@@ -1,0 +1,680 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toby Potter Coaching: Martin Jones Recap</title>
+    <style>
+        /* General Styles & Variables */
+        :root {
+            --primary-color: #003366; /* Deep Blue */
+            --secondary-color: #FF9900; /* Orange/Gold for accent */
+            --text-color: #333;
+            --light-bg: #f4f7fa;
+            --dark-bg: #1a1a1a;
+            --white: #ffffff;
+            --light-gray: #e0e0e0;
+            --medium-gray: #ccc;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        p {
+            margin-bottom: 1em;
+        }
+
+        /* Buttons */
+        .cta-button {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .cta-button:hover {
+            background-color: #e68a00; /* Slightly darker orange */
+            transform: translateY(-2px);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            color: var(--white);
+            margin: 0;
+            font-size: 2em;
+            flex-grow: 1; 
+            text-align: left; 
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            header h1 {
+                text-align: center;
+            }
+        }
+
+        /* Meeting Recap */
+        .meeting-recap {
+            background-color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+        }
+
+        .meeting-recap h2 {
+            margin-bottom: 15px;
+            font-size: 2.2em;
+        }
+
+        /* Lessons Section */
+        .lessons-section {
+            padding: 40px 0;
+            background-color: var(--light-bg);
+        }
+
+        .lesson-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden; 
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .lesson-card h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .lesson-card p {
+            font-size: 1.1em;
+            color: #555;
+            flex-grow: 1; 
+            max-width: 800px;
+        }
+
+        /* SVG Styles */
+        .lesson-svg-container {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lesson-svg-container svg {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Specific SVG Styling & Interactivity */
+        /* Fortress SVG */
+        .fortress-tower, .fortress-wall, .fortress-gate {
+            fill: #A9BCCF; /* Grey stone */
+            stroke: var(--primary-color);
+            stroke-width: 2;
+            transition: fill 0.3s ease, transform 0.3s ease;
+            transform-origin: center bottom;
+        }
+        .fortress-text {
+            fill: var(--primary-color);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            text-anchor: middle;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .fortress-layer:hover .fortress-tower,
+        .fortress-layer:hover .fortress-wall,
+        .fortress-layer:hover .fortress-gate {
+            fill: #C6D4DF; /* Lighter grey on hover */
+            transform: translateY(-5px);
+        }
+        .fortress-layer:hover .fortress-text {
+            opacity: 1;
+        }
+
+        /* Assessment SVG (Magnifying Glass) */
+        .magnifying-glass-handle { fill: var(--primary-color); }
+        .magnifying-glass-frame { fill: #ADD8E6; stroke: var(--primary-color); stroke-width: 3; }
+        .magnifying-glass-lens { fill: rgba(173, 216, 230, 0.4); stroke: #87CEEB; stroke-width: 1; }
+        .magnifying-glass-content { fill: #666; font-family: 'Segoe UI', Arial, sans-serif; font-size: 10px; transition: transform 0.3s ease, opacity 0.3s ease; }
+        .magnifying-glass-target { fill: var(--secondary-color); opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; transform-origin: center; }
+        
+        .magnifying-glass-area:hover .magnifying-glass-content { transform: scale(1.2); opacity: 0; } /* Hide original text */
+        .magnifying-glass-area:hover .magnifying-glass-target { opacity: 1; transform: scale(1.2); }
+        .magnifying-glass-area .hover-text { /* Text that appears on hover */
+            fill: var(--primary-color);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            text-anchor: middle;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .magnifying-glass-area:hover .hover-text {
+            opacity: 1;
+        }
+
+
+        /* Automation SVG (Gears) */
+        .gear-large { fill: var(--primary-color); transition: transform 0.8s ease-in-out; }
+        .gear-medium { fill: var(--secondary-color); transition: transform 0.8s ease-in-out; }
+        .gear-small { fill: #87CEEB; transition: transform 0.8s ease-in-out; }
+        .gear-text { fill: var(--white); font-family: 'Segoe UI', Arial, sans-serif; font-size: 10px; text-anchor: middle; opacity: 0; transition: opacity 0.3s ease; }
+
+        .gear-group:hover .gear-large { transform: rotate(30deg); }
+        .gear-group:hover .gear-medium { transform: rotate(-45deg); }
+        .gear-group:hover .gear-small { transform: rotate(60deg); }
+        .gear-group:hover .gear-text { opacity: 1; }
+        
+        /* Rocket SVG */
+        .rocket-body { fill: var(--primary-color); transition: transform 0.5s ease; }
+        .rocket-fin { fill: var(--secondary-color); transition: transform 0.5s ease; }
+        .rocket-window { fill: #ADD8E6; }
+        .rocket-flame { fill: #FF4500; opacity: 0; transform-origin: center bottom; transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
+        .rocket-smoke { fill: #A9A9A9; opacity: 0; transform-origin: center bottom; transition: opacity 0.3s ease-out, transform 0.3s ease-out; }
+        .rocket-boost-text { fill: var(--white); font-family: 'Segoe UI', Arial, sans-serif; font-size: 8px; text-anchor: middle; opacity: 0; transition: opacity 0.3s ease; }
+
+        .rocket-group:hover .rocket-flame {
+            opacity: 1;
+            transform: scaleY(1.2);
+            animation: pulse-flame 1s infinite alternate;
+        }
+        .rocket-group:hover .rocket-smoke {
+            opacity: 1;
+            transform: scaleY(1.5);
+            animation: pulse-smoke 1.2s infinite alternate;
+        }
+        .rocket-group:hover .rocket-body {
+            transform: translateY(-10px);
+        }
+        .rocket-group:hover .rocket-fin {
+            transform: translateY(-10px);
+        }
+        .rocket-group:hover .rocket-boost-text { opacity: 1; }
+
+        @keyframes pulse-flame {
+            0% { transform: scaleY(1) translateY(0); opacity: 0.8; }
+            50% { transform: scaleY(1.3) translateY(2px); opacity: 1; }
+            100% { transform: scaleY(1) translateY(0); opacity: 0.8; }
+        }
+        @keyframes pulse-smoke {
+            0% { transform: scaleY(1) translateY(0); opacity: 0.5; }
+            50% { transform: scaleY(1.2) translateY(3px); opacity: 0.7; }
+            100% { transform: scaleY(1) translateY(0); opacity: 0.5; }
+        }
+
+        /* Calendar SVG */
+        .calendar-bg { fill: var(--primary-color); border-radius: 5px; }
+        .calendar-header { fill: var(--secondary-color); }
+        .calendar-day-box { fill: var(--light-gray); stroke: var(--medium-gray); stroke-width: 1; transition: fill 0.3s ease; }
+        .calendar-day-text { fill: var(--text-color); font-family: 'Segoe UI', Arial, sans-serif; font-size: 8px; text-anchor: middle; }
+        .calendar-event-dot { fill: var(--secondary-color); opacity: 0; transform-origin: center; transition: opacity 0.3s ease, transform 0.3s ease; }
+        .calendar-label-text { fill: var(--white); font-family: 'Segoe UI', Arial, sans-serif; font-size: 10px; text-anchor: middle; }
+
+        .calendar-day-box:hover { fill: #d0e0f0; }
+        .calendar-day-box.event:hover .calendar-event-dot {
+             opacity: 1;
+             transform: scale(1.5);
+        }
+        .calendar-day-box.event .calendar-event-dot { opacity: 0.8; } /* Always visible for 'event' days initially */
+
+
+        /* Path to Mastery Section */
+        .path-to-mastery {
+            padding: 40px 0;
+            background-color: var(--white);
+        }
+
+        .path-to-mastery h2 {
+            font-size: 2.2em;
+        }
+
+        .program-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .program-tier {
+            background-color: var(--light-bg);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; 
+        }
+
+        .program-tier:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+        }
+
+        .program-tier h3 {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+
+        .program-tier .price {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .program-tier .price span {
+            font-size: 0.6em;
+            font-weight: normal;
+            color: #777;
+        }
+
+        .program-tier ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-bottom: 25px;
+            flex-grow: 1; 
+        }
+
+        .program-tier ul li {
+            margin-bottom: 10px;
+            color: #666;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .program-tier ul li::before {
+            content: '✓';
+            color: var(--secondary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-bg);
+            color: var(--white);
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        footer h2 {
+            color: var(--white);
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            header h1 {
+                font-size: 1.5em;
+            }
+            .cta-button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+            .lesson-card {
+                padding: 20px;
+            }
+            .lesson-card h3 {
+                font-size: 1.5em;
+            }
+            .program-tier h3 {
+                font-size: 1.4em;
+            }
+            .program-tier .price {
+                font-size: 1.8em;
+            }
+            .meeting-recap h2, .path-to-mastery h2, footer h2 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>COACHING CALL: TOBY POTTER & MARISEL</h1>
+            <a href="#path-to-mastery" class="cta-button">EXECUTE NOW</a>
+        </div>
+    </header>
+
+    <main>
+        <section class="meeting-recap">
+            <div class="container">
+                <h2>Your Path to Unshakeable Wealth</h2>
+                <p>This session with Toby Potter focused on key strategies to refine your investment approach and establish robust financial systems. We explored critical steps from foundational security to dynamic execution to empower Martin Jones.</p>
+                <p>Ready to delve deeper into these insights and accelerate your journey to financial mastery?</p>
+                <a href="https://app.fireflies.ai/view/01K39R6RHGNFK9WPZKGRVKN4TN" target="_blank" class="cta-button">ACCESS FULL RECORDING</a>
+            </div>
+        </section>
+
+        <section class="lessons-section">
+            <div class="container">
+                <h2>Core Investment Lessons from Your Session</h2>
+                <p style="text-align: center; margin-bottom: 40px;">Explore the five critical concepts distilled from your coaching call with Toby Potter. Hover over the interactive graphics to reveal deeper insights.</p>
+
+                <div class="lesson-card">
+                    <h3>1. Building Your Financial Fortress</h3>
+                    <div class="lesson-svg-container">
+                        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                            <g class="fortress-layer">
+                                <rect x="50" y="80" width="100" height="70" class="fortress-wall"/>
+                                <rect x="40" y="60" width="120" height="20" class="fortress-wall"/>
+                                <rect x="60" y="40" width="20" height="40" class="fortress-tower"/>
+                                <rect x="120" y="40" width="20" height="40" class="fortress-tower"/>
+                                <path d="M90 150 L90 110 A10 10 0 0 1 110 110 L110 150 Z" class="fortress-gate"/>
+                                <text x="100" y="100" class="fortress-text">Foundational Security</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p>Just as a fortress protects its inhabitants, your financial plan needs robust security. Establish strong defenses against market volatility and unforeseen events to safeguard your wealth and build a resilient foundation.</p>
+                </div>
+
+                <div class="lesson-card">
+                    <h3>2. The Power of Precision Assessment</h3>
+                    <div class="lesson-svg-container">
+                        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                            <g class="magnifying-glass-area">
+                                <!-- Background chart/data -->
+                                <rect x="20" y="40" width="160" height="80" fill="#f0f0f0" stroke="#ccc" stroke-width="1"/>
+                                <line x1="30" y1="100" x2="60" y2="70" stroke="#888" stroke-width="2"/>
+                                <line x1="60" y1="70" x2="90" y2="90" stroke="#888" stroke-width="2"/>
+                                <line x1="90" y1="90" x2="120" y2="60" stroke="#888" stroke-width="2"/>
+                                <line x1="120" y1="60" x2="150" y2="80" stroke="#888" stroke-width="2"/>
+                                <text x="60" y="75" class="magnifying-glass-content">Market Trends</text>
+                                <circle cx="120" cy="60" r="8" class="magnifying-glass-target"/> <!-- Target circle -->
+
+                                <!-- Magnifying Glass -->
+                                <circle cx="120" cy="60" r="30" class="magnifying-glass-frame"/>
+                                <circle cx="120" cy="60" r="25" class="magnifying-glass-lens"/>
+                                <path d="M140 70 L160 90 L150 100 L130 80 Z" class="magnifying-glass-handle"/>
+                                <text x="120" y="65" class="hover-text">Deep Dive Analysis</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p>Every successful investment journey begins with a clear understanding of your current position. Utilize precise assessments to identify opportunities, evaluate risks, and inform your strategic decisions for optimal outcomes.</p>
+                </div>
+
+                <div class="lesson-card">
+                    <h3>3. Automating Your Wealth Engine</h3>
+                    <div class="lesson-svg-container">
+                        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <path id="gear-tooth" d="M0,0 L5,0 L6,3 L5,6 L0,6 L-1,3 Z" />
+                            </defs>
+                            <g class="gear-group">
+                                <!-- Large Gear -->
+                                <g transform="translate(100, 75)">
+                                    <circle cx="0" cy="0" r="25" class="gear-large"/>
+                                    <g transform="scale(1.2)">
+                                        <use href="#gear-tooth" transform="rotate(0) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(30) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(60) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(90) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(120) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(150) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(180) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(210) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(240) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(270) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(300) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(330) translate(20, -3)"/>
+                                    </g>
+                                    <text x="0" y="5" class="gear-text">Systemize</text>
+                                </g>
+
+                                <!-- Medium Gear -->
+                                <g transform="translate(55, 95) rotate(-15)">
+                                    <circle cx="0" cy="0" r="18" class="gear-medium"/>
+                                    <g transform="scale(0.8)">
+                                        <use href="#gear-tooth" transform="rotate(0) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(45) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(90) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(135) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(180) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(225) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(270) translate(20, -3)"/>
+                                        <use href="#gear-tooth" transform="rotate(315) translate(20, -3)"/>
+                                    </g>
+                                    <text x="0" y="5" class="gear-text">Consistency</text>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <p>Unlock exponential growth by setting up automated systems for your investments. From rebalancing to reinvestment, automation ensures consistent progress and frees up your valuable time for strategic oversight.</p>
+                </div>
+
+                <div class="lesson-card">
+                    <h3>4. The Imperative of Immediate Execution</h3>
+                    <div class="lesson-svg-container">
+                        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                            <g class="rocket-group" transform="translate(0, 20)">
+                                <!-- Rocket Body -->
+                                <path d="M90 120 L80 140 L120 140 L110 120 L110 50 L100 30 L90 50 Z" class="rocket-body"/>
+                                <!-- Fins -->
+                                <path d="M80 140 L70 140 L85 115 Z" class="rocket-fin"/>
+                                <path d="M120 140 L130 140 L115 115 Z" class="rocket-fin"/>
+                                <!-- Window -->
+                                <circle cx="100" cy="70" r="8" class="rocket-window"/>
+                                <!-- Flame -->
+                                <path d="M95 140 Q100 155 105 140 L95 140 Z" class="rocket-flame"/>
+                                <path d="M90 140 Q100 160 110 140 L90 140 Z" class="rocket-smoke"/>
+                                <text x="100" y="100" class="rocket-boost-text">Launch Now</text>
+                            </g>
+                        </svg>
+                    </div>
+                    <p>Ideas are powerful, but execution is paramount. Don't let perfect be the enemy of good. Take decisive action on your well-researched plans to capture opportunities and drive tangible results in your portfolio.</p>
+                </div>
+
+                <div class="lesson-card">
+                    <h3>5. Mastering Your Investment Calendar</h3>
+                    <div class="lesson-svg-container">
+                        <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="30" y="30" width="140" height="100" rx="5" ry="5" class="calendar-bg"/>
+                            <rect x="30" y="30" width="140" height="20" class="calendar-header"/>
+                            <text x="100" y="45" class="calendar-label-text">SEPTEMBER 2024</text>
+
+                            <!-- Calendar Grid -->
+                            <g transform="translate(35, 55)">
+                                <text x="10" y="0" class="calendar-day-text" fill="#ccc">M</text>
+                                <text x="30" y="0" class="calendar-day-text" fill="#ccc">T</text>
+                                <text x="50" y="0" class="calendar-day-text" fill="#ccc">W</text>
+                                <text x="70" y="0" class="calendar-day-text" fill="#ccc">T</text>
+                                <text x="90" y="0" class="calendar-day-text" fill="#ccc">F</text>
+                                <text x="110" y="0" class="calendar-day-text" fill="#999">S</text>
+                                <text x="130" y="0" class="calendar-day-text" fill="#999">S</text>
+
+                                <!-- Row 1 -->
+                                <g class="calendar-day-box-group">
+                                    <rect x="0" y="10" width="18" height="18" class="calendar-day-box"/> <text x="9" y="23" class="calendar-day-text" fill="#999">26</text>
+                                    <rect x="20" y="10" width="18" height="18" class="calendar-day-box"/> <text x="29" y="23" class="calendar-day-text" fill="#999">27</text>
+                                    <rect x="40" y="10" width="18" height="18" class="calendar-day-box"/> <text x="49" y="23" class="calendar-day-text" fill="#999">28</text>
+                                    <rect x="60" y="10" width="18" height="18" class="calendar-day-box"/> <text x="69" y="23" class="calendar-day-text" fill="#999">29</text>
+                                    <rect x="80" y="10" width="18" height="18" class="calendar-day-box"/> <text x="89" y="23" class="calendar-day-text" fill="#999">30</text>
+                                    <rect x="100" y="10" width="18" height="18" class="calendar-day-box"/> <text x="109" y="23" class="calendar-day-text" fill="#999">31</text>
+                                    <rect x="120" y="10" width="18" height="18" class="calendar-day-box event"/> <text x="129" y="23" class="calendar-day-text">1</text><circle cx="129" cy="15" r="2.5" class="calendar-event-dot"/>
+                                </g>
+                                <!-- Row 2 -->
+                                <g class="calendar-day-box-group">
+                                    <rect x="0" y="30" width="18" height="18" class="calendar-day-box event"/> <text x="9" y="43" class="calendar-day-text">2</text><circle cx="9" cy="35" r="2.5" class="calendar-event-dot"/>
+                                    <rect x="20" y="30" width="18" height="18" class="calendar-day-box"/> <text x="29" y="43" class="calendar-day-text">3</text>
+                                    <rect x="40" y="30" width="18" height="18" class="calendar-day-box event"/> <text x="49" y="43" class="calendar-day-text">4</text><circle cx="49" cy="35" r="2.5" class="calendar-event-dot"/>
+                                    <rect x="60" y="30" width="18" height="18" class="calendar-day-box"/> <text x="69" y="43" class="calendar-day-text">5</text>
+                                    <rect x="80" y="30" width="18" height="18" class="calendar-day-box"/> <text x="89" y="43" class="calendar-day-text">6</text>
+                                    <rect x="100" y="30" width="18" height="18" class="calendar-day-box event"/> <text x="109" y="43" class="calendar-day-text">7</text><circle cx="109" cy="35" r="2.5" class="calendar-event-dot"/>
+                                    <rect x="120" y="30" width="18" height="18" class="calendar-day-box"/> <text x="129" y="43" class="calendar-day-text">8</text>
+                                </g>
+                                <!-- Row 3 -->
+                                <g class="calendar-day-box-group">
+                                    <rect x="0" y="50" width="18" height="18" class="calendar-day-box"/> <text x="9" y="63" class="calendar-day-text">9</text>
+                                    <rect x="20" y="50" width="18" height="18" class="calendar-day-box event"/> <text x="29" y="63" class="calendar-day-text">10</text><circle cx="29" cy="55" r="2.5" class="calendar-event-dot"/>
+                                    <rect x="40" y="50" width="18" height="18" class="calendar-day-box"/> <text x="49" y="63" class="calendar-day-text">11</text>
+                                    <rect x="60" y="50" width="18" height="18" class="calendar-day-box"/> <text x="69" y="63" class="calendar-day-text">12</text>
+                                    <rect x="80" y="50" width="18" height="18" class="calendar-day-box"/> <text x="89" y="63" class="calendar-day-text">13</text>
+                                    <rect x="100" y="50" width="18" height="18" class="calendar-day-box"/> <text x="109" y="63" class="calendar-day-text">14</text>
+                                    <rect x="120" y="50" width="18" height="18" class="calendar-day-box event"/> <text x="129" y="63" class="calendar-day-text">15</text><circle cx="129" cy="55" r="2.5" class="calendar-event-dot"/>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <p>Effective time management is a cornerstone of investment success. Strategically schedule your reviews, research, and rebalancing activities to ensure consistent progress toward your financial objectives and stay ahead of the curve.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="path-to-mastery" class="path-to-mastery">
+            <div class="container">
+                <h2>Your Path to Mastery: Program Tiers</h2>
+                <p style="text-align: center; margin-bottom: 40px;">Choose the tier that aligns with your ambition and accelerate your journey to becoming an Unshakable investor.</p>
+
+                <div class="program-grid">
+                    <div class="program-tier">
+                        <h3>IGNITE</h3>
+                        <div class="price">$99<span>/month</span></div>
+                        <ul>
+                            <li>✓ Foundational Learning Modules</li>
+                            <li>✓ Monthly Group Coaching Calls</li>
+                            <li>✓ Access to Core Resource Library</li>
+                            <li>✓ Exclusive Community Forum Access</li>
+                        </ul>
+                        <a href="#" class="cta-button">Join IGNITE</a>
+                    </div>
+                    <div class="program-tier">
+                        <h3>FORGE</h3>
+                        <div class="price">$299<span>/month</span></div>
+                        <ul>
+                            <li>✓ All IGNITE features included</li>
+                            <li>✓ Bi-Weekly Mastermind Sessions</li>
+                            <li>✓ Advanced Investment Strategies</li>
+                            <li>✓ Personalized Progress Tracking</li>
+                            <li>✓ Priority Email Support</li>
+                        </ul>
+                        <a href="#" class="cta-button">Join FORGE</a>
+                    </div>
+                    <div class="program-tier">
+                        <h3>ASCEND</h3>
+                        <div class="price">$799<span>/month</span></div>
+                        <ul>
+                            <li>✓ All FORGE features included</li>
+                            <li>✓ Monthly 1-on-1 Coaching Session</li>
+                            <li>✓ Custom Portfolio Review & Strategy</li>
+                            <li>✓ Exclusive Investor Network Access</li>
+                            <li>✓ Direct Line to Toby's Expert Team</li>
+                        </ul>
+                        <a href="#" class="cta-button">Join ASCEND</a>
+                    </div>
+                    <div class="program-tier">
+                        <h3>LEGACY</h3>
+                        <div class="price">Custom<span>/year</span></div>
+                        <ul>
+                            <li>✓ All ASCEND features included</li>
+                            <li>✓ Quarterly In-Person Retreats</li>
+                            <li>✓ Bespoke Wealth Preservation Plan</li>
+                            <li>✓ Advanced Tax & Estate Planning Insights</li>
+                            <li>✓ Lifetime Program Access & Updates</li>
+                        </ul>
+                        <a href="#" class="cta-button">Contact for LEGACY</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <h2>BECOME UNSHAKABLE</h2>
+            <p>Ready to transform your financial future? Toby Potter will guide you every step of the way.</p>
+            <a href="#path-to-mastery" class="cta-button">IGNITE YOUR JOURNEY</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Toby Potter Coaching Page Loaded for Martin Jones!');
+            // Any dynamic JS interactions can be added here.
+            // For now, most interactivity is handled via CSS :hover states as requested
+            // to keep the file self-contained and efficient.
+        });
+    </script>
+
+</body>
+</html>
+```
