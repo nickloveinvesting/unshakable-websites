@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multifamily Mastery: Scaling from Single Family to Apartments - The Unshakable Investor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Unshakable Investor Brand Guidelines */
+        :root {
+            --charcoal: #121212;
+            --rich-black: #0A0A0A;
+            --slate-400: #94a3b8;
+            --white: #FFFFFF;
+            --fire-start: #C84A00;
+            --fire-end: #FF6A00;
+            --gold-start: #874003;
+            --gold-end: #F2C14E;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--charcoal);
+            color: var(--slate-400);
+        }
+        .gradient-text {
+            background-image: linear-gradient(to right, var(--gold-end), var(--fire-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .btn-primary {
+            background-image: linear-gradient(to right, var(--fire-start) 0%, var(--fire-end) 51%, var(--fire-start) 100%);
+            background-size: 200% auto;
+            transition: 0.5s;
+        }
+        .btn-primary:hover {
+            background-position: right center;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        }
+        .accordion-content.open {
+            max-height: 1000px; /* Adjust as needed */
+            transition: max-height 1s ease-in-out;
+        }
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold-start), transparent);
+            opacity: 0.5;
+        }
+        .glass-panel {
+             background: rgba(10, 10, 10, 0.6);
+             backdrop-filter: blur(10px);
+             -webkit-backdrop-filter: blur(10px);
+             border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* SVG Animation */
+        .svg-pillar { opacity: 0; animation: fadeInPillar 1s forwards; }
+        .svg-pillar-text { opacity: 0; animation: fadeInText 1s 0.5s forwards; }
+        #pillar-1 { animation-delay: 0.2s; }
+        #pillar-2 { animation-delay: 0.4s; }
+        #pillar-3 { animation-delay: 0.6s; }
+        #pillar-1 .svg-pillar-text { animation-delay: 0.7s; }
+        #pillar-2 .svg-pillar-text { animation-delay: 0.9s; }
+        #pillar-3 .svg-pillar-text { animation-delay: 1.1s; }
+
+        @keyframes fadeInPillar {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInText {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header class="bg-rich-black/80 backdrop-blur-sm sticky top-0 z-50 border-b border-white/10">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68a4cee88939e941976285be.png" alt="Unshakable Investor Logo" class="h-10 md:h-12">
+            <a href="https://learn.theunshakableinvestor.com/courses/offers/9445f7ad-152f-4871-bd39-edf412cd3dbe" class="btn-primary text-white font-bold uppercase tracking-wider py-2 px-4 md:py-3 md:px-6 rounded-lg text-sm md:text-base shadow-lg shadow-black/40">
+                Enroll Now
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="overflow-hidden">
+        <section class="relative pt-20 pb-10 md:pt-32 md:pb-16 bg-charcoal text-white text-center">
+            <div class="absolute inset-0 bg-grid-slate-400/10 [mask-image:linear-gradient(to_bottom,white_30%,transparent_100%)]"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-tight">
+                    From Single Family Operator to <span class="gradient-text">Multifamily Empire</span>
+                </h1>
+                <p class="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-slate-400">
+                    This is your blueprint to stop trading time for dollars. Master the systems, secure the capital, and build a scalable real estate portfolio that generates lasting wealth and legacy.
+                </p>
+                <div class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
+                     <a href="https://learn.theunshakableinvestor.com/courses/offers/9445f7ad-152f-4871-bd39-edf412cd3dbe" class="w-full sm:w-auto btn-primary text-white font-bold uppercase tracking-wider py-4 px-10 rounded-lg text-lg shadow-lg shadow-black/40">
+                        Secure Your Spot
+                    </a>
+                     <a href="#curriculum" class="w-full sm:w-auto bg-transparent border-2 border-slate-600 hover:bg-slate-800 transition-colors text-white font-semibold py-3.5 px-10 rounded-lg text-lg">
+                        View Curriculum
+                    </a>
+                </div>
+                <div class="mt-16 max-w-4xl mx-auto">
+                    <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/6863dc045ffbef1de29b7503.png" alt="Multifamily Mastery Course" class="rounded-2xl shadow-2xl shadow-black/50 w-full">
+                </div>
+            </div>
+        </section>
+
+        <!-- 3 Pillars Section -->
+        <section class="py-20 md:py-24 bg-charcoal">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-white uppercase tracking-wider">Master the Three Pillars of <span class="gradient-text">Scaling</span></h2>
+                <div class="mt-16 max-w-5xl mx-auto">
+                     <svg viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg" class="w-full">
+                        <defs>
+                            <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color: #F2C14E;" />
+                                <stop offset="100%" style="stop-color: #874003;" />
+                            </linearGradient>
+                            <linearGradient id="fire-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color: #FF6A00;" />
+                                <stop offset="100%" style="stop-color: #C84A00;" />
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- Pillar 1: Deal Flow -->
+                        <g id="pillar-1" class="svg-pillar">
+                            <circle cx="200" cy="200" r="100" fill="rgba(10,10,10,0.6)" stroke="url(#gold-gradient)" stroke-width="2"/>
+                            <path d="M 160 180 L 200 220 L 240 180" stroke="url(#fire-gradient)" stroke-width="8" fill="none" filter="url(#glow)" stroke-linecap="round"/>
+                            <path d="M 200 160 V 240" stroke="url(#fire-gradient)" stroke-width="8" fill="none" filter="url(#glow)" stroke-linecap="round"/>
+                            <text x="200" y="340" font-family="Inter, sans-serif" font-size="24" fill="#FFFFFF" font-weight="800" text-anchor="middle" class="svg-pillar-text uppercase tracking-wider">Deal Flow</text>
+                            <text x="200" y="370" font-family="Inter, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" class="svg-pillar-text">Build Your Acquisition Machine</text>
+                        </g>
+
+                        <!-- Pillar 2: Capital Access -->
+                         <g id="pillar-2" class="svg-pillar">
+                            <circle cx="600" cy="200" r="100" fill="rgba(10,10,10,0.6)" stroke="url(#gold-gradient)" stroke-width="2"/>
+                            <text x="600" y="215" font-family="Inter, sans-serif" font-size="80" fill="url(#fire-gradient)" font-weight="900" text-anchor="middle" filter="url(#glow)">$</text>
+                            <text x="600" y="340" font-family="Inter, sans-serif" font-size="24" fill="#FFFFFF" font-weight="800" text-anchor="middle" class="svg-pillar-text uppercase tracking-wider">Capital Access</text>
+                             <text x="600" y="370" font-family="Inter, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" class="svg-pillar-text">Fund Any Deal, Any Size</text>
+                        </g>
+
+                        <!-- Pillar 3: Operator Systems -->
+                         <g id="pillar-3" class="svg-pillar">
+                            <circle cx="1000" cy="200" r="100" fill="rgba(10,10,10,0.6)" stroke="url(#gold-gradient)" stroke-width="2"/>
+                            <path d="M 980 180 L 1020 180 M 980 200 L 1020 200 M 980 220 L 1020 220" stroke="url(#fire-gradient)" stroke-width="8" fill="none" filter="url(#glow)" stroke-linecap="round"/>
+                            <rect x="965" y="165" width="70" height="70" stroke="url(#fire-gradient)" stroke-width="4" fill="none" stroke-linecap="round" rx="5"/>
+                            <text x="1000" y="340" font-family="Inter, sans-serif" font-size="24" fill="#FFFFFF" font-weight="800" text-anchor="middle" class="svg-pillar-text uppercase tracking-wider">Operator Systems</text>
+                            <text x="1000" y="370" font-family="Inter, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle" class="svg-pillar-text">Automate and Scale Your Portfolio</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- About the Instructor -->
+        <section class="py-20 md:py-24 bg-rich-black">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-5 gap-12 items-center">
+                    <div class="md:col-span-2">
+                        <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68a5e9c8f0f9c3c40f2fceb7.png" alt="Toby Potter" class="rounded-full aspect-square object-cover w-48 mx-auto md:w-full max-w-sm border-4 border-white/10 shadow-2xl">
+                    </div>
+                    <div class="md:col-span-3 text-center md:text-left">
+                        <h2 class="text-3xl md:text-4xl font-extrabold text-white uppercase">Meet Your Mentor, <span class="gradient-text">Toby Potter</span></h2>
+                        <p class="mt-4 text-lg text-slate-400">
+                            After building and losing a multi-million dollar portfolio in the 2008 crash, Toby rebuilt a $500M+ real estate empire from the ground up. His approach isn't based on theory—it's forged in the fires of failure and victory. He teaches a battle-tested, numbers-first methodology that removes emotion and installs a proven system for scaling your investments with precision and authority.
+                        </p>
+                        <div class="mt-8 flex flex-wrap justify-center md:justify-start gap-4 text-center">
+                            <div class="bg-charcoal p-4 rounded-lg border border-white/10 flex-grow">
+                                <p class="text-2xl font-bold gradient-text">30+ Years</p>
+                                <p class="text-sm text-slate-400 uppercase tracking-wider">Experience</p>
+                            </div>
+                            <div class="bg-charcoal p-4 rounded-lg border border-white/10 flex-grow">
+                                <p class="text-2xl font-bold gradient-text">$500M+</p>
+                                <p class="text-sm text-slate-400 uppercase tracking-wider">Portfolio Rebuilt</p>
+                            </div>
+                            <div class="bg-charcoal p-4 rounded-lg border border-white/10 flex-grow">
+                                <p class="text-2xl font-bold gradient-text">1000+</p>
+                                <p class="text-sm text-slate-400 uppercase tracking-wider">Investors Trained</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider my-16 container mx-auto"></div>
+
+        <!-- Curriculum Section -->
+        <section id="curriculum" class="py-20 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-4xl md:text-5xl font-black text-white uppercase">The <span class="gradient-text">Operator's Blueprint</span></h2>
+                    <p class="mt-4 text-lg text-slate-400">This isn't just a course; it's a complete operational system. Each module is a critical component designed to transform you into a disciplined, effective multifamily investor who executes with confidence.</p>
+                </div>
+                <div id="accordion-container" class="mt-16 max-w-4xl mx-auto space-y-4">
+                    <!-- Accordion items will be injected here by JavaScript -->
+                </div>
+            </div>
+        </section>
+        
+        <div class="section-divider my-16 container mx-auto"></div>
+
+        <!-- Who Is This For? -->
+        <section class="py-20 md:py-24">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-5xl font-black text-white uppercase">ARE YOU READY TO <span class="gradient-text">EXECUTE?</span></h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-400">This intensive program is for operators, not hobbyists. We are looking for investors who are ready to commit to a new standard of execution.</p>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left max-w-6xl mx-auto">
+                    <div class="glass-panel p-6 rounded-2xl text-center">
+                        <svg class="w-16 h-16 mx-auto" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 58C46.3594 58 58 46.3594 58 32C58 17.6406 46.3594 6 32 6C17.6406 6 6 17.6406 6 32C6 46.3594 17.6406 58 32 58Z" stroke="url(#gold-gradient)" stroke-width="4"/><path d="M24 40L40 24M26 24H40V38" stroke="url(#fire-gradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <h3 class="text-xl font-bold text-white mt-4">THE AMBITIOUS OPERATOR</h3>
+                        <p class="mt-2 text-slate-400">You've done a few single-family deals (2-5) and have tasted success. Now you're hungry for more and know that your current methods won't get you to the next level.</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl text-center">
+                        <svg class="w-16 h-16 mx-auto" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M25.5 16H38.5L46 24V48H18V24L25.5 16Z" stroke="url(#gold-gradient)" stroke-width="4" stroke-linejoin="round"/><path d="M32 48V36C28.6863 36 26 33.3137 26 30C26 26.6863 28.6863 24 32 24C35.3137 24 38 26.6863 38 30" stroke="url(#fire-gradient)" stroke-width="4" stroke-linecap="round"/><path d="M18 48H46" stroke="url(#gold-gradient)" stroke-width="4" stroke-linecap="round"/></svg>
+                        <h3 class="text-xl font-bold text-white mt-4">THE SYSTEMS-BUILDER</h3>
+                        <p class="mt-2 text-slate-400">You recognize that "hustle" alone doesn't scale. You're ready to build repeatable systems for deal finding, capital raising, and asset management.</p>
+                    </div>
+                    <div class="glass-panel p-6 rounded-2xl text-center">
+                         <svg class="w-16 h-16 mx-auto" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 28V54H52V28L32 10L12 28Z" stroke="url(#gold-gradient)" stroke-width="4" stroke-linejoin="round"/><path d="M24 54V38H40V54" stroke="url(#fire-gradient)" stroke-width="4" stroke-linejoin="round"/><path d="M44 54V34" stroke="url(#gold-gradient)" stroke-width="4" stroke-linecap="round"/></svg>
+                        <h3 class="text-xl font-bold text-white mt-4">THE LEGACY-FOCUSED INVESTOR</h3>
+                        <p class="mt-2 text-slate-400">You're not just chasing quick profits. You want to build a sustainable portfolio that generates wealth for generations and makes a lasting impact.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider my-16 container mx-auto"></div>
+
+        <!-- Inside the Course -->
+        <section class="py-20 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-4xl md:text-5xl font-black text-white uppercase">Your <span class="gradient-text">Mission Control</span></h2>
+                        <p class="mt-4 text-lg text-slate-400">
+                            Access the entire Multifamily Mastery curriculum through our professional, easy-to-navigate learning portal. This is your command center for scaling your operations.
+                        </p>
+                        <ul class="mt-8 space-y-4 text-left">
+                            <li class="flex items-center gap-3">
+                                <svg class="w-6 h-6 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span class="text-slate-300">On-demand video lessons, available 24/7 on any device.</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="w-6 h-6 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span class="text-slate-300">Downloadable tools, scripts, and underwriting models.</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="w-6 h-6 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span class="text-slate-300">Track your progress and revisit key lessons anytime.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68b717e076561e559df2f4e9.png" alt="Screenshot of the course platform" class="rounded-2xl shadow-2xl shadow-black/50 w-full">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section id="enroll" class="py-20 md:py-32 bg-rich-black">
+            <div class="container mx-auto px-6 text-center">
+                 <h2 class="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
+                    Your <span class="gradient-text">Legacy</span> Is Built on <br/> The Decisions You Make Today.
+                </h2>
+                <p class="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-slate-400">
+                    The market doesn't reward hesitation. It rewards decisive action. Enroll in Multifamily Mastery and gain the unshakable confidence to build the future you deserve.
+                </p>
+                <div class="mt-10">
+                     <a href="https://learn.theunshakableinvestor.com/courses/offers/9445f7ad-152f-4871-bd39-edf412cd3dbe" class="btn-primary text-white font-bold uppercase tracking-wider py-4 px-12 rounded-lg text-xl shadow-lg shadow-black/40 inline-block">
+                        Enroll and Start Scaling
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black py-12">
+        <div class="container mx-auto px-6 text-center text-slate-500">
+            <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68a4cee88939e941976285be.png" alt="Unshakable Investor Logo" class="h-10 mx-auto mb-6">
+            <p>&copy; 2024 The Unshakable Investor. All Rights Reserved.</p>
+            <p class="text-sm mt-2">This is not an offer to sell securities. Investing in real estate involves risk. Past performance is not indicative of future results.</p>
+        </div>
+    </footer>
+
+    <script>
+        const courseData = [
+            {
+                module: 1,
+                title: "Wholesaling Foundations — Earning Your Stripes",
+                description: "Master the art of finding and controlling deals without using your own cash. This is the ultimate real estate bootcamp.",
+                lessons: [
+                    { title: "The Wholesaler’s Mindset", description: "Discover why wholesaling is the essential first step to earning the right to go big." },
+                    { title: "Deal Finding Mastery", description: "Learn the core strategies for sourcing profitable off-market deals consistently." },
+                    { title: "The Art of the Offer", description: "Structure and present offers that get accepted, even with heavy competition." },
+                    { title: "Closing the Deal", description: "Navigate the assignment process and build a powerful network of cash buyers." }
+                ]
+            },
+            {
+                module: 2,
+                title: "Fix & Flip — Manufacturing Equity",
+                description: "Learn how to analyze, fund, and manage renovations to create forced appreciation and generate significant cash profits.",
+                lessons: [
+                    { title: "Accurate Rehab Budgeting", description: "Master the skill of estimating repair costs to protect your profit margin." },
+                    { title: "Contractor Management", description: "Find, vet, and manage reliable contractors to keep your project on time and on budget." },
+                    { title: "Funding Your Flips", description: "Explore the best funding options, from hard money to private lenders." },
+                    { title: "The Profitable Exit", description: "Learn how to market and sell your renovated property for maximum return." }
+                ]
+            },
+            {
+                module: 3,
+                title: "The BRRRR Method — Building Your Rental Portfolio",
+                description: "Implement the Buy, Rehab, Rent, Refinance, Repeat strategy to acquire rental properties with little to no money down.",
+                lessons: [
+                    { title: "BRRRR Deal Analysis", description: "Identify properties that fit the strict criteria for a successful BRRRR." },
+                    { title: "Securing Long-Term Financing", description: "Navigate the refinancing process to pull your capital out and move to the next deal." },
+                    { title: "Tenant Screening & Leasing", description: "Place high-quality tenants who will protect your asset and pay on time." },
+                    { title: "Scaling with BRRRR", description: "Systematize the process to repeatably add doors to your portfolio." }
+                ]
+            },
+            {
+                module: 4,
+                title: "Transition to Multifamily — The Quantum Leap",
+                description: "Understand the fundamental shifts in mindset, analysis, and financing required to move from single-family to commercial apartments.",
+                lessons: [
+                    { title: "Commercial vs. Residential Mindset", description: "Learn why multifamily is a business, not just a property." },
+                    { title: "Key Multifamily Metrics", description: "Master NOI, Cap Rate, and Cash-on-Cash Return to speak the language of commercial real estate." },
+                    { title: "Finding Your Multifamily Niche", description: "Determine the right market, asset class, and deal size for your first apartment investment." },
+                    { title: "Building Your Multifamily Team", description: "Assemble the essential players: brokers, lenders, attorneys, and property managers." }
+                ]
+            },
+            {
+                module: 5,
+                title: "Capital Stacking & Syndication — Funding Big Deals",
+                description: "Learn how to legally raise private capital from investors to fund large multifamily acquisitions.",
+                lessons: [
+                    { title: "The Syndication Model", description: "Understand the roles of the General Partner and Limited Partners." },
+                    { title: "Crafting an Investor Pitch Deck", description: "Create a compelling investment summary that attracts capital." },
+                    { title: "SEC Compliance & Legal Structures", description: "Navigate the legal requirements to protect yourself and your investors." },
+                    { title: "Investor Relations & Reporting", description: "Build trust and confidence through professional communication and transparent reporting." }
+                ]
+            },
+            {
+                module: 6,
+                title: "Legacy Building — Beyond the Deal",
+                description: "Structure your business and your portfolio to create generational wealth and a lasting impact.",
+                lessons: [
+                    { title: "Owner vs. Operator Mindset", description: "Shift from doing everything yourself to leading a team and managing systems." },
+                    { title: "Asset Protection & Tax Strategy", description: "Implement the right legal and tax structures to protect what you've built." },
+                    { title: "Systemizing Your Empire", description: "Create processes that allow your business to run without you." },
+                    { title: "Defining Your 50-Year Vision", description: "Codify your values and establish a multi-generational plan for your wealth and legacy." }
+                ]
+            }
+        ];
+
+        const accordionContainer = document.getElementById('accordion-container');
+
+        courseData.forEach(module => {
+            const item = document.createElement('div');
+            item.className = 'glass-panel rounded-xl';
+            
+            const header = document.createElement('div');
+            header.className = 'accordion-header flex justify-between items-center p-5 md:p-6 cursor-pointer';
+            header.innerHTML = `
+                <div class="flex items-center gap-4">
+                    <span class="gradient-text font-black text-2xl">${String(module.module).padStart(2, '0')}</span>
+                    <div>
+                        <h3 class="text-white font-bold text-lg md:text-xl uppercase">${module.title}</h3>
+                        <p class="text-slate-400 text-sm hidden md:block">${module.description}</p>
+                    </div>
+                </div>
+                <div class="icon text-white text-3xl font-light transform transition-transform duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 transition-transform transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                </div>
+            `;
+
+            const content = document.createElement('div');
+            content.className = 'accordion-content';
+            
+            const list = document.createElement('ul');
+            list.className = 'px-6 pb-6 pt-2 border-t border-white/10 space-y-3';
+            module.lessons.forEach(lesson => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-3';
+                li.innerHTML = `
+                    <svg class="w-5 h-5 text-amber-500 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    <div>
+                        <p class="font-semibold text-white">${lesson.title}</p>
+                        <p class="text-slate-400 text-sm">${lesson.description}</p>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+
+            content.appendChild(list);
+            item.appendChild(header);
+            item.appendChild(content);
+            accordionContainer.appendChild(item);
+
+            header.addEventListener('click', () => {
+                const isOpen = content.classList.contains('open');
+                
+                document.querySelectorAll('.accordion-content.open').forEach(openContent => {
+                    openContent.classList.remove('open');
+                    openContent.previousElementSibling.querySelector('svg').classList.remove('rotate-45');
+                });
+                
+                if (!isOpen) {
+                    content.classList.add('open');
+                    header.querySelector('svg').classList.add('rotate-45');
+                }
+            });
+        });
+
+        const firstHeader = document.querySelector('.accordion-header');
+        if (firstHeader) {
+            firstHeader.click();
+        }
+
+    </script>
+</body>
+</html>
