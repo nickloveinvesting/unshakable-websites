@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coaching Call Summary | The Unshakable Investor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rich-black: #0A0A0A;
+            --charcoal: #121212;
+            --fire-orange-start: #C84A00;
+            --fire-orange-mid: #FF6A00;
+            --fire-orange-end: #FFC14D;
+            --iconic-gold-start: #6A4B0F;
+            --iconic-gold-mid: #A9711A;
+            --iconic-gold-end: #F2C14E;
+            --white: #FFFFFF;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+        }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; background-color: var(--charcoal); color: var(--white); }
+        h1, h2, h3, h4, h5, h6 { text-transform: uppercase; letter-spacing: -0.025em; }
+        .concept-card { background-color: var(--rich-black); border: 1px solid #222; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; }
+        .concept-card:hover { transform: translateY(-10px); box-shadow: 0 0 25px rgba(255, 106, 0, 0.2); }
+        .quote-bubble { position: relative; background: var(--rich-black); border-radius: .4em; padding: 1.5rem; border: 1px solid #333; }
+        .quote-bubble:after { content: ''; position: absolute; top: 0; left: 50%; width: 0; height: 0; border: 20px solid transparent; border-bottom-color: var(--rich-black); border-top: 0; border-left: 0; margin-left: -10px; margin-top: -20px; }
+        .slider-container { position: relative; width: 100%; max-width: 600px; margin: auto; overflow: hidden; border-radius: 0.5rem; }
+        .slider-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .before-image { position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; }
+        .slider-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: linear-gradient(45deg, var(--fire-orange-start), var(--fire-orange-mid)); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: ew-resize; box-shadow: 0 0 15px var(--fire-orange-mid); z-index: 10; }
+        .slider-handle svg { width: 24px; height: 24px; }
+        .cta-button { background: linear-gradient(45deg, var(--fire-orange-start), var(--fire-orange-mid)); color: var(--white); font-weight: 800; padding: 0.85rem 2.5rem; border-radius: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s ease; border: 2px solid transparent; box-shadow: 0 0 15px rgba(255, 106, 0, 0.3); }
+        .cta-button:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 106, 0, 0.5); }
+        .cta-button-outline { background: transparent; color: var(--fire-orange-mid); border: 2px solid var(--fire-orange-mid); font-weight: 800; padding: 0.85rem 2.5rem; border-radius: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s ease; }
+        .cta-button-outline:hover { background: var(--fire-orange-mid); color: var(--white); transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 106, 0, 0.5); }
+        .text-gold-gradient { background: -webkit-linear-gradient(45deg, var(--iconic-gold-start), var(--iconic-gold-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-orange-gradient { background: -webkit-linear-gradient(45deg, var(--fire-orange-end), var(--fire-orange-mid)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .pillar-infographic .pillar-group { transition: transform 0.3s ease; }
+        .pillar-infographic .pillar-group:hover { transform: translateY(-10px); cursor: pointer; }
+        .pillar-infographic .pillar-label { opacity: 0; transition: opacity 0.3s ease; }
+        .pillar-infographic .pillar-group:hover .pillar-label { opacity: 1; }
+        .path-of-growth-infographic #growth-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw-path 2s ease-out forwards; }
+        @keyframes draw-path { to { stroke-dashoffset: 0; } }
+        .deal-analyzer-infographic #verdict-stamp { opacity: 0; transform: scale(1.5) rotate(-15deg); transform-origin: center; animation: stamp-verdict 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: 1.8s; /* Adjusted delay to appear after coin is visible */ }
+        @keyframes stamp-verdict { to { opacity: 1; transform: scale(1) rotate(-10deg); } }
+        .wealth-engine-infographic .engine-arrow { animation: engine-flow 4s linear infinite; }
+        @keyframes engine-flow { from { motion-offset: 0%; } to { motion-offset: 100%; } }
+        .panel-container { display: grid; grid-template-columns: 1fr; min-height: 80vh; }
+        @media (min-width: 768px) { .panel-container { grid-template-columns: 1fr 120px 1fr; } }
+        .panel { padding: 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .past-panel { background-color: var(--rich-black); }
+        .future-panel { background: radial-gradient(circle at top, #222, var(--rich-black)); }
+        .catalyst-bar { background-color: var(--charcoal); display: flex; flex-direction: row; justify-content: space-around; align-items: center; padding: 1rem 0; }
+        @media (min-width: 768px) { .catalyst-bar { flex-direction: column; padding: 0 1rem; } }
+    </style>
+</head>
+<body class="bg-charcoal text-white">
+    <header class="bg-rich-black text-center py-16 px-4 border-b border-gray-800">
+        <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68a4cee88939e941976285be.png" alt="The Unshakable Investor Logo" class="w-24 h-24 mx-auto mb-6" onerror="this.onerror=null;this.src='https://placehold.co/96x96/0A0A0A/FFFFFF?text=Logo';">
+        <h1 class="text-4xl md:text-5xl font-black mb-2">ROHIT SASI KUMAR WITH TOBY POTTER</h1>
+        <h2 class="text-2xl md:text-3xl font-bold text-slate-400 mb-4">MEMBERSHIP PROGRAM CONSULTATION</h2>
+        <p class="text-lg text-slate-500 mb-8">THE UNSHAKABLE INVESTOR // COACHING CALL SUMMARY</p>
+        <a href="https://memberships.theunshakableinvestor.com/main" class="cta-button-outline inline-block">START YOUR FUTURE TODAY</a>
+    </header>
+    <section class="bg-rich-black py-12 border-y border-gray-800">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-extrabold mb-4 text-orange-gradient">MEETING RECAP & FULL RECORDING</h2>
+            <p class="max-w-3xl mx-auto text-slate-400 mb-8">This coaching call focused on shifting Rohit Sasi Kumar's perspective from market stagnation and fear to proactive investment strategies. Key discussions revolved around overcoming mental barriers, identifying real estate opportunities regardless of market sentiment, and leveraging mentorship to accelerate growth and achieve financial freedom.</p>
+            <a href="https://app.fireflies.ai/view/01K493RWK5V74JJSGFVZKHV567" target="_blank" class="cta-button inline-block">ACCESS THE RECORDING</a>
+        </div>
+    </section>
+    <main class="container mx-auto px-4 py-12 md:py-20">
+        <!-- Lesson 1: IGNITE YOUR MARKET VISION -->
+        <section class="mb-20 text-center">
+            <h2 class="text-4xl md:text-5xl font-black text-orange-gradient mb-8">IGNITE YOUR MARKET VISION</h2>
+            <p class="max-w-3xl mx-auto text-slate-400 mb-12 text-lg">
+                The conversation highlighted Rohit's perception that the market was "dead," leading to inaction. Toby emphasized that successful investors don't wait for ideal conditions but actively seek opportunities, turning perceived downturns into strategic entry points, as discussed when addressing the "pity" mindset.
+            </p>
+            <div class="flex justify-center items-center">
+                <svg class="w-full max-w-xl h-64 md:h-80" viewBox="0 0 600 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="fire-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#C84A00" />
+                            <stop offset="50%" stop-color="#FF6A00" />
+                            <stop offset="100%" stop-color="#FFC14D" />
+                        </linearGradient>
+                        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+                            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 15 -5" result="glow" />
+                            <feMerge>
+                                <feMergeNode in="glow" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <!-- Initial dark padlock representing market paralysis -->
+                    <g id="padlock" filter="url(#glow)">
+                        <rect x="250" y="80" width="100" height="120" rx="10" fill="#333" stroke="#555" stroke-width="3" />
+                        <rect x="270" y="100" width="60" height="60" rx="5" fill="#1A1A1A" stroke="#444" stroke-width="2" />
+                        <path d="M275 80 Q275 50 300 50 Q325 50 325 80" stroke="#555" stroke-width="15" fill="none" />
+                        <circle cx="300" cy="130" r="10" fill="#555" />
+                        <path d="M295 130 L305 130 M300 125 L300 135" stroke="#1A1A1A" stroke-width="2" />
+                    </g>
+
+                    <!-- Cityscape revealed -->
+                    <g id="cityscape" opacity="0">
+                        <rect x="100" y="150" width="50" height="80" fill="url(#fire-gradient)" />
+                        <rect x="160" y="120" width="60" height="110" fill="url(#fire-gradient)" />
+                        <rect x="230" y="100" width="70" height="130" fill="url(#fire-gradient)" />
+                        <rect x="310" y="130" width="60" height="100" fill="url(#fire-gradient)" />
+                        <rect x="380" y="160" width="50" height="70" fill="url(#fire-gradient)" />
+                        <rect x="440" y="140" width="55" height="90" fill="url(#fire-gradient)" />
+                        <text x="300" y="270" font-size="24" font-weight="bold" fill="url(#fire-gradient)" text-anchor="middle">OPPORTUNITY IGNITED</text>
+                    </g>
+
+                    <animateTransform
+                        xlink:href="#padlock"
+                        attributeName="transform"
+                        type="scale"
+                        from="1"
+                        to="0"
+                        dur="1.5s"
+                        begin="1s"
+                        fill="freeze"
+                        keyTimes="0;1"
+                        keySplines="0.4 0 0.2 1"
+                    />
+                    <animate
+                        xlink:href="#padlock"
+                        attributeName="opacity"
+                        from="1"
+                        to="0"
+                        dur="1s"
+                        begin="1.5s"
+                        fill="freeze"
+                    />
+                    <animate
+                        xlink:href="#cityscape"
+                        attributeName="opacity"
+                        from="0"
+                        to="1"
+                        dur="1.5s"
+                        begin="2s"
+                        fill="freeze"
+                    />
+                    <animateTransform
+                        xlink:href="#cityscape"
+                        attributeName="transform"
+                        type="translate"
+                        from="0 50"
+                        to="0 0"
+                        dur="1.5s"
+                        begin="2s"
+                        fill="freeze"
+                    />
+                </svg>
+            </div>
+        </section>
+
+        <!-- Lesson 2: UNCOVERING HIDDEN VALUE (Interactive Slider) -->
+        <section class="mb-20 text-center">
+            <h2 class="text-4xl md:text-5xl font-black text-gold-gradient mb-8">UNCOVERING HIDDEN VALUE</h2>
+            <p class="max-w-3xl mx-auto text-slate-400 mb-12 text-lg">
+                Rohit expressed frustration about the scarcity of "good deals," often citing the belief that truly profitable opportunities were "off-market" and inaccessible. Toby countered this by illustrating how to identify potential in properties that others overlook, much like a neglected property transforming into a valuable asset through strategic renovation, shifting the focus from finding "off-market" to creating "on-value" opportunities.
+            </p>
+            <div id="slider" class="slider-container relative w-full max-w-2xl mx-auto h-96 bg-gray-900 overflow-hidden border border-gray-700 rounded-lg shadow-xl">
+                <img class="slider-image absolute top-0 left-0 w-full h-full object-cover" src="https://placehold.co/800x600/343A40/FFFFFF?text=Before+Renovation" alt="Before Renovation - Neglected Property">
+                <div class="before-image absolute top-0 left-0 w-1/2 h-full overflow-hidden">
+                    <img class="slider-image" src="https://placehold.co/800x600/C84A00/FFFFFF?text=After+Renovation" alt="After Renovation - Transformed Property">
+                </div>
+                <div id="slider-handle" class="slider-handle">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="text-white">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="mt-4 text-slate-500 text-sm">Drag the slider to reveal the transformation</p>
+        </section>
+
+        <!-- Lesson 3: FORGE YOUR PATH WITH GUIDANCE -->
+        <section class="mb-20 text-center">
+            <h2 class="text-4xl md:text-5xl font-black text-orange-gradient mb-8">FORGE YOUR PATH WITH GUIDANCE</h2>
+            <p class="max-w-3xl mx-auto text-slate-400 mb-12 text-lg">
+                Rohit acknowledged feeling overwhelmed by the complexities of real estate investing, unsure how to move past analysis paralysis and avoid common pitfalls. The discussion underscored the importance of mentorship, explaining how structured guidance, like having "someone who's been there, done that," provides a clear roadmap and accelerates progress by offering proven strategies and direct support for complex situations.
+            </p>
+            <div class="flex justify-center items-center">
+                <svg class="w-full max-w-xl h-64 md:h-80" viewBox="0 0 600 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#6A4B0F" />
+                            <stop offset="50%" stop-color="#A9711A" />
+                            <stop offset="100%" stop-color="#F2C14E" />
+                        </linearGradient>
+                        <filter id="glow-gold" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+                            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 15 -5" result="glow" />
+                            <feMerge>
+                                <feMergeNode in="glow" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <!-- Ground and ascent path -->
+                    <path d="M100 250 L500 80" stroke="#333" stroke-width="2" />
+                    <path d="M100 250 L150 200 L200 220 L250 170 L300 190 L350 140 L400 160 L450 110 L500 130" stroke="#444" stroke-width="5" fill="none" />
+
+                    <!-- Client's current "iron" gear system -->
+                    <g id="client-gears" transform="translate(100, 200)">
+                        <circle cx="0" cy="0" r="30" fill="#555" stroke="#777" stroke-width="2" filter="url(#glow)"/>
+                        <path d="M-15 -35 L15 -35 A30 30 0 0 1 35 15 L35 -15 A30 30 0 0 1 15 35 L-15 35 A30 30 0 0 1 -35 15 L-35 -15 A30 30 0 0 1 -15 -35 Z" fill="#444" stroke="#666" stroke-width="1" transform="rotate(20)" />
+                        <circle cx="0" cy="0" r="10" fill="#222" />
+                    </g>
+
+                    <!-- Mentor's "gold" gear system at the top -->
+                    <g id="mentor-gears" transform="translate(450, 80)" opacity="0">
+                        <circle cx="0" cy="0" r="40" fill="url(#gold-gradient)" stroke="#FFD700" stroke-width="3" filter="url(#glow-gold)"/>
+                        <path d="M-20 -45 L20 -45 A40 40 0 0 1 45 20 L45 -20 A40 40 0 0 1 20 45 L-20 45 A40 40 0 0 1 -45 20 L-45 -20 A40 40 0 0 1 -20 -45 Z" fill="url(#gold-gradient)" stroke="#FFD700" stroke-width="1" transform="rotate(-10)" />
+                        <circle cx="0" cy="0" r="15" fill="#333" />
+                        <text x="0" y="5" font-size="16" font-weight="bold" fill="#fff" text-anchor="middle">MASTERY</text>
+                    </g>
+
+                    <!-- Mentorship chain -->
+                    <path id="mentorship-chain" d="M100 200 L450 80" stroke="url(#gold-gradient)" stroke-width="8" stroke-dasharray="1000" stroke-dashoffset="1000" fill="none" filter="url(#glow-gold)">
+                        <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="2s" begin="0.5s" fill="freeze" />
+                    </path>
+
+                    <!-- Client gear movement along the chain -->
+                    <animateMotion
+                        xlink:href="#client-gears"
+                        path="M100 200 L450 80"
+                        dur="2s"
+                        begin="1s"
+                        fill="freeze"
+                        rotate="auto"
+                    />
+                     <animate
+                        xlink:href="#mentor-gears"
+                        attributeName="opacity"
+                        from="0"
+                        to="1"
+                        dur="0.5s"
+                        begin="2.5s"
+                        fill="freeze"
+                     />
+                </svg>
+            </div>
+        </section>
+
+        <!-- Lesson 4: PRECISION IN PROFIT -->
+        <section class="mb-20 text-center">
+            <h2 class="text-4xl md:text-5xl font-black text-gold-gradient mb-8">PRECISION IN PROFIT</h2>
+            <p class="max-w-3xl mx-auto text-slate-400 mb-12 text-lg">
+                The conversation touched on Rohit's previous approach to evaluating deals, which sometimes lacked a systematic data-driven framework. Toby highlighted the necessity of using tools, potentially including AI-powered insights, to rigorously analyze property potential, market trends, and financial viability, ensuring decisions are based on concrete data rather than speculation, as mentioned when discussing "unshakable" decisions.
+            </p>
+            <div class="flex justify-center items-center deal-analyzer-infographic">
+                <svg class="w-full max-w-xl h-64 md:h-80" viewBox="0 0 600 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="fire-gradient-lg" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#C84A00" />
+                            <stop offset="50%" stop-color="#FF6A00" />
+                            <stop offset="100%" stop-color="#FFC14D" />
+                        </linearGradient>
+                        <linearGradient id="gold-gradient-lg" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#6A4B0F" />
+                            <stop offset="50%" stop-color="#A9711A" />
+                            <stop offset="100%" stop-color="#F2C14E" />
+                        </linearGradient>
+                        <filter id="data-glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 10 -3" result="glow" />
+                            <feMerge>
+                                <feMergeNode in="glow" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                        <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="url(#gold-gradient-lg)" />
+                        </marker>
+                    </defs>
+
+                    <!-- Data Inputs -->
+                    <g id="data-inputs">
+                        <rect x="50" y="50" width="80" height="40" fill="#333" stroke="#666" rx="5" filter="url(#data-glow)"/>
+                        <text x="90" y="75" fill="#aaa" font-size="14" text-anchor="middle">MARKET</text>
+                        <rect x="50" y="130" width="80" height="40" fill="#333" stroke="#666" rx="5" filter="url(#data-glow)"/>
+                        <text x="90" y="155" fill="#aaa" font-size="14" text-anchor="middle">PROPERTY</text>
+                        <rect x="50" y="210" width="80" height="40" fill="#333" stroke="#666" rx="5" filter="url(#data-glow)"/>
+                        <text x="90" y="235" fill="#aaa" font-size="14" text-anchor="middle">FINANCIALS</text>
+                    </g>
+
+                    <!-- Data Flow Arrows -->
+                    <path d="M130 70 H180" stroke="#666" stroke-width="2" stroke-dasharray="5,5">
+                        <animate attributeName="stroke-dashoffset" from="0" to="-10" dur="1s" repeatCount="indefinite" />
+                    </path>
+                    <path d="M130 150 H180" stroke="#666" stroke-width="2" stroke-dasharray="5,5">
+                        <animate attributeName="stroke-dashoffset" from="0" to="-10" dur="1s" repeatCount="indefinite" begin="0.2s" />
+                    </path>
+                    <path d="M130 230 H180" stroke="#666" stroke-width="2" stroke-dasharray="5,5">
+                        <animate attributeName="stroke-dashoffset" from="0" to="-10" dur="1s" repeatCount="indefinite" begin="0.4s" />
+                    </path>
+
+                    <!-- Central Forge/Processor -->
+                    <g transform="translate(300, 150)">
+                        <rect x="-75" y="-75" width="150" height="150" rx="15" fill="#1A1A1A" stroke="url(#fire-gradient-lg)" stroke-width="3" filter="url(#data-glow)"/>
+                        <circle cx="0" cy="0" r="50" fill="#0A0A0A" stroke="url(#fire-gradient-lg)" stroke-width="2"/>
+                        <text x="0" y="-10" fill="url(#fire-gradient-lg)" font-size="20" font-weight="bold" text-anchor="middle">AI</text>
+                        <text x="0" y="20" fill="url(#fire-gradient-lg)" font-size="16" text-anchor="middle">ANALYTICS</text>
+                        <animateTransform
+                            attributeName="transform"
+                            type="rotate"
+                            from="0 0 0"
+                            to="360 0 0"
+                            dur="5s"
+                            repeatCount="indefinite"
+                        />
+                    </g>
+
+                    <!-- Output Arrow -->
+                    <path d="M375 150 H425" stroke="url(#gold-gradient-lg)" stroke-width="4" marker-end="url(#arrowhead)">
+                        <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1s" repeatCount="indefinite" />
+                    </path>
+
+                    <!-- Gold Coin / Ingot -->
+                    <g id="output-coin">
+                        <circle cx="480" cy="150" r="40" fill="url(#gold-gradient-lg)" stroke="#FFD700" stroke-width="2" filter="url(#data-glow)"/>
+                        <text x="480" y="158" fill="#1A1A1A" font-size="24" font-weight="bold" text-anchor="middle" letter-spacing="-1px">PROFIT</text>
+                        <g id="verdict-stamp"> <!-- The CSS animation applies to this group -->
+                            <path d="M440 130 L520 170" stroke="#1A1A1A" stroke-width="5" />
+                            <path d="M440 170 L520 130" stroke="#1A1A1A" stroke-width="5" />
+                        </g>
+                         <animate
+                            xlink:href="#output-coin"
+                            attributeName="opacity"
+                            from="0"
+                            to="1"
+                            dur="0.8s"
+                            begin="1s"
+                            fill="freeze"
+                        />
+                        <animateTransform
+                            xlink:href="#output-coin"
+                            attributeName="transform"
+                            type="scale"
+                            from="0.5"
+                            to="1"
+                            dur="0.8s"
+                            begin="1s"
+                            fill="freeze"
+                        />
+                    </g>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Lesson 5: BUILD UNSHAKABLE MOMENTUM -->
+        <section class="mb-20 text-center">
+            <h2 class="text-4xl md:text-5xl font-black text-orange-gradient mb-8">BUILD UNSHAKABLE MOMENTUM</h2>
+            <p class="max-w-3xl mx-auto text-slate-400 mb-12 text-lg">
+                Rohit confessed to inconsistent application of strategies, leading to stop-start progress rather than continuous growth. Toby emphasized that "daily intentional action" and "small consistent wins" are crucial for building wealth, highlighting how incremental efforts compound over time to create an "unshakable engine" of financial freedom, urging him to commit to sustained engagement.
+            </p>
+            <div class="flex justify-center items-center">
+                <svg class="w-full max-w-xl h-64 md:h-80" viewBox="0 0 600 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="fire-grad-momentum" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#C84A00" />
+                            <stop offset="50%" stop-color="#FF6A00" />
+                            <stop offset="100%" stop-color="#FFC14D" />
+                        </linearGradient>
+                        <linearGradient id="gold-grad-momentum" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#6A4B0F" />
+                            <stop offset="50%" stop-color="#A9711A" />
+                            <stop offset="100%" stop-color="#F2C14E" />
+                        </linearGradient>
+                        <filter id="momentum-glow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+                            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 15 -5" result="glow" />
+                            <feMerge>
+                                <feMergeNode in="glow" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                        <marker id="arrowhead-small" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#6A4B0F" />
+                        </marker>
+                         <marker id="arrowhead-small-rev" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#C84A00" />
+                        </marker>
+                    </defs>
+
+                    <!-- Gears -->
+                    <g transform="translate(150, 150)">
+                        <circle cx="0" cy="0" r="40" fill="#1A1A1A" stroke="url(#fire-grad-momentum)" stroke-width="2" filter="url(#momentum-glow)"/>
+                        <path d="M-20 -45 L20 -45 A40 40 0 0 1 45 20 L45 -20 A40 40 0 0 1 20 45 L-20 45 A40 40 0 0 1 -45 20 L-45 -20 A40 40 0 0 1 -20 -45 Z" fill="url(#fire-grad-momentum)" transform="rotate(0)">
+                             <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="4s" repeatCount="indefinite"/>
+                        </path>
+                        <circle cx="0" cy="0" r="15" fill="#0A0A0A" />
+                        <text x="0" y="5" fill="#fff" font-size="14" text-anchor="middle">ACTION</text>
+                    </g>
+
+                    <g transform="translate(300, 150)">
+                        <circle cx="0" cy="0" r="50" fill="#1A1A1A" stroke="url(#gold-grad-momentum)" stroke-width="3" filter="url(#momentum-glow)"/>
+                        <path d="M-25 -55 L25 -55 A50 50 0 0 1 55 25 L55 -25 A50 50 0 0 1 25 55 L-25 55 A50 50 0 0 1 -55 25 L-55 -25 A50 50 0 0 1 -25 -55 Z" fill="url(#gold-grad-momentum)" transform="rotate(0)">
+                             <animateTransform attributeName="transform" type="rotate" from="360 0 0" to="0 0 0" dur="5s" repeatCount="indefinite"/>
+                        </path>
+                        <circle cx="0" cy="0" r="20" fill="#0A0A0A" />
+                        <text x="0" y="5" fill="#fff" font-size="16" text-anchor="middle">GROWTH</text>
+                    </g>
+
+                    <!-- Connecting Gear Teeth (animated) -->
+                    <path d="M200 150 L250 150" stroke="#333" stroke-width="5" marker-end="url(#arrowhead-small)" marker-start="url(#arrowhead-small-rev)">
+                        <animate attributeName="stroke-dashoffset" from="0" to="-10" dur="0.5s" repeatCount="indefinite" />
+                    </path>
+
+                    <!-- Growing Wealth Bar -->
+                    <rect x="420" y="200" width="100" height="0" rx="5" fill="url(#gold-grad-momentum)" stroke="#FFD700" stroke-width="2" filter="url(#momentum-glow)">
+                        <animate attributeName="height" from="0" to="100" dur="3s" begin="1s" fill="freeze"/>
+                        <animate attributeName="y" from="200" to="100" dur="3s" begin="1s" fill="freeze"/>
+                    </rect>
+                    <text x="470" y="160" fill="#1A1A1A" font-size="20" font-weight="bold" text-anchor="middle">WEALTH</text>
+                    <text x="470" y="180" fill="#fff" font-size="12" text-anchor="middle" opacity="0">
+                        <animate attributeName="opacity" from="0" to="1" dur="1s" begin="3.5s" fill="freeze"/>
+                        COMPOUNDING
+                    </text>
+                </svg>
+            </div>
+        </section>
+
+    </main>
+    <section id="mastery-path" class="bg-rich-black border-t border-gray-800 py-20">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center items-center mb-8">
+                <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68a5e9c8f0f9c3c40f2fceb7.png" alt="Toby Potter" class="w-24 h-24 rounded-full object-cover border-4 border-gray-800">
+            </div>
+            <h2 class="text-5xl md:text-6xl font-black mb-2">REMOVE THE NOISE. CAPTURE YOUR FUTURE.</h2>
+            <p class="text-lg md:text-xl mb-12 text-gold-gradient font-semibold">FOUR TIERS OF COMMITMENT. ONE DECISION THAT CHANGES TOMORROW.</p>
+            <div class="panel-container rounded-2xl shadow-2xl overflow-hidden border border-gray-800">
+                <div class="panel past-panel">
+                    <h2 class="text-3xl font-bold uppercase text-slate-500 tracking-widest">The Past</h2>
+                    <p class="text-gray-500 mt-2">A cycle of stagnation.</p>
+                    <div class="space-y-8 mt-12 w-full max-w-sm">
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-gray-600"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></div><div><h3 class="font-bold text-xl text-slate-400">Watching Opportunities Pass</h3><p class="text-gray-500">Believing the market is "dead" and staying on the sidelines.</p></div></div>
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-gray-600"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><h3 class="font-bold text-xl text-slate-400">Living in Pity</h3><p class="text-gray-500">Blaming the world instead of taking ownership of your situation.</p></div></div>
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-gray-600"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg></div><div><h3 class="font-bold text-xl text-slate-400">Paralyzed by Fear</h3><p class="text-gray-500">Doing nothing to avoid risk, which guarantees zero progress.</p></div></div>
+                    </div>
+                </div>
+                <div class="catalyst-bar">
+                    <div class="text-center p-2"><div class="w-16 h-16 bg-rich-black border-2 border-gold-gradient rounded-full flex items-center justify-center text-4xl shadow-lg text-gold-gradient"><svg class="w-8 h-8" fill="none" stroke="url(#gold-gradient-fill)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div><p class="text-xs font-bold mt-2 uppercase">Action</p></div>
+                </div>
+                <div class="panel future-panel">
+                    <h2 class="text-3xl font-bold uppercase text-orange-gradient tracking-widest">The Future</h2>
+                    <p class="text-slate-300 mt-2">A future ignited by change.</p>
+                    <div class="space-y-8 mt-12 w-full max-w-sm">
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-orange-gradient"><svg class="w-12 h-12" fill="none" stroke="url(#orange-gradient-fill)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div><div><h3 class="font-bold text-xl text-orange-400">Creating Opportunities</h3><p class="text-slate-300">Finding the profitable deals that others miss.</p></div></div>
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-orange-gradient"><svg class="w-12 h-12" fill="none" stroke="url(#orange-gradient-fill)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg></div><div><h3 class="font-bold text-xl text-orange-400">Building an Empire</h3><p class="text-slate-300">Taking control and architecting a legacy of success.</p></div></div>
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-orange-gradient"><svg class="w-12 h-12" fill="none" stroke="url(#orange-gradient-fill)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg></div><div><h3 class="font-bold text-xl text-orange-400">Achieving Financial Freedom</h3><p class="text-slate-300">Making daily progress towards the life you desire.</p></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto text-left mt-16">
+                <div class="concept-card p-8 rounded-lg border border-gray-800"><div class="flex-grow"><h3 class="text-2xl font-black text-orange-gradient">IGNITE</h3><p class="font-semibold text-slate-400 mb-2">FOCUS: PERSONAL GROWTH & MINDSET</p><p class="text-4xl font-black mb-6">$99 <span class="text-lg font-semibold text-slate-400">/ MONTH</span></p><ul class="space-y-3"><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> 28-Day Personal Growth Journey</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Weekly Mindset Coaching Call</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Private Community Access</li></ul></div><div class="mt-8 text-center"><a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block w-full">SELECT IGNITE</a></div></div>
+                <div class="concept-card p-8 rounded-lg border border-gray-800"><div class="flex-grow"><h3 class="text-2xl font-black text-orange-gradient">FORGE</h3><p class="font-semibold text-slate-400 mb-2">FOCUS: ENTRY TO REAL ESTATE MENTORSHIP</p><p class="text-4xl font-black mb-6">$2,500 <span class="text-lg font-semibold text-slate-400">/ QUARTER</span></p><ul class="space-y-3"><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Everything in Ignite, plus:</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Weekly Real Estate Strategy Calls</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Access to AI Deal Support Tools</li></ul></div><div class="mt-8 text-center"><a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block w-full">SELECT FORGE</a></div></div>
+                <div class="concept-card p-8 rounded-lg border border-gray-800"><div class="flex-grow"><h3 class="text-2xl font-black text-gold-gradient">ASCEND</h3><p class="font-semibold text-slate-400 mb-2">FOCUS: SCALING DEALS & FUNDING ACCESS</p><p class="text-4xl font-black mb-6">$10,000 <span class="text-lg font-semibold text-slate-400">/ QUARTER</span></p><ul class="space-y-3"><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Everything in Forge, plus:</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Direct Funding Resources for Deals</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Six 1-on-1 Private Coaching Sessions</li></ul></div><div class="mt-8 text-center"><a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block w-full">SELECT ASCEND</a></div></div>
+                <div class="concept-card p-8 rounded-lg border-2 border-yellow-500"><div class="flex-grow"><h3 class="text-2xl font-black text-gold-gradient">LEGACY</h3><p class="font-semibold text-slate-400 mb-2">FOCUS: ELITE ACCESS & MAXIMUM SUPPORT</p><p class="text-4xl font-black mb-6">$30,000 <span class="text-lg font-semibold text-slate-400">/ YEAR</span></p><ul class="space-y-3"><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Everything in Ascend, plus:</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Exclusive Elite Community</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Toby's Direct Text Access</li></ul></div><div class="mt-8 text-center"><a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block w-full">SELECT LEGACY</a></div></div>
+            </div>
+            <div class="mt-20">
+                <h2 class="text-3xl font-black">IF NOTHING CHANGES, NOTHING CHANGES.</h2>
+                <p class="max-w-xl mx-auto text-slate-400 my-4">The choice you make today decides your next six months. Schedule a no-obligation strategy call and take control of your future now.</p>
+                <a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block">MAKE YOUR MOVE</a>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-rich-black text-center py-12 px-4 border-t border-gray-800">
+        <p class="mt-8 text-sm text-slate-600">&copy; 2025 THE UNSHAKABLE INVESTOR. ALL RIGHTS RESERVED.</p>
+    </footer>
+    <script>
+        const slider = document.getElementById('slider');
+        if (slider) {
+            const handle = document.getElementById('slider-handle');
+            const beforeImage = document.querySelector('.before-image');
+            let isDragging = false;
+            const startDrag = (e) => { isDragging = true; };
+            const stopDrag = () => { isDragging = false; };
+            const onDrag = (e) => {
+                if (!isDragging) return;
+                if (e.type === 'touchmove') { e.preventDefault(); }
+                let clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+                if (clientX === undefined) return;
+                const rect = slider.getBoundingClientRect();
+                let offsetX = clientX - rect.left;
+                let newWidth = Math.max(0, Math.min(offsetX, rect.width));
+                let percentage = (newWidth / rect.width) * 100;
+                handle.style.left = percentage + '%';
+                beforeImage.style.width = percentage + '%';
+            };
+            handle.addEventListener('mousedown', startDrag);
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('mouseleave', stopDrag);
+            document.addEventListener('mousemove', onDrag);
+            handle.addEventListener('touchstart', startDrag, { passive: true });
+            document.addEventListener('touchend', stopDrag);
+            document.addEventListener('touchcancel', stopDrag);
+            document.addEventListener('touchmove', onDrag, { passive: false });
+        }
+    </script>
+</body>
+</html>
