@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coaching Call Summary | The Unshakable Investor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rich-black: #0A0A0A;
+            --charcoal: #121212;
+            --fire-orange-start: #C84A00;
+            --fire-orange-mid: #FF6A00;
+            --fire-orange-end: #FFC14D;
+            --iconic-gold-start: #6A4B0F;
+            --iconic-gold-mid: #A9711A;
+            --iconic-gold-end: #F2C14E;
+            --white: #FFFFFF;
+            --slate-400: #94a3b8;
+            --slate-500: #64748b;
+            --slate-600: #475569;
+        }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; background-color: var(--charcoal); color: var(--white); }
+        h1, h2, h3, h4, h5, h6 { text-transform: uppercase; letter-spacing: -0.025em; }
+        .concept-card { background-color: var(--rich-black); border: 1px solid #222; transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; }
+        .concept-card:hover { transform: translateY(-10px); box-shadow: 0 0 25px rgba(255, 106, 0, 0.2); }
+        .quote-bubble { position: relative; background: var(--rich-black); border-radius: .4em; padding: 1.5rem; border: 1px solid #333; }
+        .quote-bubble:after { content: ''; position: absolute; top: 0; left: 50%; width: 0; height: 0; border: 20px solid transparent; border-bottom-color: var(--rich-black); border-top: 0; border-left: 0; margin-left: -10px; margin-top: -20px; }
+        .slider-container { position: relative; width: 100%; max-width: 600px; margin: auto; overflow: hidden; border-radius: 0.5rem; }
+        .slider-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .before-image { position: absolute; top: 0; left: 50%; width: 50%; height: 100%; overflow: hidden; } /* Corrected initial state to 50% for handle position */
+        .slider-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: linear-gradient(45deg, var(--fire-orange-start), var(--fire-orange-mid)); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: ew-resize; box-shadow: 0 0 15px var(--fire-orange-mid); z-index: 10; }
+        .slider-handle svg { width: 24px; height: 24px; }
+        .cta-button { background: linear-gradient(45deg, var(--fire-orange-start), var(--fire-orange-mid)); color: var(--white); font-weight: 800; padding: 0.85rem 2.5rem; border-radius: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s ease; border: 2px solid transparent; box-shadow: 0 0 15px rgba(255, 106, 0, 0.3); }
+        .cta-button:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 106, 0, 0.5); }
+        .cta-button-outline { background: transparent; color: var(--fire-orange-mid); border: 2px solid var(--fire-orange-mid); font-weight: 800; padding: 0.85rem 2.5rem; border-radius: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.3s ease; }
+        .cta-button-outline:hover { background: var(--fire-orange-mid); color: var(--white); transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 106, 0, 0.5); }
+        .text-gold-gradient { background: -webkit-linear-gradient(45deg, var(--iconic-gold-start), var(--iconic-gold-end)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-orange-gradient { background: -webkit-linear-gradient(45deg, var(--fire-orange-end), var(--fire-orange-mid)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .pillar-infographic .pillar-group { transition: transform 0.3s ease; }
+        .pillar-infographic .pillar-group:hover { transform: translateY(-10px); cursor: pointer; }
+        .pillar-infographic .pillar-label { opacity: 0; transition: opacity 0.3s ease; }
+        .pillar-infographic .pillar-group:hover .pillar-label { opacity: 1; }
+        .path-of-growth-infographic #growth-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw-path 2s ease-out forwards; }
+        @keyframes draw-path { to { stroke-dashoffset: 0; } }
+        .deal-analyzer-infographic #verdict-stamp { opacity: 0; transform: scale(1.5) rotate(-15deg); transform-origin: center; animation: stamp-verdict 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: 0.5s; }
+        @keyframes stamp-verdict { to { opacity: 1; transform: scale(1) rotate(-10deg); } }
+        .wealth-engine-infographic .engine-arrow { animation: engine-flow 4s linear infinite; }
+        @keyframes engine-flow { from { motion-offset: 0%; } to { motion-offset: 100%; } }
+        .panel-container { display: grid; grid-template-columns: 1fr; min-height: 80vh; }
+        @media (min-width: 768px) { .panel-container { grid-template-columns: 1fr 120px 1fr; } }
+        .panel { padding: 2rem; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .past-panel { background-color: var(--rich-black); }
+        .future-panel { background: radial-gradient(circle at top, #222, var(--rich-black)); }
+        .catalyst-bar { background-color: var(--charcoal); display: flex; flex-direction: row; justify-content: space-around; align-items: center; padding: 1rem 0; }
+        @media (min-width: 768px) { .catalyst-bar { flex-direction: column; padding: 0 1rem; } }
+    </style>
+</head>
+<body class="bg-charcoal text-white">
+    <header class="bg-rich-black text-center py-16 px-4 border-b border-gray-800">
+        <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68a4cee88939e941976285be.png" alt="The Unshakable Investor Logo" class="w-24 h-24 mx-auto mb-6" onerror="this.onerror=null;this.src='https://placehold.co/96x96/0A0A0A/FFFFFF?text=Logo';">
+        <h1 class="text-4xl md:text-5xl font-black mb-2">ANTHONY HYDE WITH TOBY POTTER</h1>
+        <h2 class="text-2xl md:text-3xl font-bold text-slate-400 mb-4">MEMBERSHIP PROGRAM CONSULTATION</h2>
+        <p class="text-lg text-slate-500 mb-8">THE UNSHAKABLE INVESTOR // COACHING CALL SUMMARY</p>
+        <a href="https://memberships.theunshakableinvestor.com/main" class="cta-button-outline inline-block">START YOUR FUTURE TODAY</a>
+    </header>
+    <section class="bg-rich-black py-12 border-y border-gray-800">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-extrabold mb-4 text-orange-gradient">MEETING RECAP & FULL RECORDING</h2>
+            <p class="max-w-3xl mx-auto text-slate-400 mb-8">This coaching call outlines Anthony Hyde's journey as a seasoned real estate developer recovering from a traumatic brain injury, now seeking a lending partner for his multi-family and residential deals. Toby Potter, recognizing Anthony's 27 years of experience, offers a direct capital funding partnership through his lending company, bypassing the full coaching program to provide the "push" Anthony needs to re-enter active investing.</p>
+            <a href="https://app.fireflies.ai/view/01K48TTRH56F36RHH6WYC9P9KX" target="_blank" class="cta-button inline-block">ACCESS THE RECORDING</a>
+        </div>
+    </section>
+    <main class="container mx-auto px-4 py-12 md:py-20">
+        <!-- Lesson 1: UNDERSTANDING LENDER RISK AVERSION -->
+        <section class="mb-20">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-black text-orange-gradient mb-6 text-center">UNDERSTANDING LENDER RISK AVERSION</h2>
+                <p class="text-lg text-slate-400 mb-10 text-center max-w-2xl mx-auto">Anthony struggled to find lenders "who will allow a second mortgage" on his deals, a common challenge in the current market. Toby explained that for real estate investment properties, a second lien significantly weakens the file as investors are more likely to walk away if things go south, making it tougher for the first lien holder to recoup their funds.</p>
+                <div class="flex justify-center items-center h-80">
+                    <svg viewBox="0 0 400 200" class="w-full max-w-xl h-full" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="fireGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#C84A00" />
+                                <stop offset="50%" stop-color="#FF6A00" />
+                                <stop offset="100%" stop-color="#FFC14D" />
+                            </linearGradient>
+                            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#6A4B0F" />
+                                <stop offset="50%" stop-color="#A9711A" />
+                                <stop offset="100%" stop-color="#F2C14E" />
+                            </linearGradient>
+                            <filter id="glowEffect">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- Base of the "equity stack" - First Lien -->
+                        <rect x="100" y="140" width="200" height="40" fill="url(#goldGradient)" rx="5" ry="5" stroke="#333" stroke-width="2" filter="url(#glowEffect)">
+                            <title>First Lien - Secure Foundation</title>
+                        </rect>
+                        <text x="200" y="165" font-family="Inter" font-size="14" fill="white" text-anchor="middle" font-weight="bold">FIRST LIEN</text>
+
+                        <!-- The unstable second lien -->
+                        <g transform="translate(0,0)" id="secondLienGroup">
+                            <rect x="110" y="80" width="180" height="40" fill="url(#fireGradient)" rx="5" ry="5" stroke="#333" stroke-width="2" filter="url(#glowEffect)">
+                                <title>Second Lien - Added Risk</title>
+                                <animateTransform attributeName="transform" type="rotate" from="0 200 100" to="2 200 100" dur="2s" repeatCount="indefinite" additive="sum" direction="alternate"/>
+                                <animate attributeName="x" from="110" to="115" dur="2s" repeatCount="indefinite" additive="sum" direction="alternate"/>
+                                <animate attributeName="width" from="180" to="170" dur="2s" repeatCount="indefinite" additive="sum" direction="alternate"/>
+                            </rect>
+                            <text x="200" y="105" font-family="Inter" font-size="14" fill="white" text-anchor="middle" font-weight="bold">SECOND LIEN</text>
+                            <path d="M120 75 L125 70 M130 70 L135 75 M140 70 L145 75 M150 75 L155 70 M160 70 L165 75 M170 75 L175 70 M180 70 L185 75 M190 75 L195 70 M200 70 L205 75 M210 75 L215 70 M220 70 L225 75 M230 75 L235 70 M240 70 L245 75 M250 75 L255 70 M260 70 L265 75 M270 75 L275 70 M280 70 L285 75"
+                                stroke="white" stroke-width="1" opacity="0.5" stroke-linecap="round">
+                                <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" dur="2s" repeatCount="indefinite"/>
+                                <animateTransform attributeName="transform" type="translate" from="0 0" to="0 -5" dur="2s" repeatCount="indefinite" additive="sum" direction="alternate"/>
+                            </path>
+                        </g>
+                        <!-- Warning Icon & Text -->
+                        <g id="warningIcon" opacity="0">
+                            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="3s" repeatCount="indefinite" />
+                            <circle cx="200" cy="50" r="20" fill="red" opacity="0.8" />
+                            <text x="200" y="56" font-family="Inter" font-size="20" fill="white" text-anchor="middle" font-weight="bold">!</text>
+                            <text x="200" y="75" font-family="Inter" font-size="12" fill="white" text-anchor="middle" font-weight="bold">RISK</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lesson 2: MODERN INVESTING DEMANDS NEW STRATEGIES -->
+        <section class="mb-20">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-black text-gold-gradient mb-6 text-center">MODERN INVESTING DEMANDS NEW STRATEGIES</h2>
+                <p class="text-lg text-slate-400 mb-10 text-center max-w-2xl mx-auto">Toby emphasized that "everything's harder today than it was 5 years ago pre Covid and definitely harder than it was 10, 15 years ago." The days when HGTV made fix-and-flips seem "easy" are over, highlighting the need for sophisticated approaches and partnerships to navigate increased market complexities.</p>
+                <div id="slider" class="slider-container relative w-full h-96 rounded-lg overflow-hidden border-2 border-gray-700 shadow-xl">
+                    <img src="https://placehold.co/800x400/3A3A3A/FFFFFF?text=OUTDATED+STRATEGIES+%0A(PRE-COVID)" alt="Before: Dilapidated old house representing outdated strategies" class="slider-image absolute top-0 left-0 w-full h-full object-cover">
+                    <div class="before-image absolute top-0 left-1/2 h-full overflow-hidden">
+                        <img src="https://placehold.co/800x400/C84A00/FFFFFF?text=ADAPTED+STRATEGIES+%0A(TODAY)" alt="After: Modern renovated house representing new, effective strategies" class="slider-image absolute top-0 left-0 w-full h-full object-cover">
+                    </div>
+                    <div id="slider-handle" class="slider-handle">
+                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 5v14l11-7z" fill="white"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lesson 3: LEVERAGING DECADES OF REAL ESTATE MASTERY -->
+        <section class="mb-20">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-black text-orange-gradient mb-6 text-center">LEVERAGING DECADES OF REAL ESTATE MASTERY</h2>
+                <p class="text-lg text-slate-400 mb-10 text-center max-w-2xl mx-auto">Anthony, an "ex-athlete" and developer for "over 27 years," has hands-on experience across multiple real estate facets, including "fix and flips, through being a landlord, short term rentals." This deep, practical knowledge allows him to offer mentorship in partnerships, proving his value beyond just capital, even while recovering from a TBI.</p>
+                <div class="flex justify-center items-center h-96">
+                    <svg viewBox="0 0 500 400" class="w-full max-w-xl h-full" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="treeTrunkGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#6A4B0F" />
+                                <stop offset="100%" stop-color="#C84A00" />
+                            </linearGradient>
+                            <linearGradient id="branchGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#F2C14E" />
+                                <stop offset="100%" stop-color="#FF6A00" />
+                            </linearGradient>
+                            <filter id="treeGlow">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- Tree Trunk (27 years) -->
+                        <g id="trunkGroup" opacity="0">
+                            <animate attributeName="opacity" from="0" to="1" dur="1s" fill="freeze" />
+                            <rect x="230" y="150" width="40" height="200" fill="url(#treeTrunkGradient)" rx="5" filter="url(#treeGlow)">
+                                <title>27 Years of Experience</title>
+                            </rect>
+                            <text x="250" y="360" font-family="Inter" font-size="18" fill="white" text-anchor="middle" font-weight="bold">27 YEARS EXPERIENCE</text>
+                            <!-- Root System -->
+                            <path d="M230 350 Q200 380, 150 370 Q100 360, 100 320" fill="none" stroke="url(#treeTrunkGradient)" stroke-width="5" stroke-linecap="round" filter="url(#treeGlow)">
+                                <animate attributeName="stroke-dasharray" from="0 200" to="200 0" dur="1s" begin="0.5s" fill="freeze"/>
+                            </path>
+                            <path d="M270 350 Q300 380, 350 370 Q400 360, 400 320" fill="none" stroke="url(#treeTrunkGradient)" stroke-width="5" stroke-linecap="round" filter="url(#treeGlow)">
+                                <animate attributeName="stroke-dasharray" from="0 200" to="200 0" dur="1s" begin="0.7s" fill="freeze"/>
+                            </path>
+                            <text x="125" y="320" font-family="Inter" font-size="12" fill="var(--slate-400)" text-anchor="middle">DEEP ROOTS</text>
+                            <text x="375" y="320" font-family="Inter" font-size="12" fill="var(--slate-400)" text-anchor="middle">RESILIENCE</text>
+                        </g>
+
+                        <!-- Branches (skills) -->
+                        <g id="branchGroup" opacity="0">
+                             <animate attributeName="opacity" from="0" to="1" dur="1s" begin="1.5s" fill="freeze" />
+                            <path d="M270 180 Q350 150, 400 120" stroke="url(#branchGradient)" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#treeGlow)">
+                                <animate attributeName="stroke-dasharray" from="0 100" to="100 0" dur="1s" fill="freeze" begin="1.5s"/>
+                            </path>
+                            <text x="405" y="115" font-family="Inter" font-size="14" fill="var(--slate-400)" font-weight="bold">FIX & FLIPS</text>
+                            <path d="M230 180 Q150 150, 100 120" stroke="url(#branchGradient)" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#treeGlow)">
+                                <animate attributeName="stroke-dasharray" from="0 100" to="100 0" dur="1s" begin="1.7s" fill="freeze"/>
+                            </path>
+                            <text x="50" y="115" font-family="Inter" font-size="14" fill="var(--slate-400)" text-anchor="end" font-weight="bold">LANDLORD</text>
+
+                            <path d="M270 240 Q350 210, 400 180" stroke="url(#branchGradient)" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#treeGlow)">
+                                <animate attributeName="stroke-dasharray" from="0 100" to="100 0" dur="1s" begin="1.9s" fill="freeze"/>
+                            </path>
+                            <text x="405" y="175" font-family="Inter" font-size="14" fill="var(--slate-400)" font-weight="bold">SHORT-TERM RENTALS</text>
+                            <path d="M230 240 Q150 210, 100 180" stroke="url(#branchGradient)" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#treeGlow)">
+                                <animate attributeName="stroke-dasharray" from="0 100" to="100 0" dur="1s" begin="2.1s" fill="freeze"/>
+                            </path>
+                            <text x="50" y="175" font-family="Inter" font-size="14" fill="var(--slate-400)" text-anchor="end" font-weight="bold">BROKERING DEALS</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lesson 4: STRATEGIC LENDING FOR RESIDENTIAL & MULTI-FAMILY -->
+        <section class="mb-20">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-black text-gold-gradient mb-6 text-center">STRATEGIC LENDING FOR RESIDENTIAL & MULTI-FAMILY</h2>
+                <p class="text-lg text-slate-400 mb-10 text-center max-w-2xl mx-auto">Toby confirmed his company focuses solely on "residential, family, and multi-family all day long," including "new construction," specifically excluding office, strip, or retail centers. This specialized lending approach allows them to "come in and partner" with experienced developers like Anthony who need additional capital for suitable deals.</p>
+                <div class="flex justify-center items-center h-96">
+                    <svg viewBox="0 0 500 400" class="w-full max-w-xl h-full" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="gearGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#F2C14E" />
+                                <stop offset="100%" stop-color="#A9711A" />
+                            </linearGradient>
+                            <linearGradient id="gearOrangeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FFC14D" />
+                                <stop offset="100%" stop-color="#FF6A00" />
+                            </linearGradient>
+                            <filter id="gearGlow">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- Gear 1 (Expert Developer) -->
+                        <g transform="translate(150, 200)" filter="url(#gearGlow)">
+                            <path fill="url(#gearGoldGradient)" stroke="#333" stroke-width="2" d="M-60 0 A60 60 0 1 1 60 0 A60 60 0 1 1 -60 0 Z M60 0 L70 10 L70 -10 Z M-60 0 L-70 10 L-70 -10 Z M0 60 L10 70 L-10 70 Z M0 -60 L10 -70 L-10 -70 Z">
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="10s" repeatCount="indefinite" additive="sum"/>
+                            </path>
+                            <text x="0" y="5" font-family="Inter" font-size="20" fill="white" text-anchor="middle" font-weight="bold">ANTHONY</text>
+                            <text x="0" y="25" font-family="Inter" font-size="12" fill="var(--slate-400)" text-anchor="middle">EXPERT DEVELOPER</text>
+                        </g>
+
+                        <!-- Gear 2 (Strategic Capital) -->
+                        <g transform="translate(350, 200)" filter="url(#gearGlow)">
+                            <path fill="url(#gearOrangeGradient)" stroke="#333" stroke-width="2" d="M-60 0 A60 60 0 1 1 60 0 A60 60 0 1 1 -60 0 Z M60 0 L70 10 L70 -10 Z M-60 0 L-70 10 L-70 -10 Z M0 60 L10 70 L-10 70 Z M0 -60 L10 -70 L-10 -70 Z">
+                                 <animateTransform attributeName="transform" type="rotate" from="360 0 0" to="0 0 0" dur="10s" repeatCount="indefinite" additive="sum"/>
+                            </path>
+                            <text x="0" y="5" font-family="Inter" font-size="20" fill="white" text-anchor="middle" font-weight="bold">TOBY</text>
+                            <text x="0" y="25" font-family="Inter" font-size="12" fill="var(--slate-400)" text-anchor="middle">STRATEGIC CAPITAL</text>
+                        </g>
+
+                        <!-- Residential House Icon -->
+                        <g transform="translate(100, 50)" id="houseIcon" opacity="0">
+                            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="5s" repeatCount="indefinite" />
+                            <rect x="-20" y="-15" width="40" height="30" rx="3" fill="url(#gearGoldGradient)"/>
+                            <path d="M-20 -15 L0 -35 L20 -15 Z" fill="url(#gearGoldGradient)"/>
+                            <rect x="-10" y="0" width="20" height="10" fill="white"/>
+                            <text x="0" y="30" font-family="Inter" font-size="10" fill="var(--slate-400)" text-anchor="middle">RESIDENTIAL</text>
+                            <animateMotion path="M0 0 C 50 20, 100 -20, 150 0 C 200 20, 250 -20, 300 0" dur="10s" repeatCount="indefinite" rotate="auto"/>
+                        </g>
+                        <!-- Apartment Building Icon -->
+                        <g transform="translate(400, 50)" id="apartmentIcon" opacity="0">
+                            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="5s" repeatCount="indefinite" begin="2.5s" />
+                            <rect x="-20" y="-20" width="40" height="40" rx="3" fill="url(#gearOrangeGradient)"/>
+                            <rect x="-15" y="-15" width="10" height="10" fill="white"/>
+                            <rect x="5" y="-15" width="10" height="10" fill="white"/>
+                            <rect x="-15" y="5" width="10" height="10" fill="white"/>
+                            <rect x="5" y="5" width="10" height="10" fill="white"/>
+                            <text x="0" y="30" font-family="Inter" font-size="10" fill="var(--slate-400)" text-anchor="middle">MULTI-FAMILY</text>
+                             <animateMotion path="M0 0 C -50 20, -100 -20, -150 0 C -200 20, -250 -20, -300 0" dur="10s" repeatCount="indefinite" rotate="auto"/>
+                        </g>
+
+                        <!-- Darkened Commercial Icons (Not Focus) -->
+                        <g transform="translate(250, 350)" opacity="0.3">
+                            <rect x="-25" y="-15" width="50" height="30" rx="5" fill="#333"/>
+                            <text x="0" y="25" font-family="Inter" font-size="10" fill="#666" text-anchor="middle">OFFICE/RETAIL (NOT FOCUSED)</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lesson 5: CAPITAL PARTNERSHIP OVER COACHING FOR EXPERTS -->
+        <section class="mb-20">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-black text-orange-gradient mb-6 text-center">CAPITAL PARTNERSHIP OVER COACHING FOR EXPERTS</h2>
+                <p class="text-lg text-slate-400 mb-10 text-center max-w-2xl mx-auto">Toby explicitly stated, "I don't think you need our coaching mentoring program... I think you just need a funding partner." This acknowledges Anthony's extensive "knowledge" and "experience" with crews and teams, positioning the Unshakable Investor as a crucial capital provider to facilitate new deals for already proficient investors.</p>
+            <div class="flex justify-center items-center h-96">
+                <svg viewBox="0 0 600 300" class="w-full max-w-xl h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="pathGoldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#F2C14E" />
+                            <stop offset="100%" stop-color="#A9711A" />
+                        </linearGradient>
+                        <linearGradient id="pathFireGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#C84A00" />
+                            <stop offset="100%" stop-color="#FF6A00" />
+                        </linearGradient>
+                        <filter id="pathGlow">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <!-- Coaching Path (dimmed, winding) -->
+                    <path d="M50 250 C150 180, 250 220, 350 150" fill="none" stroke="#444" stroke-width="5" stroke-dasharray="10 5" filter="url(#pathGlow)">
+                        <title>Coaching Program Path</title>
+                    </path>
+                    <text x="200" y="200" font-family="Inter" font-size="14" fill="#666" text-anchor="middle">COACHING PROGRAM</text>
+                    <circle cx="350" cy="150" r="15" fill="#444">
+                        <title>Learning</title>
+                    </circle>
+                    <text x="350" y="155" font-family="Inter" font-size="10" fill="white" text-anchor="middle" font-weight="bold">📚</text>
+
+
+                    <!-- Funding Path (bright, direct) -->
+                    <path id="funding-path-svg" d="M50 250 L450 100" fill="none" stroke="url(#pathFireGradient)" stroke-width="8" stroke-linecap="round" filter="url(#pathGlow)">
+                        <animate attributeName="stroke-dasharray" from="0 500" to="500 0" dur="2s" fill="freeze"/>
+                    </path>
+                    <text x="250" y="170" font-family="Inter" font-size="18" fill="url(#pathFireGradient)" text-anchor="middle" font-weight="bold">FUNDING PARTNERSHIP</text>
+
+                    <!-- Anthony's figure -->
+                    <g transform="translate(50, 250)">
+                        <circle cx="0" cy="0" r="15" fill="url(#pathGoldGradient)" filter="url(#pathGlow)">
+                            <animateMotion path="M0 0 L400 -150" dur="2s" fill="freeze"/>
+                        </circle>
+                        <path d="M0 15 L0 30 M-10 20 L10 20" stroke="white" stroke-width="3" stroke-linecap="round" fill="none">
+                            <animateMotion path="M0 0 L400 -150" dur="2s" fill="freeze"/>
+                        </path>
+                        <text x="0" y="45" font-family="Inter" font-size="14" fill="var(--slate-400)" text-anchor="middle">ANTHONY</text>
+                    </g>
+
+
+                    <!-- Treasure Chest (Capital) -->
+                    <g transform="translate(450, 100)" opacity="0">
+                        <animate attributeName="opacity" from="0" to="1" dur="1s" begin="2s" fill="freeze"/>
+                        <rect x="-30" y="-20" width="60" height="40" rx="5" ry="5" fill="url(#pathGoldGradient)" stroke="#333" stroke-width="2" filter="url(#pathGlow)"/>
+                        <path d="M-30 -20 L-25 -30 L25 -30 L30 -20 Z" fill="url(#pathFireGradient)" stroke="#333" stroke-width="2"/>
+                        <line x1="0" y1="-30" x2="0" y2="-20" stroke="#FFF" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="0" cy="-25" r="5" fill="#FFF"/>
+                        <text x="0" y="5" font-family="Inter" font-size="10" fill="white" text-anchor="middle">CAPITAL</text>
+                    </g>
+                </svg>
+            </div>
+            </div>
+        </section>
+    </main>
+    <section id="mastery-path" class="bg-rich-black border-t border-gray-800 py-20">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex justify-center items-center mb-8">
+                <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68a5e9c8f0f9c3c40f2fceb7.png" alt="Toby Potter" class="w-24 h-24 rounded-full object-cover border-4 border-gray-800">
+            </div>
+            <h2 class="text-5xl md:text-6xl font-black mb-2">REMOVE THE NOISE. CAPTURE YOUR FUTURE.</h2>
+            <p class="text-lg md:text-xl mb-12 text-gold-gradient font-semibold">FOUR TIERS OF COMMITMENT. ONE DECISION THAT CHANGES TOMORROW.</p>
+            <div class="panel-container rounded-2xl shadow-2xl overflow-hidden border border-gray-800">
+                <div class="panel past-panel">
+                    <h2 class="text-3xl font-bold uppercase text-slate-500 tracking-widest">The Past</h2>
+                    <p class="text-gray-500 mt-2">A cycle of stagnation.</p>
+                    <div class="space-y-8 mt-12 w-full max-w-sm">
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-gray-600"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg></div><div><h3 class="font-bold text-xl text-slate-400">Watching Opportunities Pass</h3><p class="text-gray-500">Believing the market is "dead" and staying on the sidelines.</p></div></div>
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-gray-600"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><h3 class="font-bold text-xl text-slate-400">Living in Pity</h3><p class="text-gray-500">Blaming the world instead of taking ownership of your situation.</p></div></div>
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-gray-600"><svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg></div><div><h3 class="font-bold text-xl text-slate-400">Paralyzed by Fear</h3><p class="text-gray-500">Doing nothing to avoid risk, which guarantees zero progress.</p></div></div>
+                    </div>
+                </div>
+                <div class="catalyst-bar">
+                    <div class="text-center p-2"><div class="w-16 h-16 bg-rich-black border-2 border-gold-gradient rounded-full flex items-center justify-center text-4xl shadow-lg text-gold-gradient"><svg class="w-8 h-8" fill="none" stroke="url(#gold-gradient-fill)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div><p class="text-xs font-bold mt-2 uppercase">Action</p></div>
+                </div>
+                <div class="panel future-panel">
+                    <h2 class="text-3xl font-bold uppercase text-orange-gradient tracking-widest">The Future</h2>
+                    <p class="text-slate-300 mt-2">A future ignited by change.</p>
+                    <div class="space-y-8 mt-12 w-full max-w-sm">
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-orange-gradient"><svg class="w-12 h-12" fill="none" stroke="url(#orange-gradient-fill)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div><div><h3 class="font-bold text-xl text-orange-400">Creating Opportunities</h3><p class="text-slate-300">Finding the profitable deals that others miss.</p></div></div>
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-orange-gradient"><svg class="w-12 h-12" fill="none" stroke="url(#orange-gradient-fill)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg></div><div><h3 class="font-bold text-xl text-orange-400">Building an Empire</h3><p class="text-slate-300">Taking control and architecting a legacy of success.</p></div></div>
+                        <div class="flex items-center space-x-4"><div class="text-4xl text-orange-gradient"><svg class="w-12 h-12" fill="none" stroke="url(#orange-gradient-fill)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg></div><div><h3 class="font-bold text-xl text-orange-400">Achieving Financial Freedom</h3><p class="text-slate-300">Making daily progress towards the life you desire.</p></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto text-left mt-16">
+                <div class="concept-card p-8 rounded-lg border border-gray-800"><div class="flex-grow"><h3 class="text-2xl font-black text-orange-gradient">IGNITE</h3><p class="font-semibold text-slate-400 mb-2">FOCUS: PERSONAL GROWTH & MINDSET</p><p class="text-4xl font-black mb-6">$99 <span class="text-lg font-semibold text-slate-400">/ MONTH</span></p><ul class="space-y-3"><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> 28-Day Personal Growth Journey</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Weekly Mindset Coaching Call</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Private Community Access</li></ul></div><div class="mt-8 text-center"><a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block w-full">SELECT IGNITE</a></div></div>
+                <div class="concept-card p-8 rounded-lg border border-gray-800"><div class="flex-grow"><h3 class="text-2xl font-black text-orange-gradient">FORGE</h3><p class="font-semibold text-slate-400 mb-2">FOCUS: ENTRY TO REAL ESTATE MENTORSHIP</p><p class="text-4xl font-black mb-6">$2,500 <span class="text-lg font-semibold text-slate-400">/ QUARTER</span></p><ul class="space-y-3"><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Everything in Ignite, plus:</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Weekly Real Estate Strategy Calls</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Access to AI Deal Support Tools</li></ul></div><div class="mt-8 text-center"><a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block w-full">SELECT FORGE</a></div></div>
+                <div class="concept-card p-8 rounded-lg border border-gray-800"><div class="flex-grow"><h3 class="text-2xl font-black text-gold-gradient">ASCEND</h3><p class="font-semibold text-slate-400 mb-2">FOCUS: SCALING DEALS & FUNDING ACCESS</p><p class="text-4xl font-black mb-6">$10,000 <span class="text-lg font-semibold text-slate-400">/ QUARTER</span></p><ul class="space-y-3"><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Everything in Forge, plus:</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Direct Funding Resources for Deals</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Six 1-on-1 Private Coaching Sessions</li></ul></div><div class="mt-8 text-center"><a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block w-full">SELECT ASCEND</a></div></div>
+                <div class="concept-card p-8 rounded-lg border-2 border-yellow-500"><div class="flex-grow"><h3 class="text-2xl font-black text-gold-gradient">LEGACY</h3><p class="font-semibold text-slate-400 mb-2">FOCUS: ELITE ACCESS & MAXIMUM SUPPORT</p><p class="text-4xl font-black mb-6">$30,000 <span class="text-lg font-semibold text-slate-400">/ YEAR</span></p><ul class="space-y-3"><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Everything in Ascend, plus:</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Exclusive Elite Community</li><li class="flex items-center"><svg class="w-5 h-5 mr-3 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Toby's Direct Text Access</li></ul></div><div class="mt-8 text-center"><a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block w-full">SELECT LEGACY</a></div></div>
+            </div>
+            <div class="mt-20">
+                <h2 class="text-3xl font-black">IF NOTHING CHANGES, NOTHING CHANGES.</h2>
+                <p class="max-w-xl mx-auto text-slate-400 my-4">The choice you make today decides your next six months. Schedule a no-obligation strategy call and take control of your future now.</p>
+                <a href="https://memberships.theunshakableinvestor.com" target="_blank" class="cta-button inline-block">MAKE YOUR MOVE</a>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-rich-black text-center py-12 px-4 border-t border-gray-800">
+        <p class="mt-8 text-sm text-slate-600">&copy; 2025 THE UNSHAKABLE INVESTOR. ALL RIGHTS RESERVED.</p>
+    </footer>
+    <script>
+        const slider = document.getElementById('slider');
+        if (slider) {
+            const handle = document.getElementById('slider-handle');
+            const beforeImage = document.querySelector('.before-image');
+            let isDragging = false;
+            const startDrag = (e) => { isDragging = true; };
+            const stopDrag = () => { isDragging = false; };
+            const onDrag = (e) => {
+                if (!isDragging) return;
+                if (e.type === 'touchmove') { e.preventDefault(); }
+                let clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+                if (clientX === undefined) return;
+                const rect = slider.getBoundingClientRect();
+                let offsetX = clientX - rect.left;
+                let newWidth = Math.max(0, Math.min(offsetX, rect.width));
+                let percentage = (newWidth / rect.width) * 100;
+                handle.style.left = percentage + '%';
+                beforeImage.style.width = percentage + '%';
+            };
+            handle.addEventListener('mousedown', startDrag);
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('mouseleave', stopDrag);
+            document.addEventListener('mousemove', onDrag);
+            handle.addEventListener('touchstart', startDrag, { passive: true });
+            document.addEventListener('touchend', stopDrag);
+            document.addEventListener('touchcancel', stopDrag);
+            document.addEventListener('touchmove', onDrag, { passive: false });
+        }
+    </script>
+</body>
+</html>
