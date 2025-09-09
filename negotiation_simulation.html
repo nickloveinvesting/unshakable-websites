@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pressure Cooker: Fix-and-Flip Negotiation Simulation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Global Styles & Variables --- */
+        :root {
+            --primary-color: #1A237E; /* Deep Indigo */
+            --secondary-color: #FF6F00; /* Amber for Action */
+            --background-color: #ECEFF1;
+            --surface-color: #FFFFFF;
+            --text-color: #263238;
+            --text-secondary: #546E7A;
+            --success-color: #2E7D32;
+            --warning-color: #F9A825;
+            --danger-color: #C62828;
+            --font-stack: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- Layout & Container --- */
+        .simulation-container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            background-color: var(--surface-color);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            min-height: 85vh;
+        }
+
+        /* --- Sidebar (Status Dashboard) --- */
+        .sidebar {
+            width: 300px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-size: 1.4em;
+            font-weight: 700;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 20px;
+        }
+
+        .stat-block {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .timer-critical {
+            background-color: var(--danger-color);
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .phase-header {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--background-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .narrative {
+            line-height: 1.7;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+        }
+
+        /* --- Deal Memo / Cards --- */
+        .card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--background-color);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .memo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .memo-item strong {
+            display: block;
+            color: var(--text-color);
+        }
+        .memo-item span {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+
+        /* --- Choices & Actions --- */
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .action-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.1s;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .action-button:hover {
+            background-color: #E65100;
+            transform: translateY(-2px);
+        }
+
+        .action-button.secondary {
+            background-color: #78909C;
+        }
+        .action-button.secondary:hover {
+            background-color: #546E7A;
+        }
+
+         .action-button.danger {
+            background-color: var(--danger-color);
+        }
+        .action-button.danger:hover {
+            background-color: #B71C1C;
+        }
+
+        .action-button:disabled {
+            background-color: #B0BEC5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .time-cost {
+            font-size: 0.85em;
+            opacity: 0.8;
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* --- Feedback & Alerts --- */
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .feedback-success {
+            background-color: #E8F5E9;
+            border-left: 5px solid var(--success-color);
+            color: var(--success-color);
+        }
+        .feedback-warning {
+            background-color: #FFFDE7;
+            border-left: 5px solid var(--warning-color);
+            color: #C67C00;
+        }
+         .feedback-danger {
+            background-color: #FFEBEE;
+            border-left: 5px solid var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        /* --- Inputs --- */
+        input[type="number"] {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100px;
+            margin-right: 15px;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 900px) {
+            .simulation-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+            .main-content {
+                padding: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="simulation-container">
+        <div class="sidebar" id="sidebar">
+            <div class="logo">Pressure Cooker Sim</div>
+
+            <div class="stat-block" id="timerBlock">
+                <div class="stat-label">Time Remaining (Hours)</div>
+                <div class="stat-value" id="stat_time_left">72.0</div>
+            </div>
+
+            <div class="stat-block">
+                <div class="stat-label">Deal Status</div>
+                <div class="stat-value" id="stat_deal_status">Active</div>
+            </div>
+
+            <div class="stat-block">
+                <div class="stat-label">Credibility Score (0-100)</div>
+                <div class="stat-value" id="stat_credibility">50</div>
+            </div>
+
+            <div class="stat-block">
+                <div class="stat-label">Agent Rapport (0-100)</div>
+                <div class="stat-value" id="stat_agent_rapport">40</div>
+            </div>
+
+             <div class="stat-block">
+                <div class="stat-label">MAO (Max Allowable Offer)</div>
+                <div class="stat-value" id="stat_mao">$225,000</div>
+            </div>
+
+            <div class="stat-block">
+                <div class="stat-label">Erosion (Loss)</div>
+                <div class="stat-value" id="stat_erosion">$0</div>
+            </div>
+        </div>
+        <div class="main-content" id="mainContent">
+            </div>
+    </div>
+
+    <script>
+        // === Game Definitions ===
+
+        const SELLER_PROFILES = {
+            HEIR: { id: "HEIR", name: "Out-of-state heir", description: "Prioritizes speed and certainty. Hates repairs." },
+            LANDLORD: { id: "LANDLORD", name: "Retired landlord", description: "Prioritizes walk-away number and tax timing." },
+            PRIDEFUL: { id: "PRIDEFUL", name: "Prideful owner", description: "Emotional. Wants a respectful buyer." }
+        };
+
+        const HIDDEN_PROBLEMS = [
+            { id: "SEWER", name: "Sewer collapse under slab", weight: 35, baseCost: 18000 },
+            { id: "APPRAISAL", name: "Appraisal shortfall", weight: 25 },
+            { id: "TITLE", name: "Title/probate delay", weight: 15 },
+            { id: "UNPERMITTED", name: "Unpermitted addition", weight: 15, baseCost: 9000 }, // Avg 6k-12k
+            { id: "ROOF_LEAK", name: "Roof leak surge", weight: 10, baseCost: 4300 }, // 800 tarp + 3.5k mold
+        ];
+
+        // === Game State Initialization ===
+        let gameState = {};
+
+        function initializeGame() {
+            // Draw Seller Profile Randomly
+            const profiles = Object.values(SELLER_PROFILES);
+            const sellerProfile = profiles[Math.floor(Math.random() * profiles.length)];
+
+            gameState = {
+                // Core Variables
+                time_left_hours: 72.0,
+                credibility: 50,
+                agent_rapport: 40,
+                seller_profile: sellerProfile,
+                competition_level: "Medium-High", // Default from spec memo
+                MAO: 225000,
+                contingency_pct: 10, // Default
+                comp_risk: 30,
+                deal_status: "Active",
+                erosion_amount: 0,
+                arv_reduction: 0, // For scope reduction scenarios
+
+                // Player Choices & Status
+                diligence_ready: { plumber: false, roofer: false, inspector: false },
+                intel_gathered: {},
+                intel_actions_left: 3,
+                offer_package: null,
+                offer_price: 0,
+                ghosting_flag: false,
+                hidden_problem: null,
+                final_purchase_price: 0,
+                appraisal_gap_clause: false, // Track if appraisal gap was offered
+
+                // Tracking for Postmortem
+                timeline: [],
+                lessons: []
+            };
+
+            // Adjust competition based on profile if needed (Heir profile boosts competition)
+            if (sellerProfile.id === 'HEIR') {
+                gameState.competition_level = "High";
+            }
+
+            addTimelineEvent("Simulation Started. 72-hour clock ticking.");
+            // Start the simulation flow
+            phase0_Setup();
+        }
+
+        // === Utility Functions ===
+
+        function formatCurrency(amount) {
+            const numAmount = Number(amount);
+            if (isNaN(numAmount)) return "$0";
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(numAmount);
+        }
+
+        // Weighted random selection for hidden problems
+        function drawHiddenProblem() {
+            const totalWeight = HIDDEN_PROBLEMS.reduce((sum, p) => sum + p.weight, 0);
+            let random = Math.random() * totalWeight;
+            for (const problem of HIDDEN_PROBLEMS) {
+                if (random < problem.weight) {
+                    return problem;
+                }
+                random -= problem.weight;
+            }
+            return HIDDEN_PROBLEMS[HIDDEN_PROBLEMS.length - 1]; // Fallback
+        }
+
+        // Simple probability roll (e.g., 60 returns true 60% of the time)
+        function roll(percentage) {
+            return Math.random() * 100 < percentage;
+        }
+
+        function addTimelineEvent(description) {
+            gameState.timeline.push(`Hour ${ (72.0 - gameState.time_left_hours).toFixed(1) }: ${description}`);
+        }
+
+        function addLesson(lesson) {
+            if (!gameState.lessons.includes(lesson)) {
+                gameState.lessons.push(lesson);
+            }
+        }
+
+        // Update the sidebar visualization
+        function updateStatusBar() {
+            document.getElementById('stat_time_left').textContent = gameState.time_left_hours.toFixed(1);
+            document.getElementById('stat_deal_status').textContent = gameState.deal_status;
+            document.getElementById('stat_credibility').textContent = gameState.credibility;
+            document.getElementById('stat_agent_rapport').textContent = gameState.agent_rapport;
+            document.getElementById('stat_mao').textContent = formatCurrency(gameState.MAO);
+            document.getElementById('stat_erosion').textContent = formatCurrency(gameState.erosion_amount);
+
+            const timerBlock = document.getElementById('timerBlock');
+            if (gameState.time_left_hours < 12) {
+                timerBlock.classList.add('timer-critical');
+            } else {
+                timerBlock.classList.remove('timer-critical');
+            }
+        }
+
+        // Main rendering engine
+        function render(title, narrative, choicesHtml, feedbackHtml = "") {
+            const content = `
+                <h1 class="phase-header">${title}</h1>
+                ${feedbackHtml}
+                <div class="narrative">${narrative}</div>
+                <div class="choices">${choicesHtml}</div>
+            `;
+            document.getElementById('mainContent').innerHTML = content;
+            updateStatusBar();
+            document.getElementById('mainContent').scrollTop = 0; // Scroll to top
+        }
+
+        // Handles time passage and checks for game over conditions
+        function advanceTime(hours) {
+            gameState.time_left_hours -= hours;
+            if (gameState.time_left_hours <= 0) {
+                gameState.time_left_hours = 0;
+                if (gameState.deal_status !== "Closed" && gameState.deal_status !== "Lost" && gameState.deal_status !== "Canceled") {
+                    gameOver("Time Expired");
+                }
+                return true; // Game Over signal
+            }
+            return false;
+        }
+
+        // Clamps scores between 0 and 100
+        function updateScore(type, amount) {
+            if (type === 'credibility') {
+                gameState.credibility = Math.max(0, Math.min(100, gameState.credibility + amount));
+            } else if (type === 'rapport') {
+                gameState.agent_rapport = Math.max(0, Math.min(100, gameState.agent_rapport + amount));
+            }
+        }
+
+        function updateErosion(amount) {
+            gameState.erosion_amount += amount;
+        }
+
+        // === Game Flow Functions (Phases) ===
+
+        // --- PHASE 0: Setup and Tutorial ---
+        function phase0_Setup() {
+            const title = "Phase 0: Deal Intake and Setup";
+            const narrative = `
+                <p>Your acquisition manager just sent over a new deal memo. The clock starts now. You have 72 hours to get this property under contract.</p>
+                <div class="card">
+                    <h3>Deal Memo: 123 Main Street</h3>
+                    <p><strong>Competition Level:</strong> ${gameState.competition_level}</p>
+                    <div class="memo-grid">
+                        <div class="memo-item"><strong>List Price</strong> <span>$250,000</span></div>
+                        <div class="memo-item"><strong>Est. ARV</strong> <span>$360,000</span></div>
+                        <div class="memo-item"><strong>Target Profit</strong> <span>$30,000</span></div>
+                    </div>
+                    <hr>
+                    <p><strong>Known Repairs:</strong> $20,000 (Roof $12k, HVAC $8k)</p>
+                    <p><strong>Cosmetic Rehab Budget:</strong> $50,000</p>
+                    <p><strong>Estimated Soft Costs (Closing, Holding, Selling):</strong> $35,000</p>
+                    <hr>
+                    <p><strong>Calculated MAO (Max Allowable Offer):</strong> $225,000</p>
+                </div>
+                <p>Before proceeding, you must set your project contingency percentage (5-15%). This buffer covers unexpected issues during rehab.</p>
+            `;
+            const choices = `
+                <label for="contingencyInput">Set Contingency Percentage (Recommended: 10%):</label>
+                <input type="number" id="contingencyInput" min="5" max="15" value="10">
+                <button class="action-button" onclick="setContingency()">Confirm Contingency and Start Intel</button>
+            `;
+            render(title, narrative, choices);
+        }
+
+        function setContingency() {
+            const input = document.getElementById('contingencyInput');
+            const value = parseInt(input.value);
+
+            if (value >= 5 && value <= 15) {
+                gameState.contingency_pct = value;
+                addTimelineEvent(`Contingency set to ${value}%.`);
+
+                let feedback = "";
+                if (value < 10) {
+                    feedback = `<div class="feedback feedback-warning">Warning: Contingency below 10% increases risk later.</div>`;
+                    addLesson("Running a tight contingency (<10%) leaves little room for error when problems arise.");
+                } else if (value >= 12) {
+                    feedback = `<div class="feedback feedback-success">Note: High contingency (≥12%) provides safety but may make sellers perceive your offer as weaker (-5 weight on price acceptance).</div>`;
+                }
+
+                phase1_IntelGathering(feedback);
+            } else {
+                alert("Please enter a value between 5 and 15.");
+            }
+        }
+
+        // --- PHASE 1: Intel Gathering ---
+        function phase1_IntelGathering(feedback = "") {
+            if (gameState.intel_actions_left === 0) {
+                phase2_OfferConstruction(feedback);
+                return;
+            }
+
+            const title = "Phase 1: Intel Gathering";
+            const narrative = `
+                <p>You need to understand the seller's motivation and the property's reality before making an offer. You have time for <strong>${gameState.intel_actions_left}</strong> more strategic interactions with the listing agent.</p>
+                <p>Choose wisely. Each action takes time (0.5h) and impacts your relationship with the agent.</p>
+            `;
+
+            const choices = `
+                <button class="action-button secondary" onclick="executeIntel('TIMELINE')" ${gameState.intel_gathered.TIMELINE ? 'disabled' : ''}>
+                    Ask about Timeline: "What is the seller's ideal close date?"
+                    <span class="time-cost">Time Cost: 0.5h</span>
+                </button>
+                <button class="action-button secondary" onclick="executeIntel('NET_NUMBER')" ${gameState.intel_gathered.NET_NUMBER ? 'disabled' : ''}>
+                    Ask about Net Number: "What does the seller need to net from this sale?"
+                    <span class="time-cost">Time Cost: 0.5h</span>
+                </button>
+                <button class="action-button secondary" onclick="executeIntel('CONDITION')" ${gameState.intel_gathered.CONDITION ? 'disabled' : ''}>
+                    Condition Reality Check: "Any known issues with leaks, sewer, or foundation?"
+                    <span class="time-cost">Time Cost: 0.5h</span>
+                </button>
+                <button class="action-button secondary" onclick="executeIntel('WHY_PRICE')" ${gameState.intel_gathered.WHY_PRICE ? 'disabled' : ''}>
+                    Pricing Rationale: "Why not list higher if comps support it?"
+                    <span class="time-cost">Time Cost: 0.5h</span>
+                </button>
+                <button class="action-button secondary" onclick="executeIntel('ACCESS')" ${gameState.intel_gathered.ACCESS ? 'disabled' : ''}>
+                    Access Constraints: "Are there specific times we can access the property for diligence?"
+                    <span class="time-cost">Time Cost: 0.5h</span>
+                </button>
+                <button class="action-button secondary" onclick="executeIntel('COMPETITION')" ${gameState.intel_gathered.COMPETITION ? 'disabled' : ''}>
+                    Broker Pressure Read: "How many showings and offers do you have now?"
+                    <span class="time-cost">Time Cost: 0.5h</span>
+                </button>
+                <button class="action-button danger" onclick="executeIntel('LEAD_WITH_PRICE')">
+                    BAD IDEA: Lead with Price (Skip Intel, mention low price immediately)
+                    <span class="time-cost">Time Cost: 0.5h</span>
+                </button>
+            `;
+
+            render(title, narrative, choices, feedback);
+        }
+
+        function executeIntel(action) {
+            if (advanceTime(0.5)) return;
+            
+            if (action !== 'LEAD_WITH_PRICE') {
+                gameState.intel_actions_left -= 1;
+            }
+            gameState.intel_gathered[action] = true;
+
+            let feedback = "";
+            addTimelineEvent(`Intel Action: ${action}`);
+
+            switch(action) {
+                case 'TIMELINE':
+                    // If seller needs speed (Heir), reveal and +10 rapport.
+                    if (gameState.seller_profile.id === 'HEIR') {
+                        updateScore('rapport', 10);
+                        feedback = `<div class="feedback feedback-success">The agent reveals the seller needs to close quickly. Speed is key! (+10 Rapport)</div>`;
+                    } else {
+                        feedback = `<div class="feedback feedback-warning">The agent says the seller is flexible on timing.</div>`;
+                    }
+                    break;
+
+                case 'NET_NUMBER':
+                    // Reveals tax/number focus (Landlord). +5 credibility if you repeat back math.
+                    if (gameState.seller_profile.id === 'LANDLORD') {
+                        updateScore('credibility', 5);
+                        feedback = `<div class="feedback feedback-success">The seller is focused on their net proceeds due to tax implications. You repeat the math back accurately. (+5 Credibility)</div>`;
+                    } else {
+                        feedback = `<div class="feedback feedback-warning">The agent deflects, saying they just want a fair price.</div>`;
+                    }
+                    break;
+
+                case 'CONDITION':
+                    // If ‘yes’ (simulated here) and you log it, later renegotiation +10% success.
+                    feedback = `<div class="feedback feedback-success">The agent mentions some deferred maintenance. You log this for later reference. (Future renegotiation boost applied)</div>`;
+                    break;
+
+                case 'WHY_PRICE':
+                     // Reveals motivation. +5 rapport if handled respectfully. −10 if player challenges prideful owner.
+                    if (gameState.seller_profile.id === 'PRIDEFUL') {
+                        updateScore('rapport', -10);
+                        feedback = `<div class="feedback feedback-danger">The agent seems offended by the question, feeling you challenged the owner's pricing. (-10 Rapport)</div>`;
+                        addLesson("Challenging a prideful owner on price before establishing rapport damages the relationship.");
+                    } else {
+                        updateScore('rapport', 5);
+                        feedback = `<div class="feedback feedback-success">The agent appreciates the respectful approach and explains the price reflects the desire for a smooth transaction. (+5 Rapport)</div>`;
+                    }
+                    break;
+
+                case 'ACCESS':
+                    // Unlocks same-day inspections path. +time efficiency.
+                    feedback = `<div class="feedback feedback-success">The property is vacant with a lockbox. You now have the ability to prebook inspections.</div>`;
+                    break;
+
+                case 'COMPETITION':
+                    // Sets competition_level.
+                    if (gameState.competition_level === "High") {
+                        feedback = `<div class="feedback feedback-warning">The agent says, "My phone is blowing up. We expect multiple offers by tomorrow." (Competition confirmed High)</div>`;
+                    } else {
+                        feedback = `<div class="feedback feedback-success">The agent says, "Interest has been steady but no offers yet."</div>`;
+                    }
+                    break;
+                case 'LEAD_WITH_PRICE':
+                    // −10 rapport, −10 credibility, +ghosting odds
+                    updateScore('rapport', -10);
+                    updateScore('credibility', -10);
+                    gameState.ghosting_flag = true;
+                    gameState.intel_actions_left = 0; // Ends the phase
+                    feedback = `<div class="feedback feedback-danger">You immediately mention a price significantly lower than asking. The agent is cold and dismissive. (-10 Rapport, -10 Credibility. Ghosting risk increased.)</div>`;
+                    addLesson("Leading with a low price before gathering intel destroys credibility and rapport.");
+                    break;
+            }
+
+            phase1_IntelGathering(feedback);
+        }
+
+        // --- PHASE 2: Offer Construction ---
+        function phase2_OfferConstruction(feedback = "") {
+            const title = "Phase 2: Offer Construction";
+            const narrative = `
+                <p>It's time to structure your offer. Based on your intel and the market conditions, choose the package that balances speed, price, and risk.</p>
+                <p>Your MAO is ${formatCurrency(gameState.MAO)}. Competition is currently ${gameState.competition_level}.</p>
+            `;
+
+            const choices = `
+                <div class="card">
+                <h3>Select Offer Package</h3>
+                <button class="action-button" onclick="selectOffer('A')">
+                    A) Professional Package: $225k (MAO). 14-day close, 7-day inspection, $5k EMD. As-is. Detailed math attached.
+                    <span class="time-cost">Time Cost: 2.0h</span>
+                </button>
+                <button class="action-button" onclick="selectOffer('B')">
+                    B) Speed Package: $228k (Above MAO). 10-day close, 3-day inspection, $10k EMD. No financing contingency. Proof of funds attached.
+                    <span class="time-cost">Time Cost: 1.0h</span>
+                </button>
+                <button class="action-button" onclick="selectOffer('C')">
+                    C) Multi-offer Menu: Options ranging from $215k cash to $235k seller finance/credit.
+                    <span class="time-cost">Time Cost: 1.5h</span>
+                </button>
+                <button class="action-button secondary" onclick="selectOffer('D')">
+                    D) Lowball Probe: $195k. Standard contingencies. (High Risk)
+                    <span class="time-cost">Time Cost: 0.5h</span>
+                </button>
+                </div>
+                <hr>
+                ${gameState.intel_gathered.ACCESS ? `
+                    <div class="card">
+                    <h3>Prebook Diligence (Optional - Costs 0.5h setup each)</h3>
+                    <button class="action-button secondary" onclick="toggleDiligence('plumber')" id="btn_plumber">
+                        ${gameState.diligence_ready.plumber ? '✅' : '⬜'} Plumber Scope (Reduces sewer event cost/time)
+                    </button>
+                    <button class="action-button secondary" onclick="toggleDiligence('roofer')" id="btn_roofer">
+                        ${gameState.diligence_ready.roofer ? '✅' : '⬜'} Roofer Walk (Improves roof event credit odds)
+                    </button>
+                    <button class="action-button secondary" onclick="toggleDiligence('inspector')" id="btn_inspector">
+                        ${gameState.diligence_ready.inspector ? '✅' : '⬜'} General Inspector Priority (Reveals problems faster)
+                    </button>
+                    </div>
+                ` : `
+                <p><em>(You did not confirm access constraints during intel gathering, so pre-booking diligence is unavailable.)</em></p>
+                `}
+            `;
+
+            render(title, narrative, choices, feedback);
+        }
+
+        function toggleDiligence(type) {
+            if (gameState.diligence_ready[type]) return; // Already booked
+
+            if (advanceTime(0.5)) return;
+            gameState.diligence_ready[type] = true;
+            addTimelineEvent(`Prebooked ${type}.`);
+            // Re-render to update buttons
+            phase2_OfferConstruction(`<div class="feedback feedback-success">Successfully prebooked ${type}. (Time -0.5h)</div>`);
+        }
+
+        function selectOffer(packageId) {
+            gameState.offer_package = packageId;
+            let timeCost = 0;
+            let feedback = "";
+
+            switch(packageId) {
+                case 'A': // Professional
+                    timeCost = 2.0;
+                    gameState.offer_price = 225000;
+                    updateScore('credibility', 10);
+                    updateScore('rapport', 10);
+                    feedback = `<div class="feedback feedback-success">Package A selected. Attaching detailed math shows professionalism. (+10 Credibility, +10 Rapport)</div>`;
+                    break;
+                case 'B': // Speed
+                    timeCost = 1.0;
+                    gameState.offer_price = 228000;
+                    updateScore('credibility', 8);
+                    updateScore('rapport', 12);
+                    feedback = `<div class="feedback feedback-success">Package B selected. Speed and strong terms are attractive. (+8 Credibility, +12 Rapport)</div>`;
+                    if (gameState.offer_price > gameState.MAO) {
+                        addLesson("Paying above MAO requires justification through speed or terms, but it directly erodes potential profit.");
+                    }
+                    break;
+                case 'C': // Multi-offer
+                    timeCost = 1.5;
+                    gameState.offer_price = 225000; // Base assumption for option 2
+                    updateScore('credibility', 12);
+                    updateScore('rapport', 12);
+                    feedback = `<div class="feedback feedback-success">Package C selected. Providing options shows flexibility and sophistication. (+12 Credibility, +12 Rapport)</div>`;
+                    break;
+                case 'D': // Lowball
+                    timeCost = 0.5;
+                    gameState.offer_price = 195000;
+                    updateScore('credibility', -20);
+                    updateScore('rapport', -20);
+                    gameState.ghosting_flag = true;
+                    feedback = `<div class="feedback feedback-danger">Package D selected. This lowball offer severely damages your reputation. (-20 Credibility, -20 Rapport. Ghosting flag set.)</div>`;
+                    addLesson("Submitting unrealistic lowball offers destroys credibility and often leads to being ignored.");
+                    break;
+            }
+
+            if (advanceTime(timeCost)) return;
+            addTimelineEvent(`Offer Package ${packageId} constructed at ${formatCurrency(gameState.offer_price)}.`);
+            phase3_SubmissionTiming(feedback);
+        }
+
+        // --- PHASE 3: Submission Timing ---
+        function phase3_SubmissionTiming(feedback = "") {
+            const title = "Phase 3: Submission Timing";
+            const narrative = `
+                <p>Your offer is ready. When do you want to submit it? Timing matters, especially with ${gameState.competition_level} competition.</p>
+            `;
+
+            const choices = `
+                <button class="action-button" onclick="submitOffer('IMMEDIATE')">
+                    Immediate Submission (Maximize speed)
+                </button>
+                <button class="action-button secondary" onclick="submitOffer('WAIT_12H')">
+                    Wait 12 Hours (Review comps one last time)
+                </button>
+                <button class="action-button secondary" onclick="submitOffer('WAIT_24H')">
+                    Wait 24 Hours (High risk strategy)
+                </button>
+            `;
+
+            render(title, narrative, choices, feedback);
+        }
+
+        function submitOffer(timing) {
+            let timePassed = 0;
+            let feedback = "";
+            let consequences = [];
+
+            switch(timing) {
+                case 'IMMEDIATE':
+                    timePassed = 0.5; // Time to submit
+                    updateScore('credibility', 5);
+                    consequences.push("+5 Credibility for speed.");
+                    if (gameState.competition_level === "High" || gameState.competition_level === "Medium-High") {
+                        consequences.push("Improved acceptance odds due to high competition (+10 weight).");
+                    }
+                    break;
+                case 'WAIT_12H':
+                    timePassed = 12.5;
+                    if (gameState.seller_profile.id === 'HEIR') {
+                        consequences.push("Reduced acceptance odds (Seller wants speed, -10 weight).");
+                        addLesson("Inertia kills deals, especially when the seller has signaled a need for speed.");
+                    }
+                    if (gameState.competition_level === "Low") {
+                         consequences.push("Slightly improved price leverage due to lower competition (+5 weight).");
+                    }
+                    break;
+                case 'WAIT_24H':
+                    timePassed = 24.5;
+                    if (gameState.competition_level === "High" || gameState.competition_level === "Medium-High") {
+                        if (roll(60)) {
+                            if (advanceTime(timePassed)) return;
+                            addTimelineEvent("Waited 24h to submit. Missed the opportunity.");
+                            gameOver("DEAL LOST: Too Slow");
+                            return;
+                        } else {
+                            consequences.push("High Risk: Nearly missed the opportunity.");
+                        }
+                    }
+                    break;
+            }
+
+            if (advanceTime(timePassed)) return;
+            addTimelineEvent(`Offer submitted (${timing}).`);
+
+            if (consequences.length > 0) {
+                feedback = `<div class="feedback feedback-warning">Consequences: ${consequences.join(' ')}</div>`;
+            }
+
+            phase4_AgentReaction(feedback);
+        }
+
+        // --- PHASE 4: Listing Agent Reaction ---
+        function phase4_AgentReaction(feedback = "") {
+            // Simulate time waiting for response (e.g. 2-6 hours)
+            const waitTime = Math.floor(Math.random() * 4) + 2;
+            if (advanceTime(waitTime)) return;
+            addTimelineEvent(`Waited ${waitTime}h for agent response.`);
+
+            const title = "Phase 4: Agent Reaction";
+            let narrative = `<p>After ${waitTime} hours, the listing agent responds to your offer.</p>`;
+            let choices = "";
+
+            const pkg = gameState.offer_package;
+            const profile = gameState.seller_profile.id;
+
+            // Determine Reaction based on Offer Package and Profile
+            if (pkg === 'D') {
+                // Lowball Probe Reaction
+                narrative += `<div class="card"><h3>Soft Ghost</h3><p>The agent doesn't call. They only send a text: "Thanks."</p><p>They are soft-ghosting you. The deal status is now Cold. You have a 6-hour window to try and revive it.</p></div>`;
+                gameState.deal_status = "Cold";
+                choices = `
+                    <button class="action-button" onclick="reviveDeal('CALL')">
+                        Call the Agent Immediately (10% chance to revive)
+                        <span class="time-cost">Time Cost: 1h</span>
+                    </button>
+                    <button class="action-button secondary" onclick="reviveDeal('EMAIL')">
+                        Email the Agent (0% chance of success)
+                         <span class="time-cost">Time Cost: 0.5h</span>
+                    </button>
+                    <button class="action-button secondary" onclick="reviveDeal('WAIT')">
+                        Wait 12+ Hours (Deal Lost)
+                    </button>
+                `;
+            } else if (pkg === 'C') {
+                // Multi-offer Menu Reaction
+                narrative += `<div class="card"><h3>Agent Review</h3>`;
+
+                if (profile === 'HEIR') {
+                    narrative += `<p>Agent: "The seller wants certainty. They are only considering Option 1 (Cash) or Option 2 (Finance)."</p>`;
+                    choices = `
+                        <button class="action-button" onclick="handleCounter('C_HEIR_CALL')">
+                            Call within 2 hours to push Option 2 at MAO ($225k)
+                        </button>
+                        <button class="action-button secondary" onclick="handleCounter('C_HEIR_WAIT')">
+                            Wait and consider
+                        </button>
+                    `;
+                } else if (profile === 'LANDLORD') {
+                    narrative += `<p>Agent: "The seller likes the carry option (Option 3). However, they counter at $238k with $35k carry at 4% interest."</p><p>You must accept or restructure within 4 hours.</p>`;
+                    choices = `
+                         <button class="action-button" onclick="phase5_CounterHandling('LANDLORD_CARRY')">
+                            Handle the Seller Finance Counter (4h Window)
+                        </button>
+                    `;
+                } else if (profile === 'PRIDEFUL') {
+                    narrative += `<p>Agent: "We are impressed by the professionalism. The seller wants $232k on Option 2 (Finance)."</p><p>You have a 4-hour window to respond.</p>`;
+                     choices = `
+                         <button class="action-button" onclick="phase5_CounterHandling('STANDARD_232K')">
+                            Handle the $232k Counter (4h Window)
+                        </button>
+                    `;
+                }
+                narrative += `</div>`;
+
+            } else if (pkg === 'A') {
+                // Professional Package Reaction
+                narrative += `<div class="card"><h3>Single Counter</h3><p>Agent: "We have reviewed your offer. The seller is countering at $232k. Sign today at $232k and it's yours."</p><p>You have a 4-hour window. If missed, it shifts to Highest-and-Best on Friday.</p></div>`;
+                choices = `
+                    <button class="action-button" onclick="phase5_CounterHandling('STANDARD_232K')">
+                        Handle the $232k Counter (Respond within 4h)
+                    </button>
+                    <button class="action-button secondary" onclick="missWindow('HIGHEST_BEST')">
+                        Miss the 4h Window (Delay response)
+                    </button>
+                `;
+
+            } else if (pkg === 'B') {
+                // Speed Package Reaction
+                narrative += `<div class="card"><h3>Verbal Acceptance!</h3><p>Agent: "We have a verbal acceptance at $228k, contingent on receiving the signed contract within 4 hours. If we miss that window, the seller may reopen to other buyers."</p></div>`;
+                choices = `
+                     <button class="action-button" onclick="phase5_CounterHandling('SPEED_VERBAL')">
+                        Execute the Contract (Respond within 4h)
+                    </button>
+                `;
+            }
+
+            render(title, narrative, choices, feedback);
+        }
+
+        // Handles attempts to revive a cold deal (from Lowball)
+        function reviveDeal(method) {
+            if (method === 'CALL') {
+                if (advanceTime(1.0)) return;
+                if (roll(10)) { // Base revive 10%
+                    gameState.deal_status = "Active";
+                    addTimelineEvent("Revived deal via phone call after lowball.");
+                    // Move back to a standard counter scenario
+                    phase5_CounterHandling('STANDARD_232K', `<div class="feedback feedback-success">You managed to get the agent back on the phone. They are skeptical but willing to hear a revised offer. They suggest $232k.</div>`);
+                } else {
+                    addTimelineEvent("Failed to revive deal via phone call.");
+                    gameOver("DEAL LOST: Ghosted after Lowball");
+                }
+            } else if (method === 'EMAIL') {
+                if (advanceTime(0.5)) return;
+                addTimelineEvent("Attempted to revive deal via email. No response.");
+                gameOver("DEAL LOST: Ghosted after Lowball (Email ineffective)");
+            } else if (method === 'WAIT') {
+                if (advanceTime(12.0)) return;
+                addTimelineEvent("Waited >12h to revive cold deal.");
+                gameOver("DEAL LOST: Waited too long to revive");
+            }
+        }
+
+        // Handles specific intermediate choices in Phase 4 (e.g. Multi-offer Heir response)
+        function handleCounter(scenario) {
+            if (scenario === 'C_HEIR_CALL') {
+                if (advanceTime(1.5)) return; // Within 2h window
+                // +15 acceptance for Option 2 at list MAO price.
+                // Assuming this leads to acceptance since it meets their needs
+                addTimelineEvent("Called agent (Heir profile), secured acceptance at MAO.");
+                goUnderContract(225000);
+            } else if (scenario === 'C_HEIR_WAIT') {
+                if (advanceTime(5.0)) return; // Missed window
+                addTimelineEvent("Waited too long to respond to Heir profile.");
+                missWindow('HIGHEST_BEST');
+            }
+        }
+
+        function missWindow(nextState) {
+            if (advanceTime(6.0)) return; // Simulate time passing beyond the window
+            addLesson("Missing tight response windows (e.g., 4 hours) often results in losing leverage or the deal entirely.");
+            if (nextState === 'HIGHEST_BEST') {
+                // Transition to Highest and Best (Simplified implementation)
+                const title = "Highest-and-Best";
+                const narrative = `<p>You missed the counter window. The agent informs you they are calling for Highest-and-Best offers by Friday at 5 PM.</p><p>This significantly reduces your chances and increases the likely price.</p>`;
+                // Simplified outcome: Assume the player has to pay more to win now, or loses
+                const choices = `
+                    <button class="action-button" onclick="submitHighestAndBest(235000)">
+                        Submit Final Offer: $235k, Strong Terms
+                    </button>
+                    <button class="action-button secondary" onclick="submitHighestAndBest(228000)">
+                        Submit Final Offer: $228k
+                    </button>
+                `;
+                render(title, narrative, choices);
+            }
+        }
+
+        function submitHighestAndBest(price) {
+            addTimelineEvent(`Submitted Highest-and-Best offer at ${formatCurrency(price)}.`);
+            // Simplified odds based on price
+            if (price === 235000) {
+                if (roll(50)) {
+                    goUnderContract(price);
+                } else {
+                    gameOver("DEAL LOST: Outbid in Highest-and-Best");
+                }
+            } else {
+                 if (roll(10)) {
+                    goUnderContract(price);
+                } else {
+                    gameOver("DEAL LOST: Outbid in Highest-and-Best");
+                }
+            }
+        }
+
+        // --- PHASE 5: Counter Handling ---
+        function phase5_CounterHandling(scenario, feedback = "") {
+            const title = "Phase 5: Counter Handling";
+            let narrative = `<p>The ball is in your court. How do you respond to the seller's counter? (Assume response is within the required window).</p>`;
+            let choices = "";
+
+            if (scenario === 'STANDARD_232K') {
+                narrative += `<p>The counter is $232,000. Your MAO is $225,000.</p>`;
+                choices = `
+                    <button class="action-button" onclick="executeCounter('HOLD_225K')">
+                        Hold at $225k, but Upgrade Terms (10-day close, $7.5k EMD, $5k appraisal gap)
+                        <span class="time-cost">Time Cost: 0.5h</span>
+                    </button>
+                    <button class="action-button" onclick="executeCounter('MEET_228K')">
+                        Meet near middle at $228.5k
+                        <span class="time-cost">Time Cost: 0.25h</span>
+                    </button>
+                    <button class="action-button" onclick="executeCounter('TRADE_CREDITS')">
+                        Hold at $225k, Ask for $9k Roof Credit, Waive Financing Contingency
+                        <span class="time-cost">Time Cost: 0.5h</span>
+                    </button>
+                `;
+            } else if (scenario === 'LANDLORD_CARRY') {
+                narrative += `<p>The counter is $238k with $35k seller carry at 4% interest.</p>`;
+                 choices = `
+                    <button class="action-button" onclick="executeCounter('ACCEPT_CARRY')">
+                        Accept the Counter ($238k, $35k carry @ 4%)
+                        <span class="time-cost">Time Cost: 0.25h</span>
+                    </button>
+                    <button class="action-button" onclick="executeCounter('REFRAME_CARRY')">
+                        Reframe: $232k with $25k carry at 0% for 6 months
+                        <span class="time-cost">Time Cost: 0.5h</span>
+                    </button>
+                    <button class="action-button" onclick="executeCounter('SWITCH_CASH')">
+                        Switch to Cash Offer: $218k, same-day signing
+                        <span class="time-cost">Time Cost: 0.25h</span>
+                    </button>
+                `;
+            } else if (scenario === 'SPEED_VERBAL') {
+                narrative += `<p>Verbal acceptance at $228k. Need contract signed ASAP.</p>`;
+                choices = `
+                     <button class="action-button" onclick="executeCounter('EXECUTE_CLEAN')">
+                        Execute Clean Contract Immediately (Send within 2h)
+                    </button>
+                    <button class="action-button secondary" onclick="executeCounter('REQUEST_TWEAK')">
+                        Request Tweak: Extend inspection from 3 days to 5 days
+                    </button>
+                    <button class="action-button secondary" onclick="executeCounter('DELAY_4H')">
+                        Delay 4h (Need lender/attorney review)
+                    </button>
+                `;
+            }
+
+            render(title, narrative, choices, feedback);
+        }
+
+        function executeCounter(action) {
+            let timeCost = 0.5; // Default
+
+            // Standard 232k Scenarios
+            if (action === 'HOLD_225K') {
+                addTimelineEvent("Countered $232k by holding $225k and upgrading terms.");
+                gameState.appraisal_gap_clause = true; // Track appraisal gap offer
+                if (roll(55)) {
+                    goUnderContract(225000); return;
+                } else if (roll(30/45 * 100)) { // 30% of the remaining 45%
+                    // Counter to 227k
+                    // Simplified: assume player accepts the 227k counter
+                    goUnderContract(227000, `<div class="feedback feedback-warning">They countered again at $227k. You accept.</div>`); return;
+                } else {
+                    missWindow('HIGHEST_BEST'); return;
+                }
+            }
+
+            if (action === 'MEET_228K') {
+                timeCost = 0.25;
+                addTimelineEvent("Countered $232k by meeting at $228.5k.");
+                if (roll(80)) {
+                    goUnderContract(228500); return;
+                } else {
+                    // 20% push to 230k with 2h fuse.
+                    // Simplified: assume player accepts the 230k
+                    goUnderContract(230000, `<div class="feedback feedback-danger">They pushed back one last time to $230k with a 2-hour fuse. You accept under pressure.</div>`); return;
+                }
+            }
+
+            if (action === 'TRADE_CREDITS') {
+                addTimelineEvent("Countered $232k by trading credits for price.");
+                if (roll(45)) {
+                     // Note: Price remains 225k, but erosion is reduced by the credit value later if implemented fully. For simplicity here, we proceed at 225k.
+                     goUnderContract(225000, `<div class="feedback feedback-success">They accepted the $225k price with the $9k roof credit agreement.</div>`); return;
+                } else if (roll(35/55 * 100)) {
+                    // Counter to $225k with $5k credit
+                    goUnderContract(225000, `<div class="feedback feedback-warning">They countered at $225k with only a $5k credit. You accept.</div>`); return;
+                } else {
+                    gameOver("DEAL LOST: Seller rejected the credit trade."); return;
+                }
+            }
+
+            // Landlord Carry Scenarios
+            if (action === 'ACCEPT_CARRY') {
+                timeCost = 0.25;
+                addTimelineEvent("Accepted seller carry terms.");
+                gameState.comp_risk += 10; // Appraisal risk +10
+                goUnderContract(238000, `<div class="feedback feedback-warning">Accepted $238k. Appraisal risk increased, but cash to close reduced.</div>`); return;
+            }
+
+            if (action === 'REFRAME_CARRY') {
+                addTimelineEvent("Reframed seller carry terms.");
+                if (roll(60)) {
+                    goUnderContract(232000); return;
+                } else if (roll(25/40 * 100)) {
+                    goUnderContract(235000, `<div class="feedback feedback-warning">They countered at $235k. You accept.</div>`); return;
+                } else {
+                    gameOver("DEAL LOST: Seller rejected the reframed carry."); return;
+                }
+            }
+
+            if (action === 'SWITCH_CASH') {
+                timeCost = 0.25;
+                addTimelineEvent("Switched to cash offer.");
+                // If seller needs speed (Heir) 40%. Else (Landlord) 10%.
+                const chance = (gameState.seller_profile.id === 'HEIR') ? 40 : 10;
+                if (roll(chance)) {
+                    goUnderContract(218000); return;
+                } else {
+                    gameOver("DEAL LOST: Seller prioritized carry structure over cash."); return;
+                }
+            }
+
+            // Speed Verbal Scenarios
+            if (action === 'EXECUTE_CLEAN') {
+                timeCost = 1.0; // Within 2h
+                addTimelineEvent("Executed clean contract quickly.");
+                goUnderContract(228000); return;
+            }
+
+            if (action === 'REQUEST_TWEAK') {
+                timeCost = 1.0;
+                addTimelineEvent("Requested tweak to inspection period.");
+                if (roll(65)) {
+                    goUnderContract(228000, `<div class="feedback feedback-success">Tweak approved. Inspection extended to 5 days.</div>`); return;
+                } else if (roll(25/35 * 100)) {
+                    goUnderContract(228000, `<div class="feedback feedback-warning">Tweak denied, but proceeding with original terms.</div>`); return;
+                } else {
+                    // 10% reopen
+                    let feedback = `<div class="feedback feedback-danger">The seller reopened negotiations due to the requested change. Price drifts up.</div>`;
+                    // Simplified: Price drifts up by 2k-5k if competition high.
+                    const drift = (gameState.competition_level === "High") ? (Math.floor(Math.random() * 3000) + 2000) : 1000;
+                    goUnderContract(228000 + drift, feedback); return;
+                }
+            }
+
+            if (action === 'DELAY_4H') {
+                timeCost = 4.0;
+                addTimelineEvent("Delayed contract execution.");
+                addLesson("Delaying execution on a time-sensitive agreement often leads to the seller reopening negotiations.");
+                // 70% reopen
+                if (roll(70)) {
+                    let feedback = `<div class="feedback feedback-danger">You missed the window. The seller reopened negotiations. You must now fight at a higher price ($230k-$235k).</div>`;
+                    // Simplified: Price jumps to 233k
+                    goUnderContract(233000, feedback); return;
+                } else {
+                    goUnderContract(228000, `<div class="feedback feedback-success">The seller was annoyed by the delay but still honored the agreement.</div>`); return;
+                }
+            }
+
+            // Apply time cost if execution continues
+            if (advanceTime(timeCost)) return;
+        }
+
+        // Transition state when contract is signed
+        function goUnderContract(price, feedback = "") {
+            gameState.deal_status = "UnderContract";
+            gameState.final_purchase_price = price;
+            const erosion = price - gameState.MAO;
+            if (erosion > 0) {
+                updateErosion(erosion);
+            }
+            addTimelineEvent(`Under Contract at ${formatCurrency(price)}. Initial Erosion: ${formatCurrency(Math.max(0, erosion))}.`);
+
+            // Draw the hidden problem now
+            gameState.hidden_problem = drawHiddenProblem();
+
+            const title = "Phase 6: Under Contract - Inspection Period";
+            const narrative = `
+                <p>Congratulations! You are officially under contract at ${formatCurrency(price)}.</p>
+                <p>The inspection period begins now. This is your chance to uncover any hidden issues before your Earnest Money Deposit goes hard.</p>
+            `;
+            const choices = `
+                <button class="action-button" onclick="phase6_TriggerProblem()">
+                    Begin Inspections
+                </button>
+            `;
+            render(title, narrative, choices, feedback);
+        }
+
+        // --- PHASE 6: Under Contract (Hidden Problem) ---
+        function phase6_TriggerProblem() {
+            // Simulate time for inspections
+            let inspectionTime = 48; // 2 days base
+            if (gameState.diligence_ready.inspector) {
+                inspectionTime -= 24; // Advances by 24h if prebooked
+            }
+            if (advanceTime(inspectionTime)) return;
+
+            const problem = gameState.hidden_problem;
+            addTimelineEvent(`Inspections complete. Hidden Problem discovered: ${problem.name}.`);
+
+            const title = `Phase 6: THE PRESSURE COOKER - ${problem.name}`;
+            let narrative = `<p>The inspections are back, and they uncovered a major issue during the inspection window.</p>`;
+            let choices = "";
+
+            // Branch based on the specific hidden problem
+            switch(problem.id) {
+                case 'SEWER':
+                    let cost = problem.baseCost; // $18k
+                    let decisionTime = 24; // Base decision window
+                    narrative += `<p>The sewer scope revealed a collapse under the slab. The base repair cost is ${formatCurrency(cost)}.</p>`;
+
+                    if (gameState.diligence_ready.plumber) {
+                        // No rush fee if prebooked, +12h decision time
+                        decisionTime += 12;
+                        narrative += `<div class="feedback feedback-success">Good move prebooking the plumber! You avoided a $3k rush fee and gained +12h decision time. Cost remains ${formatCurrency(cost)}.</div>`;
+                    } else {
+                        narrative += `<p>Because you didn't have a plumber ready, there's a $3k rush fee added.</p>`;
+                        cost += 3000;
+                        addLesson("Failing to prebook specialized contractors (like plumbers for sewer scopes) results in rush fees and lost time when issues are discovered.");
+                    }
+
+                    narrative += `<p>You must decide how to handle this within ${decisionTime} hours before your EMD is at risk.</p>`;
+
+                    choices = `
+                        <button class="action-button" onclick="handleProblem('SEWER_RENEGOTIATE', ${cost})">
+                            Renegotiate with Evidence (Scope video and licensed bid)
+                        </button>
+                        <button class="action-button secondary" onclick="handleProblem('SEWER_SPLIT', ${cost})">
+                            Split the Cost (Ask for ${formatCurrency(cost/2)})
+                        </button>
+                        <button class="action-button secondary" onclick="handleProblem('WALK')">
+                            Walk Away (Terminate contract within inspection period)
+                        </button>
+                    `;
+                    break;
+
+                case 'APPRAISAL':
+                    const shortfall = Math.floor(Math.random() * 8000) + 7000; // 7k-15k
+                    narrative += `<p>The appraisal came back short by ${formatCurrency(shortfall)}. The bank will only lend based on the appraised value.</p>`;
+                    
+                    if (gameState.appraisal_gap_clause) {
+                         narrative += `<div class="feedback feedback-success">You previously offered a $5k appraisal gap clause. You must cover the first $5k.</div>`;
+                         const coveredByGap = Math.min(5000, shortfall);
+                         updateErosion(coveredByGap);
+                         const remainingShortfall = shortfall - coveredByGap;
+                         
+                         if (remainingShortfall <= 0) {
+                             choices = `<button class="action-button" onclick="phase7_Close()">Proceed to Close (Covered by Gap Clause)</button>`;
+                             break;
+                         }
+                         narrative += `<p>The remaining shortfall is ${formatCurrency(remainingShortfall)}.</p>`;
+                         // Treat remaining shortfall as the new issue
+                         choices = `
+                            <button class="action-button" onclick="handleProblem('APPRAISAL_PAY', ${remainingShortfall})">
+                                Pay the Remaining Difference (${formatCurrency(remainingShortfall)})
+                            </button>
+                            <button class="action-button" onclick="handleProblem('APPRAISAL_RETRADE', ${remainingShortfall})">
+                                Ask for Price Cut (Retrade)
+                            </button>
+                            <button class="action-button secondary" onclick="handleProblem('WALK')">
+                                Cancel Contract
+                            </button>
+                        `;
+
+                    } else {
+                        choices = `
+                            <button class="action-button" onclick="handleProblem('APPRAISAL_PAY', ${shortfall})">
+                                Pay the Difference (${formatCurrency(shortfall)})
+                            </button>
+                            <button class="action-button" onclick="handleProblem('APPRAISAL_RETRADE', ${shortfall})">
+                                Ask for Price Cut (Retrade)
+                            </button>
+                            <button class="action-button secondary" onclick="handleProblem('WALK')">
+                                Cancel Contract
+                            </button>
+                        `;
+                    }
+                    break;
+
+                case 'TITLE':
+                    const delayDays = 14 + Math.floor(Math.random() * 7); // 14-21 days
+                    const carryCost = (delayDays / 30) * 2000; // Approx $2k/month carry = $1.4k-$2.1k total
+                    const extensionFee = 2000; // Assume 1-2 points hard money extension fee (using 2k flat)
+                    const totalCost = carryCost + extensionFee;
+
+                    narrative += `<p>A title defect (probate issue) has been discovered. It will delay closing by ${delayDays} days.</p>`;
+                    narrative += `<p>This adds carry costs (${formatCurrency(carryCost)}) and a hard money extension fee (${formatCurrency(extensionFee)}). Total cost: ${formatCurrency(totalCost)}.</p>`;
+                    
+                    choices = `
+                        <button class="action-button" onclick="handleProblem('TITLE_EXTEND', ${totalCost})">
+                            Extend with Addendum (Absorb the costs)
+                        </button>
+                        <button class="action-button" onclick="handleProblem('TITLE_EARLY_ACCESS', ${totalCost})">
+                            Offer $1k for early access (Start demo early)
+                        </button>
+                        <button class="action-button secondary" onclick="handleProblem('WALK')">
+                            Cancel with Clean Exit
+                        </button>
+                    `;
+                    break;
+
+                case 'UNPERMITTED':
+                    const permitCost = Math.floor(Math.random() * 6000) + 6000; // 6k-12k
+                    narrative += `<p>An unpermitted addition was discovered. You must permit or remove it. Estimated cost is ${formatCurrency(permitCost)} plus 2-4 weeks delay.</p>`;
+                    choices = `
+                        <button class="action-button" onclick="handleProblem('UNPERMITTED_PERMIT', ${permitCost})">
+                            Permit Now (Absorb cost and time)
+                        </button>
+                         <button class="action-button" onclick="handleProblem('UNPERMITTED_CREDIT', ${permitCost})">
+                            Negotiate Price Credit (Ask for $8k)
+                        </button>
+                        <button class="action-button" onclick="handleProblem('UNPERMITTED_SCOPE_REDUCTION', 0)">
+                             Scope Reduction (e.g., market as 2 bed not 3). ARV drops $15k.
+                        </button>
+                        <button class="action-button secondary" onclick="handleProblem('WALK')">
+                            Walk Away
+                        </button>
+                    `;
+                    break;
+
+                case 'ROOF_LEAK':
+                    narrative += `<p>A heavy storm caused a new roof leak. Emergency tarp is $800. Mold protocol is $3.5k if not addressed immediately.</p>`;
+                    // If roof line item was in offer package (Yes, it was in the initial memo), 70% cost share odds. If not, 20%.
+                    let creditOdds = 70;
+
+                    choices = `
+                        <button class="action-button" onclick="handleProblem('ROOF_SPLIT', 800, ${creditOdds})">
+                            Immediate Tarp ($800) and Ask Seller to Split Cost (Odds: ${creditOdds}%)
+                        </button>
+                        <button class="action-button secondary" onclick="handleProblem('ROOF_IGNORE', 800)">
+                            Ignore for >24h (Risk mold)
+                        </button>
+                    `;
+                    break;
+            }
+
+            render(title, narrative, choices);
+        }
+
+        function handleProblem(action, cost = 0, odds = 0) {
+            if (advanceTime(2.0)) return; // Time to negotiate/decide
+
+            if (action === 'WALK') {
+                addTimelineEvent("Terminated contract during inspection period.");
+                phase7_Close(true); // Smart Loss
+                return;
+            }
+
+            // Sewer Handlers
+            if (action === 'SEWER_RENEGOTIATE') {
+                // Odds: 60% credit $9k, 25% credit $5k, 15% $0.
+                let credit = 0;
+                const r = Math.random() * 100;
+
+                // Boost odds if Condition intel was gathered (+10%)
+                let boost = gameState.intel_gathered.CONDITION ? 10 : 0;
+
+                if (r < (60 + boost)) {
+                    credit = 9000;
+                } else if (r < (60 + boost + 25)) {
+                    credit = 5000;
+                } else {
+                    credit = 0;
+                }
+
+                const erosion = cost - credit;
+                updateErosion(erosion);
+                addTimelineEvent(`Renegotiated sewer issue. Cost: ${formatCurrency(cost)}. Credit received: ${formatCurrency(credit)}. Erosion: ${formatCurrency(erosion)}.`);
+
+                if (credit > 0) {
+                    phase7_Close(false, `<div class="feedback feedback-success">Renegotiation successful. Seller credited ${formatCurrency(credit)}. Remaining cost absorbed.</div>`);
+                } else {
+                    phase7_Close(false, `<div class="feedback feedback-danger">Renegotiation failed. Seller refused credit. You absorbed the full ${formatCurrency(cost)}.</div>`);
+                }
+                return;
+            }
+
+            if (action === 'SEWER_SPLIT') {
+                // Ask half cost. If counter $5k, decide.
+                // Simplified: Assume 50% chance they accept split, 50% counter 5k.
+                let credit = 0;
+                if (roll(50)) {
+                    credit = cost / 2;
+                } else {
+                    credit = 5000;
+                }
+                const erosion = cost - credit;
+                updateErosion(erosion);
+                addTimelineEvent(`Offered to split sewer cost. Credit received: ${formatCurrency(credit)}. Erosion: ${formatCurrency(erosion)}.`);
+                phase7_Close(false, `<div class="feedback feedback-warning">Seller agreed to a credit of ${formatCurrency(credit)}. You absorbed the rest.</div>`);
+                return;
+            }
+
+            // Appraisal Handlers
+            if (action === 'APPRAISAL_PAY') {
+                updateErosion(cost);
+                addTimelineEvent(`Paid appraisal shortfall of ${formatCurrency(cost)}.`);
+                phase7_Close(false, `<div class="feedback feedback-danger">You paid the difference out of pocket to save the deal.</div>`);
+                return;
+            }
+
+            if (action === 'APPRAISAL_RETRADE') {
+                // Agent_rapport ≥70 improves credit odds by +15%.
+                let successOdds = 50; // Base odds for price cut ask
+                if (gameState.agent_rapport >= 70) {
+                    successOdds += 15;
+                }
+
+                if (roll(successOdds)) {
+                    addTimelineEvent(`Successfully retraded price due to appraisal shortfall (${formatCurrency(cost)}).`);
+                    phase7_Close(false, `<div class="feedback feedback-success">Seller agreed to reduce the price by the shortfall amount!</div>`);
+                } else {
+                    updateErosion(cost);
+                    addTimelineEvent(`Failed to retrade appraisal shortfall. Paid difference (${formatCurrency(cost)}).`);
+                    phase7_Close(false, `<div class="feedback feedback-danger">Seller refused to reduce the price. You paid the difference to save the deal.</div>`);
+                }
+                return;
+            }
+
+            // Title Handler
+            if (action === 'TITLE_EXTEND') {
+                updateErosion(cost);
+                addTimelineEvent(`Extended closing due to title delay. Absorbed costs: ${formatCurrency(cost)}.`);
+                phase7_Close(false, `<div class="feedback feedback-warning">You extended the contract and absorbed the extra holding costs and fees.</div>`);
+                return;
+            }
+
+            if (action === 'TITLE_EARLY_ACCESS') {
+                // Pay $1k for early demo. Speeds rehab start by 1 week post-close.
+                updateErosion(cost + 1000);
+                addTimelineEvent(`Paid $1k for early access during title delay. Absorbed costs: ${formatCurrency(cost + 1000)}.`);
+                phase7_Close(false, `<div class="feedback feedback-success">You paid for early access. While costs increased, you can start rehab 1 week earlier post-close.</div>`);
+                return;
+            }
+
+            // Unpermitted Handlers
+            if (action === 'UNPERMITTED_PERMIT') {
+                updateErosion(cost);
+                addTimelineEvent(`Chose to permit unpermitted addition. Absorbed costs: ${formatCurrency(cost)}.`);
+                phase7_Close(false, `<div class="feedback feedback-warning">You decided to handle the permitting process, absorbing the cost and time delays.</div>`);
+                return;
+            }
+
+            if (action === 'UNPERMITTED_CREDIT') {
+                // Ask $8k. 50% success. If prideful owner, −15%.
+                let successOdds = 50;
+                if (gameState.seller_profile.id === 'PRIDEFUL') {
+                    successOdds -= 15;
+                }
+
+                if (roll(successOdds)) {
+                    const credit = 8000;
+                    const erosion = cost - credit;
+                    updateErosion(Math.max(0, erosion));
+                    addTimelineEvent(`Negotiated credit for unpermitted addition: ${formatCurrency(credit)}.`);
+                    phase7_Close(false, `<div class="feedback feedback-success">Seller agreed to an $8k credit in lieu of repairs.</div>`);
+                } else {
+                    updateErosion(cost);
+                    addTimelineEvent(`Failed to negotiate credit for unpermitted addition. Absorbed cost: ${formatCurrency(cost)}.`);
+                    phase7_Close(false, `<div class="feedback feedback-danger">Seller refused the credit. You absorbed the cost to proceed.</div>`);
+                }
+                return;
+            }
+
+            if (action === 'UNPERMITTED_SCOPE_REDUCTION') {
+                gameState.arv_reduction += 15000;
+                addTimelineEvent(`Reduced scope due to unpermitted addition. ARV dropped $15k.`);
+                phase7_Close(false, `<div class="feedback feedback-warning">You reduced the scope of the project. This avoids the immediate cost but reduces the ARV by $15k.</div>`);
+                return;
+            }
+
+            // Roof Handlers
+            if (action === 'ROOF_SPLIT') {
+                // Cost here is just the tarp (800)
+                if (roll(odds)) {
+                    const credit = cost / 2;
+                    const erosion = cost - credit;
+                    updateErosion(erosion);
+                    addTimelineEvent(`Negotiated split for roof tarp. Credit: ${formatCurrency(credit)}. Erosion: ${formatCurrency(erosion)}.`);
+                    phase7_Close(false, `<div class="feedback feedback-success">Seller agreed to split the cost of the emergency tarp.</div>`);
+                } else {
+                    updateErosion(cost);
+                    addTimelineEvent(`Failed to negotiate split for roof tarp. Absorbed cost: ${formatCurrency(cost)}.`);
+                    phase7_Close(false, `<div class="feedback feedback-danger">Seller refused to split the cost. You absorbed the full amount.</div>`);
+                }
+                return;
+            }
+
+             if (action === 'ROOF_IGNORE') {
+                // Mold triggers. Add $3.5k to the tarp cost.
+                const moldCost = 3500;
+                updateErosion(cost + moldCost);
+                addTimelineEvent(`Ignored roof leak >24h. Mold triggered. Absorbed cost: ${formatCurrency(cost + moldCost)}.`);
+                addLesson("Ignoring immediate issues like leaks leads to compounding problems (mold) and higher costs.");
+                phase7_Close(false, `<div class="feedback feedback-danger">You ignored the leak. Mold developed, requiring full remediation. You absorbed the cost.</div>`);
+                return;
+            }
+        }
+
+
+        // --- PHASE 7: Close or Cancel & Scoring ---
+        function phase7_Close(wasCanceled, feedback = "") {
+            if (gameState.deal_status === "Lost" || gameState.deal_status === "Canceled") {
+                // Game already ended via gameOver or WALK
+            } else {
+                 gameState.deal_status = wasCanceled ? "Canceled" : "Closed";
+            }
+
+            const title = "Phase 7: Final Results and Postmortem";
+            let narrative = "";
+            let outcomeLabel = "";
+            let profit = 0;
+
+            if (gameState.deal_status === "Canceled") {
+                // Smart Loss: You exited inside inspection protecting EMD and reputation.
+                outcomeLabel = "Smart Loss";
+                narrative = `<p>You chose to terminate the contract during the inspection period. Your Earnest Money Deposit is protected.</p>`;
+                narrative += `<div class="feedback feedback-success">Knowing when to walk away when the math breaks is a critical skill.</div>`;
+
+            } else if (gameState.deal_status === "Closed") {
+                // Calculate Profit
+                // Profit_after_surprise = ARV − purchase_price − rehab_total − soft_costs − erosion_amount − carry/fees.
+                const ARV = 360000 - gameState.arv_reduction;
+                const knownRehab = 70000; // 20k known + 50k cosmetic
+                const softCosts = 35000;
+                
+                // Erosion calculation: Erosion tracks costs incurred beyond the initial plan (both paying over MAO and hidden problems).
+                // We calculate profit based on the actual numbers realized in the simulation.
+
+                profit = ARV - gameState.final_purchase_price - knownRehab - softCosts;
+
+                // We must subtract the erosion caused by hidden problems/delays/fees.
+                // Erosion from purchase price (Price - MAO) is already accounted for in final_purchase_price.
+
+                const purchaseErosion = Math.max(0, gameState.final_purchase_price - gameState.MAO);
+                // Calculate how much of the total erosion was NOT due to the purchase price.
+                const problemErosion = gameState.erosion_amount - purchaseErosion;
+
+                profit -= problemErosion;
+
+
+                narrative += `
+                    <p>The deal has closed. Let's analyze the final numbers.</p>
+                    <div class="card">
+                        <h3>Projected Financial Outcome</h3>
+                        <p><strong>ARV:</strong> ${formatCurrency(ARV)}</p>
+                        <hr>
+                        <p><strong>Costs:</strong></p>
+                        <ul>
+                            <li>Purchase Price: ${formatCurrency(gameState.final_purchase_price)} (MAO: ${formatCurrency(gameState.MAO)})</li>
+                            <li>Rehab Budget (Known + Cosmetic): ${formatCurrency(knownRehab)}</li>
+                            <li>Soft Costs (Est): ${formatCurrency(softCosts)}</li>
+                            <li>Problem/Delay Erosion (Unexpected Costs/Fees): ${formatCurrency(problemErosion)}</li>
+                        </ul>
+                        <hr>
+                        <h3 style="color: ${profit >= 0 ? 'var(--success-color)' : 'var(--danger-color)'}">
+                            Projected Net Profit: ${formatCurrency(profit)}
+                        </h3>
+                    </div>
+                `;
+
+                // Determine Outcome Label
+                if (profit >= 20000) {
+                    // Fast Yes: Profit ≥ $20k after surprise.
+                    outcomeLabel = "Fast Yes";
+                    narrative += `<div class="feedback feedback-success">Excellent execution. You managed the negotiation and the surprise effectively, preserving strong profit margins.</div>`;
+                } else if (profit >= 0 && profit < 15000) {
+                    // Bad Win: Profit < $15k.
+                    outcomeLabel = "Bad Win";
+                    narrative += `<div class="feedback feedback-warning">You closed the deal, but the profit margin is thin (<$15k). Review where erosion occurred. Flagged for coaching.</div>`;
+                } else if (profit < 0) {
+                    // Catastrophic: Negative projected profit.
+                    outcomeLabel = "Catastrophic (Loss)";
+                    narrative += `<div class="feedback feedback-danger">The projected outcome is a loss. You either overpaid significantly or failed to manage the hidden problem costs. Trigger remediation lesson.</div>`;
+                } else {
+                    outcomeLabel = "Marginal Win";
+                }
+            }
+
+            // Generate Postmortem
+            narrative += `
+                <div class="card">
+                    <h3>Postmortem Generator</h3>
+                    <h4>Outcome: ${outcomeLabel}</h4>
+                    ${generateLessons(profit)}
+                    <h4>Decision Timeline:</h4>
+                    <ol>
+                        ${gameState.timeline.map(t => `<li>${t}</li>`).join('')}
+                    </ol>
+                </div>
+            `;
+
+
+            const choices = `
+                <button class="action-button" onclick="initializeGame()">Start New Simulation</button>
+            `;
+
+            render(title, narrative, choices, feedback);
+        }
+
+        function generateLessons(profit) {
+            // Add auto-lessons based on path
+            if (gameState.final_purchase_price > gameState.MAO) {
+                addLesson(`Traded emotion for math: You breached MAO by ${formatCurrency(gameState.final_purchase_price - gameState.MAO)}.`);
+            }
+
+            if (gameState.deal_status === "Closed" && profit < 15000 && gameState.credibility < 50) {
+                addLesson("Bad Win combined with low credibility indicates risky negotiation behavior.");
+            }
+            
+            let html = `<h4>Lessons Learned:</h4><ul>`;
+            if (gameState.lessons.length > 0) {
+                html += gameState.lessons.map(l => `<li>${l}</li>`).join('');
+            } else {
+                html += '<li>No major lessons triggered. Review timeline for optimization.</li>';
+            }
+            html += `</ul>
+            <hr>
+            <h4>Coach Prompts:</h4>
+            <ul>
+                <li>Where did you pay (erode profit) to feel good or secure the deal?</li>
+                <li>What will you prebook next time?</li>
+                <li>Commit your new MAO calculation and contingency plan.</li>
+            </ul>
+            <hr>
+            <p style="font-size:0.8em;">Debug Info: Seller Profile was ${gameState.seller_profile.name}.</p>
+            `;
+            return html;
+        }
+
+
+        // Handles game over scenarios (Deal Lost before Under Contract)
+        function gameOver(reason) {
+            gameState.deal_status = "Lost";
+            addTimelineEvent(`Game Over: ${reason}`);
+
+            const title = "Deal Lost";
+            const narrative = `
+                <div class="feedback feedback-danger">
+                    <h3>The deal has fallen apart.</h3>
+                    <p>Reason: ${reason}</p>
+                </div>
+                <p>In the fast-paced world of real estate investment, mistakes made during the acquisition phase often lead to lost opportunities.</p>
+                 <div class="card">
+                    <h3>Postmortem Generator</h3>
+                    <h4>Outcome: Deal Lost</h4>
+                    ${generateLessons(0)}
+                    <h4>Decision Timeline:</h4>
+                    <ol>
+                        ${gameState.timeline.map(t => `<li>${t}</li>`).join('')}
+                    </ol>
+                </div>
+            `;
+            const choices = `
+                <button class="action-button" onclick="initializeGame()">Try Again</button>
+            `;
+            render(title, narrative, choices);
+        }
+
+
+        // Start the game when the page loads
+        window.onload = initializeGame;
+
+    </script>
+</body>
+</html>
