@@ -1,0 +1,939 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix-and-Flip Tycoon: The Reality Simulator 2.0</title>
+    <style>
+        /* --- Global Styles & Variables --- */
+        :root {
+            --primary-color: #004d40; /* Deep Teal */
+            --secondary-color: #ffab40; /* Amber */
+            --background-color: #f0f0f0;
+            --text-color: #333;
+            --success-color: #4caf50;
+            --danger-color: #e53935;
+            --card-background: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        /* --- Layout & Container --- */
+        .game-container {
+            max-width: 800px;
+            width: 100%;
+            background-color: var(--card-background);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px;
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            border-bottom: 5px solid var(--secondary-color);
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            background-color: #e0e0e0;
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+        }
+        .status-item {
+            text-align: center;
+        }
+        .content {
+            padding: 30px;
+            line-height: 1.6;
+        }
+        /* --- Typography & Content --- */
+        .narrative {
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+        /* --- Buttons & Choices --- */
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .choice-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.2s;
+            text-align: left;
+        }
+        .choice-button:hover {
+            background-color: #00695c;
+            transform: translateY(-2px);
+        }
+        .choice-button.secondary {
+            background-color: #546e7a;
+        }
+        .choice-button.secondary:hover {
+            background-color: #78909c;
+        }
+        /* --- Cards & Visuals --- */
+        .property-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fafafa;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        /* Utilizing Pexels images for visualization */
+        .property-image, .scenario-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+         .scenario-image {
+            height: 250px;
+         }
+        /* --- Feedback & Alerts --- */
+        .financial-update {
+            background-color: #fff9c4;
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .surprise-event {
+            background-color: #ffebee;
+            border-left: 5px solid var(--danger-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--danger-color);
+        }
+        .investor-insight {
+            background-color: #e8f5e9;
+            border: 2px dashed var(--success-color);
+            padding: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            Fix-and-Flip Tycoon: The Reality Simulator 2.0
+        </div>
+        <div class="status-bar" id="statusBar">
+            <div class="status-item">Cash: <span id="playerCash">$100,000</span></div>
+            <div class="status-item">Loan: <span id="loanAmount">$0</span></div>
+            <div class="status-item">Months Held: <span id="monthsHeld">0</span></div>
+        </div>
+        <div class="content" id="gameContent">
+            <!-- Game content will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // === Game State Initialization ===
+        let gameState = {};
+
+        // === Property Definitions (Enhanced with visuals and hidden conditions) ===
+        // Images sourced from Pexels.com (Free Use)
+        const properties = {
+            A: {
+                id: "A",
+                address: "123 Oak St (The 'Starter Home')",
+                list_price: 200000,
+                beds: 3, baths: 2, sqft: 1500,
+                image: "https://images.pexels.com/photos/208736/pexels-photo-208736.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                condition_notes: "Located in a stable B- neighborhood. Seems structurally sound but very dated (popcorn ceilings, old carpet, 1980s kitchen).",
+                potential_arv: 290000,
+                true_condition: {
+                    roof: "Okay",
+                    foundation: "Good",
+                    electrical: "Needs minor updates ($1,500)"
+                }
+            },
+            B: {
+                id: "B",
+                address: "456 Maple Ave (The 'Quick Flip?')",
+                list_price: 160000,
+                beds: 4, baths: 2.5, sqft: 2100,
+                image: "https://images.pexels.com/photos/280232/pexels-photo-280232.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                condition_notes: "Priced way below market in a hot A- area! Light cosmetic update recently. Listing says 'Sold As-Is, Cash preferred.' Driveway seems uneven.",
+                potential_arv: 350000,
+                true_condition: {
+                    roof: "Leaking ($8,000 fix)",
+                    foundation: "Major settling, requires piers ($15,000 fix)",
+                    electrical: "Okay"
+                }
+            },
+            C: {
+                id: "C",
+                address: "789 Pine Ln (The 'Turnkey Trap')",
+                list_price: 310000,
+                beds: 3, baths: 2, sqft: 1600,
+                image: "https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                condition_notes: "Beautifully renovated with quartz counters and hardwood floors in a C+ neighborhood. It's the nicest house on the block by far. Been sitting for 90 days.",
+                potential_arv: 325000,
+                true_condition: {
+                    roof: "Good",
+                    foundation: "Good",
+                    electrical: "Good"
+                }
+            }
+        };
+
+        // === Utility Functions ===
+        function formatCurrency(amount) {
+            const numAmount = Number(amount);
+            if (isNaN(numAmount)) return "$0";
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(numAmount);
+        }
+
+        function updateStatusBar() {
+            document.getElementById('playerCash').textContent = formatCurrency(gameState.player_cash);
+            document.getElementById('loanAmount').textContent = formatCurrency(gameState.loan_amount);
+            document.getElementById('monthsHeld').textContent = gameState.months_held;
+        }
+
+        function render(html) {
+            document.getElementById('gameContent').innerHTML = html;
+            updateStatusBar();
+            window.scrollTo(0, 0); // Scroll to top on view change
+        }
+
+        function addLesson(lesson) {
+            gameState.lessons.push(lesson);
+        }
+
+        // Calculates monthly costs (PITI + Utilities)
+        function calculateHoldingCosts() {
+            const interestRate = 0.10; // Assume 10% interest-only hard money loan
+            const principalInterest = (gameState.loan_amount * interestRate) / 12;
+            const taxesInsurance = (gameState.purchase_price * 0.015) / 12; // Assume 1.5% for T&I
+            const utilities = 300;
+            gameState.monthly_holding_costs = Math.round(principalInterest + taxesInsurance + utilities);
+        }
+
+        // Advances the game clock and deducts costs, checking for bankruptcy
+        function advanceTime(months) {
+            const monthsToAdvance = Math.ceil(months); // Always round up time
+            for (let i = 0; i < monthsToAdvance; i++) {
+                gameState.months_held++;
+                const costThisMonth = gameState.monthly_holding_costs;
+                gameState.player_cash -= costThisMonth;
+                gameState.total_holding_costs += costThisMonth;
+
+                if (gameState.player_cash < 0) {
+                    gameOver("Bankruptcy");
+                    return true; // Game over signaled
+                }
+            }
+            return false; // Game continues
+        }
+
+        // === Game Flow Functions ===
+
+        function startGame() {
+            // Initialize the game state object
+            gameState = {
+                player_cash: 100000,
+                current_property: null,
+                loan_amount: 0,
+                monthly_holding_costs: 0,
+                months_held: 0,
+                rehab_budget: 0,
+                rehab_spent: 0,
+                final_arv: 0,
+                purchase_price: 0,
+                closing_costs_buy: 0,
+                total_holding_costs: 0,
+                lessons: [],
+                decisions: {
+                    inspections: {},
+                    contractorType: null,
+                    marketingStrategy: null
+                }
+            };
+
+            render(`
+                <div class="narrative">
+                    <h1>Welcome to the Fix-and-Flip Reality Simulator</h1>
+                    <p>You are a new investor with ${formatCurrency(gameState.player_cash)} in capital. Your goal is to execute a profitable flip.</p>
+                    <p>This simulation emphasizes real-world trade-offs. Every decision impacts your budget, timeline, and potential profit.</p>
+                </div>
+                <div class="choices">
+                    <button class="choice-button" onclick="phase1_DealSourcing()">Start Hunting for Deals</button>
+                </div>
+            `);
+        }
+
+        // --- PHASE 1: DEAL SOURCING ---
+        function phase1_DealSourcing() {
+            render(`
+                <div class="narrative">
+                    <h2>Phase 1: Deal Sourcing</h2>
+                    <p>Your wholesaler sends you three potential deals. Analyze the initial numbers and the neighborhood notes. Which one do you want to pursue?</p>
+                </div>
+                ${Object.values(properties).map(p => `
+                    <div class="property-card">
+                        <img src="${p.image}" alt="Property Image" class="property-image">
+                        <h3>${p.address}</h3>
+                        <p><strong>List Price:</strong> ${formatCurrency(p.list_price)} | <strong>Potential ARV:</strong> ${formatCurrency(p.potential_arv)}</p>
+                        <p><strong>Details:</strong> ${p.beds} Bed, ${p.baths} Bath, ${p.sqft} SqFt</p>
+                        <p><strong>Notes:</strong> ${p.condition_notes}</p>
+                        <button class="choice-button" onclick="selectProperty('${p.id}')">Pursue ${p.address}</button>
+                    </div>
+                `).join('')}
+            `);
+        }
+
+        function selectProperty(propertyId) {
+            gameState.current_property = properties[propertyId];
+            gameState.final_arv = gameState.current_property.potential_arv;
+
+            // Add lessons based on initial choice
+            if (propertyId === 'C') {
+                addLesson("Lesson: You make your money when you buy. Purchasing a fully renovated property (Property C) leaves almost no room for profit.");
+            } else if (propertyId === 'B') {
+                addLesson("Lesson: Properties priced significantly below market (Property B) often hide major issues. 'As-Is' sales require extreme caution.");
+            }
+
+            phase2_MakeOffer();
+        }
+
+        // --- PHASE 2: OFFER & DUE DILIGENCE ---
+        function phase2_MakeOffer() {
+            const p = gameState.current_property;
+            render(`
+                <div class="narrative">
+                    <h2>Phase 2: Offer & Negotiation</h2>
+                    <p>You've selected ${p.address}, listed at ${formatCurrency(p.list_price)}.</p>
+                    <p>The market is competitive. What is your offer strategy?</p>
+                </div>
+                <div class="choices">
+                    <button class="choice-button" onclick="submitOffer(${p.list_price * 0.9}, 'Lowball')">
+                        Offer 10% Below Asking (The 'Aggressive Negotiator') - ${formatCurrency(p.list_price * 0.9)}
+                    </button>
+                    <button class="choice-button" onclick="submitOffer(${p.list_price}, 'Full Price')">
+                        Offer Full Price (The 'Secure the Deal') - ${formatCurrency(p.list_price)}
+                    </button>
+                     ${p.id === 'B' ? `
+                        <button class="choice-button secondary" onclick="submitOffer(${p.list_price * 1.05}, 'Over Asking')">
+                            Offer 5% Over Asking (The 'Must Have It' - Tempting for this low price!) - ${formatCurrency(p.list_price * 1.05)}
+                        </button>
+                    ` : ''}
+                </div>
+            `);
+        }
+
+        function submitOffer(price, strategy) {
+            gameState.purchase_price = price;
+            let narrative = "";
+            let insight = "";
+
+            // Simplified acceptance logic
+            if (strategy === 'Lowball' && gameState.current_property.id !== 'C') {
+                narrative = "The seller counters your offer, meeting you halfway. You agree.";
+                gameState.purchase_price = (gameState.current_property.list_price + price) / 2;
+                insight = `<div class="investor-insight">Insight: Great negotiation! You secured the property below list price, increasing your potential profit margin. You saved ${formatCurrency(gameState.current_property.list_price - gameState.purchase_price)}.</div>`;
+            } else if (strategy === 'Over Asking' && gameState.current_property.id === 'B') {
+                 narrative = "The seller immediately accepts your strong offer!";
+                 insight = `<div class="investor-insight">Insight: You secured the deal, but paying over asking on a property already flagged as 'As-Is' increases your financial risk significantly.</div>`;
+                 addLesson("Lesson: Paying over asking might secure a deal in a hot market, but it eats directly into your profit margin.");
+            }
+            else {
+                narrative = "The seller accepts your offer.";
+            }
+
+            // Financing (Assume 80% LTV Hard Money Loan)
+            const downPayment = gameState.purchase_price * 0.20;
+            gameState.loan_amount = gameState.purchase_price * 0.80;
+            gameState.player_cash -= downPayment;
+
+            calculateHoldingCosts();
+
+            render(`
+                <div class="narrative">
+                    <h2>Offer Accepted!</h2>
+                    <p>${narrative}</p>
+                    <p>The final purchase price is ${formatCurrency(gameState.purchase_price)}.</p>
+                </div>
+                <div class="financial-update">
+                    <p>Down Payment (20%): -${formatCurrency(downPayment)}</p>
+                    <p>Loan Amount (Hard Money @ 10%): +${formatCurrency(gameState.loan_amount)}</p>
+                    <p>Estimated Monthly Holding Costs (Interest, Taxes, Insurance, Utilities): ${formatCurrency(gameState.monthly_holding_costs)}</p>
+                </div>
+                 ${insight}
+                <div class="choices">
+                    <button class="choice-button" onclick="phase2_DueDiligence()">Begin Due Diligence Period</button>
+                </div>
+            `);
+        }
+
+        function phase2_DueDiligence() {
+            render(`
+                <div class="narrative">
+                    <h2>Due Diligence (10-Day Period)</h2>
+                    <p>You have 10 days to inspect the property. Inspections cost money upfront, but they can uncover critical issues.</p>
+                    <p>Which inspections will you order?</p>
+                    <img src="https://images.pexels.com/photos/5691537/pexels-photo-5691537.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Inspector looking at house" class="scenario-image">
+                </div>
+                <div class="choices">
+                    <button class="choice-button" onclick="runInspections('Full')">
+                        The Full Package (General, Roof, Foundation, Electrical) - $1,500
+                    </button>
+                    <button class="choice-button secondary" onclick="runInspections('Basic')">
+                        General Home Inspection Only (Covers basics) - $500
+                    </button>
+                    <button class="choice-button secondary" onclick="runInspections('None')">
+                        Skip Inspections (Save money and time - Beginner Mistake) - $0
+                    </button>
+                </div>
+            `);
+        }
+
+        function runInspections(type) {
+            let cost = 0;
+            let findings = [];
+            const trueCondition = gameState.current_property.true_condition;
+            gameState.decisions.inspections = {}; // Reset
+
+            if (type === 'Full') {
+                cost = 1500;
+                gameState.decisions.inspections = { roof: true, foundation: true, electrical: true, general: true };
+                // Reveal all hidden issues
+                if (trueCondition.roof !== 'Good' && trueCondition.roof !== 'Okay') findings.push(`Roof: ${trueCondition.roof}`);
+                if (trueCondition.foundation !== 'Good') findings.push(`Foundation: ${trueCondition.foundation}`);
+                if (trueCondition.electrical !== 'Good' && trueCondition.electrical !== 'Okay') findings.push(`Electrical: ${trueCondition.electrical}`);
+            } else if (type === 'Basic') {
+                cost = 500;
+                gameState.decisions.inspections = { general: true };
+                // Basic inspection might miss major specialized issues
+                if (trueCondition.electrical.includes("minor updates")) findings.push(`Electrical: ${trueCondition.electrical}`);
+                if (trueCondition.roof === 'Okay') findings.push("Roof is aging but no active leaks found.");
+
+                if (trueCondition.foundation.includes("Major settling") || trueCondition.roof.includes("Leaking")) {
+                     addLesson("Lesson: A basic inspection often misses specialized issues (like structural problems or major leaks) that can derail a flip.");
+                }
+
+            } else if (type === 'None') {
+                cost = 0;
+                addLesson("Lesson: Skipping inspections is a critical beginner mistake. Hidden issues will cost significantly more during rehab.");
+            }
+
+            gameState.player_cash -= cost;
+
+            let narrative = "";
+            let insight = "";
+
+            if (findings.length > 0) {
+                narrative = `<p>The inspector calls you with the results:</p><ul>${findings.map(f => `<li>${f}</li>`).join('')}</ul>`;
+            } else {
+                narrative = "<p>The inspection report came back relatively clean (based on the level of inspection performed).</p>";
+            }
+
+            // Provide insights based on the choice
+            if (type === 'None') {
+                insight = "Insight: You saved money, but you are proceeding blindly. This is a huge gamble.";
+            } else if (type === 'Full' && findings.length > 0) {
+                 insight = "Insight: Good call on the thorough inspection. You now have the information needed to budget accurately.";
+            } else if (type === 'Basic' && (trueCondition.foundation.includes("Major settling") || trueCondition.roof.includes("Leaking"))) {
+                insight = "Insight: You saved some money on specialized inspections, but the general inspector missed critical structural/roofing issues. This will likely cost you later.";
+            }
+
+            render(`
+                <div class="narrative">
+                    <h2>Inspection Results</h2>
+                    ${narrative}
+                </div>
+                ${cost > 0 ? `<div class="financial-update">Inspection Costs: -${formatCurrency(cost)}</div>` : ''}
+                ${insight ? `<div class="investor-insight">${insight}</div>` : ''}
+                <div class="choices">
+                    <button class="choice-button" onclick="phase3_Closing()">Proceed to Closing (Accept findings)</button>
+                    <button class="choice-button secondary" onclick="backOut()">Back Out of the Deal (Lose inspection costs)</button>
+                </div>
+            `);
+        }
+
+        function backOut() {
+            // Reset property specific state, keep cash reduction from inspections
+             gameState.current_property = null;
+            gameState.loan_amount = 0;
+            // ... other resets ...
+
+            render(`
+                <div class="narrative">
+                    <h2>Deal Cancelled</h2>
+                    <p>You decided to back out of the deal during the due diligence period.</p>
+                </div>
+                <div class="investor-insight">
+                    Insight: Knowing when to walk away is a crucial skill. It's better to lose a little on inspections than to proceed with a bad deal.
+                </div>
+                <div class="choices">
+                    <button class="choice-button" onclick="phase1_DealSourcing()">Return to Deal Sourcing</button>
+                </div>
+            `);
+        }
+
+        // --- PHASE 3: CLOSING & REHAB ---
+        function phase3_Closing() {
+            const closingCosts = gameState.purchase_price * 0.03; // 3% closing costs
+            gameState.closing_costs_buy = closingCosts;
+            gameState.player_cash -= closingCosts;
+
+            // Start the clock - Advance 1 month for closing process
+            if (advanceTime(1)) return;
+
+            render(`
+                <div class="narrative">
+                    <h2>Phase 3: Closing & Rehab</h2>
+                    <p>Congratulations, you own the property! The closing process took about a month.</p>
+                </div>
+                <div class="financial-update">
+                    <p>Closing Costs (3%): -${formatCurrency(closingCosts)}</p>
+                    <p>Holding Costs (1 Month): -${formatCurrency(gameState.monthly_holding_costs)}</p>
+                </div>
+                <div class="narrative">
+                    <p>Now the real work begins. It's time to renovate.</p>
+                </div>
+                <div class="choices">
+                    <button class="choice-button" onclick="phase3_SelectContractor()">Select a Contractor</button>
+                </div>
+            `);
+        }
+
+        // --- NEW: Contractor Selection Dynamics ---
+        function phase3_SelectContractor() {
+            render(`
+                <div class="narrative">
+                    <h2>Contractor Selection</h2>
+                    <p>Choosing the right contractor is critical. It impacts your budget, timeline, and quality. You've received three bids.</p>
+                    <img src="https://images.pexels.com/photos/157811/pexels-photo-157811.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Contractors discussing plans" class="scenario-image">
+                </div>
+                <div class="choices">
+                    <button class="choice-button secondary" onclick="hireContractor('Cheap')">
+                        'Chuck in a Truck' - Cheapest bid by 20%. Promises fast timeline, but seems disorganized and has mixed reviews. (High Risk)
+                    </button>
+                    <button class="choice-button" onclick="hireContractor('Standard')">
+                        'Reliable Renovations' - Middle bid. Professional presentation, good references. (Medium Risk)
+                    </button>
+                    <button class="choice-button" onclick="hireContractor('Premium')">
+                        'Elite Builders' - Highest bid by 15%. Established company, guarantees timeline and quality. (Low Risk)
+                    </button>
+                </div>
+            `);
+        }
+
+        function hireContractor(type) {
+            gameState.decisions.contractorType = type;
+            let insight = "";
+
+            if (type === 'Cheap') {
+                addLesson("Lesson: Hiring the cheapest contractor often leads to delays, poor quality work, and unexpected costs that exceed the initial savings.");
+                insight = "Insight: You are prioritizing budget over certainty. This significantly increases the risk of project delays and cost overruns.";
+            } else if (type === 'Premium') {
+                addLesson("Lesson: Paying a premium for a reliable contractor can save money in the long run by minimizing costly delays.");
+                insight = "Insight: You are paying for speed and reliability. While expensive upfront, this minimizes execution risk.";
+            } else {
+                insight = "Insight: This is the standard approach, balancing cost and risk.";
+            }
+
+             render(`
+                <div class="narrative">
+                    <h2>Contractor Hired</h2>
+                    <p>You've hired the ${type} contractor. They are ready to start planning the rehab.</p>
+                </div>
+                <div class="investor-insight">${insight}</div>
+                <div class="choices">
+                    <button class="choice-button" onclick="phase3_PlanRehab()">Plan the Rehab Finishes</button>
+                </div>
+            `);
+        }
+
+
+        // --- NEW: Time vs Cost Rehab Planning ---
+
+        // Global rehab tracking variables
+        let rehabItems = [];
+        let rehabTimeline = 0; // In months
+
+        function phase3_PlanRehab() {
+            // Initialize rehab tracking for this phase
+            rehabItems = [
+                { name: "Kitchen", done: false },
+                { name: "Bathrooms", done: false },
+                { name: "Flooring", done: false },
+                { name: "Paint (Interior/Exterior)", done: false },
+                { name: "Landscaping/Curb Appeal", done: false }
+            ];
+            rehabTimeline = 0;
+            gameState.rehab_spent = 0; // Reset spent, costs are incurred during selection
+
+            renderRehabScreen();
+        }
+
+        // Iterative screen for selecting rehab options
+        function renderRehabScreen() {
+            const remainingItems = rehabItems.filter(item => !item.done);
+
+            if (remainingItems.length === 0) {
+                finalizeRehab();
+                return;
+            }
+
+            const currentItem = remainingItems[0];
+            const options = getRehabOptions(currentItem.name);
+
+            render(`
+                <div class="narrative">
+                    <h2>Rehab Planning: ${currentItem.name}</h2>
+                    <p>How do you want to handle the ${currentItem.name.toLowerCase()} renovation? Remember, time equals holding costs.</p>
+                    <p><strong>Total Spent So Far:</strong> ${formatCurrency(gameState.rehab_spent)}</p>
+                    <p><strong>Estimated Timeline Impact:</strong> ${rehabTimeline.toFixed(1)} months</p>
+                </div>
+                <div class="choices">
+                    ${options.map(opt => `
+                        <button class="choice-button" onclick="executeRehab('${currentItem.name}', ${opt.cost}, ${opt.time}, '${opt.quality}')">
+                            ${opt.description} <br>
+                            <strong>Cost:</strong> ${formatCurrency(opt.cost)} | <strong>Time:</strong> +${opt.time} months | <strong>Quality:</strong> ${opt.quality}
+                        </button>
+                    `).join('')}
+                </div>
+            `);
+        }
+
+        // Defines the trade-offs (Time vs Cost vs Quality) for each area
+        function getRehabOptions(itemName) {
+            switch (itemName) {
+                case "Kitchen":
+                    return [
+                        { description: "Cosmetic Refresh (Paint cabinets, laminate counters)", cost: 4000, time: 0.75, quality: "Low" },
+                        { description: "Standard Remodel (Mid-grade cabinets, granite, stainless)", cost: 15000, time: 1.0, quality: "Standard" },
+                        { description: "High-End Overhaul (Custom cabinets, quartz island)", cost: 30000, time: 1.5, quality: "High" }
+                    ];
+                case "Bathrooms":
+                     return [
+                        { description: "Basic Update (New vanity, fixtures, paint)", cost: 3000, time: 0.5, quality: "Low" },
+                        { description: "Standard Remodel (New tile surround, upgraded fixtures)", cost: 9000, time: 0.75, quality: "Standard" },
+                        { description: "Luxury Spa Conversion (Full tile, glass shower)", cost: 18000, time: 1.25, quality: "High" }
+                    ];
+                case "Flooring":
+                    return [
+                        { description: "Cheap Carpet & Vinyl (Fast install)", cost: 5000, time: 0.3, quality: "Low" },
+                        { description: "LVP (Luxury Vinyl Plank) Throughout", cost: 10000, time: 0.5, quality: "Standard" },
+                        { description: "Refinish/Install Hardwood Floors (Slow process)", cost: 18000, time: 1.0, quality: "High" }
+                    ];
+                 case "Paint (Interior/Exterior)":
+                    return [
+                        { description: "DIY Paint Job (You do the work, slow)", cost: 1000, time: 1.0, quality: "Low" },
+                        { description: "Professional Crew (Standard quality, fast)", cost: 7000, time: 0.5, quality: "Standard" },
+                    ];
+                case "Landscaping/Curb Appeal":
+                     return [
+                        { description: "Mow and Mulch (DIY)", cost: 500, time: 0.25, quality: "Low" },
+                        { description: "New Sod and Professional Planting", cost: 3000, time: 0.3, quality: "Standard" },
+                    ];
+                default:
+                    return [];
+            }
+        }
+
+        function executeRehab(itemName, cost, time, quality) {
+            gameState.rehab_spent += cost;
+            rehabTimeline += time;
+
+            // Adjust Final ARV based on quality
+            if (quality === "High") {
+                gameState.final_arv += 2000; // Small boost
+                addLesson(`Lesson: High-quality finishes (${itemName}) slightly increased the potential ARV.`);
+            } else if (quality === "Low") {
+                gameState.final_arv -= 3000; // Larger penalty
+                addLesson(`Lesson: Cheap finishes (${itemName}) reduced the potential ARV. Buyers notice low quality.`);
+            }
+
+            // Mark item as done
+            const item = rehabItems.find(i => i.name === itemName);
+            if (item) item.done = true;
+
+            renderRehabScreen();
+        }
+
+        // Finalizes the rehab phase, applies contractor modifiers and checks for surprises
+        function finalizeRehab() {
+            let narrative = `<h2>Rehab Complete!</h2><p>The planned renovation work is finished.</p>`;
+            let surpriseNarrative = "";
+
+            // 1. Handle Contractor Performance (Time/Cost Overruns)
+            if (gameState.decisions.contractorType === 'Cheap') {
+                const delay = rehabTimeline * 0.5; // 50% time overrun
+                rehabTimeline += delay;
+                const costOverrun = gameState.rehab_spent * 0.25; // 25% cost overrun
+                gameState.rehab_spent += costOverrun;
+                surpriseNarrative += `<div class="surprise-event">Contractor Disaster! Your cheap contractor cut corners, failed inspections, and caused delays. The project took an extra ${delay.toFixed(1)} months and cost an additional ${formatCurrency(costOverrun)} in rework and change orders!</div>`;
+            } else if (gameState.decisions.contractorType === 'Premium') {
+                 const speedBonus = rehabTimeline * 0.2; // 20% faster
+                 rehabTimeline -= speedBonus;
+                 narrative += `<p>Your premium contractor finished ${speedBonus.toFixed(1)} months ahead of the estimated schedule!</p>`;
+            }
+
+
+            // 2. Check for Missed Inspections (Surprise Events)
+            const trueCondition = gameState.current_property.true_condition;
+            const inspections = gameState.decisions.inspections;
+
+            // Check Roof - Cost Multiplier 1.5x if found late
+            if (!inspections.roof && trueCondition.roof.includes("Leaking")) {
+                const fixCost = 12000; // $8000 * 1.5
+                gameState.rehab_spent += fixCost;
+                rehabTimeline += 1; // Add 1 month delay
+                surpriseNarrative += `<div class="surprise-event">Surprise Leak! During the bathroom remodel, extensive mold was found due to the leaky roof you didn't inspect. Emergency fix cost ${formatCurrency(fixCost)} and delayed the project by 1 month.</div>`;
+                 addLesson("Lesson: Skipping the roof inspection cost time and money when the hidden leak caused mold damage.");
+            }
+
+            // Check Foundation - Cost Multiplier 1.5x if found late
+            if (!inspections.foundation && trueCondition.foundation.includes("Major settling")) {
+                const fixCost = 22500; // $15000 * 1.5
+                gameState.rehab_spent += fixCost;
+                rehabTimeline += 1.5; // Add 1.5 month delay
+                surpriseNarrative += `<div class="surprise-event">Foundation Failure! After installing new flooring, cracks appeared in the drywall. The foundation issue you missed requires stabilization costing ${formatCurrency(fixCost)} and delayed the project by 1.5 months.</div>`;
+                addLesson("Lesson: Skipping the foundation inspection on a property with potential structural issues led to a massive unexpected expense and delay.");
+            }
+
+            // 3. Advance Time based on the final timeline
+            if (rehabTimeline < 1) rehabTimeline = 1;
+
+            const totalMonths = Math.ceil(rehabTimeline);
+            // Advance time and check for bankruptcy
+            if (advanceTime(totalMonths)) return;
+
+            render(`
+                <div class="narrative">
+                    ${narrative}
+                </div>
+                ${surpriseNarrative}
+                <div class="financial-update">
+                    <p>Total Rehab Spent (Including Overruns): ${formatCurrency(gameState.rehab_spent)}</p>
+                    <p>Total Time Elapsed (Rehab): ${totalMonths} months</p>
+                    <p>Holding Costs During Rehab: ${formatCurrency(gameState.monthly_holding_costs * totalMonths)}</p>
+                </div>
+                 <div class="narrative">
+                    <p>The property is now ready for the market. Your estimated After Repair Value (ARV), adjusted for the quality of your renovations, is ${formatCurrency(gameState.final_arv)}.</p>
+                </div>
+                <div class="choices">
+                    <button class="choice-button" onclick="phase4_ListingStrategy()">Phase 4: List the Property</button>
+                </div>
+            `);
+        }
+
+        // --- PHASE 4: LISTING & SALE ---
+
+        // --- NEW: Realistic Listing Strategies ---
+        function phase4_ListingStrategy() {
+             render(`
+                <div class="narrative">
+                    <h2>Phase 4: Listing Strategy</h2>
+                    <p>The house looks great. Now you need to decide how to market and sell it. The Estimated ARV is ${formatCurrency(gameState.final_arv)}.</p>
+                     <img src="https://images.pexels.com/photos/584399/pexels-photo-584399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="For Sale sign" class="scenario-image">
+                </div>
+                <div class="choices">
+                    <button class="choice-button" onclick="setMarketing('TopRealtor')">
+                        Hire Top Realtor + Staging (6.5% Total Commission) - Professional marketing, high-quality photos, strong negotiation. Highest chance of hitting ARV quickly.
+                    </button>
+                    <button class="choice-button secondary" onclick="setMarketing('Discount')">
+                        Use Discount Broker (4% Total Commission) - Basic MLS listing, you handle staging/photos. Average market time.
+                    </button>
+                    <button class="choice-button secondary" onclick="setMarketing('FSBO')">
+                        FSBO (For Sale By Owner) (2.5% Buyer Agent Commission) - You handle everything. Saves commission but high risk of slow sale and lower price.
+                    </button>
+                </div>
+            `);
+        }
+
+        function setMarketing(strategy) {
+            gameState.decisions.marketingStrategy = strategy;
+            let insight = "";
+
+            if (strategy === 'FSBO') {
+                addLesson("Lesson: Selling FSBO rarely saves money. Realtors provide market expertise and marketing reach that typically results in a higher sales price, justifying their commission.");
+                insight = "Insight: You are saving on the listing commission, but this strategy requires significant effort and risks leaving money on the table or extending holding time.";
+            } else if (strategy === 'TopRealtor') {
+                insight = "Insight: Hiring a professional and staging the property maximizes your chances of getting the best price quickly.";
+            } else {
+                insight = "Insight: A discount broker is a middle ground, saving some commission but potentially sacrificing top-dollar marketing exposure.";
+            }
+
+             render(`
+                <div class="narrative">
+                    <h2>Marketing Strategy Set</h2>
+                    <p>You have chosen the ${strategy} approach.</p>
+                </div>
+                <div class="investor-insight">${insight}</div>
+                <div class="choices">
+                    <button class="choice-button" onclick="phase4_OnTheMarket()">List the Property</button>
+                </div>
+            `);
+        }
+
+
+        function phase4_OnTheMarket() {
+            // Determine Market Reaction based on Strategy
+            const strategy = gameState.decisions.marketingStrategy;
+            let salePrice = gameState.final_arv;
+            let timeToSell = 1; // Base time in months
+
+            // Adjust price and time based on strategy
+            if (strategy === 'TopRealtor') {
+                salePrice *= 1.03; // 3% boost
+            } else if (strategy === 'Discount') {
+                timeToSell += 1; // Slower sale
+            } else if (strategy === 'FSBO') {
+                salePrice *= 0.92; // 8% penalty (lack of exposure/negotiation skill)
+                timeToSell += 2; // Much slower sale
+            }
+
+            // Add slight randomness for market conditions
+            const marketFactor = 0.98 + Math.random() * 0.04; // +/- 2% randomness
+            salePrice = Math.round(salePrice * marketFactor);
+
+            // Advance time and check for bankruptcy
+            if (advanceTime(timeToSell)) return;
+
+            let narrative = "";
+            if (timeToSell === 1) {
+                narrative = "The marketing strategy worked perfectly! You received a strong offer in the first few weeks.";
+            } else {
+                narrative = `The property sat on the market for ${timeToSell} months, accumulating holding costs, before you finally received an acceptable offer.`;
+            }
+
+             render(`
+                <div class="narrative">
+                    <h2>Offer Received!</h2>
+                    <p>${narrative}</p>
+                    <p>The final offer price is: <strong>${formatCurrency(salePrice)}</strong></p>
+                </div>
+                 <div class="financial-update">
+                    <p>Holding Costs During Sale Period (${timeToSell} Months): -${formatCurrency(gameState.monthly_holding_costs * timeToSell)}</p>
+                </div>
+                <div class="choices">
+                    <button class="choice-button" onclick="finalizeSale(${salePrice})">Accept Offer and Close</button>
+                </div>
+            `);
+        }
+
+        // --- PHASE 5: FINAL REPORT ---
+        function finalizeSale(salePrice) {
+            // Calculate Selling Costs
+            const strategy = gameState.decisions.marketingStrategy;
+            let commissionRate = 0;
+
+            if (strategy === 'TopRealtor') commissionRate = 0.065;
+            else if (strategy === 'Discount') commissionRate = 0.04;
+            else if (strategy === 'FSBO') commissionRate = 0.025; // Assuming buyer agent commission
+
+            const commissionCost = salePrice * commissionRate;
+            const closingCostsSell = salePrice * 0.01; // 1% seller closing costs
+            const totalSellingCosts = commissionCost + closingCostsSell;
+
+            // Calculate Profit
+            // Net Profit = Sale Price - Purchase Price - Buy Closing Costs - Rehab Spent - Total Holding Costs - Selling Costs
+            const netProfit = salePrice -
+                              gameState.purchase_price -
+                              gameState.closing_costs_buy -
+                              gameState.rehab_spent -
+                              gameState.total_holding_costs -
+                              totalSellingCosts;
+
+
+            render(`
+                <div class="narrative">
+                    <h2>Phase 5: Final Report</h2>
+                    <p>Congratulations! The sale has closed. Let's look at the numbers.</p>
+                </div>
+                <div class="property-card">
+                    <h3>Project Breakdown: ${gameState.current_property.address}</h3>
+                    <p><strong>Sale Price:</strong> ${formatCurrency(salePrice)}</p>
+                    <hr>
+                    <p><strong>Costs:</strong></p>
+                    <ul>
+                        <li>Purchase Price: ${formatCurrency(gameState.purchase_price)}</li>
+                        <li>Closing Costs (Buy): ${formatCurrency(gameState.closing_costs_buy)}</li>
+                        <li>Total Rehab Costs: ${formatCurrency(gameState.rehab_spent)}</li>
+                        <li>Total Holding Costs (${gameState.months_held} months): ${formatCurrency(gameState.total_holding_costs)}</li>
+                        <li>Selling Costs (Commission + Closing): ${formatCurrency(totalSellingCosts)}</li>
+                    </ul>
+                    <hr>
+                    <h3 style="color: ${netProfit >= 0 ? 'var(--success-color)' : 'var(--danger-color)'}">
+                        FINAL NET PROFIT / LOSS: ${formatCurrency(netProfit)}
+                    </h3>
+                </div>
+                <div class="narrative">
+                    <h3>Lessons Learned Summary</h3>
+                    <ul>
+                        ${gameState.lessons.map(l => `<li>${l}</li>`).join('')}
+                    </ul>
+                </div>
+                 <div class="choices">
+                    <button class="choice-button" onclick="startGame()">Play Again</button>
+                </div>
+            `);
+        }
+
+        // Handles game over conditions
+        function gameOver(reason) {
+             if (reason === "Bankruptcy") {
+                // Calculate the loss (Starting cash minus current negative cash)
+                const cashInvested = 100000 - gameState.player_cash;
+
+                 render(`
+                    <div class="surprise-event">
+                        <h1>GAME OVER: FORECLOSURE</h1>
+                        <p>You have run out of cash. Your holding costs and/or rehab expenses exceeded your available funds.</p>
+                        <p>The hard money lender has foreclosed on the property. You lost your entire investment.</p>
+                        <p><strong>Total Loss: ${formatCurrency(cashInvested)}</strong></p>
+                    </div>
+                     <div class="investor-insight">
+                        Insight: Flipping houses carries significant liquidity risk. Running out of capital mid-project is the most common reason investors fail. Always have reserves!
+                     </div>
+                     <div class="narrative">
+                        <h3>Key Mistakes Summary</h3>
+                         <ul>
+                            ${gameState.lessons.map(l => `<li>${l}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="choices">
+                        <button class="choice-button" onclick="startGame()">Try Again</button>
+                    </div>
+                `);
+             }
+        }
+
+
+        // Start the game when the page loads
+        window.onload = startGame;
+
+    </script>
+</body>
+</html>
