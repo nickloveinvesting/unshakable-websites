@@ -616,7 +616,7 @@
                     const systemPrompt = "You are 'Unshakable Investor,' an AI persona modeled after Toby Potter. Your analysis should be direct, authoritative, and action-oriented. Analyze the deal metrics and provide a concise, strategic summary.";
                     const userQuery = `Deal Metrics:\n- Address: ${inputs.propertyAddress.value || 'N/A'}\n- SQFT: ${sqft || 'N/A'}\n- ARV: ${formatCurrency(metrics.arv)} (${sqft > 0 ? formatCurrency(metrics.arvPerSqft, true) + '/sqft' : 'N/A'})\n- Purchase Price: ${formatCurrency(metrics.purchasePrice)} (${sqft > 0 ? formatCurrency(metrics.purchasePricePerSqft, true) + '/sqft' : 'N/A'})\n- Rehab Costs: ${formatCurrency(metrics.rehabCosts)} (${sqft > 0 ? formatCurrency(metrics.rehabPerSqft, true) + '/sqft' : 'N/A'})\n- Purchase + Rehab as % of ARV: ${metrics.costBasisOfArv.toFixed(1)}%\n- Net Profit: ${formatCurrency(metrics.netProfit)}\n- Profit Margin: ${isFinite(metrics.profitMargin) ? metrics.profitMargin.toFixed(1) + '%' : 'N/A'}\n- ROI: ${isFinite(metrics.roi) ? metrics.roi.toFixed(1) + '%' : 'N/A'}\n- Target Profit: ${formatCurrency(targetProfit)}\n\nProvide a 'Deal Summary' including:\n1. Analysis of deal strength (ref. Purchase+Rehab % of ARV, profit target).\n2. Primary leverage point for this deal.\n3. A 'what-if' scenario: "If the seller's price is firm, you would need to reduce rehab costs to approximately ${formatCurrency(whatIfRehab)} to hit your minimum target."`;
                     const payload = { contents: [{ parts: [{ text: userQuery }] }], systemInstruction: { parts: [{ text: systemPrompt }] } };
-                    const apiKey = ""; const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                    const apiKey = "AIzaSyD_EyjGDnQhrooCyRwJDFg-432iGPD6zi4"; const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
                     try {
                         const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                         if (!response.ok) { let errorMsg = `API error: ${response.status} ${response.statusText}`; try { const errorBody = await response.json(); if (errorBody && errorBody.error && errorBody.error.message) { errorMsg += ` - ${errorBody.error.message}`; } } catch (e) {} throw new Error(errorMsg); }
@@ -815,3 +815,4 @@
     </script>
 </body>
 </html>
+
