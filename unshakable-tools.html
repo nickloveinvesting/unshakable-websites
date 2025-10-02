@@ -144,16 +144,16 @@
             
             <!-- Navigation Links -->
             <div class="hidden sm:flex items-center space-x-4">
-                <button data-view="profitAnalysisView" class="nav-button active bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Profit Analysis</button>
+                <button data-view="profitAnalysisView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Profit Analysis</button>
                 <button data-view="rehabEstimatorView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Rehab Estimator</button>
-                <button data-view="submitDealView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Submit Deal</button>
+                <button data-view="submitDealView" class="nav-button active bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Submit Deal</button>
             </div>
         </div>
     </nav>
 
     <main id="app-container">
         <!-- Profit Analysis View -->
-        <div id="profitAnalysisView" class="view-container">
+        <div id="profitAnalysisView" class="view-container hidden">
              <div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
                 <div class="w-full max-w-7xl mx-auto">
                     <header class="text-center mb-10 pt-8 sm:pt-0">
@@ -324,7 +324,7 @@
                         <p class="text-sm text-slate-400 mb-4">The table below shows how Net Profit changes with different Purchase Prices and Rehab Costs. Green cells meet or exceed your Target Profit.</p>
                         <div id="profit_table_container" class="rounded-lg">
                             <table id="profit_table" class="w-full text-sm border-collapse border border-slate-700">
-                                </table>
+                            </table>
                         </div>
                     </section>
                     
@@ -417,17 +417,17 @@
                                 </div>
                             </div>
                              <p class="text-xs text-slate-500 mt-6 text-center">Disclaimer: This tool provides a rough estimate for informational purposes only.</p>
-                               <!-- Email Section -->
-                               <div class="mt-6 border-t border-slate-700 pt-4">
-                                   <h3 class="text-lg font-bold uppercase tracking-tighter mb-3 text-center">Get a Detailed Breakdown</h3>
-                                   <div class="space-y-3">
-                                       <input type="email" id="user-email" placeholder="Enter your email address" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                                       <button id="email-budget-btn" class="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity duration-200">
-                                           Email Me The Full Rehab Budget
-                                       </button>
-                                       <p id="email-status" class="text-xs text-center h-4"></p>
-                                   </div>
-                               </div>
+                                <!-- Email Section -->
+                                <div class="mt-6 border-t border-slate-700 pt-4">
+                                    <h3 class="text-lg font-bold uppercase tracking-tighter mb-3 text-center">Get a Detailed Breakdown</h3>
+                                    <div class="space-y-3">
+                                        <input type="email" id="user-email" placeholder="Enter your email address" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                                        <button id="email-budget-btn" class="w-full bg-gradient-to-r from-yellow-600 to-yellow-800 text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 transition-opacity duration-200">
+                                            Email Me The Full Rehab Budget
+                                        </button>
+                                        <p id="email-status" class="text-xs text-center h-4"></p>
+                                    </div>
+                                </div>
                         </aside>
                     </div>
                 </main>
@@ -435,33 +435,13 @@
         </div>
 
         <!-- Submit Deal View -->
-        <div id="submitDealView" class="view-container hidden">
-            <div class="container mx-auto p-4 md:p-8 flex flex-col" style="min-height: calc(100vh - 70px);">
-                 <header class="text-center mb-12 pt-8 sm:pt-0">
+        <div id="submitDealView" class="view-container">
+            <div class="flex flex-col" style="min-height: calc(100vh - 70px);">
+                 <header class="text-center mb-4 pt-4 container mx-auto p-4 md:p-8">
                     <h1 class="text-4xl md:text-5xl font-extrabold uppercase tracking-tighter text-white">Submit Your Deal</h1>
                     <p class="text-slate-400 mt-2 max-w-2xl mx-auto">Complete the form below and our team will review your potential fix-and-flip project.</p>
                 </header>
-                <div class="flex-grow">
-                    <iframe
-                        src="https://ghl.theunshakableinvestor.com/widget/form/tktvDpXi3BztUZXWEc3K"
-                        style="width:100%;height:100%;border:none;border-radius:3px"
-                        id="inline-tktvDpXi3BztUZXWEc3K" 
-                        data-layout="{'id':'INLINE'}"
-                        data-trigger-type="alwaysShow"
-                        data-trigger-value=""
-                        data-activation-type="alwaysActivated"
-                        data-activation-value=""
-                        data-deactivation-type="neverDeactivate"
-                        data-deactivation-value=""
-                        data-form-name="Initial Deal"
-                        data-height="undefined"
-                        data-layout-iframe-id="inline-tktvDpXi3BztUZXWEc3K"
-                        data-form-id="tktvDpXi3BztUZXWEc3K"
-                        title="Initial Deal"
-                            >
-                    </iframe>
-                    <script src="https://ghl.theunshakableinvestor.com/js/form_embed.js"></script>
-                </div>
+                <iframe src="https://shy-spike-7b2.notion.site/ebd/28041616c38e80ffb2cfea0c8d6ce778" class="flex-grow" style="width:100%; border:none;"></iframe>
             </div>
         </div>
     </main>
@@ -636,7 +616,7 @@
                     const systemPrompt = "You are 'Unshakable Investor,' an AI persona modeled after Toby Potter. Your analysis should be direct, authoritative, and action-oriented. Analyze the deal metrics and provide a concise, strategic summary.";
                     const userQuery = `Deal Metrics:\n- Address: ${inputs.propertyAddress.value || 'N/A'}\n- SQFT: ${sqft || 'N/A'}\n- ARV: ${formatCurrency(metrics.arv)} (${sqft > 0 ? formatCurrency(metrics.arvPerSqft, true) + '/sqft' : 'N/A'})\n- Purchase Price: ${formatCurrency(metrics.purchasePrice)} (${sqft > 0 ? formatCurrency(metrics.purchasePricePerSqft, true) + '/sqft' : 'N/A'})\n- Rehab Costs: ${formatCurrency(metrics.rehabCosts)} (${sqft > 0 ? formatCurrency(metrics.rehabPerSqft, true) + '/sqft' : 'N/A'})\n- Purchase + Rehab as % of ARV: ${metrics.costBasisOfArv.toFixed(1)}%\n- Net Profit: ${formatCurrency(metrics.netProfit)}\n- Profit Margin: ${isFinite(metrics.profitMargin) ? metrics.profitMargin.toFixed(1) + '%' : 'N/A'}\n- ROI: ${isFinite(metrics.roi) ? metrics.roi.toFixed(1) + '%' : 'N/A'}\n- Target Profit: ${formatCurrency(targetProfit)}\n\nProvide a 'Deal Summary' including:\n1. Analysis of deal strength (ref. Purchase+Rehab % of ARV, profit target).\n2. Primary leverage point for this deal.\n3. A 'what-if' scenario: "If the seller's price is firm, you would need to reduce rehab costs to approximately ${formatCurrency(whatIfRehab)} to hit your minimum target."`;
                     const payload = { contents: [{ parts: [{ text: userQuery }] }], systemInstruction: { parts: [{ text: systemPrompt }] } };
-                    const apiKey = "AIzaSyD_EyjGDnQhrooCyRwJDFg-432iGPD6zi4"; const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+                    const apiKey = ""; const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
                     try {
                         const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                         if (!response.ok) { let errorMsg = `API error: ${response.status} ${response.statusText}`; try { const errorBody = await response.json(); if (errorBody && errorBody.error && errorBody.error.message) { errorMsg += ` - ${errorBody.error.message}`; } } catch (e) {} throw new Error(errorMsg); }
@@ -835,6 +815,3 @@
     </script>
 </body>
 </html>
-
-​
-
