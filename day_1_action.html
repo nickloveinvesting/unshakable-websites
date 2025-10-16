@@ -1,0 +1,463 @@
+```html
+<!-- Start of Unshakable Investor Interactive Exercise Component -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg-primary: #121212;
+        --bg-input: #0A0A0A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #94a3b8;
+        --accent-start: #C84A00;
+        --accent-end: #FF6A00;
+        --success-color: #10B981;
+        --error-color: #EF4444;
+        --border-color: rgba(148, 163, 184, 0.2);
+    }
+
+    #unshakableExerciseRoot {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        padding: 48px;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        max-width: 900px;
+        margin: 20px auto;
+        overflow: hidden; /* Contains pseudo-elements */
+        position: relative;
+    }
+
+    #unshakableExerciseRoot::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-image: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+        z-index: 2;
+    }
+
+    .unshakable-header .title {
+        font-size: 2.25rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+        margin: 0;
+        color: var(--text-primary);
+        background-image: linear-gradient(90deg, #FFFFFF, #94a3b8);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    
+    .unshakable-header .subtitle {
+        font-size: 1rem;
+        font-weight: 400;
+        color: var(--text-secondary);
+        margin: 8px 0 32px 0;
+        max-width: 700px;
+        line-height: 1.6;
+    }
+
+    #ledgerForm {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 24px;
+    }
+
+    .input-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .input-wrapper label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .input-field, .textarea-field {
+        background-color: var(--bg-input);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 14px 16px;
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .input-field:focus, .textarea-field:focus {
+        outline: none;
+        border-color: var(--accent-end);
+        box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.2), 0 0 15px rgba(200, 74, 0, 0.1);
+    }
+    
+    .input-field::placeholder, .textarea-field::placeholder {
+        color: rgba(148, 163, 184, 0.4);
+    }
+
+    .ledger-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
+        padding: 28px 0;
+    }
+
+    .ledger-column {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .textarea-field {
+        resize: vertical;
+        min-height: 250px;
+        flex-grow: 1;
+    }
+
+    .commitment-section {
+        background-color: rgba(0,0,0,0.2);
+        padding: 24px;
+        border: 1px solid var(--border-color);
+    }
+
+    .commitment-text {
+        font-family: 'Inter', sans-serif;
+        font-style: italic;
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: var(--text-secondary);
+        text-align: center;
+        margin: 0 0 24px 0;
+    }
+    
+    .commitment-text strong {
+        color: var(--text-primary);
+        font-style: normal;
+        font-weight: 500;
+    }
+
+    .commitment-inputs {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .checkbox-wrapper input[type="checkbox"] {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+    }
+    
+    .custom-checkbox {
+        width: 20px;
+        height: 20px;
+        background-color: var(--bg-input);
+        border: 2px solid var(--border-color);
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    
+    .custom-checkbox .checkmark {
+        display: none;
+        width: 6px;
+        height: 12px;
+        border: solid var(--text-primary);
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+    }
+
+    .checkbox-wrapper input[type="checkbox"]:checked + .custom-checkbox {
+        background-image: linear-gradient(45deg, var(--accent-start), var(--accent-end));
+        border-color: var(--accent-end);
+    }
+    
+    .checkbox-wrapper input[type="checkbox"]:checked + .custom-checkbox .checkmark {
+        display: block;
+    }
+    
+    .checkbox-wrapper label {
+        color: var(--text-primary);
+        font-weight: 500;
+        margin: 0;
+    }
+
+    #submitBtn {
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-primary);
+        background-image: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+        border: none;
+        padding: 16px 24px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    
+    #submitBtn:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.4s ease;
+        z-index: -1;
+    }
+
+    #submitBtn:hover:not(:disabled) {
+        box-shadow: 0 0 20px rgba(255, 106, 0, 0.4);
+        transform: translateY(-2px);
+    }
+
+    #submitBtn:hover:not(:disabled):before {
+        left: 100%;
+    }
+    
+    #submitBtn:active:not(:disabled) {
+        transform: translateY(0);
+        box-shadow: 0 0 10px rgba(255, 106, 0, 0.2);
+    }
+
+    #submitBtn:disabled {
+        cursor: not-allowed;
+        background-image: none;
+        background-color: #333;
+        color: #777;
+    }
+    
+    #submitBtn.is-success {
+        background-image: none;
+        background-color: var(--success-color);
+    }
+
+    #submitBtn.is-error {
+        background-image: none;
+        background-color: var(--error-color);
+    }
+    
+    .error-message {
+        color: var(--error-color);
+        font-size: 0.875rem;
+        margin-top: 8px;
+        display: none;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #unshakableExerciseRoot {
+            padding: 24px;
+        }
+        .form-row, .ledger-grid, .commitment-inputs {
+            flex-direction: column;
+            grid-template-columns: 1fr;
+        }
+    }
+
+</style>
+
+<div id="unshakableExerciseRoot">
+    <header class="unshakable-header">
+        <h1 class="title">The Pain & Vision Ledger</h1>
+        <p class="subtitle">"The decisions you make will shape your life, but the life you desire, the life you want should shape your decisions."</p>
+    </header>
+
+    <form id="ledgerForm" novalidate>
+        <div class="form-row">
+            <div class="input-wrapper">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" class="input-field" placeholder="e.g., John Doe" required>
+                <p class="error-message">Full name is required.</p>
+            </div>
+            <div class="input-wrapper">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="input-field" placeholder="e.g., john.doe@email.com" required>
+                <p class="error-message">A valid email is required.</p>
+            </div>
+        </div>
+
+        <div class="ledger-grid">
+            <div class="ledger-column">
+                <label for="painText">The Pain</label>
+                <textarea id="painText" name="pain" class="textarea-field" placeholder="List the specific, painful consequences of past decisions..." required></textarea>
+                 <p class="error-message">This field cannot be empty.</p>
+            </div>
+            <div class="ledger-column">
+                <label for="visionText">The Vision</label>
+                <textarea id="visionText" name="vision" class="textarea-field" placeholder="Write the powerful, desirable outcomes of the new life you are creating..." required></textarea>
+                <p class="error-message">This field cannot be empty.</p>
+            </div>
+        </div>
+
+        <div class="commitment-section">
+            <p class="commitment-text">
+                Today, my decisions serve <strong>the vision</strong>, not the pain.
+            </p>
+            <div class="commitment-inputs">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="commitment" name="commitment" required>
+                    <span class="custom-checkbox">
+                        <span class="checkmark"></span>
+                    </span>
+                    <label for="commitment">I commit to this declaration.</label>
+                </div>
+                <div class="input-wrapper">
+                    <label for="signatureDate">Date of Commitment</label>
+                    <input type="text" id="signatureDate" name="signatureDate" class="input-field" required>
+                </div>
+            </div>
+            <p class="error-message" id="commitmentError">You must commit to this declaration.</p>
+        </div>
+
+        <button type="submit" id="submitBtn">Submit My Ledger</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('ledgerForm');
+        if (!form) return;
+
+        const submitBtn = document.getElementById('submitBtn');
+        const formElements = form.elements;
+        const dateField = document.getElementById('signatureDate');
+
+        // Pre-fill date
+        const today = new Date();
+        const formattedDate = `${today.toLocaleString('default', { month: 'long' })} ${today.getDate()}, ${today.getFullYear()}`;
+        if (dateField) {
+            dateField.value = formattedDate;
+        }
+
+        const WEBHOOK_URL = 'https://hook.us2.make.com/7wbmkvn8vujpej74sy29299rl9nmgn9e';
+        const LESSON_TITLE = 'Toby-ism #1: Decisions Shape Your Life (Lesson #111)';
+        
+        const validateField = (field) => {
+            let isValid = true;
+            const errorMsg = field.parentElement.querySelector('.error-message');
+            
+            field.style.borderColor = 'var(--border-color)';
+            if(errorMsg) errorMsg.style.display = 'none';
+
+            if ((field.type === 'checkbox' && !field.checked) || (field.value.trim() === '' && field.type !== 'checkbox')) {
+                isValid = false;
+                field.style.borderColor = 'var(--error-color)';
+                if (errorMsg) {
+                    errorMsg.style.display = 'block';
+                } else if (field.type === 'checkbox') {
+                    // Special case for checkbox group
+                    document.getElementById('commitmentError').style.display = 'block';
+                }
+            } else if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
+                isValid = false;
+                field.style.borderColor = 'var(--error-color)';
+                if (errorMsg) errorMsg.style.display = 'block';
+            }
+            return isValid;
+        };
+        
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+
+            let isFormValid = true;
+            const requiredFields = ['fullName', 'email', 'painText', 'visionText', 'commitment', 'signatureDate'];
+            
+            // Clear previous commitment error
+            document.getElementById('commitmentError').style.display = 'none';
+
+            requiredFields.forEach(fieldName => {
+                const field = form.elements[fieldName];
+                if (!validateField(field)) {
+                    isFormValid = false;
+                }
+            });
+            
+            if (!isFormValid) {
+                return;
+            }
+
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+            submitBtn.classList.remove('is-error', 'is-success');
+
+            const formData = {
+                lessonTitle: LESSON_TITLE,
+                fullName: formElements.fullName.value,
+                email: formElements.email.value,
+                pain: formElements.painText.value,
+                vision: formElements.visionText.value,
+                commitment: formElements.commitment.checked,
+                signatureDate: formElements.signatureDate.value,
+                submittedAt: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    submitBtn.textContent = 'Submitted Successfully';
+                    submitBtn.classList.add('is-success');
+                    // Disable all form fields
+                    Array.from(formElements).forEach(el => el.disabled = true);
+                } else {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Submission Error:', error);
+                submitBtn.textContent = 'Error - Try Again';
+                submitBtn.classList.add('is-error');
+                submitBtn.disabled = false;
+            }
+        };
+
+        form.addEventListener('submit', handleSubmit);
+
+        // Add real-time validation feedback on blur
+        Array.from(form.querySelectorAll('[required]')).forEach(field => {
+            field.addEventListener('blur', () => validateField(field));
+        });
+    });
+</script>
+<!-- End of Unshakable Investor Interactive Exercise Component -->
+```
