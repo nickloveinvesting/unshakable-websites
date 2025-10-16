@@ -1,0 +1,442 @@
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Unshakable Investor Brand Guide CSS */
+        :root {
+            --bg-color: #121212;
+            --primary-text-color: #FFFFFF;
+            --secondary-text-color: #94a3b8;
+            --input-bg-color: #0A0A0A;
+            --fire-gradient-start: #C84A00;
+            --fire-gradient-end: #FF6A00;
+            --success-color-start: #28a745; /* Standard green for success */
+            --success-color-end: #218838;
+            --error-color-start: #dc3545; /* Standard red for error */
+            --error-color-end: #c82333;
+        }
+
+        /* Basic Reset & Font */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* The body style might not be directly inherited if embedded, but sets defaults for context */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--input-bg-color); /* Slightly lighter dark than --bg-color for contrast */
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border for engineered feel */
+        }
+
+        .title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900; /* Black */
+            font-size: 2.2em;
+            color: var(--primary-text-color);
+            text-transform: uppercase;
+            letter-spacing: -0.025em;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 1.1em;
+            color: var(--secondary-text-color);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--secondary-text-color);
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--input-bg-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: var(--primary-text-color);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            -webkit-appearance: none; /* Remove default browser styling */
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--fire-gradient-end);
+            box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.3); /* Subtle glow */
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .exercise-area-wrapper {
+            background-color: var(--input-bg-color); /* Darker background for the exercise content section */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .concentric-diagram {
+            position: relative;
+            width: 100%;
+            max-width: 400px; /* Control size of the visual */
+            aspect-ratio: 1 / 1;
+            margin: 0 auto 30px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .diagram-outer-circle, .diagram-inner-circle {
+            position: absolute;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+        }
+
+        .diagram-outer-circle {
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            color: var(--secondary-text-color);
+            background-color: rgba(255, 255, 255, 0.02);
+            font-size: 0.9em;
+        }
+
+        .diagram-inner-circle {
+            width: 60%;
+            height: 60%;
+            border: 2px solid var(--fire-gradient-end);
+            color: var(--fire-gradient-end);
+            background-color: rgba(255, 106, 0, 0.08);
+            font-size: 1.1em;
+        }
+
+        .exercise-inputs {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .exercise-input-section {
+            flex: 1;
+            min-width: 300px; /* Ensure sections don't get too small */
+            background-color: #0A0A0A; /* Slightly different from wrapper to show distinction */
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .section-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .my-control-label {
+            color: var(--fire-gradient-end);
+        }
+
+        .not-my-control-label {
+            color: var(--secondary-text-color);
+        }
+
+        .exercise-instructions {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            color: var(--secondary-text-color);
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 10px;
+        }
+
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(90deg, var(--fire-gradient-start), var(--fire-gradient-end));
+            color: var(--primary-text-color);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 106, 0, 0.4);
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 106, 0, 0.6);
+        }
+
+        .submit-button:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(255, 106, 0, 0.3);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .submit-button.success {
+            background: linear-gradient(90deg, var(--success-color-start), var(--success-color-end));
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .submit-button.error {
+            background: linear-gradient(90deg, var(--error-color-start), var(--error-color-end));
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            .title {
+                font-size: 1.8em;
+            }
+            .subtitle {
+                font-size: 1em;
+            }
+            .exercise-inputs {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .exercise-input-section {
+                min-width: unset;
+                width: 100%;
+            }
+            .diagram-inner-circle, .diagram-outer-circle {
+                font-size: 0.8em; /* Smaller text for diagram on small screens */
+            }
+        }
+    </style>
+</head>
+<div class="container">
+    <h2 class="title">The Personal Power Audit</h2>
+    <p class="subtitle">Toby-ism #3: If It's Going to Be, It's Up to Me (Lesson #113)</p>
+    <p class="exercise-instructions">
+        "If it's going to be, it's up to me." Your success depends entirely on your own actions, period. For this exercise, reflect on your life and decisions. Use the diagram below to conceptualize what is within and outside your control, then detail your specific thoughts in the input sections.
+    </p>
+
+    <form id="powerAuditForm" novalidate> <!-- novalidate to allow JS to handle all validation -->
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email address">
+        </div>
+
+        <div class="exercise-area-wrapper">
+            <div class="concentric-diagram">
+                <div class="diagram-outer-circle">
+                    0% MY CONTROL
+                </div>
+                <div class="diagram-inner-circle">
+                    100% MY CONTROL
+                </div>
+            </div>
+
+            <div class="exercise-inputs">
+                <div class="exercise-input-section">
+                    <h3 class="section-label my-control-label">100% My Control</h3>
+                    <p class="secondary-text-color">What specific actions, thoughts, and attitudes are entirely within your sphere of influence? List them here.</p>
+                    <textarea id="myControlContent" name="myControlContent" required placeholder="Example: My effort, my daily habits, my reaction to setbacks, the words I choose to use, my physical activity, how I manage my finances, my willingness to learn."></textarea>
+                </div>
+
+                <div class="exercise-input-section">
+                    <h3 class="section-label not-my-control-label">0% My Control</h3>
+                    <p class="secondary-text-color">What external factors, other people's actions, or unforeseen events are entirely outside your influence? List them here.</p>
+                    <textarea id="notMyControlContent" name="notMyControlContent" required placeholder="Example: The weather, other people's opinions, market fluctuations, global events, what happened in the past, certain health conditions, how others interpret my actions."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-button" id="submitButton">SUBMIT PERSONAL POWER AUDIT</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('powerAuditForm');
+        const submitButton = document.getElementById('submitButton');
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const myControlContent = document.getElementById('myControlContent');
+        const notMyControlContent = document.getElementById('notMyControlContent');
+
+        const lessonTitle = "Toby-ism #3: If It's Going to Be, It's Up to Me (Lesson #113)";
+        const exerciseTitle = "The Personal Power Audit";
+        const webhookUrl = 'https://hook.us2.make.com/7wbmkvn8vujpej74sy29299rl9nmgn9e';
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+
+            // Basic client-side validation
+            let isValid = true;
+            const requiredInputs = [fullNameInput, emailInput, myControlContent, notMyControlContent];
+
+            requiredInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = 'var(--error-color-start)'; // Highlight empty required fields
+                    isValid = false;
+                } else {
+                    input.style.borderColor = ''; // Reset border if valid
+                }
+            });
+
+            if (!isValid) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Simple email format validation
+            if (!/\S+@\S+\.\S+/.test(emailInput.value.trim())) {
+                emailInput.style.borderColor = 'var(--error-color-start)';
+                alert('Please enter a valid email address.');
+                return;
+            } else {
+                emailInput.style.borderColor = '';
+            }
+
+            submitButton.textContent = 'SUBMITTING...';
+            submitButton.disabled = true;
+            submitButton.classList.remove('success', 'error');
+
+            const formData = {
+                lessonTitle: lessonTitle,
+                exerciseTitle: exerciseTitle,
+                fullName: fullNameInput.value.trim(),
+                email: emailInput.value.trim(),
+                myControlContent: myControlContent.value.trim(),
+                notMyControlContent: notMyControlContent.value.trim()
+            };
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    submitButton.textContent = 'SUBMITTED SUCCESSFULLY';
+                    submitButton.classList.add('success');
+                    // Disable all form fields after successful submission
+                    requiredInputs.forEach(input => {
+                        input.disabled = true;
+                    });
+                } else {
+                    const errorDetails = await response.text(); // Get raw text for more general error handling
+                    console.error('Submission error:', response.status, errorDetails);
+                    submitButton.textContent = 'ERROR - TRY AGAIN';
+                    submitButton.classList.add('error');
+                    submitButton.disabled = false; // Re-enable for retry
+                }
+            } catch (error) {
+                console.error('Network or server error:', error);
+                submitButton.textContent = 'ERROR - TRY AGAIN';
+                submitButton.classList.add('error');
+                submitButton.disabled = false; // Re-enable for retry
+            }
+        });
+    });
+</script>
