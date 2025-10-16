@@ -1,0 +1,397 @@
+```html
+<!-- [START] Unshakable Investor Interactive Exercise -->
+
+<!-- Google Fonts: Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+    /* ---------------------------------- */
+    /*          BRANDING & RESET          */
+    /* ---------------------------------- */
+    :root {
+        --bg-color: #121212;
+        --container-bg: #1a1a1a;
+        --input-bg: #0A0A0A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #94a3b8;
+        --border-color: rgba(148, 163, 184, 0.2);
+        --border-color-focus: #C84A00;
+        --accent-start: #C84A00;
+        --accent-end: #FF6A00;
+        --success-start: #059669;
+        --success-end: #10B981;
+        --error-start: #DC2626;
+        --error-end: #EF4444;
+        --font-main: 'Inter', sans-serif;
+    }
+
+    #unshakable-exercise-112 * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* ---------------------------------- */
+    /*        MAIN CONTAINER LAYOUT       */
+    /* ---------------------------------- */
+    #unshakable-exercise-112 {
+        font-family: var(--font-main);
+        background-color: var(--bg-color);
+        color: var(--text-primary);
+        padding: clamp(24px, 5vw, 48px);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        max-width: 900px;
+        margin: 2rem auto;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ---------------------------------- */
+    /*           TYPOGRAPHY               */
+    /* ---------------------------------- */
+    #unshakable-exercise-112 .exercise-header h2 {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+        line-height: 1.1;
+        background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    #unshakable-exercise-112 .exercise-header .lesson-context {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    #unshakable-exercise-112 blockquote {
+        border-left: 3px solid var(--accent-start);
+        padding-left: 1.5rem;
+        margin: 0 0 2rem 0;
+        font-style: italic;
+        color: var(--text-secondary);
+        font-weight: 400;
+        line-height: 1.6;
+    }
+    
+    #unshakable-exercise-112 blockquote footer {
+        font-style: normal;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-top: 0.5rem;
+    }
+
+    /* ---------------------------------- */
+    /*           FORM STYLING             */
+    /* ---------------------------------- */
+    #mandateForm {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .form-section {
+        border: 1px solid var(--border-color);
+        padding: 1.5rem;
+        border-radius: 6px;
+        background-color: rgba(0,0,0,0.2);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-weight: 500;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+    
+    .form-group label .label-number {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+        color: var(--text-primary);
+        font-weight: 700;
+        font-size: 0.75rem;
+        margin-right: 0.5rem;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea {
+        background-color: var(--input-bg);
+        color: var(--text-primary);
+        border: 1px solid #333;
+        border-radius: 4px;
+        padding: 12px 16px;
+        font-family: var(--font-main);
+        font-size: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        width: 100%;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group input[type="email"]:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--border-color-focus);
+        box-shadow: 0 0 0 3px rgba(200, 74, 0, 0.3);
+    }
+    
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .form-group ::placeholder {
+        color: #555;
+    }
+    
+    /* ---------------------------------- */
+    /*           SUBMIT BUTTON            */
+    /* ---------------------------------- */
+    #submitBtn {
+        font-family: var(--font-main);
+        background-image: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%);
+        color: var(--text-primary);
+        border: none;
+        padding: 16px 24px;
+        font-weight: 700;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        background-size: 100% 100%;
+    }
+
+    #submitBtn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(255, 106, 0, 0.3);
+    }
+    
+    #submitBtn:disabled {
+        opacity: 0.7;
+        cursor: wait;
+    }
+
+    #submitBtn.success {
+        background-image: linear-gradient(90deg, var(--success-start) 0%, var(--success-end) 100%);
+        cursor: not-allowed;
+    }
+
+    #submitBtn.error {
+        background-image: linear-gradient(90deg, var(--error-start) 0%, var(--error-end) 100%);
+        cursor: pointer; /* Allow re-click */
+    }
+    
+    #submitBtn.error:disabled {
+        cursor: wait; /* Wait during the cool-down period */
+    }
+</style>
+
+<div id="unshakable-exercise-112">
+
+    <header class="exercise-header">
+        <p class="lesson-context">Toby-ism #2: No Excuses (Lesson #112)</p>
+        <h2>The No-Excuse Mandate</h2>
+    </header>
+
+    <blockquote>
+        "No excuses. And 99% of the excuses you accept are the ones you create... I have a dream, I have a vision, I'm making a decision and I'm not accepting any excuses to achieve it."
+        <footer>— Toby</footer>
+    </blockquote>
+
+    <form id="mandateForm" novalidate>
+
+        <!-- Personal Information Section -->
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+        </div>
+
+        <!-- Excuse #1 Section -->
+        <div class="form-section">
+            <div class="form-group">
+                <label for="excuse1"><span class="label-number">1</span> Your Most Common Excuse</label>
+                <input type="text" id="excuse1" name="excuse1" placeholder="e.g., &quot;I'm too tired&quot; or &quot;I don't have time&quot;" required>
+            </div>
+            <div class="form-group">
+                <label for="mandate1">Your No-Excuse Mandate #1</label>
+                <textarea id="mandate1" name="mandate1" placeholder="The Truth: This is a lie I tell myself to avoid discomfort.&#10;The Action: When I hear this, I will immediately..." required></textarea>
+            </div>
+        </div>
+
+        <!-- Excuse #2 Section -->
+        <div class="form-section">
+            <div class="form-group">
+                <label for="excuse2"><span class="label-number">2</span> Your Second Most Common Excuse</label>
+                <input type="text" id="excuse2" name="excuse2" placeholder="e.g., &quot;I'll do it tomorrow&quot;" required>
+            </div>
+            <div class="form-group">
+                <label for="mandate2">Your No-Excuse Mandate #2</label>
+                <textarea id="mandate2" name="mandate2" placeholder="The Truth: This is a lie I tell myself to avoid discomfort.&#10;The Action: When I hear this, I will immediately..." required></textarea>
+            </div>
+        </div>
+
+        <!-- Excuse #3 Section -->
+        <div class="form-section">
+            <div class="form-group">
+                <label for="excuse3"><span class="label-number">3</span> Your Third Most Common Excuse</label>
+                <input type="text" id="excuse3" name="excuse3" placeholder="e.g., &quot;It's too difficult&quot;" required>
+            </div>
+            <div class="form-group">
+                <label for="mandate3">Your No-Excuse Mandate #3</label>
+                <textarea id="mandate3" name="mandate3" placeholder="The Truth: This is a lie I tell myself to avoid discomfort.&#10;The Action: When I hear this, I will immediately..." required></textarea>
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn">Submit Your Mandates</button>
+
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('mandateForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formInputs = form.querySelectorAll('input, textarea');
+        const webhookUrl = 'https://hook.us2.make.com/7wbmkvn8vujpej74sy29299rl9nmgn9e';
+        const lessonTitle = 'Toby-ism #2: No Excuses (Lesson #112)';
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Simple validation
+            let isValid = true;
+            formInputs.forEach(input => {
+                if (input.hasAttribute('required') && !input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--error-start').trim();
+                    input.style.boxShadow = `0 0 0 3px rgba(220, 38, 38, 0.3)`;
+                } else {
+                    input.style.borderColor = '';
+                    input.style.boxShadow = '';
+                }
+            });
+
+            if (!isValid) {
+                // You can add a more prominent error message here if needed
+                return;
+            }
+
+            handleSubmission();
+        });
+        
+        // Reset validation styles on input
+        formInputs.forEach(input => {
+            input.addEventListener('input', () => {
+                if (input.value.trim()) {
+                    input.style.borderColor = '';
+                    input.style.boxShadow = '';
+                }
+            });
+        });
+
+        async function handleSubmission() {
+            // 1. Change UI to "Submitting" state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.classList.remove('error', 'success');
+
+            // 2. Gather form data
+            const formData = {
+                lessonTitle: lessonTitle,
+                submittedAt: new Date().toISOString(),
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                mandates: [
+                    {
+                        excuse: document.getElementById('excuse1').value.trim(),
+                        mandate: document.getElementById('mandate1').value.trim(),
+                    },
+                    {
+                        excuse: document.getElementById('excuse2').value.trim(),
+                        mandate: document.getElementById('mandate2').value.trim(),
+                    },
+                    {
+                        excuse: document.getElementById('excuse3').value.trim(),
+                        mandate: document.getElementById('mandate3').value.trim(),
+                    }
+                ]
+            };
+
+            // 3. Send data to webhook
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    // Success State
+                    submitBtn.textContent = 'Submitted Successfully';
+                    submitBtn.classList.add('success');
+                    // Disable all form fields
+                    formInputs.forEach(input => {
+                        input.disabled = true;
+                        input.style.cursor = 'not-allowed';
+                    });
+                } else {
+                    // Handle server-side errors
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Submission Error:', error);
+                // Error State
+                submitBtn.textContent = 'Error - Try Again';
+                submitBtn.classList.add('error');
+                submitBtn.disabled = false; // Re-enable for another attempt
+
+                // Optional: Reset button after a delay to allow another try
+                setTimeout(() => {
+                    if (submitBtn.classList.contains('error')) {
+                        submitBtn.textContent = 'Submit Your Mandates';
+                        submitBtn.classList.remove('error');
+                    }
+                }, 4000);
+            }
+        }
+    });
+</script>
+
+<!-- [END] Unshakable Investor Interactive Exercise -->
+```
