@@ -1,0 +1,396 @@
+```html
+<!-- START: Unshakable Investor Interactive Exercise Component -->
+
+<!-- 
+    Component: The White Wolf Action Pact
+    Lesson: #135 - The Two Wolves Parable
+    Developer: Expert Front-End & UI/UX Specialist
+    Version: 1.0.0
+    Date: 2023-10-27
+-->
+
+<!-- Google Fonts: Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+    /* ---------------------------------- */
+    /* BRANDING & RESET                   */
+    /* ---------------------------------- */
+    :root {
+        --bg-dark: #121212;
+        --bg-input: #0A0A0A;
+        --text-primary: #FFFFFF;
+        --text-secondary: #94a3b8;
+        --border-color: #27272a;
+        --accent-start: #C84A00;
+        --accent-end: #FF6A00;
+        --accent-gradient: linear-gradient(95deg, var(--accent-start) 0%, var(--accent-end) 100%);
+        --success-gradient: linear-gradient(95deg, #16a34a 0%, #22c55e 100%);
+        --error-gradient: linear-gradient(95deg, #dc2626 0%, #ef4444 100%);
+        --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    /* Basic Reset for Embedded Component */
+    .unshakable-exercise-container * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* ---------------------------------- */
+    /* MAIN COMPONENT STYLES              */
+    /* ---------------------------------- */
+    .unshakable-exercise-container {
+        font-family: var(--font-main);
+        background-color: var(--bg-dark);
+        color: var(--text-primary);
+        padding: 40px;
+        border: 1px solid var(--border-color);
+        max-width: 820px;
+        margin: 32px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Subtle background grain for texture */
+    .unshakable-exercise-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800"><g fill-opacity="0.01"><circle fill="%23FFFFFF" cx="400" cy="400" r="600"/><circle fill="%23FFFFFF" cx="400" cy="400" r="500"/><circle fill="%23FFFFFF" cx="400" cy="400" r="400"/><circle fill="%23FFFFFF" cx="400" cy="400" r="300"/><circle fill="%23FFFFFF" cx="400" cy="400" r="200"/><circle fill="%23FFFFFF" cx="400" cy="400" r="100"/></g></svg>');
+        opacity: 0.1;
+        pointer-events: none;
+    }
+
+    /* ---------------------------------- */
+    /* HEADER & TYPOGRAPHY                */
+    /* ---------------------------------- */
+    .exercise-header {
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 24px;
+        margin-bottom: 16px;
+    }
+
+    .exercise-header .day-label {
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+    }
+
+    .exercise-header .main-title {
+        font-size: 2.25rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+        margin-bottom: 12px;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+
+    .exercise-header .lesson-quote {
+        color: var(--text-secondary);
+        font-style: italic;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* ---------------------------------- */
+    /* FORM STYLES                        */
+    /* ---------------------------------- */
+    #whiteWolfForm {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .exercise-action-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.025em;
+        text-align: center;
+        margin-bottom: 4px;
+    }
+
+    .exercise-action-description {
+        color: var(--text-secondary);
+        text-align: center;
+        max-width: 650px;
+        margin: 0 auto 16px auto;
+        line-height: 1.5;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group label {
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group textarea {
+        background-color: var(--bg-input);
+        color: var(--text-primary);
+        font-family: var(--font-main);
+        font-size: 1rem;
+        padding: 14px 16px;
+        border: 1px solid var(--border-color);
+        width: 100%;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        resize: vertical;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+        color: #4a5568;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--accent-end);
+        box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.2);
+    }
+    
+    .form-group input:disabled,
+    .form-group textarea:disabled {
+        background-color: #1a1a1a;
+        color: #718096;
+        cursor: not-allowed;
+    }
+
+    /* ---------------------------------- */
+    /* SUBMIT BUTTON                      */
+    /* ---------------------------------- */
+    #submitPactButton {
+        font-family: var(--font-main);
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.075em;
+        color: var(--text-primary);
+        background: var(--accent-gradient);
+        border: none;
+        padding: 16px 24px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        margin-top: 16px;
+    }
+
+    #submitPactButton:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 15px rgba(255, 106, 0, 0.3);
+    }
+    
+    #submitPactButton:active:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(255, 106, 0, 0.3);
+    }
+    
+    #submitPactButton:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    
+    /* State-specific styles */
+    #submitPactButton.is-submitting {
+      cursor: wait;
+    }
+    
+    #submitPactButton.is-success {
+      background: var(--success-gradient);
+    }
+    
+    #submitPactButton.is-error {
+      background: var(--error-gradient);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+        .unshakable-exercise-container {
+            padding: 24px;
+        }
+        .exercise-header .main-title {
+            font-size: 1.75rem;
+        }
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+    }
+</style>
+
+<div class="unshakable-exercise-container">
+    <header class="exercise-header">
+        <p class="day-label">DAY #6 // LESSON #135</p>
+        <h1 class="main-title">The Two Wolves Parable</h1>
+        <p class="lesson-quote">"There's two wolves in us... Whichever wolf you feed wins. And the battle every day, they fight every day for dominance, for control. And whichever one you feed wins."</p>
+    </header>
+
+    <form id="whiteWolfForm" novalidate>
+        <div class="action-header">
+            <h2 class="exercise-action-title">The White Wolf Action Pact</h2>
+            <p class="exercise-action-description">Identify one specific, tangible action you can take in the next 24 hours that intentionally "feeds the white wolf." Write this commitment down as a "Pact."</p>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" placeholder="e.g., Jane Doe" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="e.g., jane.doe@email.com" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="whiteWolfPact">My Pact To Feed The White Wolf</label>
+            <textarea id="whiteWolfPact" name="whiteWolfPact" rows="8" placeholder="Example: I will spend the first 15 minutes of my day in quiet reflection, without my phone, and write down three things I am grateful for." required></textarea>
+        </div>
+
+        <button type="submit" id="submitPactButton">Submit My Pact</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const whiteWolfForm = document.getElementById('whiteWolfForm');
+        if (!whiteWolfForm) {
+            console.error('Form with ID "whiteWolfForm" not found. Script cannot execute.');
+            return;
+        }
+
+        const submitButton = document.getElementById('submitPactButton');
+        const allInputs = whiteWolfForm.querySelectorAll('input, textarea');
+        const webhookUrl = 'https://hook.us2.make.com/7wbmkvn8vujpej74sy29299rl9nmgn9e';
+
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+
+            // Simple client-side validation
+            if (!whiteWolfForm.checkValidity()) {
+                whiteWolfForm.reportValidity();
+                return;
+            }
+
+            // --- UI STATE: Submitting ---
+            setButtonState('submitting');
+            
+            // --- DATA COLLECTION ---
+            const formData = {
+                lessonTitle: "The Two Wolves Parable (Lesson #135)",
+                exerciseTitle: "The White Wolf Action Pact",
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                pact: document.getElementById('whiteWolfPact').value.trim(),
+                submittedAt: new Date().toISOString()
+            };
+
+            // --- API REQUEST ---
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    // --- UI STATE: Success ---
+                    handleSuccess();
+                } else {
+                    // --- UI STATE: Server Error ---
+                    const errorData = await response.json();
+                    console.error('Server Error:', response.status, errorData);
+                    handleError();
+                }
+            } catch (error) {
+                // --- UI STATE: Network Error ---
+                console.error('Network or Fetch Error:', error);
+                handleError();
+            }
+        };
+
+        const setButtonState = (state) => {
+            submitButton.classList.remove('is-submitting', 'is-success', 'is-error');
+            submitButton.disabled = false;
+
+            switch (state) {
+                case 'submitting':
+                    submitButton.textContent = 'Submitting...';
+                    submitButton.classList.add('is-submitting');
+                    submitButton.disabled = true;
+                    break;
+                case 'success':
+                    submitButton.textContent = 'Submitted Successfully';
+                    submitButton.classList.add('is-success');
+                    submitButton.disabled = true;
+                    break;
+                case 'error':
+                    submitButton.textContent = 'Error - Try Again';
+                    submitButton.classList.add('is-error');
+                    break;
+                default: // 'idle'
+                    submitButton.textContent = 'Submit My Pact';
+                    break;
+            }
+        };
+
+        const handleSuccess = () => {
+            setButtonState('success');
+            allInputs.forEach(input => {
+                input.disabled = true;
+            });
+        };
+
+        const handleError = () => {
+            setButtonState('error');
+            // Reset button to idle state after a delay so the user can try again
+            setTimeout(() => {
+                // Only reset if it's still in the error state
+                if (submitButton.classList.contains('is-error')) {
+                    setButtonState('idle');
+                }
+            }, 4000);
+        };
+
+        whiteWolfForm.addEventListener('submit', handleSubmit);
+    });
+</script>
+
+<!-- END: Unshakable Investor Interactive Exercise Component -->
+```
