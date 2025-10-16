@@ -1,0 +1,402 @@
+```html
+<!-- Self-contained "Unshakable Investor" Interactive Exercise Component -->
+
+<div class="unshakable-exercise-container" id="gratitude-journal-container">
+
+    <!-- [1] STYLES & FONT IMPORT -->
+    <!-- This section contains the CSS styling, font imports, and custom properties to match the brand guide. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- BRAND & LAYOUT DEFINITIONS --- */
+        :root {
+            /* Color Palette */
+            --bg-dark: #121212;
+            --bg-input: #0A0A0A;
+            --text-primary: #FFFFFF;
+            --text-secondary: #94a3b8;
+            --border-idle: #333333;
+            --accent-start: #C84A00;
+            --accent-end: #FF6A00;
+            --success-start: #0D9488; /* Teal for success */
+            --success-end: #2DD4BF;
+            --error-start: #BE123C; /* Rose for error */
+            --error-end: #F43F5E;
+
+            /* Typography */
+            --font-family-main: 'Inter', sans-serif;
+
+            /* Spacing & Sizing */
+            --container-padding: clamp(24px, 5vw, 48px);
+            --grid-gap: 24px;
+        }
+
+        /* --- BASE CONTAINER STYLING --- */
+        .unshakable-exercise-container {
+            all: unset; /* Reset styles to prevent conflicts when embedded */
+            display: block; /* Ensure it behaves like a block element */
+            font-family: var(--font-family-main);
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            padding: var(--container-padding);
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            margin: 2rem auto;
+            box-sizing: border-box;
+        }
+
+        /* --- HEADER & TYPOGRAPHY --- */
+        .unshakable-exercise-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .unshakable-exercise-header .lesson-day {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 0;
+        }
+
+        .unshakable-exercise-header .exercise-title {
+            font-size: clamp(2rem, 6vw, 2.75rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+            margin: 8px 0 16px 0;
+            background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        .unshakable-exercise-header .exercise-description {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* --- FORM LAYOUT & STYLING --- */
+        #gratitudeJournalForm {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--grid-gap);
+        }
+
+        .form-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Form Labels: Engineered style with floating animation */
+        .form-group label {
+            position: absolute;
+            left: 16px;
+            top: 14px;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            pointer-events: none;
+            transition: all 0.2s ease-out;
+            background-color: var(--bg-input);
+            padding: 0 4px;
+        }
+
+        /* Input/Textarea Styling */
+        .form-group input,
+        .form-group textarea {
+            background-color: var(--bg-input);
+            border: 2px solid var(--border-idle);
+            color: var(--text-primary);
+            padding: 14px 16px;
+            font-family: var(--font-family-main);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Focus & Filled State for Floating Labels */
+        .form-group input:focus + label,
+        .form-group textarea:focus + label,
+        .form-group input:not(:placeholder-shown) + label,
+        .form-group textarea:not(:placeholder-shown) + label {
+            top: -10px;
+            left: 12px;
+            font-size: 0.75rem;
+            color: var(--accent-end);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-end);
+            box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.25);
+        }
+
+        /* Required but empty fields validation styling */
+        .form-group input:required:invalid:not(:placeholder-shown),
+        .form-group textarea:required:invalid:not(:placeholder-shown) {
+            border-color: var(--error-start);
+        }
+
+        /* --- SUBMIT BUTTON STYLING --- */
+        #submitButton {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+            border: none;
+            color: var(--text-primary);
+            padding: 16px 32px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-image 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #submitButton:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(200, 74, 0, 0.25);
+        }
+        
+        #submitButton:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        /* Button States */
+        #submitButton:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        #submitButton.state-success {
+             background-image: linear-gradient(90deg, var(--success-start), var(--success-end));
+        }
+        
+        #submitButton.state-error {
+             background-image: linear-gradient(90deg, var(--error-start), var(--error-end));
+        }
+
+        /* Spinner for submitting state */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: var(--text-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 12px;
+        }
+
+        #submitButton.state-submitting .spinner {
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- SUBMISSION STATUS MESSAGE --- */
+        #submissionStatus {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            height: 20px; /* Reserve space to prevent layout shift */
+            transition: color 0.3s ease;
+        }
+
+        #submissionStatus.status-success {
+            color: var(--success-end);
+        }
+
+        #submissionStatus.status-error {
+            color: var(--error-end);
+        }
+
+    </style>
+
+    <!-- [2] HTML STRUCTURE -->
+    <!-- This section contains the semantic HTML for the exercise component. -->
+    <div class="unshakable-exercise-header">
+        <p class="lesson-day">Day #5</p>
+        <h1 class="exercise-title">The Daily Wins & Gratitude Journal</h1>
+        <p class="exercise-description">Before you go to sleep, write down one win you created today (no matter how small) and one thing you're genuinely grateful for. The "win" trains your brain to see progress, while gratitude trains it to see blessings.</p>
+    </div>
+
+    <form id="gratitudeJournalForm" novalidate>
+        <!-- Hidden input to include the lesson title in the submission -->
+        <input type="hidden" id="lessonTitle" name="lessonTitle" value="The Evening Gratitude Practice (Lesson #132)">
+
+        <!-- User Information Fields -->
+        <div class="form-grid">
+            <div class="form-group">
+                <input type="text" id="fullName" name="fullName" required placeholder=" ">
+                <label for="fullName">Full Name</label>
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" name="email" required placeholder=" ">
+                <label for="email">Email Address</label>
+            </div>
+        </div>
+
+        <!-- Exercise-Specific Fields -->
+        <div class="form-grid">
+            <div class="form-group">
+                <textarea id="dailyWin" name="dailyWin" rows="5" required placeholder=" "></textarea>
+                <label for="dailyWin">Today's Win</label>
+            </div>
+            <div class="form-group">
+                <textarea id="gratitudeEntry" name="gratitudeEntry" rows="5" required placeholder=" "></textarea>
+                <label for="gratitudeEntry">Gratitude</label>
+            </div>
+        </div>
+
+        <button type="submit" id="submitButton">
+            <span class="spinner"></span>
+            <span class="button-text">Submit Journal Entry</span>
+        </button>
+    </form>
+
+    <div id="submissionStatus"></div>
+
+</div>
+
+<!-- [3] JAVASCRIPT LOGIC -->
+<!-- This script handles form validation, state changes, and the asynchronous submission to the webhook. -->
+<script>
+    (function() {
+        // Encapsulate the script to avoid global scope pollution.
+        const container = document.getElementById('gratitude-journal-container');
+        if (!container) return; // Exit if the container isn't found
+
+        const form = container.querySelector('#gratitudeJournalForm');
+        const submitButton = container.querySelector('#submitButton');
+        const buttonText = container.querySelector('.button-text');
+        const statusMessage = container.querySelector('#submissionStatus');
+        const webhookUrl = 'https://hook.us2.make.com/7wbmkvn8vujpej74sy29299rl9nmgn9e';
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Simple client-side validation
+            if (!form.checkValidity()) {
+                statusMessage.textContent = 'Please fill out all required fields.';
+                statusMessage.className = 'status-error';
+                // Trigger browser's native validation UI
+                form.reportValidity();
+                return;
+            }
+            
+            submitForm();
+        });
+
+        async function submitForm() {
+            setSubmittingState(true);
+
+            // Construct the data payload from form inputs
+            const formData = new FormData(form);
+            const payload = {
+                submittedAt: new Date().toISOString(),
+                ...Object.fromEntries(formData.entries())
+            };
+            
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    handleSuccess();
+                } else {
+                    // Handle HTTP errors like 4xx, 5xx
+                    const errorData = await response.text();
+                    handleError(`Submission failed. Server responded with: ${response.status}.`);
+                    console.error('Server error details:', errorData);
+                }
+            } catch (error) {
+                // Handle network errors
+                handleError('Submission failed. Please check your network connection.');
+                console.error('Network or fetch error:', error);
+            } finally {
+                setSubmittingState(false);
+            }
+        }
+
+        function setSubmittingState(isSubmitting) {
+            submitButton.disabled = isSubmitting;
+            if (isSubmitting) {
+                submitButton.classList.add('state-submitting');
+                buttonText.textContent = 'Submitting...';
+                statusMessage.textContent = '';
+                statusMessage.className = '';
+            } else {
+                submitButton.classList.remove('state-submitting');
+            }
+        }
+
+        function handleSuccess() {
+            buttonText.textContent = 'Submitted Successfully';
+            submitButton.classList.add('state-success');
+            submitButton.disabled = true;
+            statusMessage.textContent = 'Your entry has been recorded. Well done!';
+            statusMessage.className = 'status-success';
+
+            // Disable all form fields after successful submission
+            Array.from(form.elements).forEach(element => {
+                element.disabled = true;
+            });
+        }
+        
+        function handleError(message) {
+            buttonText.textContent = 'Error - Try Again';
+            submitButton.classList.add('state-error');
+            submitButton.disabled = false; // Allow user to try again
+            statusMessage.textContent = message;
+            statusMessage.className = 'status-error';
+            
+            // Reset button to its original state after a few seconds
+            setTimeout(() => {
+                if (!submitButton.disabled) { // Only reset if not in another submission attempt
+                    buttonText.textContent = 'Submit Journal Entry';
+                    submitButton.classList.remove('state-error');
+                    statusMessage.textContent = '';
+                    statusMessage.className = '';
+                }
+            }, 5000);
+        }
+        
+    })();
+</script>
+```
