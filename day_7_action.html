@@ -1,0 +1,468 @@
+```html
+<!-- Start of Unshakable Investor Interactive Component -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+    /* ------------------------------------- */
+    /* --- BRAND & COMPONENT VARIABLES --- */
+    /* ------------------------------------- */
+    :root {
+        --ui-bg-primary: #121212;
+        --ui-bg-input: #0A0A0A;
+        --ui-text-primary: #FFFFFF;
+        --ui-text-secondary: #94a3b8;
+        --ui-accent-start: #C84A00;
+        --ui-accent-end: #FF6A00;
+        --ui-accent-gradient: linear-gradient(90deg, var(--ui-accent-start) 0%, var(--ui-accent-end) 100%);
+        --ui-success: #10B981;
+        --ui-error: #EF4444;
+        --ui-border-color: #2d2d2d;
+        --ui-font-family: 'Inter', sans-serif;
+    }
+
+    /* ------------------------------------- */
+    /* --- BASE COMPONENT STYLES --- */
+    /* ------------------------------------- */
+    .unshakable-investor-component {
+        font-family: var(--ui-font-family);
+        background-color: var(--ui-bg-primary);
+        color: var(--ui-text-primary);
+        padding: 40px;
+        border: 1px solid var(--ui-border-color);
+        max-width: 800px;
+        margin: 20px auto;
+        box-sizing: border-box;
+    }
+
+    /* ------------------------------------- */
+    /* --- HEADER & TYPOGRAPHY --- */
+    /* ------------------------------------- */
+    .uic-header {
+        text-align: center;
+        margin-bottom: 32px;
+        border-bottom: 1px solid var(--ui-border-color);
+        padding-bottom: 24px;
+    }
+
+    .uic-title {
+        font-size: 28px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -0.05em;
+        margin: 0 0 8px 0;
+        background: var(--ui-accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .uic-description {
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--ui-text-secondary);
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* ------------------------------------- */
+    /* --- FORM LAYOUT & STRUCTURE --- */
+    /* ------------------------------------- */
+    .uic-form {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .uic-form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .uic-form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ------------------------------------- */
+    /* --- LABELS & INPUTS --- */
+    /* ------------------------------------- */
+    .uic-form-group label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ui-text-secondary);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .uic-form-group input[type="text"],
+    .uic-form-group input[type="email"],
+    .uic-form-group textarea {
+        background-color: var(--ui-bg-input);
+        border: 2px solid var(--ui-border-color);
+        color: var(--ui-text-primary);
+        font-family: var(--ui-font-family);
+        font-size: 16px;
+        padding: 12px 16px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        -webkit-appearance: none;
+        appearance: none;
+        border-radius: 0;
+    }
+    
+    .uic-form-group input::placeholder,
+    .uic-form-group textarea::placeholder {
+        color: #555;
+    }
+
+    .uic-form-group input[type="text"]:focus,
+    .uic-form-group input[type="email"]:focus,
+    .uic-form-group textarea:focus {
+        outline: none;
+        border-color: var(--ui-accent-end);
+        box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.2);
+    }
+    
+    .uic-form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    /* Input Error State */
+    .uic-form-group input.error,
+    .uic-form-group textarea.error {
+        border-color: var(--ui-error);
+    }
+    
+    .uic-form-group input.error:focus,
+    .uic-form-group textarea.error:focus {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    }
+
+    /* ------------------------------------- */
+    /* --- CUSTOM CHECKBOX --- */
+    /* ------------------------------------- */
+    .uic-checkbox-group {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .uic-checkbox-group input[type="checkbox"] {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+    }
+
+    .uic-checkbox-group label {
+        position: relative;
+        padding-left: 32px;
+        font-size: 14px;
+        color: var(--ui-text-secondary);
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.2s ease;
+    }
+
+    .uic-checkbox-group label::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        background-color: var(--ui-bg-input);
+        border: 2px solid var(--ui-border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .uic-checkbox-group label:hover {
+        color: var(--ui-text-primary);
+    }
+
+    .uic-checkbox-group label:hover::before {
+        border-color: var(--ui-accent-end);
+    }
+
+    .uic-checkbox-group input[type="checkbox"]:checked + label::before {
+        background-image: var(--ui-accent-gradient);
+        border-color: var(--ui-accent-end);
+    }
+
+    .uic-checkbox-group input[type="checkbox"]:checked + label::after {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: 50%;
+        width: 6px;
+        height: 12px;
+        border: solid var(--ui-text-primary);
+        border-width: 0 2px 2px 0;
+        transform: translateY(-60%) rotate(45deg);
+    }
+    
+    .uic-checkbox-group.error label {
+        color: var(--ui-error);
+    }
+    
+    .uic-checkbox-group.error label::before {
+        border-color: var(--ui-error);
+    }
+
+
+    /* ------------------------------------- */
+    /* --- FOOTER & SUBMIT BUTTON --- */
+    /* ------------------------------------- */
+    .uic-form-footer {
+        margin-top: 16px;
+        text-align: center;
+    }
+    
+    .uic-error-message {
+        color: var(--ui-error);
+        font-size: 14px;
+        font-weight: 500;
+        min-height: 20px;
+        margin: 0 0 16px 0;
+        text-align: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .uic-error-message.visible {
+        opacity: 1;
+    }
+
+    .uic-button {
+        font-family: var(--ui-font-family);
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--ui-text-primary);
+        background-image: var(--ui-accent-gradient);
+        border: none;
+        padding: 16px 32px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        width: 100%;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-image 0.3s ease;
+        border-radius: 0;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    .uic-button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(255, 106, 0, 0.2);
+    }
+
+    .uic-button:disabled {
+        cursor: not-allowed;
+        background-image: none;
+        background-color: var(--ui-border-color);
+        color: #777;
+        box-shadow: none;
+        transform: none;
+    }
+    
+    .uic-button.success {
+        background-image: linear-gradient(90deg, #0f9b6b 0%, #10B981 100%);
+        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
+    }
+    
+    .uic-button.error {
+        background-image: linear-gradient(90deg, #d33c3c 0%, #EF4444 100%);
+        box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+    }
+    
+
+    /* ------------------------------------- */
+    /* --- RESPONSIVE ADJUSTMENTS --- */
+    /* ------------------------------------- */
+    @media (max-width: 640px) {
+        .unshakable-investor-component {
+            padding: 24px;
+        }
+        .uic-form-row {
+            grid-template-columns: 1fr;
+        }
+        .uic-title {
+            font-size: 22px;
+        }
+        .uic-description {
+            font-size: 14px;
+        }
+    }
+</style>
+
+<div class="unshakable-investor-component" id="uic-lesson-83">
+    <div class="uic-header">
+        <h1 class="uic-title">The IGNITE Accountability Contract</h1>
+        <p class="uic-description">Knowledge alone is insufficient; accountability transforms knowledge into consistent action. Commit to your goal by formalizing your accountability partnership below.</p>
+    </div>
+    <form id="accountabilityForm" class="uic-form" novalidate>
+        <!-- User Info Section -->
+        <div class="uic-form-row">
+            <div class="uic-form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required aria-label="Full Name">
+            </div>
+            <div class="uic-form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email address" required aria-label="Email Address">
+            </div>
+        </div>
+        <!-- Exercise Section -->
+        <div class="uic-form-group">
+            <label for="primaryGoal">My Single Most Important Goal (Next 21 Days)</label>
+            <textarea id="primaryGoal" name="primaryGoal" rows="5" placeholder="Example: I will complete the first three modules of the Unshakable Investor course and make one test investment." required aria-label="My Single Most Important Goal for the Next 21 Days"></textarea>
+        </div>
+        <div class="uic-form-group">
+            <label for="partnerName">Name of My Accountability Partner</label>
+            <input type="text" id="partnerName" name="partnerName" placeholder="Name of the person you asked in the community" required aria-label="Name of My Accountability Partner">
+        </div>
+        <div class="uic-checkbox-group" id="checkboxGroup">
+            <input type="checkbox" id="communityPostConfirmation" name="communityPostConfirmation" required>
+            <label for="communityPostConfirmation">I have made my post in the community forum and formally asked my partner.</label>
+        </div>
+        
+        <div class="uic-form-footer">
+            <p id="formErrorMessage" class="uic-error-message"></p>
+            <button type="submit" id="submitButton" class="uic-button">SUBMIT MY CONTRACT</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('accountabilityForm');
+        if (!form) return;
+
+        const WEBHOOK_URL = 'https://hook.us2.make.com/7wbmkvn8vujpej74sy29299rl9nmgn9e';
+        const LESSON_TITLE = 'Accountability as the Key to Action (Lesson #83)';
+        const EXERCISE_TITLE = 'The IGNITE Accountability Contract';
+
+        const submitButton = document.getElementById('submitButton');
+        const errorMessage = document.getElementById('formErrorMessage');
+
+        // Form fields
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const primaryGoalInput = document.getElementById('primaryGoal');
+        const partnerNameInput = document.getElementById('partnerName');
+        const confirmationCheckbox = document.getElementById('communityPostConfirmation');
+        const checkboxGroup = document.getElementById('checkboxGroup');
+        const allInputs = [fullNameInput, emailInput, primaryGoalInput, partnerNameInput, confirmationCheckbox];
+
+        const validateForm = () => {
+            let isValid = true;
+            errorMessage.textContent = '';
+            errorMessage.classList.remove('visible');
+
+            // Reset previous errors
+            allInputs.forEach(input => {
+                input.classList.remove('error');
+                if(input.type === 'checkbox') {
+                    checkboxGroup.classList.remove('error');
+                }
+            });
+            
+            if (fullNameInput.value.trim() === '') {
+                isValid = false;
+                fullNameInput.classList.add('error');
+            }
+            if (emailInput.value.trim() === '' || !/\S+@\S+\.\S+/.test(emailInput.value)) {
+                isValid = false;
+                emailInput.classList.add('error');
+            }
+            if (primaryGoalInput.value.trim() === '') {
+                isValid = false;
+                primaryGoalInput.classList.add('error');
+            }
+            if (partnerNameInput.value.trim() === '') {
+                isValid = false;
+                partnerNameInput.classList.add('error');
+            }
+            if (!confirmationCheckbox.checked) {
+                isValid = false;
+                checkboxGroup.classList.add('error');
+            }
+
+            if (!isValid) {
+                errorMessage.textContent = 'Please fill out all required fields correctly.';
+                errorMessage.classList.add('visible');
+            }
+
+            return isValid;
+        };
+        
+        const setFormState = (disabled) => {
+            allInputs.forEach(input => {
+                input.disabled = disabled;
+            });
+        };
+
+        const handleFormSubmit = async (event) => {
+            event.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+
+            // Set submitting state
+            submitButton.disabled = true;
+            submitButton.textContent = 'SUBMITTING...';
+            submitButton.classList.remove('error', 'success');
+
+            const formData = {
+                lessonTitle: LESSON_TITLE,
+                exerciseTitle: EXERCISE_TITLE,
+                fullName: fullNameInput.value.trim(),
+                email: emailInput.value.trim(),
+                primaryGoal: primaryGoalInput.value.trim(),
+                partnerName: partnerNameInput.value.trim(),
+                communityPostConfirmed: confirmationCheckbox.checked,
+                submittedAt: new Date().toISOString()
+            };
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    // Success state
+                    submitButton.textContent = 'SUBMITTED SUCCESSFULLY';
+                    submitButton.classList.add('success');
+                    setFormState(true); // Disable all form fields
+                } else {
+                    // Handle HTTP errors
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
+            } catch (error) {
+                // Error state
+                console.error('Submission Error:', error);
+                errorMessage.textContent = 'An error occurred. Please try again.';
+                errorMessage.classList.add('visible');
+                submitButton.textContent = 'ERROR - TRY AGAIN';
+                submitButton.classList.add('error');
+                submitButton.disabled = false; // Re-enable button
+            }
+        };
+
+        form.addEventListener('submit', handleFormSubmit);
+    });
+</script>
+<!-- End of Unshakable Investor Interactive Component -->
+```
