@@ -132,21 +132,39 @@
              background-image: linear-gradient(to right, #C84A00, #FF6A00);
              color: #FFFFFF;
         }
+
+        /* Utility to hide scrollbars for touch-friendly strips */
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
     </style>
 </head>
 <body class="antialiased">
     <nav class="bg-slate-900/50 py-3 border-b border-slate-700 sticky top-0 z-50 backdrop-blur-sm">
-        <div class="container mx-auto flex justify-between items-center px-4">
+        <div class="container mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 px-4">
             <!-- Logo -->
-            <a href="https://learn.theunshakableinvestor.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://learn.theunshakableinvestor.com" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">
                 <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68c95d8f7505d3a75a7fabd2.png" alt="Unshakable Investor Logo" class="h-8 w-auto">
             </a>
-            
-            <!-- Navigation Links -->
+
+            <!-- Navigation Links (Desktop) -->
             <div class="hidden sm:flex items-center space-x-4">
-                <button data-view="rehabEstimatorView" class="nav-button active bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Rehab Estimator</button>
-                <button data-view="profitAnalysisView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Profit Analysis</button>
-                <button data-view="submitDealView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Submit Deal</button>
+                <button data-view="rehabEstimatorView" class="nav-button active bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider text-center transition-colors">Rehab Estimator</button>
+                <button data-view="profitAnalysisView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider text-center transition-colors">Profit Analysis</button>
+                <button data-view="submitDealView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider text-center transition-colors">Submit Deal</button>
+            </div>
+
+            <!-- Navigation Links (Mobile) -->
+            <div class="sm:hidden w-full">
+                <div class="grid grid-cols-3 gap-2 no-scrollbar">
+                    <button data-view="rehabEstimatorView" class="nav-button active w-full bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-center transition-colors">Rehab Estimator</button>
+                    <button data-view="profitAnalysisView" class="nav-button w-full bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-center transition-colors">Profit Analysis</button>
+                    <button data-view="submitDealView" class="nav-button w-full bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-center transition-colors">Submit Deal</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -490,9 +508,8 @@
 
                         // Update active button style
                         navButtons.forEach(btn => {
-                            btn.classList.remove('active');
+                            btn.classList.toggle('active', btn.dataset.view === targetViewId);
                         });
-                        button.classList.add('active');
                     });
                 });
             }
