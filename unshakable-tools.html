@@ -132,21 +132,82 @@
              background-image: linear-gradient(to right, #C84A00, #FF6A00);
              color: #FFFFFF;
         }
+
+        .nav-button:focus-visible {
+            outline: 2px solid #FFC94E;
+            outline-offset: 2px;
+        }
+
+        .nav-button .nav-chevron {
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            opacity: 0.6;
+        }
+
+        .nav-button.active .nav-chevron {
+            opacity: 0.95;
+            transform: translateX(2px);
+        }
+
+        @media (max-width: 639px) {
+            .nav-button {
+                border-radius: 0.75rem;
+            }
+
+            .nav-button.active {
+                box-shadow: 0 12px 24px rgba(200, 74, 0, 0.35);
+            }
+        }
+
+        /* Utility to hide scrollbars for touch-friendly strips */
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
     </style>
 </head>
 <body class="antialiased">
     <nav class="bg-slate-900/50 py-3 border-b border-slate-700 sticky top-0 z-50 backdrop-blur-sm">
-        <div class="container mx-auto flex justify-between items-center px-4">
+        <div class="container mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 px-4">
             <!-- Logo -->
-            <a href="https://learn.theunshakableinvestor.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://learn.theunshakableinvestor.com" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">
                 <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68c95d8f7505d3a75a7fabd2.png" alt="Unshakable Investor Logo" class="h-8 w-auto">
             </a>
-            
-            <!-- Navigation Links -->
-            <div class="hidden sm:flex items-center space-x-4">
-                <button data-view="rehabEstimatorView" class="nav-button active bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Rehab Estimator</button>
-                <button data-view="profitAnalysisView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Profit Analysis</button>
-                <button data-view="submitDealView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors">Submit Deal</button>
+
+            <!-- Navigation Links (Desktop) -->
+            <div class="hidden sm:flex items-center space-x-4" role="tablist" aria-label="Tool navigation">
+                <button data-view="rehabEstimatorView" aria-controls="rehabEstimatorView" class="nav-button active bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider text-center transition-colors" role="tab" aria-selected="true">Rehab Estimator</button>
+                <button data-view="profitAnalysisView" aria-controls="profitAnalysisView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider text-center transition-colors" role="tab" aria-selected="false">Profit Analysis</button>
+                <button data-view="submitDealView" aria-controls="submitDealView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider text-center transition-colors" role="tab" aria-selected="false">Submit Deal</button>
+            </div>
+
+            <!-- Navigation Links (Mobile) -->
+            <div class="sm:hidden w-full" role="tablist" aria-label="Tool navigation">
+                <div class="flex flex-col gap-2">
+                    <button data-view="rehabEstimatorView" aria-controls="rehabEstimatorView" class="nav-button active w-full bg-slate-800/80 text-white hover:bg-slate-700 px-4 py-3 rounded-xl text-base font-semibold uppercase tracking-wide text-left transition-colors border border-slate-700 shadow-sm flex items-center justify-between" role="tab" aria-selected="true">
+                        <span class="flex items-center gap-3">
+                            <i data-lucide="construction" class="h-5 w-5 text-amber-400"></i>
+                            <span>Rehab Estimator</span>
+                        </span>
+                        <i data-lucide="chevron-right" class="nav-chevron h-5 w-5 text-slate-300"></i>
+                    </button>
+                    <button data-view="profitAnalysisView" aria-controls="profitAnalysisView" class="nav-button w-full bg-slate-800/80 text-white hover:bg-slate-700 px-4 py-3 rounded-xl text-base font-semibold uppercase tracking-wide text-left transition-colors border border-slate-700 shadow-sm flex items-center justify-between" role="tab" aria-selected="false">
+                        <span class="flex items-center gap-3">
+                            <i data-lucide="trending-up" class="h-5 w-5 text-emerald-400"></i>
+                            <span>Profit Analysis</span>
+                        </span>
+                        <i data-lucide="chevron-right" class="nav-chevron h-5 w-5 text-slate-300"></i>
+                    </button>
+                    <button data-view="submitDealView" aria-controls="submitDealView" class="nav-button w-full bg-slate-800/80 text-white hover:bg-slate-700 px-4 py-3 rounded-xl text-base font-semibold uppercase tracking-wide text-left transition-colors border border-slate-700 shadow-sm flex items-center justify-between" role="tab" aria-selected="false">
+                        <span class="flex items-center gap-3">
+                            <i data-lucide="inbox" class="h-5 w-5 text-sky-400"></i>
+                            <span>Submit Deal</span>
+                        </span>
+                        <i data-lucide="chevron-right" class="nav-chevron h-5 w-5 text-slate-300"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -488,11 +549,12 @@
                             targetView.classList.remove('hidden');
                         }
 
-                        // Update active button style
+                        // Update active button style and accessibility state
                         navButtons.forEach(btn => {
-                            btn.classList.remove('active');
+                            const isActive = btn.dataset.view === targetViewId;
+                            btn.classList.toggle('active', isActive);
+                            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
                         });
-                        button.classList.add('active');
                     });
                 });
             }
