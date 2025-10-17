@@ -156,6 +156,15 @@
             .nav-button.active {
                 box-shadow: 0 12px 24px rgba(200, 74, 0, 0.35);
             }
+
+            #mobileTabBar .nav-button {
+                border-radius: 0.9rem;
+                box-shadow: none;
+            }
+
+            #mobileTabBar .nav-button.active {
+                box-shadow: 0 14px 30px rgba(200, 74, 0, 0.4);
+            }
         }
 
         /* Utility to hide scrollbars for touch-friendly strips */
@@ -183,36 +192,32 @@
                 <button data-view="submitDealView" aria-controls="submitDealView" class="nav-button bg-slate-800 text-white hover:bg-slate-700 px-3 py-2 rounded-md text-sm font-bold uppercase tracking-wider text-center transition-colors" role="tab" aria-selected="false">Submit Deal</button>
             </div>
 
-            <!-- Navigation Links (Mobile) -->
-            <div class="sm:hidden w-full" role="tablist" aria-label="Tool navigation">
-                <div class="flex flex-col gap-2">
-                    <button data-view="rehabEstimatorView" aria-controls="rehabEstimatorView" class="nav-button active w-full bg-slate-800/80 text-white hover:bg-slate-700 px-4 py-3 rounded-xl text-base font-semibold uppercase tracking-wide text-left transition-colors border border-slate-700 shadow-sm flex items-center justify-between" role="tab" aria-selected="true">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="construction" class="h-5 w-5 text-amber-400"></i>
-                            <span>Rehab Estimator</span>
-                        </span>
-                        <i data-lucide="chevron-right" class="nav-chevron h-5 w-5 text-slate-300"></i>
-                    </button>
-                    <button data-view="profitAnalysisView" aria-controls="profitAnalysisView" class="nav-button w-full bg-slate-800/80 text-white hover:bg-slate-700 px-4 py-3 rounded-xl text-base font-semibold uppercase tracking-wide text-left transition-colors border border-slate-700 shadow-sm flex items-center justify-between" role="tab" aria-selected="false">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="trending-up" class="h-5 w-5 text-emerald-400"></i>
-                            <span>Profit Analysis</span>
-                        </span>
-                        <i data-lucide="chevron-right" class="nav-chevron h-5 w-5 text-slate-300"></i>
-                    </button>
-                    <button data-view="submitDealView" aria-controls="submitDealView" class="nav-button w-full bg-slate-800/80 text-white hover:bg-slate-700 px-4 py-3 rounded-xl text-base font-semibold uppercase tracking-wide text-left transition-colors border border-slate-700 shadow-sm flex items-center justify-between" role="tab" aria-selected="false">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="inbox" class="h-5 w-5 text-sky-400"></i>
-                            <span>Submit Deal</span>
-                        </span>
-                        <i data-lucide="chevron-right" class="nav-chevron h-5 w-5 text-slate-300"></i>
-                    </button>
-                </div>
-            </div>
+            <!-- Spacer for mobile (nav handled by bottom tab bar) -->
+            <div class="sm:hidden" aria-hidden="true"></div>
         </div>
     </nav>
 
-    <main id="app-container">
+    <!-- Mobile Bottom Tab Bar -->
+    <div id="mobileTabBar" class="sm:hidden fixed bottom-0 inset-x-0 z-50 border-t border-slate-800 bg-slate-950/95 backdrop-blur supports-[backdrop-filter]:bg-slate-950/80">
+        <div class="px-4 pt-2 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+            <div class="grid grid-cols-3 gap-2">
+                <button data-view="rehabEstimatorView" aria-controls="rehabEstimatorView" class="nav-button active w-full bg-slate-900/70 text-white px-3 py-2 rounded-xl text-xs font-semibold uppercase tracking-wide flex flex-col items-center gap-1 transition-colors" role="tab" aria-selected="true">
+                    <i data-lucide="construction" class="h-5 w-5 text-amber-400"></i>
+                    <span>Rehab</span>
+                </button>
+                <button data-view="profitAnalysisView" aria-controls="profitAnalysisView" class="nav-button w-full bg-slate-900/70 text-white px-3 py-2 rounded-xl text-xs font-semibold uppercase tracking-wide flex flex-col items-center gap-1 transition-colors" role="tab" aria-selected="false">
+                    <i data-lucide="trending-up" class="h-5 w-5 text-emerald-400"></i>
+                    <span>Profit</span>
+                </button>
+                <button data-view="submitDealView" aria-controls="submitDealView" class="nav-button w-full bg-slate-900/70 text-white px-3 py-2 rounded-xl text-xs font-semibold uppercase tracking-wide flex flex-col items-center gap-1 transition-colors" role="tab" aria-selected="false">
+                    <i data-lucide="inbox" class="h-5 w-5 text-sky-400"></i>
+                    <span>Submit</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main id="app-container" class="pb-28 sm:pb-0">
         <!-- Profit Analysis View -->
         <div id="profitAnalysisView" class="view-container hidden">
              <div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
