@@ -364,7 +364,7 @@
                                             <div class="ml-4 border-l-2 border-slate-600 pl-4 space-y-1">
                                                 <div class="flex justify-between text-xs"><span>Selling Costs (6% of ARV)</span><span id="breakdown_selling"></span></div>
                                                 <div class="flex justify-between text-xs"><span>Financing Costs</span><span id="breakdown_financing"></span></div>
-                                                <div class="flex justify-between text-xs"><span>Closing Costs (3% of ARV)</span><span id="breakdown_closing"></span></div>
+                                                <div class="flex justify-between text-xs"><span>Closing Costs (5% of Purchase Price)</span><span id="breakdown_closing"></span></div>
                                             </div>
                                         </div>
                                         <div class="flex justify-between p-2 rounded bg-green-500/10 text-green-300 border-t-2 border-green-500/30">
@@ -593,7 +593,7 @@
                 function getDealMetrics(arv, purchasePrice, rehabCosts, financingParams, sqft) {
                     const { ltv, interestRate, holdingPeriod } = financingParams;
                     const sellingCosts = arv * 0.06;
-                    const closingCosts = arv * 0.03;
+                    const closingCosts = purchasePrice * 0.05;
                     const totalCostBasis = purchasePrice + rehabCosts;
                     const loanAmount = totalCostBasis * (ltv / 100);
                     const financingCosts = loanAmount * (interestRate / 100 / 12) * holdingPeriod;
@@ -866,3 +866,4 @@
     </script>
 </body>
 </html>
+
