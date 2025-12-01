@@ -8,106 +8,241 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
     
-    <!-- Google Fonts: Inter (Mandatory Brand Font) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter (Brand Font) + Playfair Display (Accent) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
-    <!-- React & ReactDOM (UMD - Robust Loading) -->
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- html2canvas for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
       :root {
         --bg-dark: #0A0A0A;
+        --bg-card: #111111;
         --gold-primary: #D4AF37;
         --gold-light: #E5C76B;
+        --gold-dark: #B8962F;
         --fire-start: #C84A00;
-        --fire-end: #FF6A00;
-      }
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: var(--bg-dark);
-        color: white;
-        margin: 0;
-        overflow: hidden;
-      }
-
-      /* --- Cinematic Background Animation --- */
-      .ember-bg {
-        background: radial-gradient(circle at 50% 50%, #1a1005 0%, #0A0A0A 60%);
-        background-size: 200% 200%;
-        animation: breathe 8s ease-in-out infinite;
-      }
-      @keyframes breathe {
-        0% { background-position: 50% 50%; }
-        50% { background-position: 50% 60%; }
-        100% { background-position: 50% 50%; }
+        --fire-mid: #FF6A00;
+        --fire-end: #FF9500;
+        --ember-glow: #FF4D00;
+        --text-primary: #FFFFFF;
+        --text-secondary: #B0B0B0;
+        --text-muted: #666666;
+        --border-subtle: #222222;
+        --border-accent: #333333;
       }
       
+      * { box-sizing: border-box; }
+      
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-primary);
+        margin: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* --- Cinematic Background --- */
+      .ember-bg {
+        background: 
+          radial-gradient(ellipse 80% 50% at 50% 100%, rgba(200, 74, 0, 0.15) 0%, transparent 50%),
+          radial-gradient(ellipse 60% 40% at 20% 80%, rgba(255, 106, 0, 0.08) 0%, transparent 40%),
+          radial-gradient(ellipse 60% 40% at 80% 80%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+          linear-gradient(180deg, #0A0A0A 0%, #0D0808 100%);
+        background-attachment: fixed;
+      }
+      
+      .cinematic-glow {
+        position: fixed;
+        bottom: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 800px;
+        height: 400px;
+        background: radial-gradient(ellipse, rgba(255, 106, 0, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: 0;
+        animation: ember-breathe 6s ease-in-out infinite;
+      }
+      
+      @keyframes ember-breathe {
+        0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+        50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+      }
+      
+      /* --- Pulse Effects --- */
       .pulse-glow {
-        animation: pulse-gold 3s infinite;
+        animation: pulse-gold 2.5s infinite;
       }
       @keyframes pulse-gold {
-        0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.2); }
-        70% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
+        0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+        70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
         100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
       }
-
-      /* Error Display */
-      #debug-error {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: #000; z-index: 9999;
-        color: #ff4444; padding: 2rem;
-        font-family: monospace;
-        white-space: pre-wrap;
+      
+      .pulse-fire {
+        animation: pulse-fire 3s infinite;
       }
-      
-      /* Scrollbars */
-      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-      .custom-scrollbar::-webkit-scrollbar-track { background: var(--bg-dark); }
-      .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-      
+      @keyframes pulse-fire {
+        0% { box-shadow: 0 0 0 0 rgba(255, 106, 0, 0.3); }
+        70% { box-shadow: 0 0 0 20px rgba(255, 106, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 106, 0, 0); }
+      }
+
+      /* --- Buttons --- */
       .btn-primary {
-        background: linear-gradient(135deg, var(--gold-primary), var(--fire-end));
-        color: white;
+        background: linear-gradient(135deg, var(--gold-primary) 0%, var(--fire-mid) 100%);
+        color: #000;
         text-transform: uppercase;
         font-weight: 800;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.12em;
         border: none;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+      }
+      .btn-primary:hover::before {
+        left: 100%;
       }
       .btn-primary:hover:not(:disabled) {
-        box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
-        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4), 0 0 60px rgba(255, 106, 0, 0.2);
+        transform: translateY(-2px);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
       
-      @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-      .animate-fade-in-up { animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+      .btn-secondary {
+        background: transparent;
+        border: 1px solid var(--border-accent);
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        transition: all 0.3s ease;
+      }
+      .btn-secondary:hover {
+        border-color: var(--gold-primary);
+        color: var(--gold-primary);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+      }
       
+      /* --- Animations --- */
+      @keyframes fade-in-up { 
+        from { opacity: 0; transform: translateY(30px); } 
+        to { opacity: 1; transform: translateY(0); } 
+      }
+      @keyframes fade-in { 
+        from { opacity: 0; } 
+        to { opacity: 1; } 
+      }
+      @keyframes slide-in-right {
+        from { opacity: 0; transform: translateX(30px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes scale-in {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      .animate-fade-in-up { animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+      .animate-fade-in { animation: fade-in 0.6s ease forwards; }
+      .animate-slide-in-right { animation: slide-in-right 0.6s ease forwards; }
+      .animate-scale-in { animation: scale-in 0.5s ease forwards; }
+      
+      /* --- Glass Panels --- */
       .glass-panel {
-        background: rgba(26, 26, 26, 0.8);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(17, 17, 17, 0.85);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      
+      .glass-panel-gold {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(17, 17, 17, 0.9) 100%);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+      }
+      
+      /* --- Scrollbars --- */
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #444; }
+      
+      /* --- Progress Bar --- */
+      .progress-track {
+        background: var(--border-subtle);
+        height: 3px;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold-primary), var(--fire-mid));
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      /* --- Level Indicators --- */
+      .level-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--border-accent);
+        transition: all 0.3s ease;
+      }
+      .level-dot.active {
+        background: var(--gold-primary);
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+      }
+      .level-dot.complete {
+        background: linear-gradient(135deg, var(--gold-primary), var(--fire-mid));
+      }
+      
+      /* --- Typography --- */
+      .font-display { font-family: 'Playfair Display', Georgia, serif; }
+      
+      /* --- Form Elements --- */
+      textarea:focus, input:focus {
+        outline: none;
+        border-color: var(--gold-primary);
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+      }
+      
+      /* --- Export Button --- */
+      .export-btn {
+        background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+        border: 1px solid var(--gold-primary);
+        color: var(--gold-primary);
+      }
+      .export-btn:hover {
+        background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+        color: #000;
       }
     </style>
 </head>
-<body>
-    <div id="debug-error"></div>
+<body class="ember-bg">
+    <div class="cinematic-glow"></div>
     <div id="root"></div>
-
-    <script>
-      // Global Error Handler
-      window.onerror = function(msg, url, line, col, error) {
-        const div = document.getElementById('debug-error');
-        div.style.display = 'block';
-        div.innerHTML = `CRITICAL SYSTEM FAILURE:\n\n${msg}\n\nLine: ${line}`;
-        return false;
-      };
-    </script>
 
     <script type="text/babel">
         const { useState, useEffect, useRef, Fragment } = React;
@@ -117,26 +252,509 @@
         // CONFIGURATION
         // ==========================================
         
-        // !!! OPERATOR: PASTE YOUR API KEY HERE !!!
-        const HARDCODED_API_KEY = "AIzaSyDl5jNifT8f3qgFOiGpt3BpV92fZc4UntY"; 
+        // GoHighLevel Webhook URL - Replace with your actual webhook
+        const GHL_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/YOUR_WEBHOOK_ID";
         
-        // Direct REST Endpoint (No SDK needed)
-        const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite-preview-02-05:generateContent";
+        // Gemini API Key - Replace before production deployment
+        const GEMINI_API_KEY = "AIzaSyDl5jNifT8f3qgFOiGpt3BpV92fZc4UntY";
+        
+        // Gemini API Endpoint
+        const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent";
+        
+        // Storage key for localStorage
+        const STORAGE_KEY = "ignite_5levels_progress";
 
         // ==========================================
-        // DIRECT API SERVICE
+        // TOBY POTTER VOICE PATTERNS
+        // ==========================================
+        
+        const TOBY_VOICE = {
+            openingPhrases: [
+                "See, here's what most people miss...",
+                "Let me tell you something...",
+                "Here's the truth nobody wants to hear...",
+                "I'm going to be direct with you...",
+                "Now, stay with me here..."
+            ],
+            challengePhrases: [
+                "Where's the evidence for that story you're telling yourself?",
+                "That sounds like the PR version. What's the REAL answer?",
+                "You're dancing around something. What is it?",
+                "I hear the words, but I don't feel the truth. Go deeper.",
+                "That's what you'd tell your boss. What would you tell yourself at 3am?"
+            ],
+            confrontationalPhrases: [
+                "Stop. That's a surface answer. Dig.",
+                "You've been telling yourself that story for how long?",
+                "The market doesn't care about your feelings. Neither does transformation.",
+                "Your excuses aren't special. They're just comfortable.",
+                "Is that the truth, or is that what's comfortable?"
+            ],
+            validationPhrases: [
+                "Now we're getting somewhere.",
+                "That took courage to admit. Keep going.",
+                "Good. The uncomfortable truth is where growth lives.",
+                "That's real. That's honest. Now build on it."
+            ],
+            closingPhrases: [
+                "This is where the work begins.",
+                "Now you know. The question is: what will you do about it?",
+                "Clarity is created by commitment—not the other way around.",
+                "You are the problem. Good news—you're also the solution."
+            ]
+        };
+
+        // ==========================================
+        // LEVEL GUIDE DATA (UPGRADED)
+        // ==========================================
+
+        const LEVEL_GUIDE_DATA = [
+          {
+            level: 1,
+            title: "THE SURFACE",
+            subtitle: "What do you want? Name the result you're chasing.",
+            color: "#D4AF37",
+            svgContent: (
+              <svg className="w-full h-full" viewBox="0 0 400 300" fill="none">
+                <defs>
+                  <linearGradient id="skyGrad1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#0D0D0D" />
+                    <stop offset="100%" stopColor="#1A1510" />
+                  </linearGradient>
+                  <linearGradient id="waterGrad1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#0A0A0A" />
+                    <stop offset="100%" stopColor="#050505" />
+                  </linearGradient>
+                  <linearGradient id="iceTop" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#FFFFFF" />
+                    <stop offset="50%" stopColor="#D4AF37" />
+                    <stop offset="100%" stopColor="#B8962F" />
+                  </linearGradient>
+                  <linearGradient id="iceBottom" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#333333" />
+                    <stop offset="100%" stopColor="#0A0A0A" />
+                  </linearGradient>
+                  <filter id="glow1">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                  </filter>
+                  <filter id="deepShadow">
+                    <feDropShadow dx="0" dy="10" stdDeviation="10" floodColor="#000" floodOpacity="0.5"/>
+                  </filter>
+                </defs>
+                
+                {/* Sky */}
+                <rect width="400" height="150" fill="url(#skyGrad1)" />
+                
+                {/* Water */}
+                <rect y="150" width="400" height="150" fill="url(#waterGrad1)" />
+                
+                {/* Waterline */}
+                <line x1="0" y1="150" x2="400" y2="150" stroke="#D4AF37" strokeWidth="1" opacity="0.6" />
+                <text x="380" y="143" fill="#D4AF37" fontSize="8" fontFamily="Inter" textAnchor="end" opacity="0.8" fontWeight="600">SURFACE</text>
+                
+                {/* Iceberg - Visible tip */}
+                <g filter="url(#glow1)">
+                  <path d="M200 60 L240 150 L160 150 Z" fill="url(#iceTop)" />
+                  <path d="M200 60 L220 150 L240 150 Z" fill="#B8962F" opacity="0.4" />
+                </g>
+                
+                {/* Iceberg - Hidden mass */}
+                <path d="M160 150 L130 200 L150 260 L250 280 L270 220 L240 150 Z" fill="url(#iceBottom)" opacity="0.6" filter="url(#deepShadow)" />
+                
+                {/* Labels */}
+                <g>
+                  <circle cx="270" cy="100" r="3" fill="#D4AF37" />
+                  <line x1="267" y1="100" x2="220" y2="100" stroke="#D4AF37" strokeWidth="1" />
+                  <text x="280" y="97" fill="#FFF" fontSize="10" fontWeight="700">SYMPTOM</text>
+                  <text x="280" y="108" fill="#888" fontSize="8">What you think you want</text>
+                </g>
+                
+                <g>
+                  <circle cx="100" cy="220" r="3" fill="#666" />
+                  <line x1="103" y1="220" x2="150" y2="220" stroke="#666" strokeWidth="1" />
+                  <text x="20" y="217" fill="#666" fontSize="10" fontWeight="700">ROOT CAUSE</text>
+                  <text x="20" y="228" fill="#444" fontSize="8">What's actually driving you</text>
+                </g>
+              </svg>
+            ),
+            htmlBody: `
+              <h3 class='text-xl font-bold mb-4 text-[#D4AF37]'>The Tip of the Iceberg</h3>
+              <p class='mb-4 text-[#B0B0B0] leading-relaxed'>Most people spend their entire lives solving for symptoms. They chase the money, the title, the body—the <strong>visible tip</strong> of the iceberg.</p>
+              <p class='mb-6 text-[#B0B0B0] leading-relaxed'>But real transformation happens below the surface. The goal isn't to achieve the surface want—it's to understand <em>why you want it</em>.</p>
+              <div class="bg-black/50 p-5 rounded-lg border-l-2 border-[#D4AF37] mb-4">
+                <h4 class='text-white font-bold text-sm uppercase tracking-wide mb-2'>The "So That" Test</h4>
+                <p class='text-[#B0B0B0] text-sm'>Add "so that..." to your goal. Whatever follows is closer to the real reason.</p>
+                <p class='text-[#666] text-xs mt-2 italic'>"I want to make $50k/month <strong>so that</strong>..." → Keep going.</p>
+              </div>
+            `
+          },
+          {
+            level: 2,
+            title: "THE BREAK",
+            subtitle: "What breaks if you don't get this? What becomes impossible?",
+            color: "#E53E3E",
+            svgContent: (
+              <svg className="w-full h-full" viewBox="0 0 400 300" fill="none">
+                <defs>
+                  <linearGradient id="chainGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#666" />
+                    <stop offset="50%" stopColor="#888" />
+                    <stop offset="100%" stopColor="#666" />
+                  </linearGradient>
+                  <linearGradient id="breakGlow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#E53E3E" />
+                    <stop offset="100%" stopColor="#C53030" />
+                  </linearGradient>
+                  <filter id="redGlow">
+                    <feGaussianBlur stdDeviation="8" result="blur" />
+                    <feFlood floodColor="#E53E3E" floodOpacity="0.6" />
+                    <feComposite in2="blur" operator="in" />
+                    <feMerge>
+                      <feMergeNode />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                
+                <rect width="400" height="300" fill="#0D0D0D" />
+                
+                {/* Grid lines */}
+                <g opacity="0.1">
+                  {[...Array(10)].map((_, i) => (
+                    <line key={`h${i}`} x1="0" y1={i * 30} x2="400" y2={i * 30} stroke="#333" />
+                  ))}
+                  {[...Array(14)].map((_, i) => (
+                    <line key={`v${i}`} x1={i * 30} y1="0" x2={i * 30} y2="300" stroke="#333" />
+                  ))}
+                </g>
+                
+                {/* Left chain segment */}
+                <g transform="translate(80, 150)">
+                  <ellipse cx="0" cy="0" rx="40" ry="25" fill="none" stroke="url(#chainGrad)" strokeWidth="8" />
+                  <ellipse cx="0" cy="0" rx="40" ry="25" fill="none" stroke="#222" strokeWidth="4" />
+                </g>
+                
+                {/* Breaking point */}
+                <g transform="translate(200, 150)" filter="url(#redGlow)">
+                  <circle cx="0" cy="0" r="30" fill="url(#breakGlow)" opacity="0.2" />
+                  <path d="M-15 -10 L0 10 L15 -10" stroke="#E53E3E" strokeWidth="3" fill="none" strokeLinecap="round" />
+                  <path d="M-10 10 L10 10" stroke="#E53E3E" strokeWidth="3" fill="none" strokeLinecap="round" />
+                </g>
+                
+                {/* Right chain segment */}
+                <g transform="translate(320, 150)">
+                  <ellipse cx="0" cy="0" rx="40" ry="25" fill="none" stroke="url(#chainGrad)" strokeWidth="8" />
+                  <ellipse cx="0" cy="0" rx="40" ry="25" fill="none" stroke="#222" strokeWidth="4" />
+                </g>
+                
+                {/* Crack lines */}
+                <path d="M160 130 L175 145 M240 130 L225 145" stroke="#E53E3E" strokeWidth="2" opacity="0.6" />
+                <path d="M160 170 L175 155 M240 170 L225 155" stroke="#E53E3E" strokeWidth="2" opacity="0.6" />
+                
+                {/* Labels */}
+                <text x="80" y="100" fill="#888" fontSize="10" textAnchor="middle" fontWeight="600">CAUSE</text>
+                <text x="320" y="100" fill="#888" fontSize="10" textAnchor="middle" fontWeight="600">EFFECT</text>
+                <text x="200" y="220" fill="#E53E3E" fontSize="11" textAnchor="middle" fontWeight="700">FAILURE POINT</text>
+                <text x="200" y="235" fill="#666" fontSize="9" textAnchor="middle">What becomes impossible?</text>
+              </svg>
+            ),
+            htmlBody: `
+              <h3 class='text-xl font-bold mb-4 text-[#E53E3E]'>The Logic Chain</h3>
+              <p class='mb-4 text-[#B0B0B0] leading-relaxed'>Level 2 identifies the <strong>functional breakdown</strong>. It's the "If I don't get X, then Y becomes impossible" statement.</p>
+              <p class='mb-6 text-[#B0B0B0] leading-relaxed'>This isn't about feelings yet. It's about <em>mechanical consequences</em>.</p>
+              <div class="bg-black/50 p-5 rounded-lg border-l-2 border-[#E53E3E]">
+                <h4 class='text-white font-bold text-sm uppercase tracking-wide mb-3'>Strong vs. Weak Logic</h4>
+                <div class="space-y-3">
+                  <div class="flex items-start gap-2">
+                    <span class="text-green-500 font-bold">✓</span>
+                    <p class='text-[#B0B0B0] text-sm'>"If I don't lose the weight, I physically cannot play with my kids for more than 5 minutes."</p>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="text-red-500 font-bold">✗</span>
+                    <p class='text-[#B0B0B0] text-sm'>"If I don't lose the weight, I'll feel bad about myself."</p>
+                  </div>
+                </div>
+                <p class='text-[#666] text-xs mt-3 italic'>The first is mechanical. The second is emotional—save that for Level 3.</p>
+              </div>
+            `
+          },
+          {
+            level: 3,
+            title: "THE FUEL",
+            subtitle: "What emotion is driving this? Fear? Shame? Pride? What's in the tank?",
+            color: "#FF6A00",
+            svgContent: (
+              <svg className="w-full h-full" viewBox="0 0 400 300" fill="none">
+                <defs>
+                  <radialGradient id="coreHeat" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0%" stopColor="#FF9500" />
+                    <stop offset="40%" stopColor="#FF6A00" />
+                    <stop offset="70%" stopColor="#C84A00" />
+                    <stop offset="100%" stopColor="#1A1A1A" />
+                  </radialGradient>
+                  <radialGradient id="outerGlow" cx="0.5" cy="0.5" r="0.5">
+                    <stop offset="0%" stopColor="#FF6A00" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="#FF6A00" stopOpacity="0" />
+                  </radialGradient>
+                  <filter id="fireGlow">
+                    <feGaussianBlur stdDeviation="6" result="blur" />
+                    <feFlood floodColor="#FF6A00" floodOpacity="0.5" />
+                    <feComposite in2="blur" operator="in" />
+                    <feMerge>
+                      <feMergeNode />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                
+                <rect width="400" height="300" fill="#0D0D0D" />
+                
+                {/* Outer rings */}
+                <circle cx="200" cy="150" r="120" fill="none" stroke="#222" strokeWidth="1" strokeDasharray="4 4" />
+                <circle cx="200" cy="150" r="90" fill="none" stroke="#333" strokeWidth="1" strokeDasharray="2 2" />
+                
+                {/* Glow field */}
+                <circle cx="200" cy="150" r="100" fill="url(#outerGlow)" />
+                
+                {/* Core */}
+                <g filter="url(#fireGlow)">
+                  <circle cx="200" cy="150" r="50" fill="url(#coreHeat)" />
+                </g>
+                
+                {/* Pulse rings (animated via CSS would be ideal) */}
+                <circle cx="200" cy="150" r="60" fill="none" stroke="#FF6A00" strokeWidth="1" opacity="0.4" />
+                <circle cx="200" cy="150" r="75" fill="none" stroke="#FF6A00" strokeWidth="1" opacity="0.2" />
+                
+                {/* Center text */}
+                <text x="200" y="145" fill="#FFF" fontSize="14" fontWeight="800" textAnchor="middle">EMOTION</text>
+                <text x="200" y="162" fill="#FFB366" fontSize="10" textAnchor="middle">THE REACTOR CORE</text>
+                
+                {/* Emotion labels around the core */}
+                <text x="200" y="55" fill="#666" fontSize="9" textAnchor="middle">FEAR</text>
+                <text x="310" y="150" fill="#666" fontSize="9" textAnchor="middle">SHAME</text>
+                <text x="200" y="250" fill="#666" fontSize="9" textAnchor="middle">PRIDE</text>
+                <text x="90" y="150" fill="#666" fontSize="9" textAnchor="middle">ANGER</text>
+                
+                {/* Connecting lines */}
+                <line x1="200" y1="65" x2="200" y2="100" stroke="#444" strokeWidth="1" />
+                <line x1="295" y1="150" x2="250" y2="150" stroke="#444" strokeWidth="1" />
+                <line x1="200" y1="240" x2="200" y2="200" stroke="#444" strokeWidth="1" />
+                <line x1="105" y1="150" x2="150" y2="150" stroke="#444" strokeWidth="1" />
+              </svg>
+            ),
+            htmlBody: `
+              <h3 class='text-xl font-bold mb-4 text-[#FF6A00]'>The Reactor Core</h3>
+              <p class='mb-4 text-[#B0B0B0] leading-relaxed'>Logic is the steering wheel, but <strong>emotion is the fuel</strong>. At Level 3, we stop pretending this is a "rational decision."</p>
+              <p class='mb-6 text-[#B0B0B0] leading-relaxed'>What you're running FROM or running TOWARD—that's what actually moves you.</p>
+              <div class="bg-black/50 p-5 rounded-lg border-l-2 border-[#FF6A00] mb-4">
+                <h4 class='text-[#FF6A00] font-bold text-sm uppercase tracking-wide mb-3'>The 2 Polarities</h4>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p class="text-white font-bold mb-1">Away From Pain</p>
+                    <p class="text-[#888]">Fear, shame, embarrassment, inadequacy</p>
+                  </div>
+                  <div>
+                    <p class="text-white font-bold mb-1">Toward Pleasure</p>
+                    <p class="text-[#888]">Pride, love, significance, freedom</p>
+                  </div>
+                </div>
+              </div>
+              <p class='text-[#666] text-xs italic'>Pro tip: "Away from" motivation burns hotter but burns out faster. Know which fuel you're using.</p>
+            `
+          },
+          {
+            level: 4,
+            title: "THE CONSTRUCT",
+            subtitle: "What does this say about who you are? Who are you afraid of becoming?",
+            color: "#9F7AEA",
+            svgContent: (
+              <svg className="w-full h-full" viewBox="0 0 400 300" fill="none">
+                <defs>
+                  <linearGradient id="mirrorGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#9F7AEA" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="#553C9A" stopOpacity="0.1" />
+                  </linearGradient>
+                  <linearGradient id="frameGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#D4AF37" />
+                    <stop offset="100%" stopColor="#B8962F" />
+                  </linearGradient>
+                  <filter id="purpleGlow">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feFlood floodColor="#9F7AEA" floodOpacity="0.4" />
+                    <feComposite in2="blur" operator="in" />
+                    <feMerge>
+                      <feMergeNode />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                
+                <rect width="400" height="300" fill="#0D0D0D" />
+                
+                {/* Background grid suggesting construction */}
+                <g opacity="0.05">
+                  {[...Array(20)].map((_, i) => (
+                    <line key={`h${i}`} x1="0" y1={i * 15} x2="400" y2={i * 15} stroke="#9F7AEA" />
+                  ))}
+                  {[...Array(27)].map((_, i) => (
+                    <line key={`v${i}`} x1={i * 15} y1="0" x2={i * 15} y2="300" stroke="#9F7AEA" />
+                  ))}
+                </g>
+                
+                {/* Mirror frame */}
+                <rect x="120" y="50" width="160" height="200" rx="4" fill="none" stroke="url(#frameGrad)" strokeWidth="4" filter="url(#purpleGlow)" />
+                
+                {/* Mirror surface */}
+                <rect x="130" y="60" width="140" height="180" fill="url(#mirrorGrad)" />
+                
+                {/* Silhouette - current self */}
+                <g transform="translate(200, 150)">
+                  <ellipse cx="0" cy="-50" rx="18" ry="22" fill="#444" />
+                  <path d="M-25 -25 Q-30 20 -25 50 L25 50 Q30 20 25 -25 Z" fill="#444" />
+                </g>
+                
+                {/* Shadow self - slightly offset, darker */}
+                <g transform="translate(205, 155)" opacity="0.3">
+                  <ellipse cx="0" cy="-50" rx="18" ry="22" fill="#9F7AEA" />
+                  <path d="M-25 -25 Q-30 20 -25 50 L25 50 Q30 20 25 -25 Z" fill="#9F7AEA" />
+                </g>
+                
+                {/* Labels */}
+                <text x="200" y="35" fill="#9F7AEA" fontSize="10" textAnchor="middle" fontWeight="700" letterSpacing="0.1em">IDENTITY MIRROR</text>
+                
+                <g transform="translate(320, 100)">
+                  <text x="0" y="0" fill="#FFF" fontSize="9" fontWeight="600">WHO YOU</text>
+                  <text x="0" y="12" fill="#FFF" fontSize="9" fontWeight="600">THINK</text>
+                  <text x="0" y="24" fill="#FFF" fontSize="9" fontWeight="600">YOU ARE</text>
+                </g>
+                
+                <g transform="translate(320, 180)">
+                  <text x="0" y="0" fill="#9F7AEA" fontSize="9" fontWeight="600">WHO YOU'RE</text>
+                  <text x="0" y="12" fill="#9F7AEA" fontSize="9" fontWeight="600">AFRAID OF</text>
+                  <text x="0" y="24" fill="#9F7AEA" fontSize="9" fontWeight="600">BECOMING</text>
+                </g>
+              </svg>
+            ),
+            htmlBody: `
+              <h3 class='text-xl font-bold mb-4 text-[#9F7AEA]'>The Identity Blueprint</h3>
+              <p class='mb-4 text-[#B0B0B0] leading-relaxed'>We act in accordance with who we believe we are. Level 4 excavates your <strong>self-concept</strong>—the operating system running beneath everything.</p>
+              <p class='mb-6 text-[#B0B0B0] leading-relaxed'>This is where we find the identity you're protecting or the identity you're running from.</p>
+              <div class="bg-black/50 p-5 rounded-lg border-l-2 border-[#9F7AEA] mb-4">
+                <h4 class='text-[#9F7AEA] font-bold text-sm uppercase tracking-wide mb-3'>The Identity Excavation</h4>
+                <div class="space-y-3 text-sm">
+                  <div class="flex items-start gap-2">
+                    <span class="text-[#9F7AEA] font-bold">→</span>
+                    <p class='text-[#B0B0B0]'><strong class="text-white">The Fear Identity:</strong> "I'm afraid I am becoming lazy / irrelevant / abandoned / my father."</p>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="text-[#9F7AEA] font-bold">→</span>
+                    <p class='text-[#B0B0B0]'><strong class="text-white">The Aspiration Identity:</strong> "I need to prove I am capable / worthy / enough."</p>
+                  </div>
+                </div>
+              </div>
+            `
+          },
+          {
+            level: 5,
+            title: "THE VOW",
+            subtitle: "Where did this start? What promise did you make? What wound are you protecting?",
+            color: "#D4AF37",
+            svgContent: (
+              <svg className="w-full h-full" viewBox="0 0 400 300" fill="none">
+                <defs>
+                  <radialGradient id="magmaCore" cx="0.5" cy="0.9" r="0.6">
+                    <stop offset="0%" stopColor="#D4AF37" />
+                    <stop offset="40%" stopColor="#B8962F" />
+                    <stop offset="70%" stopColor="#8B6914" />
+                    <stop offset="100%" stopColor="#0A0A0A" />
+                  </radialGradient>
+                  <linearGradient id="shaftLight" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#FFF" stopOpacity="0.5" />
+                    <stop offset="100%" stopColor="#D4AF37" stopOpacity="0.1" />
+                  </linearGradient>
+                  <filter id="goldGlow">
+                    <feGaussianBlur stdDeviation="6" result="blur" />
+                    <feFlood floodColor="#D4AF37" floodOpacity="0.6" />
+                    <feComposite in2="blur" operator="in" />
+                    <feMerge>
+                      <feMergeNode />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                
+                <rect width="400" height="300" fill="#0A0A0A" />
+                
+                {/* Strata layers */}
+                <rect y="30" width="400" height="40" fill="#111" opacity="0.5" />
+                <rect y="70" width="400" height="50" fill="#0D0D0D" opacity="0.7" />
+                <rect y="120" width="400" height="60" fill="#080808" opacity="0.8" />
+                <rect y="180" width="400" height="120" fill="#050505" />
+                
+                {/* Layer labels */}
+                <text x="380" y="55" fill="#333" fontSize="7" textAnchor="end">SURFACE</text>
+                <text x="380" y="100" fill="#333" fontSize="7" textAnchor="end">MECHANICS</text>
+                <text x="380" y="155" fill="#333" fontSize="7" textAnchor="end">EMOTION</text>
+                <text x="380" y="210" fill="#333" fontSize="7" textAnchor="end">IDENTITY</text>
+                
+                {/* Drill shaft */}
+                <line x1="200" y1="20" x2="200" y2="250" stroke="url(#shaftLight)" strokeWidth="2" strokeDasharray="4 4" />
+                
+                {/* Entry point */}
+                <circle cx="200" cy="20" r="4" fill="#D4AF37" />
+                
+                {/* Core/Origin point */}
+                <g transform="translate(200, 265)">
+                  <ellipse cx="0" cy="0" rx="100" ry="30" fill="url(#magmaCore)" opacity="0.6" />
+                  <g filter="url(#goldGlow)">
+                    <circle cx="0" cy="0" r="12" fill="#D4AF37" />
+                  </g>
+                </g>
+                
+                {/* Labels */}
+                <text x="200" y="290" fill="#D4AF37" fontSize="10" textAnchor="middle" fontWeight="700" letterSpacing="0.15em">ORIGIN POINT</text>
+                
+                {/* Depth markers */}
+                <g>
+                  <line x1="20" y1="30" x2="20" y2="265" stroke="#333" strokeWidth="1" />
+                  <text x="15" y="150" fill="#444" fontSize="8" textAnchor="middle" transform="rotate(-90, 15, 150)">DEPTH OF EXCAVATION</text>
+                </g>
+              </svg>
+            ),
+            htmlBody: `
+              <h3 class='text-xl font-bold mb-4 text-[#D4AF37]'>The Bedrock</h3>
+              <p class='mb-4 text-[#B0B0B0] leading-relaxed'>This is the source code. The root cause is rarely about the future—it's almost always about the <strong>past</strong>.</p>
+              <p class='mb-6 text-[#B0B0B0] leading-relaxed'>At Level 5, we find the moment, the wound, or the vow that set everything in motion.</p>
+              <div class="bg-black/50 p-5 rounded-lg border-l-2 border-[#D4AF37] mb-4">
+                <h4 class='text-[#D4AF37] font-bold text-sm uppercase tracking-wide mb-3'>The 3 Archetypes of Root Cause</h4>
+                <div class="space-y-4">
+                  <div>
+                    <p class='text-white font-bold text-sm'>1. THE VOW</p>
+                    <p class='text-[#888] text-sm'>A promise made in pain. "I swore I would never be like my father." "I promised myself I'd never be poor again." "I vowed to prove them wrong."</p>
+                  </div>
+                  <div>
+                    <p class='text-white font-bold text-sm'>2. THE WOUND</p>
+                    <p class='text-[#888] text-sm'>An unhealed injury still running the show. Abandonment. Betrayal. Humiliation. The moment you learned the world wasn't safe.</p>
+                  </div>
+                  <div>
+                    <p class='text-white font-bold text-sm'>3. THE INHERITED BELIEF</p>
+                    <p class='text-[#888] text-sm'>A story you absorbed without choosing. "Money is evil." "People like us don't succeed." "You have to struggle to deserve it."</p>
+                  </div>
+                </div>
+              </div>
+              <p class='text-[#666] text-xs italic'>The excavation is complete when you can trace today's behavior to yesterday's story.</p>
+            `
+          }
+        ];
+
+        // ==========================================
+        // API & SERVICES
         // ==========================================
         
         const callGemini = async (prompt, isJson = false) => {
-            const key = HARDCODED_API_KEY;
-            
-            if (!key || key === "YOUR_API_KEY_HERE") {
-                const err = "API Key is missing. Please edit index.html line 88.";
-                return isJson ? { whyStatement: err, emotionalCore: "Configuration Required" } : err;
-            }
-
             try {
-                const response = await fetch(`${GEMINI_URL}?key=${key}`, {
+                const response = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -147,7 +765,7 @@
 
                 if (!response.ok) {
                     const err = await response.text();
-                    if (response.status === 400) throw new Error("INVALID API KEY. Check your configuration.");
+                    if (response.status === 400 || response.status === 403) throw new Error("Invalid API Key");
                     throw new Error(`API Error: ${response.status}`);
                 }
 
@@ -156,206 +774,391 @@
                 return isJson ? JSON.parse(text) : text;
             } catch (error) {
                 console.error("Gemini Error:", error);
-                return isJson ? { whyStatement: `Error: ${error.message}`, emotionalCore: "System Offline" } : `Error: ${error.message}`;
+                return isJson 
+                    ? { whyStatement: `Error: ${error.message}`, emotionalCore: "System Error" } 
+                    : `Error: ${error.message}`;
             }
         };
 
         const generateNextQuestion = async (history, currentLevel) => {
-            const historyText = history.map(h => `Level ${h.level} A: ${h.answer}`).join('\n');
-            const lastAnswer = history[history.length - 1].answer;
+            const historyText = history.map(h => `Level ${h.level}: "${h.answer}"`).join('\n');
+            const lastAnswer = history[history.length - 1]?.answer || "";
             
-            let systemPrompt = `ROLE: Socratic Coach (Toby Potter). TONE: Direct, intense, digging for truth. LEVEL: ${currentLevel}. Answer with ONLY the question. `;
-            
-            if (currentLevel === 2) systemPrompt += `Reflect on "${lastAnswer}". Ask what MECHANICAL/FUNCTIONAL outcome breaks if they don't get this. What becomes impossible?`;
-            else if (currentLevel === 3) systemPrompt += `Take answer "${lastAnswer}". Ask for the EMOTION behind it. Fear? Shame? Pride? What fuel is in the tank?`;
-            else if (currentLevel === 4) systemPrompt += `Take answer "${lastAnswer}". Ask what this says about their IDENTITY. Who are they afraid of becoming?`;
-            else if (currentLevel === 5) systemPrompt += `Take answer "${lastAnswer}". Ask about the ROOT ORIGIN/VOW. When did this start?`;
+            // Core instructions for all levels
+            const coreRules = `
+You generate ONE short question to dig deeper into someone's motivation.
 
-            return await callGemini(systemPrompt + `\nUSER HISTORY:\n${historyText}\n\nUSER LATEST ANSWER: "${lastAnswer}"`);
+STRICT RULES:
+1. Return ONLY the question. No intro, no explanation.
+2. NEVER use dashes, hyphens, or em dashes in your response. Not even one.
+3. Keep it under 30 words.
+4. Be direct. No fluff. No coaching cliches.
+5. Do not say things like "I hear you" or "That's interesting" or "Let me ask you"
+6. Just ask the question directly.
+7. Make it specific to what they actually said.
+8. Push past the surface answer to find what is underneath.
+`;
+            
+            let levelPrompt = "";
+            
+            if (currentLevel === 2) {
+                levelPrompt = `
+${coreRules}
+
+CONTEXT: They want "${lastAnswer}"
+
+YOUR TASK: Ask what breaks or becomes impossible if they do not get this. Focus on real world consequences, not feelings.
+
+Good examples:
+"What actually stops working in your life without this?"
+"If this never happens, what door stays closed forever?"
+"What becomes impossible for you without this?"
+
+Generate your question now:`;
+            } 
+            else if (currentLevel === 3) {
+                levelPrompt = `
+${coreRules}
+
+CONTEXT: 
+They want: "${history[0]?.answer}"
+What breaks without it: "${lastAnswer}"
+
+YOUR TASK: Ask what emotion is actually driving this. Fear? Shame? Anger? Pride? Get to the feeling underneath the logic.
+
+Good examples:
+"What feeling hits you when you imagine never getting this?"
+"Is this about fear or is it about proving something?"
+"What emotion wakes you up at 3am about this?"
+
+Generate your question now:`;
+            }
+            else if (currentLevel === 4) {
+                levelPrompt = `
+${coreRules}
+
+CONTEXT:
+They want: "${history[0]?.answer}"
+The emotion driving it: "${lastAnswer}"
+
+YOUR TASK: Ask what this says about who they are or who they are afraid of becoming. Get to identity.
+
+Good examples:
+"Who are you trying to prove wrong?"
+"What kind of person are you afraid of becoming if you fail at this?"
+"Who would you be if this was never an issue?"
+
+Generate your question now:`;
+            }
+            else if (currentLevel === 5) {
+                levelPrompt = `
+${coreRules}
+
+CONTEXT:
+They want: "${history[0]?.answer}"
+The identity at stake: "${lastAnswer}"
+
+YOUR TASK: Ask where this started. Find the origin moment, the old wound, or the promise they made. Go to the root.
+
+Good examples:
+"When did you first start believing this about yourself?"
+"Was there a moment or a person that made you feel this way?"
+"What happened that made you need to prove this?"
+
+Generate your question now:`;
+            }
+
+            return await callGemini(levelPrompt);
         };
 
         const generateSynthesis = async (history) => {
-            const historyText = history.map(h => `L${h.level}: ${h.answer}`).join('\n');
-            const prompt = `ROLE: Master Psychologist (Toby Potter). Analyze session:\n${historyText}\n\nReturn JSON: { "whyStatement": "150 word summary connecting L1 to L5. Use 'You' language. Be firm but encouraging.", "emotionalCore": "1 sentence hard truth/manifesto" }`;
+            const historyText = history.map(h => `Level ${h.level}: "${h.answer}"`).join('\n');
+            
+            const prompt = `
+You are writing a final summary for someone who just completed the 5 Levels of Why exercise.
+
+THEIR JOURNEY:
+${historyText}
+
+STRICT RULES:
+1. NEVER use dashes, hyphens, or em dashes anywhere in your response. Not even one.
+2. Write in second person (you/your).
+3. Be direct and clear. No fluff.
+4. Connect what they said they wanted (Level 1) to where it actually comes from (Level 5).
+5. Show them the pattern they could not see themselves.
+
+Return JSON in this exact format:
+{
+  "whyStatement": "Write 100 to 130 words that connect their surface goal to their deeper motivation. Show them the thread from what they want to why they really want it. End with what they can do now that they see this clearly. No dashes allowed.",
+  "emotionalCore": "Write one sentence of 10 to 20 words that captures the real truth driving them. Make it something they can remember. No dashes allowed."
+}`;
+
             return await callGemini(prompt, true);
         };
 
-        // ==========================================
-        // UI DATA (SVG & Content)
-        // ==========================================
-
-        const LEVEL_GUIDE_DATA = [
-          {
-            level: 1,
-            title: "What do you want?",
-            subtitle: "Describe the specific result or outcome you are chasing.",
-            svgContent: (
-              <svg className="w-full h-full" viewBox="0 0 800 500" fill="none">
-                <defs>
-                  <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="250"><stop offset="0%" stopColor="#0D0D0D" /><stop offset="100%" stopColor="#1A1A1A" /></linearGradient>
-                  <linearGradient id="waterGrad" x1="0" y1="250" x2="0" y2="500"><stop offset="0%" stopColor="#1A1A1A" stopOpacity="0.8" /><stop offset="100%" stopColor="#000000" stopOpacity="0.95" /></linearGradient>
-                  <linearGradient id="iceLight" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#FFFFFF" /><stop offset="100%" stopColor="#D4AF37" /></linearGradient>
-                  <linearGradient id="iceDark" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#333333" /><stop offset="100%" stopColor="#111111" /></linearGradient>
-                  <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5" result="blur" /><feComposite in="SourceGraphic" in2="blur" operator="over" /></filter>
-                </defs>
-                <rect width="800" height="250" fill="url(#skyGrad)" />
-                <rect y="250" width="800" height="250" fill="url(#waterGrad)" />
-                <line x1="0" y1="250" x2="800" y2="250" stroke="#D4AF37" strokeWidth="1" strokeDasharray="4 4" opacity="0.5" />
-                <text x="780" y="240" fill="#D4AF37" fontSize="12" fontFamily="monospace" textAnchor="end" opacity="0.8">WATERLINE [VISIBILITY THRESHOLD]</text>
-                <g filter="url(#glow)">
-                   <path d="M400 100 L460 250 L340 250 Z" fill="url(#iceLight)" stroke="#D4AF37" strokeWidth="2" />
-                   <path d="M400 100 L430 250 L460 250 Z" fill="#B8962F" opacity="0.5" />
-                </g>
-                <path d="M340 250 L300 350 L350 450 L450 480 L500 380 L460 250 Z" fill="url(#iceDark)" stroke="#444" strokeWidth="1" opacity="0.8" />
-                <g transform="translate(500, 120)">
-                    <line x1="0" y1="0" x2="-40" y2="20" stroke="#D4AF37" />
-                    <circle cx="0" cy="0" r="3" fill="#D4AF37" />
-                    <text x="10" y="4" fill="#FFFFFF" fontSize="14" fontWeight="bold">SYMPTOM</text>
-                </g>
-                <g transform="translate(250, 350)">
-                    <line x1="0" y1="0" x2="50" y2="0" stroke="#666" />
-                    <circle cx="0" cy="0" r="3" fill="#666" />
-                    <text x="-10" y="4" fill="#666" fontSize="14" textAnchor="end">ROOT CAUSE</text>
-                </g>
-              </svg>
-            ),
-            htmlBody: `<h3 class='text-xl font-bold mb-4 text-[#D4AF37]'>The Tip of the Iceberg</h3><p class='mb-6 text-[#B0B0B0] leading-relaxed'>You are solving for the part of the problem you can see. But in complex systems, the visible outcome is just a symptom.</p><div class="bg-[#1F1F1F] p-5 rounded border-l-2 border-[#D4AF37] mb-6 shadow-lg"><h4 class='text-white font-bold text-sm uppercase tracking-wide mb-2'>The "So That" Test</h4><p class='text-[#B0B0B0] text-sm'>If your goal is generic, ask "So that... what?"</p></div>`
-          },
-          {
-            level: 2,
-            title: "What breaks without this?",
-            subtitle: "Identify the mechanical breakdown or direct consequence.",
-            svgContent: (
-              <svg className="w-full h-full" viewBox="0 0 800 500" fill="none">
-                 <defs>
-                    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#444" /><stop offset="50%" stopColor="#777" /><stop offset="100%" stopColor="#333" /></linearGradient>
-                    <filter id="shadow"><feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.5"/></filter>
-                 </defs>
-                 <rect width="800" height="500" fill="#0D0D0D" />
-                 <path d="M0 50 H800 M0 150 H800 M0 250 H800 M0 350 H800 M0 450 H800" stroke="#222" strokeWidth="1" />
-                 <path d="M50 0 V500 M150 0 V500 M250 0 V500 M350 0 V500 M450 0 V500 M550 0 V500" stroke="#222" strokeWidth="1" />
-                 <g transform="translate(200, 250)" filter="url(#shadow)">
-                    <circle cx="0" cy="0" r="80" fill="url(#metal)" stroke="#D4AF37" strokeWidth="2" />
-                    <path d="M-80 0 L-60 0 M80 0 L60 0 M0 -80 L0 -60 M0 80 L0 60" stroke="#111" strokeWidth="4" />
-                    <text x="0" y="5" fill="#D4AF37" fontSize="12" textAnchor="middle" fontWeight="bold">ACTION</text>
-                 </g>
-                 <g transform="translate(550, 250)" filter="url(#shadow)">
-                    <circle cx="0" cy="0" r="90" fill="#E53E3E" fillOpacity="0.1" stroke="#E53E3E" strokeWidth="2" />
-                    <text x="0" y="40" fill="#E53E3E" fontSize="12" textAnchor="middle" fontWeight="bold">FAILURE</text>
-                 </g>
-                 <path d="M280 250 L290 250" stroke="#D4AF37" strokeWidth="2" markerEnd="url(#arrow)" />
-                 <path d="M410 250 L460 250" stroke="#E53E3E" strokeWidth="2" strokeDasharray="4 2" />
-              </svg>
-            ),
-            htmlBody: `<h3 class='text-xl font-bold mb-4 text-[#D4AF37]'>The Logic Chain</h3><p class='mb-6 text-[#B0B0B0] leading-relaxed'>Level 2 identifies the <strong>functional breakdown</strong>. It is the "If P, then Q" statement.</p><div class="bg-[#1A1A1A] p-4 rounded border-t-2 border-[#D4AF37]"><strong class="text-white block mb-1">Good Logic</strong><p class="text-xs text-[#B0B0B0]">"If I don't lose weight, I physically cannot go hiking with my kids." (Functional Limit)</p></div>`
-          },
-          {
-            level: 3,
-            title: "What feeling is driving this?",
-            subtitle: "Name the raw emotion you are running from or towards.",
-            svgContent: (
-              <svg className="w-full h-full" viewBox="0 0 800 500" fill="none">
-                 <defs><radialGradient id="coreHeat" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stopColor="#FF6B35" /><stop offset="60%" stopColor="#E53E3E" /><stop offset="100%" stopColor="#1A1A1A" /></radialGradient></defs>
-                 <rect width="800" height="500" fill="#0D0D0D" />
-                 <g transform="translate(400, 250)">
-                    <path d="M-200 0 A 200 200 0 1 1 200 0" fill="none" stroke="#444" strokeWidth="40" strokeDasharray="4 2" />
-                    <circle cx="0" cy="0" r="80" fill="url(#coreHeat)" />
-                    <text x="0" y="5" fill="#FFFFFF" fontSize="16" fontWeight="bold" textAnchor="middle">FEAR</text>
-                 </g>
-                 <line x1="400" y1="250" x2="650" y2="250" stroke="#FF6B35" strokeWidth="2" />
-                 <text x="660" y="255" fill="#FF6B35" fontSize="14" fontWeight="bold">EMOTIONAL DRIVER</text>
-              </svg>
-            ),
-            htmlBody: `<h3 class='text-xl font-bold mb-4 text-[#FF6B35]'>The Reactor Core</h3><p class='mb-6 text-[#B0B0B0] leading-relaxed'>Logic is the steering wheel, but emotion is the fuel. At Level 3, we stop pretending this is a "business decision".</p><div class="bg-[#1A1A1A] border border-[#FF6B35] p-5 rounded-lg mb-6"><h4 class='text-[#FF6B35] font-bold mb-2 uppercase text-xs tracking-wider'>The 2 Polarities</h4><p class="text-sm text-gray-400">Moving AWAY from Pain vs Moving TOWARD Pleasure</p></div>`
-          },
-          {
-            level: 4,
-            title: "Who are you becoming?",
-            subtitle: "Confront the identity you are building or destroying.",
-            svgContent: (
-              <svg className="w-full h-full" viewBox="0 0 800 500" fill="none">
-                 <defs><linearGradient id="gridGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#D4AF37" stopOpacity="0.5"/><stop offset="100%" stopColor="#000" stopOpacity="0"/></linearGradient></defs>
-                 <rect width="800" height="500" fill="#0D0D0D" />
-                 <rect x="200" y="50" width="400" height="400" stroke="url(#gridGrad)" strokeWidth="1" strokeDasharray="10 10" />
-                 <g transform="translate(400, 220)">
-                    <rect x="-40" y="-30" width="80" height="60" stroke="#D4AF37" strokeWidth="2" fill="#D4AF37" fillOpacity="0.1" />
-                    <circle cx="0" cy="0" r="5" fill="#D4AF37" />
-                 </g>
-                 <text x="400" y="100" fill="#D4AF37" fontSize="18" textAnchor="middle" fontWeight="bold">IDENTITY CONSTRUCT</text>
-              </svg>
-            ),
-            htmlBody: `<h3 class='text-xl font-bold mb-4 text-[#E5C76B]'>The Architectural Blueprint</h3><p class='mb-6 text-[#B0B0B0] leading-relaxed'>We act in accordance with who we believe we are. Level 4 digs into your <strong>Self-Concept</strong>.</p><div class="space-y-4 mb-6"><div class="flex items-center gap-4"><div class="w-8 h-8 rounded-full bg-[#1A1A1A] border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] font-bold">1</div><div><strong class="text-white text-sm block">The Fear Identity</strong><span class="text-[#666] text-xs">"I am afraid I am becoming lazy/irrelevant/abandoned."</span></div></div></div>`
-          },
-          {
-            level: 5,
-            title: "The Origin Point",
-            subtitle: "What is the core belief or past wound anchoring all of this?",
-            svgContent: (
-              <svg className="w-full h-full" viewBox="0 0 800 500" fill="none">
-                 <defs><radialGradient id="magma" cx="0.5" cy="1" r="1"><stop offset="0%" stopColor="#D4AF37" /><stop offset="50%" stopColor="#B8962F" /><stop offset="100%" stopColor="#000" /></radialGradient></defs>
-                 <rect width="800" height="500" fill="#0D0D0D" />
-                 <path d="M400 100 L 400 450" stroke="#D4AF37" strokeWidth="2" strokeDasharray="2 2" />
-                 <g transform="translate(400, 450)">
-                    <circle cx="0" cy="0" r="150" fill="url(#magma)" opacity="0.2" filter="url(#glow)" />
-                    <circle cx="0" cy="0" r="10" fill="#D4AF37" />
-                 </g>
-                 <text x="400" y="480" fill="#D4AF37" fontSize="14" textAnchor="middle" fontWeight="bold" letterSpacing="2">ORIGIN POINT</text>
-              </svg>
-            ),
-            htmlBody: `<h3 class='text-xl font-bold mb-4 text-[#D4AF37]'>The Bedrock</h3><p class='mb-6 text-[#B0B0B0] leading-relaxed'>This is the source code. The root cause is rarely about the future; it is almost always about the past.</p><div class="bg-[#1A1A1A] p-6 rounded-lg border border-[#333] mb-6"><h4 class='text-white font-bold mb-4 uppercase text-xs tracking-widest'>The 3 Archetypes of Root Cause</h4><ul class="space-y-3"><li class="flex gap-3"><span class="text-[#D4AF37]">✦</span><div class="text-sm text-[#B0B0B0]"><strong class="text-white">The Vow:</strong> A promise made in pain.</div></li></ul></div>`
-          }
-        ];
+        const submitToGHL = async (data) => {
+            try {
+                const response = await fetch(GHL_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event: '5_levels_completed',
+                        timestamp: new Date().toISOString(),
+                        ...data
+                    })
+                });
+                return response.ok;
+            } catch (error) {
+                console.error("GHL Webhook Error:", error);
+                return false;
+            }
+        };
 
         // ==========================================
-        // APP LOGIC
+        // LOCAL STORAGE HELPERS
+        // ==========================================
+        
+        const saveProgress = (state) => {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    ...state,
+                    savedAt: new Date().toISOString()
+                }));
+            } catch (e) {
+                console.error("Failed to save progress:", e);
+            }
+        };
+
+        const loadProgress = () => {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    // Check if saved data is less than 24 hours old
+                    const savedAt = new Date(data.savedAt);
+                    const now = new Date();
+                    const hoursDiff = (now - savedAt) / (1000 * 60 * 60);
+                    if (hoursDiff < 24) {
+                        return data;
+                    }
+                }
+            } catch (e) {
+                console.error("Failed to load progress:", e);
+            }
+            return null;
+        };
+
+        const clearProgress = () => {
+            try {
+                localStorage.removeItem(STORAGE_KEY);
+            } catch (e) {
+                console.error("Failed to clear progress:", e);
+            }
+        };
+
+        // ==========================================
+        // PDF EXPORT
+        // ==========================================
+        
+        const exportToPDF = async (history, synthesis) => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Colors
+            const gold = [212, 175, 55];
+            const white = [255, 255, 255];
+            const gray = [150, 150, 150];
+            const darkGray = [100, 100, 100];
+            
+            // Header
+            doc.setFillColor(10, 10, 10);
+            doc.rect(0, 0, 220, 50, 'F');
+            
+            doc.setTextColor(...gold);
+            doc.setFontSize(24);
+            doc.setFont('helvetica', 'bold');
+            doc.text('5 LEVELS OF WHY', 105, 25, { align: 'center' });
+            
+            doc.setTextColor(...gray);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text('EXCAVATION RESULTS | IGNITE PROGRAM', 105, 35, { align: 'center' });
+            doc.text(new Date().toLocaleDateString(), 105, 42, { align: 'center' });
+            
+            let yPos = 60;
+            
+            // Journey Section
+            doc.setTextColor(...gold);
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
+            doc.text('YOUR EXCAVATION JOURNEY', 20, yPos);
+            yPos += 10;
+            
+            history.forEach((h, i) => {
+                const levelData = LEVEL_GUIDE_DATA[h.level - 1];
+                
+                // Level header
+                doc.setTextColor(...gold);
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`LEVEL ${h.level}: ${levelData.title}`, 20, yPos);
+                yPos += 6;
+                
+                // Question
+                doc.setTextColor(...darkGray);
+                doc.setFontSize(9);
+                doc.setFont('helvetica', 'italic');
+                const questionLines = doc.splitTextToSize(`Q: ${h.question}`, 170);
+                doc.text(questionLines, 20, yPos);
+                yPos += questionLines.length * 5;
+                
+                // Answer
+                doc.setTextColor(...white);
+                doc.setFont('helvetica', 'normal');
+                const answerLines = doc.splitTextToSize(`A: ${h.answer}`, 170);
+                doc.text(answerLines, 20, yPos);
+                yPos += answerLines.length * 5 + 8;
+                
+                // Page break if needed
+                if (yPos > 260) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+            });
+            
+            // Synthesis Section
+            if (yPos > 200) {
+                doc.addPage();
+                yPos = 20;
+            }
+            
+            doc.setDrawColor(...gold);
+            doc.setLineWidth(0.5);
+            doc.line(20, yPos, 190, yPos);
+            yPos += 10;
+            
+            doc.setTextColor(...gold);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('YOUR TRUE NORTH', 20, yPos);
+            yPos += 10;
+            
+            doc.setTextColor(...white);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            const synthesisLines = doc.splitTextToSize(synthesis.whyStatement, 170);
+            doc.text(synthesisLines, 20, yPos);
+            yPos += synthesisLines.length * 5 + 15;
+            
+            // Emotional Core box
+            doc.setFillColor(20, 20, 20);
+            doc.rect(15, yPos - 5, 180, 25, 'F');
+            doc.setDrawColor(...gold);
+            doc.rect(15, yPos - 5, 180, 25, 'S');
+            
+            doc.setTextColor(...gray);
+            doc.setFontSize(8);
+            doc.text('YOUR EMOTIONAL CORE', 105, yPos + 2, { align: 'center' });
+            
+            doc.setTextColor(...gold);
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'italic');
+            const coreLines = doc.splitTextToSize(`"${synthesis.emotionalCore}"`, 160);
+            doc.text(coreLines, 105, yPos + 12, { align: 'center' });
+            
+            // Footer
+            doc.setTextColor(...gray);
+            doc.setFontSize(8);
+            doc.text('IGNITE by Unshakable Investor | www.unshakableinvestor.com', 105, 285, { align: 'center' });
+            
+            // Save
+            doc.save('5-Levels-of-Why-Results.pdf');
+        };
+
+        // ==========================================
+        // MAIN APP
         // ==========================================
 
         const App = () => {
-          const [appState, setAppState] = useState('INTRO'); // States: INTRO -> INFO -> DEFINE_PROBLEM -> ANALYSIS_LOOP -> SYNTHESIZING -> COMPLETE
-          const [currentLevel, setCurrentLevel] = useState(1);
-          const [initialProblem, setInitialProblem] = useState("");
-          const [history, setHistory] = useState([]);
-          const [synthesisResult, setSynthesisResult] = useState(null);
+          // Load saved progress or use defaults
+          const savedProgress = loadProgress();
+          
+          const [appState, setAppState] = useState(savedProgress?.appState || 'INTRO');
+          const [currentLevel, setCurrentLevel] = useState(savedProgress?.currentLevel || 1);
+          const [initialProblem, setInitialProblem] = useState(savedProgress?.initialProblem || "");
+          const [history, setHistory] = useState(savedProgress?.history || []);
+          const [synthesisResult, setSynthesisResult] = useState(savedProgress?.synthesisResult || null);
           const [loading, setLoading] = useState(false);
-          const [activeQuestion, setActiveQuestion] = useState("What do you want?");
+          const [activeQuestion, setActiveQuestion] = useState(savedProgress?.activeQuestion || "What is the specific result you are chasing?");
           const [inputText, setInputText] = useState("");
+          const [userName, setUserName] = useState(savedProgress?.userName || "");
+          const [userEmail, setUserEmail] = useState(savedProgress?.userEmail || "");
+          const [showResumeModal, setShowResumeModal] = useState(savedProgress && !savedProgress.synthesisResult);
           const bottomRef = useRef(null);
+          const synthesisRef = useRef(null);
 
-          // Auto-scroll logic
+          // Auto-scroll
           useEffect(() => { 
             if(bottomRef.current) bottomRef.current.scrollIntoView({ behavior: 'smooth' }); 
           }, [history, loading, activeQuestion]);
 
-          const handleIntroStart = () => {
-              setAppState('INFO');
-          };
+          // Save progress whenever state changes
+          useEffect(() => {
+            if (appState !== 'INTRO' && appState !== 'INFO') {
+              saveProgress({
+                appState,
+                currentLevel,
+                initialProblem,
+                history,
+                synthesisResult,
+                activeQuestion,
+                userName,
+                userEmail
+              });
+            }
+          }, [appState, currentLevel, initialProblem, history, synthesisResult, activeQuestion, userName, userEmail]);
+
+          const handleIntroStart = () => setAppState('INFO');
           
           const handleInfoComplete = () => {
-              setAppState('DEFINE_PROBLEM');
+            setAppState('DEFINE_PROBLEM');
           };
 
-          const handleStartExcavation = () => {
-             const h = [{ level: 1, question: "What do you want?", answer: initialProblem }];
+          const handleResumeSession = () => {
+            setShowResumeModal(false);
+          };
+
+          const handleStartFresh = () => {
+            clearProgress();
+            setAppState('INTRO');
+            setCurrentLevel(1);
+            setInitialProblem("");
+            setHistory([]);
+            setSynthesisResult(null);
+            setActiveQuestion("What is the specific result you are chasing?");
+            setShowResumeModal(false);
+          };
+
+          const handleStartExcavation = async () => {
+             const h = [{ level: 1, question: "What is the specific result you are chasing?", answer: initialProblem }];
              setHistory(h);
              setAppState('ANALYSIS_LOOP');
              setLoading(true);
-             generateNextQuestion(h, 2).then(q => { 
-                 setActiveQuestion(q); 
-                 setCurrentLevel(2); 
-                 setLoading(false); 
-             });
+             
+             const q = await generateNextQuestion(h, 2);
+             setActiveQuestion(q); 
+             setCurrentLevel(2); 
+             setLoading(false);
           };
 
           const handleNext = async () => {
              if(!inputText.trim()) return;
              
-             // 1. Add User Answer to History
              const newHistory = [...history, { level: currentLevel, question: activeQuestion, answer: inputText }];
              setHistory(newHistory);
              setInputText("");
              setLoading(true);
              
-             // 2. Determine Next Step
              if(currentLevel < 5) {
                 const nextLevel = currentLevel + 1;
                 const q = await generateNextQuestion(newHistory, nextLevel);
@@ -368,100 +1171,190 @@
                 setSynthesisResult(rep);
                 setAppState('COMPLETE');
                 setLoading(false);
+                
+                // Submit to GHL
+                await submitToGHL({
+                    userName,
+                    userEmail,
+                    history: newHistory,
+                    synthesis: rep,
+                    completedAt: new Date().toISOString()
+                });
+                
+                // Clear localStorage on completion
+                clearProgress();
              }
           };
 
-          // --- COMPONENT: INTRO SCREEN ---
-          const IntroScreen = ({ onStart }) => (
-            <div className="h-full w-full ember-bg flex flex-col items-center justify-center text-center p-8 animate-fade-in-up relative z-50">
-                <div className="max-w-4xl mx-auto">
-                    <div className="mb-6">
-                        <svg className="w-16 h-16 mx-auto mb-6 text-[#D4AF37]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-                        </svg>
-                    </div>
-                    <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-[#FF6A00] mb-2 tracking-tighter">
-                        5 LEVELS
-                    </h1>
-                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 tracking-[0.2em] uppercase">
-                        OF WHY
-                    </h2>
-                    <p className="text-[#B0B0B0] text-lg md:text-xl max-w-2xl mx-auto mb-12 font-light leading-relaxed">
-                        Drift is the enemy. Clarity is the weapon.<br/>
-                        Excavate the hidden story running your life.
-                    </p>
-                    <button 
-                        onClick={onStart}
-                        className="pulse-glow px-12 py-5 bg-[#D4AF37] text-black font-black text-lg uppercase tracking-[0.15em] hover:bg-white transition-all transform hover:scale-105"
-                    >
-                        START EXCAVATION
-                    </button>
+          const handleExportPDF = () => {
+            if (history.length > 0 && synthesisResult) {
+              exportToPDF(history, synthesisResult);
+            }
+          };
+
+          // --- PROGRESS INDICATOR COMPONENT ---
+          const ProgressIndicator = ({ current, total = 5 }) => (
+            <div className="flex items-center gap-2 mb-6">
+              <div className="flex gap-2">
+                {[1,2,3,4,5].map(level => (
+                  <div key={level} className="flex flex-col items-center">
+                    <div className={`level-dot ${level < current ? 'complete' : level === current ? 'active' : ''}`} />
+                    <span className={`text-[10px] mt-1 ${level === current ? 'text-[#D4AF37]' : 'text-[#444]'}`}>
+                      {level}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex-1 ml-4">
+                <div className="progress-track">
+                  <div className="progress-fill" style={{ width: `${((current - 1) / 4) * 100}%` }} />
                 </div>
+              </div>
+              <span className="text-[#D4AF37] text-sm font-bold ml-2">Level {current}/5</span>
             </div>
           );
 
-          // --- COMPONENT: INFO SCREEN ---
+          // --- RESUME SESSION MODAL ---
+          const ResumeModal = () => (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+              <div className="glass-panel-gold p-8 rounded-xl max-w-md w-full animate-scale-in">
+                <h3 className="text-xl font-bold text-[#D4AF37] mb-2">Session Found</h3>
+                <p className="text-[#B0B0B0] text-sm mb-6">You have an unfinished excavation. Would you like to continue where you left off?</p>
+                
+                <div className="bg-black/50 p-4 rounded-lg mb-6">
+                  <p className="text-white text-sm"><strong>Level:</strong> {savedProgress?.currentLevel || 1} of 5</p>
+                  <p className="text-[#888] text-sm mt-1"><strong>Started:</strong> {savedProgress?.history?.[0]?.answer?.substring(0, 50)}...</p>
+                </div>
+                
+                <div className="flex gap-3">
+                  <button 
+                    onClick={handleStartFresh}
+                    className="flex-1 btn-secondary py-3 rounded"
+                  >
+                    Start Fresh
+                  </button>
+                  <button 
+                    onClick={handleResumeSession}
+                    className="flex-1 btn-primary py-3 rounded"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+
+          // --- INTRO SCREEN ---
+          const IntroScreen = ({ onStart }) => (
+            <div className="min-h-screen flex flex-col items-center justify-center text-center p-8 animate-fade-in-up relative">
+              <div className="max-w-4xl mx-auto">
+                <div className="mb-8">
+                  <svg className="w-20 h-20 mx-auto mb-6 text-[#D4AF37]" viewBox="0 0 100 100" fill="none">
+                    <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
+                    <path d="M50 20 L50 80 M30 40 L50 20 L70 40" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                    <circle cx="50" cy="75" r="5" fill="currentColor" />
+                  </svg>
+                </div>
+                
+                <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] via-[#FF9500] to-[#FF6A00] mb-3 tracking-tight">
+                  5 LEVELS
+                </h1>
+                <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 tracking-[0.25em] uppercase">
+                  OF WHY
+                </h2>
+                
+                <p className="text-[#B0B0B0] text-lg md:text-xl max-w-2xl mx-auto mb-4 font-light leading-relaxed">
+                  Drift is the enemy. Clarity is the weapon.
+                </p>
+                <p className="text-[#888] text-base md:text-lg max-w-xl mx-auto mb-12 leading-relaxed">
+                  Excavate the hidden story running your life.
+                </p>
+                
+                <button 
+                    onClick={onStart}
+                    className="pulse-glow px-14 py-5 btn-primary text-lg tracking-[0.15em] rounded-sm"
+                >
+                    START EXCAVATION
+                </button>
+                
+                <p className="text-[#444] text-xs mt-8 uppercase tracking-widest">IGNITE Program | Step 1 of 3</p>
+              </div>
+            </div>
+          );
+
+          // --- INFO SCREEN ---
           const InfoScreen = ({ onNext }) => (
-            <div className="h-full w-full bg-[#0D0D0D] overflow-y-auto custom-scrollbar p-6 animate-fade-in-up">
-              <div className="max-w-5xl mx-auto pt-10 pb-20">
+            <div className="min-h-screen overflow-y-auto custom-scrollbar p-6 animate-fade-in-up">
+              <div className="max-w-5xl mx-auto pt-8 pb-20">
                 
-                <h2 className="text-[#D4AF37] font-bold tracking-[0.3em] uppercase mb-12 text-center text-2xl">The Briefing</h2>
+                <div className="text-center mb-12">
+                  <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">THE BRIEFING</span>
+                  <h2 className="text-3xl font-bold text-white mt-2">Before You Descend</h2>
+                </div>
                 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
                    
                    {/* STRATA VISUALIZATION */}
-                   <div className="bg-[#1A1A1A] border border-[#333] p-8 rounded-xl shadow-2xl relative overflow-hidden group">
+                   <div className="glass-panel p-6 rounded-xl relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#D4AF37] to-[#FF6A00]"></div>
-                      <svg className="w-full h-full min-h-[400px]" viewBox="0 0 400 500" fill="none">
+                      <svg className="w-full" viewBox="0 0 400 450" fill="none">
                           <defs>
                              <linearGradient id="drillGrad" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="0%" stopColor="#FFF" stopOpacity="0.8"/>
                                 <stop offset="100%" stopColor="#D4AF37" stopOpacity="0.2"/>
                              </linearGradient>
-                             <pattern id="rockPattern" width="20" height="20" patternUnits="userSpaceOnUse">
-                                <circle cx="2" cy="2" r="1" fill="#333"/>
-                                <circle cx="12" cy="12" r="1" fill="#222"/>
-                             </pattern>
                           </defs>
 
                           {/* Shaft Line */}
-                          <line x1="200" y1="50" x2="200" y2="450" stroke="url(#drillGrad)" strokeWidth="2" strokeDasharray="4 4" />
-                          <circle cx="200" cy="50" r="4" fill="#D4AF37" />
-                          <circle cx="200" cy="450" r="4" fill="#FF6A00" />
+                          <line x1="200" y1="30" x2="200" y2="420" stroke="url(#drillGrad)" strokeWidth="2" strokeDasharray="4 4" />
+                          <circle cx="200" cy="30" r="4" fill="#D4AF37" />
+                          <circle cx="200" cy="420" r="6" fill="#FF6A00">
+                            <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite" />
+                          </circle>
 
-                          {/* Level 1: Surface */}
-                          <g transform="translate(50, 50)">
-                             <path d="M0 20 Q 150 10 300 20" stroke="#4a5d23" strokeWidth="2" fill="none"/>
-                             <text x="20" y="0" fill="#FFF" fontSize="12" fontWeight="bold">L1: THE WANT</text>
-                             <text x="20" y="15" fill="#666" fontSize="10">Surface Goal</text>
-                             <line x1="280" y1="20" x2="150" y2="20" stroke="#333" strokeDasharray="2 2" />
+                          {/* Level 1 */}
+                          <g transform="translate(40, 40)">
+                             <rect x="0" y="0" width="320" height="60" fill="#1a1a1a" stroke="#333" rx="4" />
+                             <circle cx="160" cy="30" r="16" fill="#D4AF37" />
+                             <text x="160" y="35" fill="#000" fontSize="12" fontWeight="bold" textAnchor="middle">1</text>
+                             <text x="30" y="25" fill="#D4AF37" fontSize="11" fontWeight="bold">THE SURFACE</text>
+                             <text x="30" y="42" fill="#888" fontSize="10">What do you want?</text>
                           </g>
 
-                          {/* Level 2: Mechanics */}
-                          <g transform="translate(50, 150)">
-                             <rect x="0" y="0" width="300" height="40" fill="url(#rockPattern)" opacity="0.5"/>
-                             <text x="20" y="25" fill="#FFF" fontSize="12" fontWeight="bold">L2: THE BREAK</text>
-                             <text x="260" y="25" fill="#888" fontSize="10" textAnchor="end">Mechanical Failure</text>
+                          {/* Level 2 */}
+                          <g transform="translate(40, 115)">
+                             <rect x="0" y="0" width="320" height="60" fill="#161616" stroke="#333" rx="4" />
+                             <circle cx="160" cy="30" r="16" fill="#E53E3E" />
+                             <text x="160" y="35" fill="#FFF" fontSize="12" fontWeight="bold" textAnchor="middle">2</text>
+                             <text x="30" y="25" fill="#E53E3E" fontSize="11" fontWeight="bold">THE BREAK</text>
+                             <text x="30" y="42" fill="#888" fontSize="10">What stops working?</text>
                           </g>
 
-                          {/* Level 3: Emotion */}
-                          <g transform="translate(50, 250)">
-                             <path d="M0 10 Q 75 30 150 10 T 300 10" fill="none" stroke="#FF6A00" strokeWidth="2" opacity="0.6"/>
-                             <text x="20" y="0" fill="#FF6A00" fontSize="12" fontWeight="bold">L3: THE FUEL</text>
-                             <text x="20" y="35" fill="#888" fontSize="10">Raw Emotion</text>
+                          {/* Level 3 */}
+                          <g transform="translate(40, 190)">
+                             <rect x="0" y="0" width="320" height="60" fill="#121212" stroke="#333" rx="4" />
+                             <circle cx="160" cy="30" r="16" fill="#FF6A00" />
+                             <text x="160" y="35" fill="#000" fontSize="12" fontWeight="bold" textAnchor="middle">3</text>
+                             <text x="30" y="25" fill="#FF6A00" fontSize="11" fontWeight="bold">THE FUEL</text>
+                             <text x="30" y="42" fill="#888" fontSize="10">What emotion drives it?</text>
                           </g>
 
-                          {/* Level 4: Identity */}
-                          <g transform="translate(50, 350)">
-                             <rect x="0" y="0" width="300" height="40" stroke="#444" fill="none" strokeDasharray="4 4"/>
-                             <text x="20" y="25" fill="#FFF" fontSize="12" fontWeight="bold">L4: THE CONSTRUCT</text>
-                             <text x="260" y="25" fill="#888" fontSize="10" textAnchor="end">Self-Concept</text>
+                          {/* Level 4 */}
+                          <g transform="translate(40, 265)">
+                             <rect x="0" y="0" width="320" height="60" fill="#0e0e0e" stroke="#333" rx="4" />
+                             <circle cx="160" cy="30" r="16" fill="#9F7AEA" />
+                             <text x="160" y="35" fill="#FFF" fontSize="12" fontWeight="bold" textAnchor="middle">4</text>
+                             <text x="30" y="25" fill="#9F7AEA" fontSize="11" fontWeight="bold">THE CONSTRUCT</text>
+                             <text x="30" y="42" fill="#888" fontSize="10">What identity is at stake?</text>
                           </g>
 
-                          {/* Level 5: Core */}
-                          <g transform="translate(50, 430)">
-                             <circle cx="150" cy="20" r="30" fill="radial-gradient(#D4AF37, #000)" opacity="0.3"/>
-                             <text x="150" y="25" fill="#D4AF37" fontSize="14" fontWeight="bold" textAnchor="middle">L5: THE VOW</text>
+                          {/* Level 5 */}
+                          <g transform="translate(40, 340)">
+                             <rect x="0" y="0" width="320" height="60" fill="#0a0a0a" stroke="#D4AF37" rx="4" />
+                             <circle cx="160" cy="30" r="16" fill="#D4AF37" />
+                             <text x="160" y="35" fill="#000" fontSize="12" fontWeight="bold" textAnchor="middle">5</text>
+                             <text x="30" y="25" fill="#D4AF37" fontSize="11" fontWeight="bold">THE VOW</text>
+                             <text x="30" y="42" fill="#888" fontSize="10">Where did it begin?</text>
                           </g>
                       </svg>
                    </div>
@@ -469,77 +1362,151 @@
                    {/* TEXT CONTENT */}
                    <div className="space-y-8">
                        <div>
-                           <h3 className="text-3xl font-bold text-white mb-4">THE ARCHITECTURE OF TRUTH</h3>
-                           <p className="text-[#B0B0B0] text-lg leading-relaxed">
-                               Most people spend their lives solving for symptoms. They want money, so they work harder. They want weight loss, so they diet. But 90% of the time, the problem isn't the problem.<br/><br/>
-                               The <strong>"5 Levels of Why"</strong> is a surgical tool designed to bypass your logical defenses and locate the <em>root driver</em>—the silent engine running your life.
+                           <h3 className="text-2xl font-bold text-white mb-4">THE ARCHITECTURE OF TRUTH</h3>
+                           <p className="text-[#B0B0B0] leading-relaxed mb-4">
+                               Most people spend their lives solving for symptoms. They want money, so they work harder. They want weight loss, so they diet. But 90% of the time, <strong className="text-white">the problem isn't the problem.</strong>
+                           </p>
+                           <p className="text-[#B0B0B0] leading-relaxed">
+                               The <span className="text-[#D4AF37] font-semibold">"5 Levels of Why"</span> is a surgical tool designed to bypass your logical defenses and locate the <em>root driver</em>—the silent engine running your life.
                            </p>
                        </div>
 
-                       <div className="bg-[#1A1A1A] p-6 border-l-4 border-[#D4AF37]">
-                           <h4 className="text-white font-bold uppercase tracking-wide mb-4">Engagement Rules</h4>
+                       <div className="glass-panel p-6 border-l-2 border-[#D4AF37]">
+                           <h4 className="text-white font-bold uppercase tracking-wide mb-5 text-sm">Engagement Rules</h4>
                            <ul className="space-y-4 text-[#CCCCCC]">
-                               <li className="flex gap-3">
-                                   <span className="text-[#D4AF37] font-bold">01.</span>
-                                   <span><strong>Turn off the PR Manager.</strong> Do not give the "correct" answer. Give the real one.</span>
+                               <li className="flex gap-4">
+                                   <span className="text-[#D4AF37] font-bold text-lg">01</span>
+                                   <span><strong className="text-white">Turn off the PR Manager.</strong> Do not give the "correct" answer. Give the real one.</span>
                                </li>
-                               <li className="flex gap-3">
-                                   <span className="text-[#D4AF37] font-bold">02.</span>
-                                   <span><strong>Follow the Pain.</strong> If an answer makes you uncomfortable, you are on the right track.</span>
+                               <li className="flex gap-4">
+                                   <span className="text-[#D4AF37] font-bold text-lg">02</span>
+                                   <span><strong className="text-white">Follow the Pain.</strong> If an answer makes you uncomfortable, you're on the right track.</span>
                                </li>
-                               <li className="flex gap-3">
-                                   <span className="text-[#D4AF37] font-bold">03.</span>
-                                   <span><strong>Speed Matters.</strong> Don't over-intellectualize. Go with your gut response.</span>
+                               <li className="flex gap-4">
+                                   <span className="text-[#D4AF37] font-bold text-lg">03</span>
+                                   <span><strong className="text-white">Speed Matters.</strong> Don't over-intellectualize. Go with your gut.</span>
                                </li>
                            </ul>
                        </div>
 
                        <button 
                           onClick={onNext}
-                          className="w-full btn-primary py-5 rounded text-lg font-bold shadow-2xl hover:scale-[1.02] transition-transform"
+                          className="w-full btn-primary py-5 rounded text-lg font-bold"
                        >
-                          I UNDERSTAND - BEGIN
+                          I UNDERSTAND — BEGIN
                        </button>
                    </div>
-
                 </div>
               </div>
             </div>
           );
 
-          // --- COMPONENTS ---
+          // --- CHAT BUBBLE ---
           const Bubble = ({ txt, isUser }) => (
-            <div className={`flex w-full mb-6 ${isUser ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] p-5 rounded-xl ${isUser ? 'bg-[#2A2A2A] border border-[#333]' : 'bg-[#D4AF37] bg-opacity-10 border border-[#D4AF37] border-opacity-30'}`}>
-                <p className="text-white whitespace-pre-wrap">{txt}</p>
+            <div className={`flex w-full mb-5 ${isUser ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>
+              <div className={`max-w-[85%] p-5 rounded-xl ${
+                isUser 
+                  ? 'bg-[#1A1A1A] border border-[#333] rounded-br-sm' 
+                  : 'glass-panel-gold rounded-bl-sm'
+              }`}>
+                {!isUser && (
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#FF6A00] flex items-center justify-center">
+                      <span className="text-[10px] font-bold text-black">TP</span>
+                    </div>
+                    <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-wide">Coach</span>
+                  </div>
+                )}
+                <p className="text-white whitespace-pre-wrap leading-relaxed">{txt}</p>
               </div>
             </div>
           );
 
-          const KnowledgeCard = ({ level }) => {
+          // --- KNOWLEDGE CARD (Memoized to prevent SVG flicker) ---
+          const KnowledgeCard = React.memo(({ level }) => {
              const d = LEVEL_GUIDE_DATA[level - 1];
              if(!d) return null;
              return (
-               <div className="bg-[#1A1A1A] p-6 h-full border-l border-[#333] overflow-y-auto custom-scrollbar">
-                  <div className="mb-6"><span className="text-[#D4AF37] text-xs font-bold border border-[#D4AF37] px-2 py-1 rounded">LEVEL {d.level}</span><h2 className="text-2xl font-bold mt-2">{d.title}</h2><p className="text-[#B0B0B0]">{d.subtitle}</p></div>
-                  <div className="aspect-video bg-black mb-6 rounded border border-[#333] p-4">{d.svgContent}</div>
-                  <div className="prose prose-invert prose-sm" dangerouslySetInnerHTML={{__html: d.htmlBody}} />
+               <div className="glass-panel h-full border-l border-[#222] overflow-y-auto custom-scrollbar">
+                  <div className="p-6">
+                    <div className="mb-6">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className="text-xs font-bold px-3 py-1 rounded" style={{ backgroundColor: `${d.color}20`, color: d.color, border: `1px solid ${d.color}40` }}>
+                          LEVEL {d.level}
+                        </span>
+                      </div>
+                      <h2 className="text-2xl font-bold text-white">{d.title}</h2>
+                      <p className="text-[#888] mt-1">{d.subtitle}</p>
+                    </div>
+                    <div className="aspect-[4/3] bg-black/50 mb-6 rounded-lg border border-[#222] p-4 flex items-center justify-center">
+                      {d.svgContent}
+                    </div>
+                    <div className="prose prose-invert prose-sm" dangerouslySetInnerHTML={{__html: d.htmlBody}} />
+                  </div>
                </div>
              );
-          };
+          });
 
+          // --- COMPLETION SCREEN ---
+          const CompletionScreen = () => (
+            <div className="animate-fade-in-up" ref={synthesisRef}>
+              <div className="glass-panel-gold p-8 rounded-xl border-l-4 border-[#D4AF37] shadow-2xl">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest">TRUE NORTH</span>
+                    <h2 className="text-white text-3xl font-bold mt-1">Excavation Complete</h2>
+                  </div>
+                  <button 
+                    onClick={handleExportPDF}
+                    className="export-btn px-4 py-2 rounded text-sm font-bold uppercase tracking-wide transition-all flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Save PDF
+                  </button>
+                </div>
+                
+                <p className="text-lg font-light text-[#E0E0E0] leading-relaxed whitespace-pre-wrap mb-8">
+                  {synthesisResult?.whyStatement}
+                </p>
+                
+                <div className="bg-black/60 p-6 border border-[#D4AF37]/30 rounded-lg text-center">
+                  <span className="text-[#888] text-xs uppercase tracking-widest mb-3 block">YOUR EMOTIONAL CORE</span>
+                  <p className="text-xl md:text-2xl font-display italic text-[#D4AF37] leading-relaxed">
+                    "{synthesisResult?.emotionalCore}"
+                  </p>
+                </div>
+                
+                <div className="mt-8 pt-6 border-t border-[#333]">
+                  <p className="text-[#888] text-sm mb-4">This excavation has been saved. Your next step in the Activation Protocol is the Problem Definition.</p>
+                  <button 
+                    onClick={() => window.location.reload()} 
+                    className="btn-secondary px-6 py-3 rounded text-sm"
+                  >
+                    Start New Excavation
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+
+          // --- MAIN RENDER ---
           return (
-            <div className="flex h-screen w-full bg-[#0D0D0D]">
-                {/* OVERLAYS */}
+            <div className="flex min-h-screen w-full relative">
+                {/* MODALS */}
+                {showResumeModal && <ResumeModal />}
+
+                {/* INTRO SCREEN */}
                 {appState === 'INTRO' && (
-                    <div className="fixed inset-0 z-50">
+                    <div className="w-full">
                         <IntroScreen onStart={handleIntroStart} />
                     </div>
                 )}
 
-                {/* INFO SCREEN (Replaces Main App Temporarily) */}
+                {/* INFO SCREEN */}
                 {appState === 'INFO' && (
-                    <div className="fixed inset-0 z-40 bg-[#0D0D0D]">
+                    <div className="w-full">
                         <InfoScreen onNext={handleInfoComplete} />
                     </div>
                 )}
@@ -550,32 +1517,40 @@
                         {/* LEFT SIDE: CHAT */}
                         <div className={`flex-1 flex flex-col relative z-10 ${appState === 'COMPLETE' ? 'w-full' : 'lg:w-1/2'}`}>
                             
-                            <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
-                                <div className="max-w-3xl mx-auto pt-8">
+                            <div className="flex-1 overflow-y-auto p-4 md:p-6 custom-scrollbar">
+                                <div className="max-w-3xl mx-auto pt-4 md:pt-8">
                                      {/* HEADER */}
-                                     <div className="text-center mb-8">
-                                        <h1 className="text-[#D4AF37] font-bold tracking-[0.3em] text-2xl">UNSHAKABLE</h1>
+                                     <div className="text-center mb-6">
+                                        <h1 className="text-[#D4AF37] font-bold tracking-[0.3em] text-xl md:text-2xl">UNSHAKABLE</h1>
                                         <p className="text-[#666] text-xs tracking-widest mt-1">5 LEVELS OF WHY</p>
                                      </div>
 
+                                     {/* PROGRESS INDICATOR */}
+                                     {appState !== 'COMPLETE' && appState !== 'DEFINE_PROBLEM' && (
+                                       <ProgressIndicator current={currentLevel} />
+                                     )}
+
                                      {/* DEFINE PROBLEM SCREEN (Level 1) */}
                                      {appState === 'DEFINE_PROBLEM' && (
-                                        <div className="bg-[#1A1A1A] p-8 rounded-xl border border-[#333] animate-fade-in-up">
+                                        <div className="glass-panel p-6 md:p-8 rounded-xl animate-fade-in-up">
                                             <div className="flex items-center gap-3 mb-4">
-                                                <span className="w-8 h-8 rounded-full bg-[#D4AF37] text-black font-bold flex items-center justify-center">1</span>
-                                                <h3 className="text-xl font-bold text-white uppercase tracking-wider">The Surface</h3>
+                                                <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#FF6A00] text-black font-bold flex items-center justify-center text-lg">1</span>
+                                                <div>
+                                                  <h3 className="text-lg font-bold text-white uppercase tracking-wider">The Surface</h3>
+                                                  <p className="text-[#888] text-sm">Level 1 of 5</p>
+                                                </div>
                                             </div>
-                                            <h3 className="text-2xl font-light mb-6 text-[#E5E5E5]">What is the specific result you are chasing?</h3>
+                                            <h3 className="text-xl md:text-2xl font-light mb-6 text-[#E5E5E5]">What is the specific result you are chasing?</h3>
                                             <textarea 
                                                 value={initialProblem} 
                                                 onChange={e => setInitialProblem(e.target.value)} 
-                                                className="w-full bg-black border border-[#333] p-6 rounded-lg text-lg h-40 outline-none focus:border-[#D4AF37] text-white placeholder-[#444] leading-relaxed" 
+                                                className="w-full bg-black/50 border border-[#333] p-5 rounded-lg text-base md:text-lg h-36 text-white placeholder-[#444] leading-relaxed transition-all" 
                                                 placeholder="I want to make $50k/month... I want to lose 30lbs... I want to quit my job..." 
                                             />
                                             <button 
                                                 onClick={handleStartExcavation} 
-                                                disabled={!initialProblem} 
-                                                className="w-full mt-6 btn-primary py-5 rounded font-bold transition-transform text-lg"
+                                                disabled={!initialProblem.trim()} 
+                                                className="w-full mt-6 btn-primary py-5 rounded font-bold text-lg"
                                             >
                                                 BEGIN EXCAVATION
                                             </button>
@@ -595,35 +1570,38 @@
                                             {appState === 'ANALYSIS_LOOP' && !loading && (
                                                 <div className="animate-fade-in-up">
                                                     <Bubble txt={activeQuestion} />
-                                                    {/* Mobile Card Show */}
+                                                    {/* Mobile Card Indicator */}
                                                     <div className="lg:hidden mt-4 mb-4">
-                                                        <div className="bg-[#1A1A1A] border border-[#333] p-4 rounded text-center">
-                                                            <span className="text-[#D4AF37] text-xs font-bold">LEVEL {currentLevel} GUIDE BELOW</span>
+                                                        <div className="glass-panel p-4 rounded text-center">
+                                                            <span className="text-[#D4AF37] text-xs font-bold">↓ LEVEL {currentLevel} GUIDE BELOW ↓</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             )}
 
                                             {loading && (
-                                                <div className="flex items-center gap-2 p-4 text-[#D4AF37] text-xs tracking-widest animate-pulse">
-                                                    <span>DIGGING DEEPER</span>
-                                                    <span className="text-lg">...</span>
+                                                <div className="flex items-center gap-3 p-5 animate-pulse">
+                                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#FF6A00] flex items-center justify-center">
+                                                      <span className="text-[10px] font-bold text-black">TP</span>
+                                                    </div>
+                                                    <span className="text-[#D4AF37] text-sm tracking-widest uppercase">Digging deeper...</span>
+                                                </div>
+                                            )}
+
+                                            {appState === 'SYNTHESIZING' && (
+                                                <div className="glass-panel p-8 rounded-xl text-center animate-pulse">
+                                                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#FF6A00] flex items-center justify-center">
+                                                      <svg className="w-8 h-8 text-black animate-spin" fill="none" viewBox="0 0 24 24">
+                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                      </svg>
+                                                    </div>
+                                                    <p className="text-[#D4AF37] text-sm tracking-widest uppercase">Synthesizing your excavation...</p>
                                                 </div>
                                             )}
 
                                             {appState === 'COMPLETE' && synthesisResult && (
-                                                <div className="bg-[#1A1A1A] p-8 rounded border-l-4 border-[#D4AF37] animate-fade-in shadow-2xl mt-8">
-                                                    <div className="mb-6">
-                                                        <span className="text-[#D4AF37] text-xs font-bold uppercase tracking-widest">TRUE NORTH</span>
-                                                        <h2 className="text-white text-3xl font-bold mt-2 mb-6">Excavation Complete</h2>
-                                                        <p className="text-xl font-light text-[#E0E0E0] leading-relaxed whitespace-pre-wrap">{synthesisResult.whyStatement}</p>
-                                                    </div>
-                                                    <div className="bg-black p-6 border border-[#333] rounded text-center">
-                                                        <span className="text-[#666] text-xs uppercase tracking-widest mb-2 block">YOUR EMOTIONAL CORE</span>
-                                                        <p className="text-2xl font-serif italic text-[#D4AF37]">"{synthesisResult.emotionalCore}"</p>
-                                                    </div>
-                                                    <button onClick={() => window.location.reload()} className="w-full mt-8 border border-[#333] py-4 rounded text-[#666] hover:text-white hover:border-[#D4AF37] transition-colors uppercase tracking-widest text-xs font-bold">START NEW SESSION</button>
-                                                </div>
+                                                <CompletionScreen />
                                             )}
                                             <div ref={bottomRef} />
                                         </div>
@@ -633,23 +1611,23 @@
 
                             {/* INPUT AREA */}
                             {appState === 'ANALYSIS_LOOP' && (
-                                <div className="p-4 bg-[#1A1A1A] border-t border-[#333] shadow-2xl">
-                                    <div className="max-w-3xl mx-auto flex gap-4">
+                                <div className="p-4 glass-panel border-t border-[#222] shadow-2xl">
+                                    <div className="max-w-3xl mx-auto flex gap-3">
                                         <input 
                                             value={inputText} 
                                             onChange={e => setInputText(e.target.value)} 
-                                            onKeyDown={e => e.key === 'Enter' && handleNext()} 
-                                            className="flex-1 bg-black border border-[#333] rounded px-6 py-4 outline-none focus:border-[#D4AF37] text-white text-lg transition-colors placeholder-[#333]" 
+                                            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && handleNext()} 
+                                            className="flex-1 bg-black/50 border border-[#333] rounded-lg px-5 py-4 text-white text-base transition-all placeholder-[#444]" 
                                             autoFocus 
-                                            placeholder="Type your honest answer here..." 
+                                            placeholder="Type your honest answer..." 
                                             disabled={loading}
                                         />
                                         <button 
                                             onClick={handleNext} 
-                                            disabled={!inputText || loading} 
-                                            className="bg-[#D4AF37] hover:bg-[#B8962F] text-black font-bold px-8 rounded transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide"
+                                            disabled={!inputText.trim() || loading} 
+                                            className="bg-gradient-to-r from-[#D4AF37] to-[#FF6A00] hover:from-[#E5C76B] hover:to-[#FF9500] text-black font-bold px-6 md:px-8 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide text-sm"
                                         >
-                                            NEXT
+                                            Next
                                         </button>
                                     </div>
                                 </div>
@@ -658,9 +1636,16 @@
 
                         {/* RIGHT SIDE: KNOWLEDGE PANEL (Desktop Only) */}
                         {appState !== 'COMPLETE' && (
-                            <div className="hidden lg:block w-1/2 h-full shadow-2xl relative z-20">
+                            <div className="hidden lg:block w-1/2 h-screen sticky top-0">
                                 <KnowledgeCard level={currentLevel} />
                             </div>
+                        )}
+                        
+                        {/* Mobile Knowledge Panel */}
+                        {appState === 'ANALYSIS_LOOP' && (
+                          <div className="lg:hidden fixed bottom-20 left-0 right-0 max-h-[40vh] overflow-y-auto custom-scrollbar z-20">
+                            <KnowledgeCard level={currentLevel} />
+                          </div>
                         )}
                     </>
                 )}
