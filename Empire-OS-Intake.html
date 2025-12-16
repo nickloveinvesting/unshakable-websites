@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Empire O.S. Intake Assessment | The Unshakable Investor</title>
+    <!-- MANDATORY TYPOGRAPHY: INTER -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- EMPIRE O.S. BRAND SYSTEM --- */
+        :root {
+            /* Palette */
+            --bg-color: #050505;       /* Void Black */
+            --card-bg: #111111;        /* Deep Charcoal */
+            --input-bg: #0A0A0A;       /* Recessed Input Black */
+            
+            --text-main: #FFFFFF;      /* Primary Text */
+            --text-muted: #A3A3A3;     /* Light Grey */
+            
+            /* Gradients & Accents */
+            --fire-gradient: linear-gradient(135deg, #C84A00 0%, #FF6A00 100%);
+            --fire-glow: 0 0 20px rgba(255, 69, 0, 0.4);
+            --accent-orange: #FF6A00;
+            
+            /* UI Elements */
+            --border: #333333;
+            --border-active: #FF6A00;
+            --focus-ring: 0 0 0 3px rgba(255, 106, 0, 0.3);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            
+            /* Functional Colors */
+            --danger: #991B1B;
+            --danger-text: #FECACA;
+            --success: #065F46;
+            --success-text: #6EE7B7;
+
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * { box-sizing: border-box; touch-action: manipulation; }
+        
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            font-size: 18px; 
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+        }
+
+        /* LAYOUT */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px 120px 20px; /* Extra bottom padding for mobile footer clearance */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TYPOGRAPHY - UNSHAKABLE STYLE */
+        h1, h2, h3 { 
+            color: var(--text-main); 
+            margin-top: 0; 
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+        }
+        
+        h1 { 
+            font-size: 2.5rem; 
+            font-weight: 900; 
+            text-align: center; 
+            margin-bottom: 0.5rem; 
+            background: var(--fire-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 30px rgba(255, 106, 0, 0.3); 
+        }
+        
+        h2 { 
+            font-size: 1.5rem; 
+            font-weight: 800; 
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        
+        p { margin-bottom: 1.25rem; color: var(--text-muted); font-size: 1.1rem; }
+
+        /* HEADER & PROGRESS */
+        .header { margin-bottom: 2.5rem; text-align: center; }
+        
+        .status-bar {
+            background: #222;
+            height: 8px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin: 1.5rem 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .progress-fill {
+            background: var(--fire-gradient);
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(255, 106, 0, 0.6);
+        }
+        
+        .meta-info { 
+            font-size: 0.9rem; 
+            color: var(--text-muted); 
+            display: flex; 
+            justify-content: space-between; 
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        /* CARD COMPONENT - FORGED DEPTH */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            /* DEEP SHADOW FOR LIFT */
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255,255,255,0.05);
+            position: relative;
+            overflow: visible; /* Changed to visible for tooltip popup */
+        }
+
+        /* WATERMARK QUESTION NUMBER */
+        .question-number-watermark {
+            position: absolute;
+            top: -15px;
+            right: 15px;
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.03); /* Subtle watermark */
+            pointer-events: none;
+            line-height: 1;
+            z-index: 0;
+            letter-spacing: -0.05em;
+        }
+
+        /* NEW: QUESTION NUMBER LABEL (Title Above Text) */
+        .question-number-label {
+            color: var(--accent-orange);
+            font-size: 0.85rem;
+            font-weight: 900;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            text-shadow: 0 0 10px rgba(255, 106, 0, 0.4); /* Glow effect */
+            position: relative;
+            z-index: 2;
+        }
+
+        /* TOOLTIP SYSTEM */
+        .info-wrapper {
+            position: relative;
+            display: inline-flex;
+            margin-left: 12px;
+            z-index: 10;
+        }
+
+        .info-icon {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 22px; /* Slightly larger for touch */
+            height: 22px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 800;
+            font-family: serif; 
+            cursor: help;
+            box-shadow: 0 0 8px rgba(220, 38, 38, 0.6);
+            transition: transform 0.2s;
+        }
+        
+        .info-icon:hover, .info-icon:active { transform: scale(1.1); }
+
+        .tooltip-content {
+            position: absolute;
+            bottom: 150%; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            background: #0f0f0f;
+            border: 1px solid var(--accent-orange);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #E5E7EB;
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: 400;
+            text-shadow: none;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.2s, visibility 0.2s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.9);
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        /* Triangle for tooltip */
+        .tooltip-content::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--accent-orange) transparent transparent transparent;
+        }
+
+        .info-wrapper:hover .tooltip-content, 
+        .info-wrapper:focus-within .tooltip-content,
+        .info-wrapper:active .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* Ensure card content sits above watermark */
+        .card > *:not(.question-number-watermark) {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .question-text {
+            font-weight: 700;
+            font-size: 1.25rem; 
+            margin-bottom: 1.25rem;
+            display: block;
+            color: #FFFFFF;
+            line-height: 1.4;
+        }
+
+        /* INPUTS - RECESSED LOOK */
+        textarea, input[type="text"], input[type="time"], input[type="email"] {
+            width: 100%;
+            padding: 18px; 
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 1.1rem; 
+            font-family: inherit;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.6);
+            -webkit-appearance: none; /* Mobile fix */
+        }
+        
+        textarea:focus, input:focus { 
+            outline: none; 
+            border-color: var(--accent-orange); 
+            box-shadow: var(--focus-ring), inset 0 2px 4px rgba(0,0,0,0.4); 
+            background: #000;
+        }
+        
+        textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
+
+        /* CHECKBOXES & RADIOS */
+        .choice-group { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+        
+        .choice-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            cursor: pointer;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid #222;
+            background: #161616;
+            transition: all 0.2s;
+        }
+        
+        .choice-label:hover, .choice-label:active { 
+            background: #202020; 
+            border-color: #444;
+        }
+        
+        .choice-label input { 
+            margin-top: 4px; 
+            width: 24px; 
+            height: 24px; 
+            flex-shrink: 0; 
+            accent-color: var(--accent-orange);
+            cursor: pointer;
+        }
+        
+        .choice-text { font-size: 1.1rem; color: #E5E7EB; font-weight: 500; }
+
+        /* BUTTONS - HIGH IMPACT */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 32px; 
+            border-radius: var(--radius-sm);
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        @media(min-width: 600px) { .btn { width: auto; min-width: 160px; } }
+        
+        .btn-primary { 
+            background: var(--fire-gradient); 
+            color: white; 
+            box-shadow: 0 4px 20px rgba(255, 69, 0, 0.4);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .btn-primary:hover:not(:disabled) { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 69, 0, 0.5);
+            filter: brightness(1.1);
+        }
+        
+        .btn-primary:disabled { 
+            background: #333; 
+            color: #666; 
+            cursor: not-allowed; 
+            box-shadow: none;
+        }
+        
+        .btn-secondary { 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid var(--border); 
+            color: var(--text-muted); 
+        }
+        
+        .btn-secondary:hover { 
+            border-color: #666; 
+            color: white; 
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .btn-sm { 
+            padding: 10px 20px; 
+            font-size: 0.85rem; 
+            margin-right: 10px; 
+            margin-bottom: 10px; 
+            width: auto; 
+            background: #262626;
+            border: 1px solid #333;
+        }
+        .btn-sm:hover { background: #333; color: white; border-color: #555; }
+
+        /* SCROLL INDICATOR - SIDE POSITIONED */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 110px; /* Above footer */
+            right: 20px;   /* Off to the side */
+            left: auto;    /* Override center */
+            transform: none; /* Override center */
+            
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--accent-orange);
+            color: var(--accent-orange);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            animation: bounce 2s infinite;
+            z-index: 90;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .scroll-indicator.hidden { opacity: 0; }
+        .scroll-indicator .arrow { font-size: 1.2rem; line-height: 1; }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        /* FOOTER NAV */
+        .nav-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(5, 5, 5, 0.95);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+        }
+        
+        /* Spacer for fixed footer */
+        .footer-spacer { height: 100px; }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 640px) {
+            body { font-size: 16px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.25rem; }
+            
+            .container { padding: 20px 15px 130px 15px; }
+            
+            .card { 
+                padding: 1.5rem; 
+                margin-bottom: 1.5rem; 
+            }
+            
+            .question-number-watermark {
+                font-size: 3rem;
+                top: -10px;
+                right: 10px;
+            }
+            
+            .nav-footer { padding: 1rem; }
+            
+            /* Stack buttons on mobile */
+            .btn { width: 100%; margin-bottom: 0; }
+            #btn-submit, #btn-back { width: 100%; }
+            
+            /* Responsive Tooltip */
+            .tooltip-content {
+                width: 240px;
+                bottom: 160%;
+            }
+            
+            /* Adjust input layouts */
+            .combo-time-text { flex-direction: column; }
+        }
+
+        /* UTILITIES */
+        .hidden { display: none !important; }
+        .error-box { 
+            background: rgba(60, 10, 10, 0.5); 
+            border: 1px solid var(--danger); 
+            color: var(--danger-text); 
+            padding: 1.5rem; 
+            border-radius: var(--radius-sm); 
+            margin-bottom: 1.5rem; 
+            font-weight: 600;
+        }
+        
+        .success-box { 
+            background: rgba(6, 40, 30, 0.5); 
+            border: 1px solid var(--success); 
+            color: var(--success-text); 
+            padding: 3rem; 
+            text-align: center; 
+            border-radius: var(--radius-md); 
+            box-shadow: 0 0 30px rgba(6, 95, 70, 0.2);
+        }
+
+        /* SPINNER */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1); 
+            border-top: 3px solid #FFF;
+            border-radius: 50%; 
+            width: 24px; 
+            height: 24px; 
+            animation: spin 0.8s linear infinite; 
+            margin-right: 12px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* HELPER TEXT */
+        .helper { 
+            font-size: 0.9rem; 
+            color: var(--accent-orange); 
+            margin-top: -0.25rem; 
+            margin-bottom: 0.75rem; 
+            display: block; 
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+        
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; border: 2px solid var(--bg-color); }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- HEADER -->
+    <div class="header" id="app-header">
+        <h1>EMPIRE O.S. INTAKE</h1>
+        <div class="meta-info">
+            <span id="step-indicator">Loading...</span>
+            <span id="save-indicator">SYSTEM READY</span>
+        </div>
+        <div class="status-bar"><div class="progress-fill" id="progress-bar"></div></div>
+    </div>
+
+    <!-- OFFLINE WARNING -->
+    <div id="offline-banner" class="error-box hidden" style="border-color: #F59E0B; color: #FCD34D;">
+        ⚠ SYSTEM OFFLINE. LOCAL STORAGE ACTIVE. RECONNECT TO TRANSMIT.
+    </div>
+
+    <!-- WIZARD CONTAINER -->
+    <form id="wizard-form" onsubmit="return false;">
+        
+        <!-- INTRO SCREEN -->
+        <div id="step-intro" class="hidden">
+            <div class="card" style="text-align: center;">
+                <h2 style="font-size: 2rem; border: none; margin-bottom: 1rem;">WELCOME, OPERATOR.</h2>
+                <p style="font-size: 1.25rem; color: #E5E7EB; margin-bottom: 2rem;">This is the Empire O.S. Intake Assessment. </p>
+                <p>We do not guess. We measure. This tool is designed to capture a high-fidelity picture of your daily operations, influences, and mindset.</p>
+                
+                <div style="background: rgba(255,255,255,0.03); padding: 30px; border-radius: 12px; margin: 40px 0; text-align: left; border: 1px solid #222;">
+                    <h3 style="font-size: 1rem; margin-bottom: 15px; color: var(--accent-orange);">OPERATIONAL PROTOCOL:</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: var(--text-muted); font-size: 1.1rem; gap: 10px; display: flex; flex-direction: column;">
+                        <li>Answers <strong>autosave</strong> to this device instantly.</li>
+                        <li>Close the browser anytime; your progress is secure.</li>
+                        <li>Data transmits <strong>only</strong> upon final confirmation.</li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-primary" onclick="app.goToStep(1)">INITIATE ASSESSMENT</button>
+            </div>
+        </div>
+
+        <!-- DYNAMIC QUESTION CONTAINER -->
+        <div id="step-content"></div>
+
+        <!-- REVIEW & SUBMIT SCREEN -->
+        <div id="step-review" class="hidden">
+            <div class="card">
+                <h2>READY TO SUBMIT?</h2>
+                <p>Please enter your details to finalize your profile.</p>
+                
+                <div id="missing-answers-warning" class="error-box hidden">
+                    <strong>Notice:</strong> Incomplete fields detected. Submission is permitted but completeness is preferred.
+                </div>
+
+                <!-- NEW IDENTITY FIELDS -->
+                <div style="margin-bottom: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid #333; border-radius: 8px;">
+                    <h3 style="font-size: 1rem; color: var(--accent-orange); margin-bottom: 1rem;">OPERATOR IDENTITY</h3>
+                    
+                    <label class="helper" style="color: #A3A3A3;">First Name</label>
+                    <input type="text" id="op-firstname" placeholder="Enter first name..." oninput="app.validateReview()">
+                    
+                    <label class="helper" style="color: #A3A3A3;">Last Name</label>
+                    <input type="text" id="op-lastname" placeholder="Enter last name..." oninput="app.validateReview()">
+                    
+                    <label class="helper" style="color: #A3A3A3;">Email Address</label>
+                    <input type="email" id="op-email" placeholder="Enter email address..." oninput="app.validateReview()">
+                </div>
+
+                <div class="choice-group" style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border);">
+                    <label class="choice-label" style="background: transparent; border: none;">
+                        <input type="checkbox" id="consent-checkbox" onchange="app.validateReview()">
+                        <span class="choice-text" style="line-height: 1.4;">I confirm that these answers are true, accurate, and final.</span>
+                    </label>
+                </div>
+
+                <div class="mt-4" style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- CHANGED BUTTON TEXT -->
+                    <button id="btn-submit" class="btn btn-primary" onclick="app.submitForm()" disabled>SUBMIT ASSESSMENT</button>
+                    <button class="btn btn-secondary" onclick="app.downloadJSON()">DOWNLOAD LOCAL BACKUP (JSON)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUCCESS SCREEN -->
+        <div id="step-success" class="hidden">
+            <div class="success-box">
+                <h2 style="color: var(--success-text); margin-bottom: 1.5rem; font-size: 2rem;">SUBMISSION COMPLETE</h2>
+                <p style="color: #D1FAE5; font-size: 1.2rem;">Operator, your assessment has been securely received.</p>
+                <p style="font-size: 1rem;">You may now close this interface.</p>
+                <!-- CHANGED BUTTON TEXT -->
+                <button class="btn btn-secondary mt-4" onclick="app.resetForm()" style="border-color: var(--success); color: var(--success-text);">START OVER</button>
+            </div>
+        </div>
+
+        <!-- UNVERIFIED SUBMISSION (CORS ISSUE) SCREEN -->
+        <div id="step-unverified" class="hidden">
+            <div class="card" style="border-color: #F59E0B;">
+                <h2 style="color: #F59E0B;">SUBMISSION UNVERIFIED</h2>
+                <p>Data was transmitted, but network protocols prevented receipt confirmation.</p>
+                <p><strong>Status: Likely Successful.</strong> Verification required.</p>
+                
+                <div style="display:flex; flex-direction:column; gap:20px; margin-top:30px;">
+                    <button class="btn btn-primary" onclick="app.submitForm(true)">RETRY VERIFIED SUBMISSION</button>
+                    <button class="btn btn-secondary" onclick="app.confirmUnverified()">MARK AS COMPLETE (OVERRIDE)</button>
+                    <button class="btn btn-secondary" onclick="app.downloadJSON()">DOWNLOAD BACKUP</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-spacer"></div>
+
+    </form>
+</div>
+
+<!-- SCROLL INDICATOR -->
+<div id="scroll-indicator" class="scroll-indicator hidden">
+    <span>SCROLL FOR MORE</span>
+    <div class="arrow">↓</div>
+</div>
+
+<!-- NAVIGATION FOOTER -->
+<div class="nav-footer" id="nav-footer">
+    <button class="btn btn-secondary" id="btn-back" onclick="app.prevStep()">BACK</button>
+    <button class="btn btn-primary" id="btn-next" onclick="app.nextStep()">NEXT</button>
+</div>
+
+<script>
+// --- CONFIGURATION ---
+const WEBHOOK_URL = "https://hook.us2.make.com/wkmxl2w46tovzu3ixu2ccgaua1skk62m";
+const STORAGE_KEY_ANSWERS = "empire_os_intake_v1_answers";
+const STORAGE_KEY_META = "empire_os_intake_v1_meta";
+const STORAGE_KEY_PENDING = "empire_os_intake_v1_pending";
+
+// --- DATA STRUCTURE ---
+const QUESTIONS = [
+    // --- SECTION 1: Daily Routine ---
+    {
+        id: "q1_routine",
+        section: "Daily Routine and Habits",
+        prompt: "Can you walk me through a typical day for you, from the moment you wake up until you go to sleep?",
+        insight: "TACTICAL INSIGHT: We are looking for granularity. Do you run your day, or does it run you? Identify where energy leaks occur.",
+        type: "textarea_with_templates",
+        templates: ["Morning:", "Afternoon:", "Evening:", "Notes:"]
+    },
+    {
+        id: "q2_wake",
+        section: "Daily Routine and Habits",
+        prompt: "What time do you usually get up in the morning, and what is the first thing you do?",
+        insight: "TACTICAL INSIGHT: Victory is won in the morning. Does your first action align with your mission, or is it reactive (e.g., scrolling)?",
+        type: "combo_time_text"
+    },
+    {
+        id: "q3_meals",
+        section: "Daily Routine and Habits",
+        prompt: "What do you typically eat for breakfast, lunch, and dinner?",
+        insight: "TACTICAL INSIGHT: Your physical vessel drives your mental output. Are you fueling for performance or pleasure? Be honest.",
+        type: "triple_text",
+        labels: ["Breakfast", "Lunch", "Dinner"]
+    },
+    {
+        id: "q4_care",
+        section: "Daily Routine and Habits",
+        prompt: "How do you structure your days to balance high-priority obligations with your growth goals?",
+        insight: "TACTICAL INSIGHT: Drift is the enemy. Show us how you anchor your non-negotiables against the chaos of daily demands.",
+        type: "combo_check_text",
+        options: ["Strict Schedule", "Flexible/Flow", "Block Scheduling", "Morning/Night Splits", "No Set Structure"],
+        textLabel: "Additional details on structure:"
+    },
+    {
+        id: "q5_hobbies",
+        section: "Daily Routine and Habits",
+        prompt: "What activities or hobbies do you engage in during your free time?",
+        insight: "TACTICAL INSIGHT: Does your downtime sharpen you or numb you? We value active recovery over passive consumption.",
+        type: "combo_check_text",
+        options: ["Walking", "Reading", "TV/Movies", "Music", "Cooking", "Church", "Volunteering", "Social time", "DIY projects", "Fishing/Outdoors"],
+        textLabel: "Other / Details:"
+    },
+    {
+        id: "q6_study",
+        section: "Daily Routine and Habits",
+        prompt: "How much time do you dedicate to professional development or study weekly?",
+        insight: "TACTICAL INSIGHT: Amateurs dabble. Professionals obsess. We are looking for the intensity of your commitment to skill acquisition.",
+        type: "combo_radio_text",
+        options: ["0 hours", "<1 hr/week", "1–3 hrs/week", "4–7 hrs/week", "8+ hrs/week"],
+        textLabel: "What does that study time look like?"
+    },
+
+    // --- SECTION 2: Personal Interests ---
+    {
+        id: "q7_media",
+        section: "Personal Interests and Influences",
+        prompt: "What kinds of books, articles, or podcasts do you enjoy? What are you currently reading or listening to?",
+        insight: "TACTICAL INSIGHT: 'Garbage in, garbage out.' Your intellectual diet determines your strategic output. What are you feeding your mind?",
+        type: "combo_check_text",
+        options: ["Books", "Articles", "Podcasts", "YouTube", "Audiobooks", "None lately"],
+        textLabel: "What are you currently reading or listening to?"
+    },
+    {
+        id: "q8_history",
+        section: "Personal Interests and Influences",
+        prompt: "Who is a person in history you admire, and why do they inspire you?",
+        insight: "TACTICAL INSIGHT: We emulate what we admire. This question reveals the values and leadership traits you aspire to embody.",
+        type: "textarea"
+    },
+    {
+        id: "q9_dinner",
+        section: "Personal Interests and Influences",
+        prompt: "If you could have a conversation with any three people, living or dead, who would they be and what would you ask them?",
+        insight: "TACTICAL INSIGHT: This reveals your hunger for wisdom. Who holds the keys to the doors you are trying to unlock?",
+        type: "textarea"
+    },
+    {
+        id: "q10_perfect_day",
+        section: "Personal Interests and Influences",
+        prompt: "What does a \"perfect day\" look like to you, with no limitations on time or money?",
+        insight: "TACTICAL INSIGHT: Visualizing the destination is the first step to mapping the path. Focus on purpose and freedom, not just leisure.",
+        type: "textarea"
+    },
+
+    // --- SECTION 3: Mindset ---
+    {
+        id: "q11_motivation",
+        section: "Mindset and Self-Perception",
+        prompt: "How do you keep yourself motivated, especially on days when you feel stuck or uninspired?",
+        insight: "TACTICAL INSIGHT: Motivation is fleeting. We are looking for your systems and discipline that operate when your feelings fade.",
+        type: "combo_radio_text",
+        labelPre: "When stuck, what do you usually do first?",
+        options: ["Quit for the day", "Distract myself", "Ask for help", "Push through", "Pray/meditate"],
+        textLabel: "Elaborate on your process:"
+    },
+    {
+        id: "q12_sobriety",
+        section: "Mindset and Self-Perception",
+        prompt: "Reflecting on your biggest personal victory or transformation, what daily practices from that journey do you maintain today?",
+        insight: "TACTICAL INSIGHT: Past victories leave clues. Identify the daily standards and radical honesty that keep you from sliding backward.",
+        type: "textarea"
+    },
+    {
+        id: "q13_challenge",
+        section: "Mindset and Self-Perception",
+        prompt: "When you face a challenge, what is your typical thought process for working through it?",
+        insight: "TACTICAL INSIGHT: Do you panic or pivot? We use 'Inversion' and logic to dismantle crisis. Describe your mental framework.",
+        type: "textarea"
+    },
+    {
+        id: "q14_success",
+        section: "Mindset and Self-Perception",
+        prompt: "How do you define success for yourself at this stage in your life?",
+        insight: "TACTICAL INSIGHT: Move beyond the money. What does true autonomy, generational impact, and spiritual authority look like to you?",
+        type: "textarea"
+    },
+    {
+        id: "q15_proud",
+        section: "Mindset and Self-Perception",
+        prompt: "What is one thing you are proud of that most people might not know about you?",
+        insight: "TACTICAL INSIGHT: Character is who you are in the dark. Reveal a quiet win or a battle fought in silence that defines your grit.",
+        type: "textarea"
+    }
+];
+
+// --- APP ENGINE ---
+const app = {
+    currentStep: 0,
+    totalSteps: 3, 
+    answers: {},
+    isSubmitting: false,
+
+    init: function() {
+        this.loadState();
+        this.setupEventListeners();
+        this.render();
+        
+        window.addEventListener('online', () => this.updateNetworkStatus());
+        window.addEventListener('offline', () => this.updateNetworkStatus());
+        this.updateNetworkStatus();
+        window.addEventListener('scroll', () => this.checkScroll());
+        window.addEventListener('resize', () => this.checkScroll());
+
+        window.addEventListener('beforeunload', (e) => {
+            if (Object.keys(this.answers).length > 0 && !this.isSubmitting && this.currentStep < 5) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    },
+
+    loadState: function() {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY_ANSWERS);
+            if (saved) {
+                this.answers = JSON.parse(saved);
+            }
+            // NO GHOST PROTOCOL (DEFAULT BLANK)
+        } catch (e) { console.error(e); }
+    },
+
+    saveState: function() {
+        localStorage.setItem(STORAGE_KEY_ANSWERS, JSON.stringify(this.answers));
+        localStorage.setItem(STORAGE_KEY_META, new Date().toLocaleTimeString());
+        
+        const indicator = document.getElementById('save-indicator');
+        if (indicator) {
+            indicator.textContent = "SAVED " + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+    },
+
+    updateAnswer: function(fieldId, value) {
+        this.answers[fieldId] = value;
+        if (this.saveTimeout) clearTimeout(this.saveTimeout);
+        this.saveTimeout = setTimeout(() => { this.saveState(); }, 400);
+    },
+
+    goToStep: function(step) {
+        this.currentStep = step;
+        this.render();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => this.checkScroll(), 500); // Check scroll after render
+    },
+
+    nextStep: function() {
+        if (this.currentStep < 4) { this.goToStep(this.currentStep + 1); }
+    },
+
+    prevStep: function() {
+        if (this.currentStep > 0) { this.goToStep(this.currentStep - 1); }
+    },
+
+    // --- SCROLL INDICATOR LOGIC ---
+    checkScroll: function() {
+        const indicator = document.getElementById('scroll-indicator');
+        const footer = document.getElementById('nav-footer');
+        
+        if (this.currentStep === 0 || this.currentStep >= 4) {
+             return indicator.classList.add('hidden');
+        }
+
+        const docHeight = document.documentElement.scrollHeight;
+        const scrollPos = window.innerHeight + window.scrollY;
+        const footerHeight = footer ? footer.offsetHeight : 0;
+        
+        if ((docHeight - footerHeight) > (window.innerHeight) && 
+            (docHeight - scrollPos) > 50) {
+            indicator.classList.remove('hidden');
+        } else {
+            indicator.classList.add('hidden');
+        }
+    },
+
+    // --- NEW VALIDATION LOGIC ---
+    validateReview: function() {
+        const fname = document.getElementById('op-firstname')?.value.trim();
+        const lname = document.getElementById('op-lastname')?.value.trim();
+        const email = document.getElementById('op-email')?.value.trim();
+        const consent = document.getElementById('consent-checkbox')?.checked;
+        const btn = document.getElementById('btn-submit');
+        
+        // Ensure all identity fields and consent are present
+        if (fname && lname && email && consent) {
+            btn.disabled = false;
+        } else {
+            btn.disabled = true;
+        }
+    },
+
+    render: function() {
+        ['step-intro', 'step-content', 'step-review', 'step-success', 'step-unverified'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
+
+        const navFooter = document.getElementById('nav-footer');
+        const header = document.getElementById('app-header');
+        const progressBar = document.getElementById('progress-bar');
+        const stepIndicator = document.getElementById('step-indicator');
+
+        if (this.currentStep === 0) {
+            document.getElementById('step-intro').classList.remove('hidden');
+            navFooter.classList.add('hidden');
+            header.classList.add('hidden');
+        } else if (this.currentStep <= 3) {
+            header.classList.remove('hidden');
+            document.getElementById('step-content').classList.remove('hidden');
+            navFooter.classList.remove('hidden');
+            
+            const sectionMap = ["", "Daily Routine and Habits", "Personal Interests and Influences", "Mindset and Self-Perception"];
+            const currentSectionName = sectionMap[this.currentStep];
+            const questionsToShow = QUESTIONS.filter(q => q.section === currentSectionName);
+            
+            this.renderQuestions(questionsToShow);
+
+            const percent = (this.currentStep / 3) * 100;
+            progressBar.style.width = `${percent}%`;
+            stepIndicator.textContent = `PHASE ${this.currentStep} / 3`;
+            document.getElementById('btn-next').textContent = "NEXT";
+        } else if (this.currentStep === 4) {
+            header.classList.remove('hidden');
+            document.getElementById('step-review').classList.remove('hidden');
+            navFooter.classList.add('hidden');
+            progressBar.style.width = '100%';
+            stepIndicator.textContent = "REVIEW";
+            
+            const hasBlanks = QUESTIONS.some(q => !this.buildAnswerString(q));
+            const warning = document.getElementById('missing-answers-warning');
+            hasBlanks ? warning.classList.remove('hidden') : warning.classList.add('hidden');
+
+            // Reset UI state for validation
+            const cb = document.getElementById('consent-checkbox');
+            if(cb) cb.checked = false;
+            this.validateReview();
+
+        } else if (this.currentStep === 5) {
+            header.classList.add('hidden');
+            document.getElementById('step-success').classList.remove('hidden');
+            navFooter.classList.add('hidden');
+        } else if (this.currentStep === 6) {
+            header.classList.add('hidden');
+            document.getElementById('step-unverified').classList.remove('hidden');
+            navFooter.classList.add('hidden');
+        }
+        
+        this.checkScroll();
+    },
+
+    renderQuestions: function(questions) {
+        const container = document.getElementById('step-content');
+        container.innerHTML = '';
+
+        questions.forEach(q => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            const globalIndex = QUESTIONS.indexOf(q) + 1;
+            const numStr = globalIndex.toString().padStart(2, '0');
+
+            const numDiv = document.createElement('div');
+            numDiv.className = 'question-number-watermark';
+            numDiv.textContent = numStr;
+            card.appendChild(numDiv);
+
+            // QUESTION NUMBER LABEL with TOOLTIP ICON
+            const titleLabel = document.createElement('div');
+            titleLabel.className = 'question-number-label';
+            
+            const labelText = document.createElement('span');
+            labelText.textContent = `// QUERY ${numStr}`;
+            titleLabel.appendChild(labelText);
+
+            // Create Tooltip Wrapper
+            const infoWrapper = document.createElement('div');
+            infoWrapper.className = 'info-wrapper';
+            
+            const infoIcon = document.createElement('div');
+            infoIcon.className = 'info-icon';
+            infoIcon.textContent = 'i';
+            
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip-content';
+            tooltip.textContent = q.insight || "Answer honestly and thoroughly.";
+            
+            infoWrapper.appendChild(infoIcon);
+            infoWrapper.appendChild(tooltip);
+            titleLabel.appendChild(infoWrapper);
+
+            card.appendChild(titleLabel);
+
+            const label = document.createElement('label');
+            label.className = 'question-text';
+            label.textContent = q.prompt;
+            label.htmlFor = q.id;
+            card.appendChild(label);
+
+            if (q.type === 'textarea' || q.type === 'textarea_with_templates') {
+                const ta = document.createElement('textarea');
+                ta.id = q.id;
+                ta.value = this.answers[q.id] || '';
+                ta.oninput = (e) => this.updateAnswer(q.id, e.target.value);
+                
+                if (q.type === 'textarea_with_templates') {
+                    const btnGroup = document.createElement('div');
+                    btnGroup.style.marginBottom = '12px';
+                    q.templates.forEach(tmpl => {
+                        const btn = document.createElement('button');
+                        btn.className = 'btn btn-sm';
+                        btn.textContent = "+ " + tmpl.replace(':', '');
+                        btn.onclick = (e) => {
+                            e.preventDefault();
+                            const current = ta.value;
+                            ta.value = current + (current.length > 0 ? '\n' : '') + tmpl + " ";
+                            this.updateAnswer(q.id, ta.value);
+                            ta.focus();
+                        };
+                        btnGroup.appendChild(btn);
+                    });
+                    card.appendChild(btnGroup);
+                }
+                card.appendChild(ta);
+            }
+            else if (q.type === 'combo_time_text') {
+                const div = document.createElement('div');
+                div.className = "combo-time-text"; // Added class for mobile styling
+                div.innerHTML = `
+                    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                        <div style="flex:1; min-width:140px;">
+                            <span class="helper">Wake Time</span>
+                            <input type="time" id="${q.id}_time" value="${this.answers[q.id + '_time'] || ''}">
+                        </div>
+                        <div style="flex:3; min-width:240px;">
+                            <span class="helper">First thing you do</span>
+                            <input type="text" id="${q.id}_act" value="${this.answers[q.id + '_act'] || ''}" placeholder="e.g. Made coffee">
+                        </div>
+                    </div>
+                `;
+                card.appendChild(div);
+                setTimeout(() => {
+                    document.getElementById(q.id+'_time').oninput = (e) => this.updateAnswer(q.id+'_time', e.target.value);
+                    document.getElementById(q.id+'_act').oninput = (e) => this.updateAnswer(q.id+'_act', e.target.value);
+                }, 0);
+            }
+            else if (q.type === 'triple_text') {
+                q.labels.forEach(lbl => {
+                    const subId = q.id + '_' + lbl.toLowerCase();
+                    const group = document.createElement('div');
+                    group.innerHTML = `<span class="helper">${lbl}</span>`;
+                    const inp = document.createElement('input');
+                    inp.type = 'text';
+                    inp.value = this.answers[subId] || '';
+                    inp.oninput = (e) => this.updateAnswer(subId, e.target.value);
+                    group.appendChild(inp);
+                    card.appendChild(group);
+                });
+            }
+            else if (q.type === 'combo_check_text') {
+                const group = document.createElement('div');
+                group.className = 'choice-group';
+                
+                const currentChecks = this.answers[q.id + '_checks'] || [];
+
+                q.options.forEach(opt => {
+                    const lbl = document.createElement('label');
+                    lbl.className = 'choice-label';
+                    const chk = document.createElement('input');
+                    chk.type = 'checkbox';
+                    chk.value = opt;
+                    chk.checked = currentChecks.includes(opt);
+                    
+                    chk.onchange = (e) => {
+                        let arr = this.answers[q.id + '_checks'] || [];
+                        if (e.target.checked) arr.push(opt);
+                        else arr = arr.filter(x => x !== opt);
+                        this.updateAnswer(q.id + '_checks', arr);
+                    };
+
+                    lbl.appendChild(chk);
+                    lbl.appendChild(document.createElement('span')).className = "choice-text";
+                    lbl.lastChild.textContent = opt;
+                    group.appendChild(lbl);
+                });
+                card.appendChild(group);
+
+                const txtLbl = document.createElement('span');
+                txtLbl.className = 'helper mt-4';
+                txtLbl.textContent = q.textLabel || "Details:";
+                card.appendChild(txtLbl);
+
+                const ta = document.createElement('textarea');
+                ta.value = this.answers[q.id + '_text'] || '';
+                ta.style.minHeight = "120px";
+                ta.oninput = (e) => this.updateAnswer(q.id + '_text', e.target.value);
+                card.appendChild(ta);
+            }
+            else if (q.type === 'combo_radio_text') {
+                if (q.labelPre) {
+                     const pre = document.createElement('p'); pre.textContent = q.labelPre; card.appendChild(pre);
+                }
+                const group = document.createElement('div');
+                group.className = 'choice-group';
+                const currentRadio = this.answers[q.id + '_radio'] || '';
+
+                q.options.forEach(opt => {
+                    const lbl = document.createElement('label');
+                    lbl.className = 'choice-label';
+                    const rad = document.createElement('input');
+                    rad.type = 'radio';
+                    rad.name = q.id;
+                    rad.value = opt;
+                    rad.checked = currentRadio === opt;
+                    
+                    rad.onchange = (e) => this.updateAnswer(q.id + '_radio', opt);
+
+                    lbl.appendChild(rad);
+                    lbl.appendChild(document.createElement('span')).className = "choice-text";
+                    lbl.lastChild.textContent = opt;
+                    group.appendChild(lbl);
+                });
+                card.appendChild(group);
+
+                if (q.textLabel) {
+                    const txtLbl = document.createElement('span');
+                    txtLbl.className = 'helper mt-4';
+                    txtLbl.textContent = q.textLabel;
+                    card.appendChild(txtLbl);
+                    
+                    const ta = document.createElement('textarea');
+                    ta.value = this.answers[q.id + '_text'] || '';
+                    ta.style.minHeight = "120px";
+                    ta.oninput = (e) => this.updateAnswer(q.id + '_text', e.target.value);
+                    card.appendChild(ta);
+                }
+            }
+            container.appendChild(card);
+        });
+    },
+
+    buildAnswerString: function(q) {
+        if (q.type === 'textarea' || q.type === 'textarea_with_templates') {
+            return this.answers[q.id] || "";
+        }
+        if (q.type === 'combo_time_text') {
+            const t = this.answers[q.id + '_time'];
+            const a = this.answers[q.id + '_act'];
+            if (!t && !a) return "";
+            return `Wake Time: ${t || 'Not set'} | First Thing: ${a || 'Not set'}`;
+        }
+        if (q.type === 'triple_text') {
+            const vals = q.labels.map(l => `${l}: ${this.answers[q.id + '_' + l.toLowerCase()] || '—'}`);
+            return vals.join(" | ");
+        }
+        if (q.type === 'combo_check_text') {
+            const checks = (this.answers[q.id + '_checks'] || []).join(", ");
+            const text = this.answers[q.id + '_text'] || "";
+            if (!checks && !text) return "";
+            return `Selected: [${checks}] | Details: ${text}`;
+        }
+        if (q.type === 'combo_radio_text') {
+            const radio = this.answers[q.id + '_radio'] || "None selected";
+            const text = this.answers[q.id + '_text'] || "";
+            return `Choice: ${radio} | Details: ${text}`;
+        }
+        return "";
+    },
+
+    generatePayload: function() {
+        return QUESTIONS.map(q => ({
+            question: q.prompt,
+            answer: this.buildAnswerString(q)
+        }));
+    },
+
+    downloadJSON: function() {
+        const payload = this.generatePayload();
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
+        const anchor = document.createElement('a');
+        anchor.href = dataStr;
+        anchor.download = "Empire_OS_Assessment_Backup.json";
+        document.body.appendChild(anchor);
+        anchor.click();
+        anchor.remove();
+    },
+
+    submitForm: async function(isRetry = false) {
+        if (this.isSubmitting) return;
+        
+        const btn = document.getElementById('btn-submit');
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> TRANSMITTING...';
+        }
+        this.isSubmitting = true;
+
+        // Capture Identity
+        const identity = {
+            firstName: document.getElementById('op-firstname')?.value.trim() || "Unknown",
+            lastName: document.getElementById('op-lastname')?.value.trim() || "Unknown",
+            email: document.getElementById('op-email')?.value.trim() || "Unknown"
+        };
+
+        const payloadArray = this.generatePayload();
+        
+        // Single root object
+        const finalBody = {
+            operator_identity: identity,
+            operator_response: payloadArray,
+            submitted_at: new Date().toISOString()
+        };
+
+        localStorage.setItem(STORAGE_KEY_PENDING, JSON.stringify(finalBody));
+
+        try {
+            const response = await fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(finalBody),
+                mode: 'cors'
+            });
+
+            if (response.ok) {
+                this.completeSubmission();
+            } else {
+                throw new Error("Server returned " + response.status);
+            }
+
+        } catch (error) {
+            console.warn("Primary fetch failed, trying no-cors fallback...", error);
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(finalBody),
+                    mode: 'no-cors'
+                });
+                this.goToStep(6); 
+            } catch (innerError) {
+                alert("CONNECTION FAILED. PLEASE ENSURE YOU ARE ONLINE AND RETRY.");
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = "RETRY TRANSMISSION";
+                }
+            }
+        } finally {
+            this.isSubmitting = false;
+        }
+    },
+
+    completeSubmission: function() {
+        localStorage.removeItem(STORAGE_KEY_ANSWERS);
+        localStorage.removeItem(STORAGE_KEY_PENDING);
+        this.answers = {};
+        this.goToStep(5);
+    },
+
+    confirmUnverified: function() {
+        this.completeSubmission();
+    },
+
+    resetForm: function() {
+        if(confirm("CONFIRM RESET: THIS WILL DELETE ALL LOCAL DATA.")) {
+            localStorage.removeItem(STORAGE_KEY_ANSWERS);
+            localStorage.removeItem(STORAGE_KEY_PENDING);
+            window.location.reload();
+        }
+    },
+
+    setupEventListeners: function() {
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () { window.history.go(1); };
+    },
+
+    updateNetworkStatus: function() {
+        const banner = document.getElementById('offline-banner');
+        navigator.onLine ? banner.classList.add('hidden') : banner.classList.remove('hidden');
+    }
+};
+
+window.onload = function() { app.init(); };
+
+</script>
+</body>
+</html>
