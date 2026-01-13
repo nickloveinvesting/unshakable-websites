@@ -1,463 +1,913 @@
-```html
-<!-- Start of Unshakable Investor Interactive Exercise Component -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
-
-<style>
-    :root {
-        --bg-primary: #121212;
-        --bg-input: #0A0A0A;
-        --text-primary: #FFFFFF;
-        --text-secondary: #94a3b8;
-        --accent-start: #C84A00;
-        --accent-end: #FF6A00;
-        --success-color: #10B981;
-        --error-color: #EF4444;
-        --border-color: rgba(148, 163, 184, 0.2);
-    }
-
-    #unshakableExerciseRoot {
-        font-family: 'Inter', sans-serif;
-        background-color: var(--bg-primary);
-        color: var(--text-primary);
-        padding: 48px;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        max-width: 900px;
-        margin: 20px auto;
-        overflow: hidden; /* Contains pseudo-elements */
-        position: relative;
-    }
-
-    #unshakableExerciseRoot::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background-image: linear-gradient(90deg, var(--accent-start), var(--accent-end));
-        z-index: 2;
-    }
-
-    .unshakable-header .title {
-        font-size: 2.25rem;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: -0.05em;
-        margin: 0;
-        color: var(--text-primary);
-        background-image: linear-gradient(90deg, #FFFFFF, #94a3b8);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGNITE: Week 1 Installation Chamber</title>
     
-    .unshakable-header .subtitle {
-        font-size: 1rem;
-        font-weight: 400;
-        color: var(--text-secondary);
-        margin: 8px 0 32px 0;
-        max-width: 700px;
-        line-height: 1.6;
-    }
-
-    #ledgerForm {
-        display: flex;
-        flex-direction: column;
-        gap: 28px;
-    }
-
-    .form-row {
-        display: flex;
-        gap: 24px;
-    }
-
-    .input-wrapper {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-
-    .input-wrapper label {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--text-secondary);
-        margin-bottom: 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-    }
-
-    .input-field, .textarea-field {
-        background-color: var(--bg-input);
-        color: var(--text-primary);
-        border: 1px solid var(--border-color);
-        padding: 14px 16px;
-        font-size: 1rem;
-        font-family: 'Inter', sans-serif;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        width: 100%;
-        box-sizing: border-box;
-    }
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     
-    .input-field:focus, .textarea-field:focus {
-        outline: none;
-        border-color: var(--accent-end);
-        box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.2), 0 0 15px rgba(200, 74, 0, 0.1);
-    }
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    .input-field::placeholder, .textarea-field::placeholder {
-        color: rgba(148, 163, 184, 0.4);
-    }
-
-    .ledger-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-        border-top: 1px solid var(--border-color);
-        border-bottom: 1px solid var(--border-color);
-        padding: 28px 0;
-    }
-
-    .ledger-column {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .textarea-field {
-        resize: vertical;
-        min-height: 250px;
-        flex-grow: 1;
-    }
-
-    .commitment-section {
-        background-color: rgba(0,0,0,0.2);
-        padding: 24px;
-        border: 1px solid var(--border-color);
-    }
-
-    .commitment-text {
-        font-family: 'Inter', sans-serif;
-        font-style: italic;
-        font-size: 1.1rem;
-        line-height: 1.7;
-        color: var(--text-secondary);
-        text-align: center;
-        margin: 0 0 24px 0;
-    }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    .commitment-text strong {
-        color: var(--text-primary);
-        font-style: normal;
-        font-weight: 500;
-    }
+    <!-- JSPDF for Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    .commitment-inputs {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 24px;
-    }
-
-    .checkbox-wrapper {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        user-select: none;
-    }
-    
-    .checkbox-wrapper input[type="checkbox"] {
-        opacity: 0;
-        width: 0;
-        height: 0;
-        position: absolute;
-    }
-    
-    .custom-checkbox {
-        width: 20px;
-        height: 20px;
-        background-color: var(--bg-input);
-        border: 2px solid var(--border-color);
-        margin-right: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background-color 0.2s ease, border-color 0.2s ease;
-    }
-    
-    .custom-checkbox .checkmark {
-        display: none;
-        width: 6px;
-        height: 12px;
-        border: solid var(--text-primary);
-        border-width: 0 3px 3px 0;
-        transform: rotate(45deg);
-    }
-
-    .checkbox-wrapper input[type="checkbox"]:checked + .custom-checkbox {
-        background-image: linear-gradient(45deg, var(--accent-start), var(--accent-end));
-        border-color: var(--accent-end);
-    }
-    
-    .checkbox-wrapper input[type="checkbox"]:checked + .custom-checkbox .checkmark {
-        display: block;
-    }
-    
-    .checkbox-wrapper label {
-        color: var(--text-primary);
-        font-weight: 500;
-        margin: 0;
-    }
-
-    #submitBtn {
-        font-family: 'Inter', sans-serif;
-        font-size: 1rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-primary);
-        background-image: linear-gradient(90deg, var(--accent-start), var(--accent-end));
-        border: none;
-        padding: 16px 24px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
-    }
-    
-    #submitBtn:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        transition: left 0.4s ease;
-        z-index: -1;
-    }
-
-    #submitBtn:hover:not(:disabled) {
-        box-shadow: 0 0 20px rgba(255, 106, 0, 0.4);
-        transform: translateY(-2px);
-    }
-
-    #submitBtn:hover:not(:disabled):before {
-        left: 100%;
-    }
-    
-    #submitBtn:active:not(:disabled) {
-        transform: translateY(0);
-        box-shadow: 0 0 10px rgba(255, 106, 0, 0.2);
-    }
-
-    #submitBtn:disabled {
-        cursor: not-allowed;
-        background-image: none;
-        background-color: #333;
-        color: #777;
-    }
-    
-    #submitBtn.is-success {
-        background-image: none;
-        background-color: var(--success-color);
-    }
-
-    #submitBtn.is-error {
-        background-image: none;
-        background-color: var(--error-color);
-    }
-    
-    .error-message {
-        color: var(--error-color);
-        font-size: 0.875rem;
-        margin-top: 8px;
-        display: none;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        #unshakableExerciseRoot {
-            padding: 24px;
-        }
-        .form-row, .ledger-grid, .commitment-inputs {
-            flex-direction: column;
-            grid-template-columns: 1fr;
-        }
-    }
-
-</style>
-
-<div id="unshakableExerciseRoot">
-    <header class="unshakable-header">
-        <h1 class="title">The Pain & Vision Ledger</h1>
-        <p class="subtitle">"The decisions you make will shape your life, but the life you desire, the life you want should shape your decisions."</p>
-    </header>
-
-    <form id="ledgerForm" novalidate>
-        <div class="form-row">
-            <div class="input-wrapper">
-                <label for="fullName">Full Name</label>
-                <input type="text" id="fullName" name="fullName" class="input-field" placeholder="e.g., John Doe" required>
-                <p class="error-message">Full name is required.</p>
-            </div>
-            <div class="input-wrapper">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" class="input-field" placeholder="e.g., john.doe@email.com" required>
-                <p class="error-message">A valid email is required.</p>
-            </div>
-        </div>
-
-        <div class="ledger-grid">
-            <div class="ledger-column">
-                <label for="painText">The Pain</label>
-                <textarea id="painText" name="pain" class="textarea-field" placeholder="List the specific, painful consequences of past decisions..." required></textarea>
-                 <p class="error-message">This field cannot be empty.</p>
-            </div>
-            <div class="ledger-column">
-                <label for="visionText">The Vision</label>
-                <textarea id="visionText" name="vision" class="textarea-field" placeholder="Write the powerful, desirable outcomes of the new life you are creating..." required></textarea>
-                <p class="error-message">This field cannot be empty.</p>
-            </div>
-        </div>
-
-        <div class="commitment-section">
-            <p class="commitment-text">
-                Today, my decisions serve <strong>the vision</strong>, not the pain.
-            </p>
-            <div class="commitment-inputs">
-                <div class="checkbox-wrapper">
-                    <input type="checkbox" id="commitment" name="commitment" required>
-                    <span class="custom-checkbox">
-                        <span class="checkmark"></span>
-                    </span>
-                    <label for="commitment">I commit to this declaration.</label>
-                </div>
-                <div class="input-wrapper">
-                    <label for="signatureDate">Date of Commitment</label>
-                    <input type="text" id="signatureDate" name="signatureDate" class="input-field" required>
-                </div>
-            </div>
-            <p class="error-message" id="commitmentError">You must commit to this declaration.</p>
-        </div>
-
-        <button type="submit" id="submitBtn">Submit My Ledger</button>
-    </form>
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('ledgerForm');
-        if (!form) return;
-
-        const submitBtn = document.getElementById('submitBtn');
-        const formElements = form.elements;
-        const dateField = document.getElementById('signatureDate');
-
-        // Pre-fill date
-        const today = new Date();
-        const formattedDate = `${today.toLocaleString('default', { month: 'long' })} ${today.getDate()}, ${today.getFullYear()}`;
-        if (dateField) {
-            dateField.value = formattedDate;
-        }
-
-        const WEBHOOK_URL = 'https://hook.us2.make.com/7wbmkvn8vujpej74sy29299rl9nmgn9e';
-        const LESSON_TITLE = 'Toby-ism #1: Decisions Shape Your Life (Lesson #111)';
-        
-        const validateField = (field) => {
-            let isValid = true;
-            const errorMsg = field.parentElement.querySelector('.error-message');
-            
-            field.style.borderColor = 'var(--border-color)';
-            if(errorMsg) errorMsg.style.display = 'none';
-
-            if ((field.type === 'checkbox' && !field.checked) || (field.value.trim() === '' && field.type !== 'checkbox')) {
-                isValid = false;
-                field.style.borderColor = 'var(--error-color)';
-                if (errorMsg) {
-                    errorMsg.style.display = 'block';
-                } else if (field.type === 'checkbox') {
-                    // Special case for checkbox group
-                    document.getElementById('commitmentError').style.display = 'block';
+    <!-- Custom Config for Brand Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        charcoal: '#1a1a1a',
+                        obsidian: '#050505',
+                        gold: '#d4af37',
+                        goldHover: '#b5952f',
+                        silver: '#B0B0B0',
+                        alert: '#D32F2F'
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
                 }
-            } else if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
-                isValid = false;
-                field.style.borderColor = 'var(--error-color)';
-                if (errorMsg) errorMsg.style.display = 'block';
             }
-            return isValid;
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background-color: #050505; color: white; font-family: 'Montserrat', sans-serif; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        input, textarea, select { background-color: #2a2a2a; border: 1px solid #444; color: white; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 0 1px #d4af37; }
+        
+        /* Image Filter for Brand Consistency */
+        .brand-image {
+            filter: grayscale(100%) sepia(20%) brightness(0.8) contrast(1.2);
+            transition: filter 0.5s ease;
+        }
+        .brand-image:hover {
+            filter: grayscale(0%) sepia(0%) brightness(1) contrast(1);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- ICONS ---
+        const IconWrapper = ({ size = 24, className = "", children }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {children}
+            </svg>
+        );
+
+        const MenuIcon = (props) => <IconWrapper {...props}><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="18" x2="20" y2="18"></line></IconWrapper>;
+        const X = (props) => <IconWrapper {...props}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></IconWrapper>;
+        const ChevronRight = (props) => <IconWrapper {...props}><polyline points="9 18 15 12 9 6"></polyline></IconWrapper>;
+        const ChevronLeft = (props) => <IconWrapper {...props}><polyline points="15 18 9 12 15 6"></polyline></IconWrapper>;
+        const CheckCircle = (props) => <IconWrapper {...props}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></IconWrapper>;
+        const Volume2 = (props) => <IconWrapper {...props}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></IconWrapper>;
+        const Pause = (props) => <IconWrapper {...props}><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></IconWrapper>;
+        const Shield = (props) => <IconWrapper {...props}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></IconWrapper>;
+        const FileDown = (props) => <IconWrapper {...props}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="12" y2="18"></line><line x1="15" y1="15" x2="12" y2="18"></line></IconWrapper>;
+
+        // --- CONTENT DATA ---
+        // Using Unsplash images. To ensure stability, we use specific Photo IDs.
+        const SLIDES = [
+            // SECTION 1: OPENING
+            { 
+                id: 1, 
+                type: 'title', 
+                title: "IGNITE", 
+                subtitle: "WEEK 1: INSTALLATION CHAMBER", 
+                content: "Welcome to the forge. You are here to build the internal architecture of a leader.",
+                teaching: "Most people try to change their life by changing their circumstances. We change the life by upgrading the Operator. This week is not about information; it is about installation. Prepare your mind.",
+                image: "https://images.unsplash.com/photo-1590610994348-1110037a3424?q=80&w=1000&auto=format&fit=crop" // Forge/Fire
+            },
+            { 
+                id: 2, 
+                type: 'content', 
+                title: "CORE TRUTH", 
+                content: "You are already living an identity. Most never chose it.",
+                teaching: "Look at your bank account, your body, and your relationships. They are lagging indicators of your current identity. If you are inconsistent, it is because you identify as an inconsistent person. To change the output, we must rewrite the source code.",
+                image: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=1000&auto=format&fit=crop" // Reflection/Mirror
+            },
+            { 
+                id: 3, 
+                type: 'list', 
+                title: "OBJECTIVES", 
+                items: ["Expose your current drift", "Define the Operator Identity", "Calculate the Gap", "Install Daily Governance"],
+                teaching: "We do not guess here. We measure. By the end of this module, you will have a clear, written gap between who you are and who you must become. That gap is your war map.",
+                image: "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=1000&auto=format&fit=crop" // Blueprint
+            },
+            
+            // SECTION 2: DOCTRINE
+            { 
+                id: 4, 
+                type: 'content', 
+                title: "IDENTITY DEFINED", 
+                content: "Identity is the invisible ceiling on your performance.",
+                teaching: "Think of identity like a thermostat. If your identity is set to '75 degrees' (comfort), you will subconsciously sabotage yourself every time you heat up to '100 degrees' (success) just to cool back down to where you belong. We are raising the setting.",
+                image: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=1000&auto=format&fit=crop" // Science/Measurement
+            },
+            { 
+                id: 5, 
+                type: 'quote', 
+                content: "Behavior obeys identity. Not goals. Not willpower. Not motivation.",
+                teaching: "Motivation is a feeling; feelings are fleeting. Identity is a fact; facts are stubborn. When you say 'I am a runner,' you run. When you say 'I am trying to run,' you quit when it rains. Language matters.",
+                image: "https://images.unsplash.com/photo-1548067417-640a2cc4612d?q=80&w=1000&auto=format&fit=crop" // Lion/Stoic
+            },
+            { 
+                id: 6, 
+                type: 'list', 
+                title: "SYMPTOMS OF DRIFT", 
+                items: ["Inconsistent habits", "Negotiation with self", "Dependency on external hype", "Starting strong, finishing weak"],
+                teaching: "Drift is the silent killer. It's the slow erosion of standards. If you find yourself negotiating with your alarm clock or your commitments, you are in drift. The Operator does not negotiate with terrorists, especially the ones in their own head.",
+                image: "https://images.unsplash.com/photo-1497290756760-23ac55edf0d4?q=80&w=1000&auto=format&fit=crop" // Ocean/Mist/Drift
+            },
+            { 
+                id: 7, 
+                type: 'list', 
+                title: "THE OPERATOR IDENTITY", 
+                items: ["Keeps promises to self", "Emotional stability under fire", "Speed of implementation", "Outcome independence"],
+                teaching: "An Operator is not unemotional; they are emotionally disciplined. They act regardless of how they feel. They do not wait for the perfect conditions. They execute. This is the standard we are building today.",
+                image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1000&auto=format&fit=crop" // Gym/Weight/Strength
+            },
+            { 
+                id: 8, 
+                type: 'content', 
+                title: "THE GAP", 
+                content: "The distance between reality and potential is lack of alignment.",
+                teaching: "You feel the pain of the Gap every day. It's the anxiety of knowing you are capable of more. We close the gap not by dreaming bigger, but by acting clearer. We bridge it with daily proof.",
+                image: "https://images.unsplash.com/photo-1502421946760-d027e0298e3b?q=80&w=1000&auto=format&fit=crop" // Canyon/Gap
+            },
+            { 
+                id: 9, 
+                type: 'quote', 
+                content: "You do not rise to your goals. You fall to your systems.",
+                teaching: "Your identity is your internal operating system. If the OS is buggy, the apps (your goals) will crash. We are here to patch the code.",
+                image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop" // Architecture/Structure
+            },
+            { 
+                id: 10, 
+                type: 'content', 
+                title: "TRANSITION", 
+                content: "Enough theory. Now we expose YOUR identity.",
+                teaching: "Prepare yourself. The next few slides require work. Do not rush them. If you cheat the assessment, you cheat your future. Turn off distractions. Let's go deep.",
+                image: "https://images.unsplash.com/photo-1517520287167-4bbf64a00d66?q=80&w=1000&auto=format&fit=crop" // Door/Portal
+            },
+            
+            // SECTION 3: ASSIGNMENT 1
+            { 
+                id: 11, 
+                type: 'content', 
+                title: "ASSESSMENT", 
+                content: "We cannot rebuild what we do not acknowledge.",
+                teaching: "This is an audit. Just like a financial audit exposes where the money is leaking, this identity audit exposes where your personal power is leaking. Look for the leaks.",
+                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1000&auto=format&fit=crop" // Audit/Accounting
+            },
+            { 
+                id: 12, 
+                type: 'content', 
+                title: "INSTRUCTIONS", 
+                content: "Answer who you have been for the last 90 days.",
+                teaching: "Do not answer who you want to be. Do not answer who you were 5 years ago. Who showed up for the last 90 days? That person is the current reality.",
+                image: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1000&auto=format&fit=crop" // Pen/Paper/Writing
+            },
+            { 
+                id: 13, 
+                type: 'content', 
+                title: "THE REVEAL", 
+                content: "This will reveal the 'Drift Identity'.",
+                teaching: "It might be painful to see it written down. Good. Pain is information. Let it disturb you. You need to be disturbed to move.",
+                image: "https://images.unsplash.com/photo-1506461883276-594a12b11cf3?q=80&w=1000&auto=format&fit=crop" // Ripples/Water
+            },
+            { 
+                id: 14, 
+                type: 'assignment', 
+                assignmentId: 'assessment', 
+                title: "ASSIGNMENT REQUIRED", 
+                btnText: "Complete Identity Assessment",
+                image: "https://images.unsplash.com/photo-1616077167599-77a86f05929b?q=80&w=1000&auto=format&fit=crop" // Shield/Texture
+            },
+            
+            // SECTION 4: ASSIGNMENT 2
+            { 
+                id: 15, 
+                type: 'content', 
+                title: "THE GAP MAP", 
+                content: "Now we map the trajectory to the Operator.",
+                teaching: "On one side is the Drifter. On the other is the Operator. In the middle is the Gap. We are about to define exactly what behaviors bridge that gap.",
+                image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=1000&auto=format&fit=crop" // Compass/Map
+            },
+            { 
+                id: 16, 
+                type: 'content', 
+                title: "CURRENT VS FUTURE", 
+                content: "The Drift Identity negotiates. The Operator Identity executes.",
+                teaching: "Drift says 'I'll do it tomorrow.' Operator says 'It's done.' Drift says 'I'm tired.' Operator says 'I'm disciplined.' Identify the specific linguistic differences in your own head.",
+                image: "https://images.unsplash.com/photo-1577003832449-ca881d85ddff?q=80&w=1000&auto=format&fit=crop" // Fork in Road/Path
+            },
+            { 
+                id: 17, 
+                type: 'content', 
+                title: "TRANSFORMATION ZONE", 
+                content: "Bridged by daily discipline, not massive leaps.",
+                teaching: "You don't jump the Grand Canyon. You build a bridge. Daily actions are the planks of that bridge. Lay one plank today. Lay another tomorrow.",
+                image: "https://images.unsplash.com/photo-1513467535987-fd81bc7d7cd3?q=80&w=1000&auto=format&fit=crop" // Bridge/Construction
+            },
+            { 
+                id: 18, 
+                type: 'assignment', 
+                assignmentId: 'gapMap', 
+                title: "ASSIGNMENT REQUIRED", 
+                btnText: "Complete Identity Gap Map",
+                image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1000&auto=format&fit=crop" // Notebook/Chart
+            },
+            
+            // SECTION 5: ASSIGNMENT 3
+            { 
+                id: 19, 
+                type: 'content', 
+                title: "FUTURE OPERATOR", 
+                content: "Codify your new self. Certainty is the currency.",
+                teaching: "When you write a contract, it is binding. You are about to write a contract with yourself. Use definitive language. 'I AM,' not 'I want to be.'",
+                image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=1000&auto=format&fit=crop" // Legal/Signing
+            },
+            { 
+                id: 20, 
+                type: 'content', 
+                title: "NON-NEGOTIABLE", 
+                content: "This is a constitution. Once written, it becomes law.",
+                teaching: "A constitution governs a country. It limits power and defines rights. Your Operator Statement governs your soul. It limits the power of your emotions and defines the rights of your vision.",
+                image: "https://images.unsplash.com/photo-1533158326339-bef870425ccf?q=80&w=1000&auto=format&fit=crop" // Stone/Pillar
+            },
+            { 
+                id: 21, 
+                type: 'content', 
+                title: "INSTRUCTIONS", 
+                content: "Use the template. Read it. Feel the weight of it.",
+                teaching: "Do not rush this. This statement will be read every morning for the next 30 days. Make sure it is worth reading. Make sure it stirs the fire.",
+                image: "https://images.unsplash.com/photo-1455849318743-b2233052fcff?q=80&w=1000&auto=format&fit=crop" // Focus/Writing
+            },
+            { 
+                id: 22, 
+                type: 'assignment', 
+                assignmentId: 'operatorStatement', 
+                title: "ASSIGNMENT REQUIRED", 
+                btnText: "Author Future Operator Statement",
+                image: "https://images.unsplash.com/photo-1507208773393-40d9fc937b42?q=80&w=1000&auto=format&fit=crop" // Scroll/Document
+            },
+            
+            // SECTION 6: ASSIGNMENT 4 & CLOSE
+            { 
+                id: 23, 
+                type: 'content', 
+                title: "DAILY IDENTITY ACTION", 
+                content: "Identity is built by proof.",
+                teaching: "You can't think your way into a new way of acting, but you can act your way into a new way of thinking. We need ONE small proof point. One daily win that says 'I am disciplined.'",
+                image: "https://images.unsplash.com/photo-1599557434571-0814f6b21650?q=80&w=1000&auto=format&fit=crop" // Domino/Chain reaction
+            },
+            { 
+                id: 24, 
+                type: 'assignment', 
+                assignmentId: 'dailyAction', 
+                title: "ASSIGNMENT REQUIRED", 
+                btnText: "Install Daily Identity Action",
+                image: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=1000&auto=format&fit=crop" // Sunrise/Action
+            },
+        ];
+
+        // --- COMPONENTS ---
+
+        const Modal = ({ isOpen, onClose, title, children }) => {
+            if (!isOpen) return null;
+            return (
+                <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                    <div className="bg-charcoal border border-gold w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-lg shadow-2xl animate-fade-in relative">
+                        <div className="flex justify-between items-center p-6 border-b border-gray-800 sticky top-0 bg-charcoal z-10">
+                            <h2 className="text-xl font-bold text-gold uppercase tracking-wider">{title}</h2>
+                            <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <div className="p-8">
+                            {children}
+                        </div>
+                    </div>
+                </div>
+            );
         };
-        
-        const handleSubmit = async (event) => {
-            event.preventDefault();
 
-            let isFormValid = true;
-            const requiredFields = ['fullName', 'email', 'painText', 'visionText', 'commitment', 'signatureDate'];
+        const ProgressBar = ({ current, total, progress }) => (
+            <div className="w-full bg-gray-800 h-1.5 fixed top-0 left-0 z-40">
+                <div 
+                    className="bg-gradient-to-r from-yellow-700 to-gold h-full transition-all duration-700 ease-out shadow-[0_0_10px_rgba(212,175,55,0.7)]" 
+                    style={{ width: `${progress}%` }}
+                ></div>
+            </div>
+        );
+
+        const Assignment1 = ({ data, onSave }) => {
+            const [form, setForm] = useState(data || {});
+            const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+            return (
+                <div className="space-y-8 font-light">
+                    <p className="text-sm text-gray-400 italic border-l-2 border-gold pl-4">"The truth will set you free, but first it will piss you off." Be brutally honest here.</p>
+                    {['When I say I will do something, I...', 'My typical morning routine is...', 'I tend to avoid...', 'My dominant internal dialogue sounds like...', 'When things get hard, I usually...'].map((label, i) => (
+                        <div key={i}>
+                            <label className="block text-gold text-sm font-bold mb-2 uppercase tracking-wide">{label}</label>
+                            <input name={`q${i}`} value={form[`q${i}`] || ''} onChange={handleChange} className="w-full p-4 rounded bg-black/50 border border-gray-700 focus:border-gold text-white transition-colors placeholder-gray-600" placeholder="Type your honest answer here..." />
+                        </div>
+                    ))}
+                    <div>
+                        <label className="block text-gold text-sm font-bold mb-2 uppercase tracking-wide">I follow through on commitments ___% of the time</label>
+                        <input type="number" name="percentage" value={form.percentage || ''} onChange={handleChange} className="w-full p-4 rounded bg-black/50 border border-gray-700 focus:border-gold text-white" />
+                    </div>
+                    <div className="bg-gray-900/50 p-6 rounded border border-gray-800">
+                        <label className="block text-white text-lg font-bold mb-4">Summary: The "Drift Identity"</label>
+                        <textarea name="summary" value={form.summary || ''} onChange={handleChange} rows="4" placeholder="Based on the answers above, summarize the identity you've been living. E.g., 'I am someone who starts strong but fades when it gets hard...'" className="w-full p-4 rounded bg-black border border-gray-700 focus:border-gold text-white" />
+                    </div>
+                    <button onClick={() => onSave(form)} className="w-full bg-gold text-black font-black uppercase py-4 rounded hover:bg-white transition-all shadow-lg hover:shadow-gold/20">Lock In Assessment</button>
+                </div>
+            );
+        };
+
+        const Assignment2 = ({ data, onSave }) => {
+            const [form, setForm] = useState(data || {});
+            const rows = ['Discipline', 'Consistency', 'Communication', 'Decision Making', 'Follow-through', 'Self-talk'];
             
-            // Clear previous commitment error
-            document.getElementById('commitmentError').style.display = 'none';
-
-            requiredFields.forEach(fieldName => {
-                const field = form.elements[fieldName];
-                if (!validateField(field)) {
-                    isFormValid = false;
-                }
-            });
-            
-            if (!isFormValid) {
-                return;
-            }
-
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
-            submitBtn.classList.remove('is-error', 'is-success');
-
-            const formData = {
-                lessonTitle: LESSON_TITLE,
-                fullName: formElements.fullName.value,
-                email: formElements.email.value,
-                pain: formElements.painText.value,
-                vision: formElements.visionText.value,
-                commitment: formElements.commitment.checked,
-                signatureDate: formElements.signatureDate.value,
-                submittedAt: new Date().toISOString()
+            const handleChange = (row, col, val) => {
+                setForm(prev => ({ ...prev, [`${row}_${col}`]: val }));
             };
 
-            try {
-                const response = await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                });
-
-                if (response.ok) {
-                    submitBtn.textContent = 'Submitted Successfully';
-                    submitBtn.classList.add('is-success');
-                    // Disable all form fields
-                    Array.from(formElements).forEach(el => el.disabled = true);
-                } else {
-                    throw new Error(`Server responded with status: ${response.status}`);
-                }
-            } catch (error) {
-                console.error('Submission Error:', error);
-                submitBtn.textContent = 'Error - Try Again';
-                submitBtn.classList.add('is-error');
-                submitBtn.disabled = false;
-            }
+            return (
+                <div className="space-y-6">
+                    <p className="text-gray-300 mb-6">Define the specific behavioral shifts required.</p>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr>
+                                    <th className="p-3 text-gold font-bold uppercase text-sm tracking-wider w-1/4">Category</th>
+                                    <th className="p-3 text-gray-400 uppercase text-xs tracking-wider w-1/3">Current Identity (Drift)</th>
+                                    <th className="p-3 text-gold uppercase text-xs tracking-wider w-1/3">Future Operator Identity</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-800">
+                                {rows.map(row => (
+                                    <tr key={row}>
+                                        <td className="p-4 font-bold text-sm text-gray-300">{row}</td>
+                                        <td className="p-2"><textarea rows="2" className="w-full bg-gray-900/50 p-2 text-sm rounded border border-gray-700 focus:border-red-900" value={form[`${row}_curr`] || ''} onChange={(e) => handleChange(row, 'curr', e.target.value)} /></td>
+                                        <td className="p-2"><textarea rows="2" className="w-full bg-gray-900/50 p-2 text-sm rounded border border-gold/30 focus:border-gold" value={form[`${row}_fut`] || ''} onChange={(e) => handleChange(row, 'fut', e.target.value)} /></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onClick={() => onSave(form)} className="w-full bg-gold text-black font-black uppercase py-4 rounded hover:bg-white transition-all shadow-lg hover:shadow-gold/20">Map The Gap</button>
+                </div>
+            );
         };
 
-        form.addEventListener('submit', handleSubmit);
+        const Assignment3 = ({ data, onSave }) => {
+            const [form, setForm] = useState(data || {});
+            const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-        // Add real-time validation feedback on blur
-        Array.from(form.querySelectorAll('[required]')).forEach(field => {
-            field.addEventListener('blur', () => validateField(field));
-        });
-    });
-</script>
-<!-- End of Unshakable Investor Interactive Exercise Component -->
-```
+            return (
+                <div className="space-y-8">
+                    <div className="bg-gray-900 p-6 rounded-lg border-l-4 border-gold">
+                        <h3 className="text-white font-bold mb-2">Instructions</h3>
+                        <p className="text-gray-400 text-sm">Write this in the present tense. Use definitive language ("I am", "I do"). No "I will try" or "I hope".</p>
+                    </div>
+                    {['I am the type of person who...', 'I operate by these standards...', 'I do not negotiate with myself on...', 'I show up daily by...', 'I execute even when...'].map((label, i) => (
+                        <div key={i}>
+                            <label className="block text-gold text-sm font-bold mb-2 uppercase tracking-wide">{label}</label>
+                            <textarea name={`stmt${i}`} value={form[`stmt${i}`] || ''} onChange={handleChange} rows="2" className="w-full p-4 rounded bg-black/50 border border-gray-700 focus:border-gold text-white" />
+                        </div>
+                    ))}
+                    <div className="flex gap-6 items-end bg-charcoal p-6 border border-gray-800 rounded">
+                         <div className="flex-1">
+                            <label className="block text-gray-500 text-xs uppercase mb-2 tracking-widest">Digital Signature</label>
+                            <input name="signature" value={form.signature || ''} onChange={handleChange} placeholder="Sign your name" className="w-full p-2 bg-transparent border-b border-gold text-3xl font-serif italic focus:outline-none text-gold placeholder-gray-700" />
+                        </div>
+                        <div className="w-32">
+                             <label className="block text-gray-500 text-xs uppercase mb-2 tracking-widest">Date</label>
+                            <input value={new Date().toLocaleDateString()} disabled className="w-full p-2 bg-transparent border-b border-gray-700 text-gray-400 text-center" />
+                        </div>
+                    </div>
+                    <button onClick={() => onSave(form)} className="w-full bg-gold text-black font-black uppercase py-4 rounded hover:bg-white transition-all shadow-lg hover:shadow-gold/20">Ratify Statement</button>
+                </div>
+            );
+        };
+
+        const Assignment4 = ({ data, onSave }) => {
+            const [form, setForm] = useState(data || {});
+            const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+            return (
+                <div className="space-y-8">
+                    <div className="text-center space-y-4">
+                        <h3 className="text-2xl text-white font-black uppercase">Daily Protocol Installation</h3>
+                        <p className="text-gray-400">Choose ONE action. Small. Repeatable. Binary (Done/Not Done).</p>
+                    </div>
+                    
+                    <div className="bg-gray-900/50 p-8 rounded-lg border border-gold/30 space-y-6">
+                        <div>
+                            <label className="block text-gold text-lg font-bold mb-3">My Daily Identity Action is:</label>
+                            <input name="action" value={form.action || ''} onChange={handleChange} className="w-full p-4 text-xl font-bold rounded bg-black border border-gold text-white placeholder-gray-700" placeholder="e.g., 100 pushups, 20 cold calls..." />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-gray-400 text-sm mb-2 uppercase tracking-wide">Time of Execution</label>
+                                <input type="time" name="time" value={form.time || ''} onChange={handleChange} className="w-full p-4 rounded bg-black border border-gray-700 focus:border-gold" />
+                            </div>
+                             <div>
+                                <label className="block text-gray-400 text-sm mb-2 uppercase tracking-wide">Habit Stack Anchor</label>
+                                <select name="stack" value={form.stack || ''} onChange={handleChange} className="w-full p-4 rounded bg-black border border-gray-700 focus:border-gold">
+                                    <option value="">I will do this after...</option>
+                                    <option value="wakeup">Immediately upon waking</option>
+                                    <option value="coffee">Morning coffee</option>
+                                    <option value="lunch">Lunch break</option>
+                                    <option value="work_end">Ending work day</option>
+                                    <option value="dinner">Dinner</option>
+                                    <option value="bed">Brushing teeth</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button onClick={() => onSave(form)} className="w-full bg-gold text-black font-black uppercase py-4 rounded hover:bg-white transition-all shadow-lg hover:shadow-gold/20">Install Protocol</button>
+                </div>
+            );
+        };
+        
+        const DailyLog = ({ logData, onSave }) => {
+            const [log, setLog] = useState(logData || Array(7).fill({ completed: false, notes: '', identity: '', command: '' }));
+            const days = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'];
+
+            const updateDay = (index, field, value) => {
+                const newLog = [...log];
+                newLog[index] = { ...newLog[index], [field]: value };
+                setLog(newLog);
+            };
+
+            const calculateStats = () => {
+                const completed = log.filter(d => d.completed).length;
+                const pct = Math.round((completed / 7) * 100);
+                return { completed, pct };
+            };
+
+            const stats = calculateStats();
+            let color = 'text-red-500';
+            if (stats.pct >= 60) color = 'text-yellow-500';
+            if (stats.pct >= 85) color = 'text-green-500';
+
+            return (
+                <div className="space-y-6">
+                    <div className="flex justify-between items-end border-b border-gray-700 pb-4">
+                        <h2 className="text-2xl font-black text-white tracking-tight">WEEK 1 TRACKING</h2>
+                        <div className={`text-xl font-bold ${color}`}>{stats.pct}% ADHERENCE</div>
+                    </div>
+                    
+                    <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                        {days.map((day, idx) => (
+                            <div key={idx} className="bg-gray-900/50 p-4 rounded border border-gray-800 transition-all hover:border-gray-600">
+                                <div className="flex justify-between items-center mb-3">
+                                    <h3 className="text-gold font-bold font-mono">{day}</h3>
+                                    <label className="flex items-center space-x-3 cursor-pointer group">
+                                        <span className="text-xs uppercase tracking-widest text-gray-500 group-hover:text-white transition-colors">Action Complete</span>
+                                        <input type="checkbox" checked={log[idx]?.completed || false} onChange={(e) => updateDay(idx, 'completed', e.target.checked)} className="w-6 h-6 accent-gold" />
+                                    </label>
+                                </div>
+                                {!log[idx]?.completed && (
+                                    <div className="mb-3 animate-fade-in">
+                                        <input placeholder="What identity spoke louder today?" className="w-full bg-red-900/10 border border-red-900/30 text-sm p-3 rounded text-red-400 focus:outline-none focus:border-red-500" value={log[idx]?.identity || ''} onChange={(e) => updateDay(idx, 'identity', e.target.value)} />
+                                    </div>
+                                )}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <input placeholder="One decision reflecting Future Identity..." className="w-full bg-black border border-gray-700 text-sm p-3 rounded focus:border-gold" value={log[idx]?.notes || ''} onChange={(e) => updateDay(idx, 'notes', e.target.value)} />
+                                    <input placeholder="Self-command for tomorrow..." className="w-full bg-black border border-gray-700 text-sm p-3 rounded font-semibold text-gold placeholder-gray-600 focus:border-gold" value={log[idx]?.command || ''} onChange={(e) => updateDay(idx, 'command', e.target.value)} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <button onClick={() => onSave(log)} className="w-full bg-gold text-black font-bold py-3 rounded uppercase tracking-wider hover:bg-white transition-colors">Save Tracking Log</button>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [currentSlide, setCurrentSlide] = useState(0);
+            const [progress, setProgress] = useState(0);
+            const [assignments, setAssignments] = useState({});
+            const [dailyLog, setDailyLog] = useState(Array(7).fill({}));
+            const [isMenuOpen, setIsMenuOpen] = useState(false);
+            const [activeModal, setActiveModal] = useState(null);
+            const [isReading, setIsReading] = useState(false);
+            const [showCompletion, setShowCompletion] = useState(false);
+
+            // Load State
+            useEffect(() => {
+                const saved = JSON.parse(localStorage.getItem('ignite_w1_state'));
+                if (saved) {
+                    setCurrentSlide(saved.currentSlide || 0);
+                    setAssignments(saved.assignments || {});
+                    setDailyLog(saved.dailyLog || Array(7).fill({}));
+                    if (saved.completedCourse) setShowCompletion(true);
+                }
+            }, []);
+
+            // Save State & Calculate Progress
+            useEffect(() => {
+                const totalSlides = SLIDES.length;
+                const totalAssignments = 4;
+                const completedAssignmentsCount = Object.keys(assignments).length;
+                
+                // Weight: 60% slides, 40% assignments
+                const slidePct = ((currentSlide + 1) / totalSlides) * 60;
+                const assignPct = (completedAssignmentsCount / totalAssignments) * 40;
+                const totalProgress = Math.min(100, Math.round(slidePct + assignPct));
+                
+                setProgress(totalProgress);
+
+                localStorage.setItem('ignite_w1_state', JSON.stringify({
+                    currentSlide,
+                    assignments,
+                    dailyLog,
+                    completedCourse: showCompletion
+                }));
+            }, [currentSlide, assignments, dailyLog, showCompletion]);
+
+            // Keyboard Nav
+            useEffect(() => {
+                const handleKey = (e) => {
+                    if (activeModal) return;
+                    if (e.key === 'ArrowRight') nextSlide();
+                    if (e.key === 'ArrowLeft') prevSlide();
+                };
+                window.addEventListener('keydown', handleKey);
+                return () => window.removeEventListener('keydown', handleKey);
+            }, [currentSlide, activeModal]);
+
+            // Text to Speech with Educational Content
+            useEffect(() => {
+                window.speechSynthesis.cancel();
+                setIsReading(false);
+            }, [currentSlide]);
+
+            const toggleSpeech = () => {
+                if (isReading) {
+                    window.speechSynthesis.cancel();
+                    setIsReading(false);
+                } else {
+                    const slide = SLIDES[currentSlide];
+                    // Reads title, subtitle, content, list items, and the teaching section
+                    let text = `${slide.title || ''}. ${slide.subtitle || ''}. ${slide.content || ''}`;
+                    if(slide.items) text += ". Key points: " + slide.items.join('. ');
+                    if(slide.teaching) text += ". Coach's Insight: " + slide.teaching;
+                    
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 1.05; // Slightly faster for energy
+                    utterance.pitch = 0.9; // Lower pitch for authority
+                    utterance.onend = () => setIsReading(false);
+                    
+                    window.speechSynthesis.speak(utterance);
+                    setIsReading(true);
+                }
+            };
+
+            const nextSlide = () => {
+                if (currentSlide < SLIDES.length - 1) {
+                    setCurrentSlide(prev => prev + 1);
+                } else if (Object.keys(assignments).length >= 4) {
+                    setShowCompletion(true);
+                }
+            };
+
+            const prevSlide = () => {
+                if (currentSlide > 0) setCurrentSlide(prev => prev - 1);
+            };
+
+            const saveAssignment = (id, data) => {
+                setAssignments(prev => ({ ...prev, [id]: data }));
+                setActiveModal(null);
+                if (currentSlide < SLIDES.length - 1) {
+                    setTimeout(() => nextSlide(), 500);
+                } else {
+                     setShowCompletion(true);
+                }
+            };
+            
+            const exportPDF = () => {
+                const doc = new window.jspdf.jsPDF();
+                doc.setFont("helvetica");
+                doc.setFontSize(22);
+                doc.setTextColor(0, 0, 0);
+                doc.text("IGNITE: Week 1 Installation Chamber", 20, 20);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, 30);
+                
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(12);
+                let y = 50;
+                
+                const addText = (text, isHeader = false) => {
+                    if (y > 270) { doc.addPage(); y = 20; }
+                    doc.setFont("helvetica", isHeader ? "bold" : "normal");
+                    if(isHeader) { y += 5; } // Extra space before headers
+                    const lines = doc.splitTextToSize(text, 170);
+                    doc.text(lines, 20, y);
+                    y += (lines.length * 6) + 4;
+                };
+
+                addText("ASSIGNMENT 1: IDENTITY ASSESSMENT", true);
+                if (assignments.assessment) {
+                    Object.entries(assignments.assessment).forEach(([k,v]) => addText(`${k}: ${v}`));
+                } else { addText("Not completed."); }
+                
+                y += 5;
+                addText("ASSIGNMENT 2: GAP MAP", true);
+                 if (assignments.gapMap) {
+                    Object.entries(assignments.gapMap).forEach(([k,v]) => addText(`${k}: ${v}`));
+                }
+                
+                y += 5;
+                addText("ASSIGNMENT 3: FUTURE OPERATOR STATEMENT", true);
+                 if (assignments.operatorStatement) {
+                    Object.entries(assignments.operatorStatement).forEach(([k,v]) => addText(`${k}: ${v}`));
+                }
+                
+                y += 5;
+                addText("ASSIGNMENT 4: DAILY PROTOCOL", true);
+                 if (assignments.dailyAction) {
+                    Object.entries(assignments.dailyAction).forEach(([k,v]) => addText(`${k}: ${v}`));
+                }
+
+                doc.save("IGNITE_Workbook_Week1.pdf");
+            };
+
+            const renderSlide = () => {
+                const slide = SLIDES[currentSlide];
+                const isAssigned = slide.type === 'assignment';
+                const isCompleted = isAssigned && assignments[slide.assignmentId];
+                
+                // Determine Layout based on content type
+                // Titles and Assignments get centered single column.
+                // Content/Lists get split screen if image is present.
+                const isSplitLayout = slide.image && (slide.type === 'content' || slide.type === 'list' || slide.type === 'quote');
+
+                return (
+                    <div className="h-full w-full flex items-center justify-center animate-fade-in px-4 md:px-0">
+                        
+                        {/* TITLE SLIDE LAYOUT */}
+                        {slide.type === 'title' && (
+                            <div className="text-center max-w-4xl relative z-10">
+                                <div className="absolute inset-0 bg-gold/5 blur-[100px] rounded-full"></div>
+                                <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase mb-6 relative drop-shadow-2xl">{slide.title}</h1>
+                                <div className="h-1 w-32 bg-gold mx-auto mb-8 shadow-[0_0_15px_#d4af37]"></div>
+                                <h2 className="text-xl md:text-3xl text-gold tracking-[0.2em] uppercase mb-10 font-bold">{slide.subtitle}</h2>
+                                <p className="text-gray-400 text-lg max-w-2xl mx-auto">{slide.content}</p>
+                                
+                                {slide.teaching && (
+                                    <div className="mt-12 bg-charcoal/80 border-l-4 border-gold p-6 text-left max-w-2xl mx-auto backdrop-blur-sm">
+                                        <p className="text-gold text-xs uppercase tracking-widest font-bold mb-2">Coach's Insight</p>
+                                        <p className="text-gray-300 italic">{slide.teaching}</p>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* SPLIT CONTENT LAYOUT */}
+                        {isSplitLayout && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 h-full w-full">
+                                {/* Image Side */}
+                                <div className="hidden md:block relative h-full w-full overflow-hidden border-r border-gray-900">
+                                    <div className="absolute inset-0 bg-gold/10 z-10 mix-blend-overlay"></div>
+                                    <img src={slide.image} alt="Visual" className="h-full w-full object-cover brand-image" />
+                                    <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent z-20"></div>
+                                </div>
+                                
+                                {/* Content Side */}
+                                <div className="flex flex-col justify-center p-8 md:p-16 h-full overflow-y-auto">
+                                    <div className="max-w-xl mx-auto w-full">
+                                        {slide.title && <h2 className="text-3xl md:text-5xl font-black text-gold uppercase mb-8 leading-tight">{slide.title}</h2>}
+                                        
+                                        <p className={`leading-relaxed mb-8 ${slide.type === 'quote' ? 'text-2xl md:text-4xl font-serif italic text-white border-l-4 border-gold pl-6' : 'text-lg md:text-xl text-gray-200'}`}>
+                                            {slide.content}
+                                        </p>
+
+                                        {slide.type === 'list' && (
+                                            <ul className="space-y-4 mb-8">
+                                                {slide.items.map((item, idx) => (
+                                                    <li key={idx} className="flex items-start text-lg text-gray-300">
+                                                        <ChevronRight className="text-gold mr-3 mt-1 flex-shrink-0" size={18} />
+                                                        {item}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+
+                                        {slide.teaching && (
+                                            <div className="mt-8 pt-8 border-t border-gray-800">
+                                                <div className="flex items-center gap-2 mb-3 text-gold">
+                                                    <Shield size={16} />
+                                                    <span className="text-xs uppercase tracking-widest font-bold">Deep Dive</span>
+                                                </div>
+                                                <p className="text-gray-400 text-sm leading-relaxed">{slide.teaching}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ASSIGNMENT LAYOUT */}
+                        {isAssigned && (
+                            <div className="bg-charcoal border border-gold p-12 rounded-lg shadow-[0_0_50px_rgba(212,175,55,0.15)] max-w-2xl w-full text-center relative overflow-hidden">
+                                {/* Decorative elements */}
+                                <div className="absolute top-0 right-0 w-24 h-24 bg-gold/10 rounded-bl-full -mr-10 -mt-10"></div>
+                                
+                                <Shield size={64} className={`mx-auto mb-8 transition-colors duration-500 ${isCompleted ? 'text-green-500' : 'text-gold'}`} />
+                                <h2 className="text-4xl font-black text-white uppercase mb-4 tracking-tight">{slide.title}</h2>
+                                {isCompleted ? (
+                                    <div className="text-green-400 flex items-center justify-center gap-2 mb-8 bg-green-900/20 py-3 rounded">
+                                        <CheckCircle /> Protocol Installed
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-400 mb-10 text-lg">Establish your baseline. Lock in your identity.</p>
+                                )}
+                                <button 
+                                    onClick={() => setActiveModal(slide.assignmentId)}
+                                    className={`w-full py-5 rounded font-bold uppercase tracking-widest transition-all transform hover:-translate-y-1 ${isCompleted ? 'bg-gray-800 text-gray-300 border border-gray-600 hover:border-white' : 'bg-gradient-to-r from-gold to-yellow-600 text-black shadow-lg hover:shadow-gold/50'}`}
+                                >
+                                    {isCompleted ? "Review Intel" : slide.btnText}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+
+            if (showCompletion) {
+                return (
+                    <div className="min-h-screen bg-obsidian text-white flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
+                        <Shield size={100} className="text-gold mb-8 animate-bounce drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]" />
+                        <h1 className="text-6xl font-black uppercase mb-4 text-white">Week 1 Complete</h1>
+                        <div className="h-1 w-20 bg-gold mx-auto mb-6"></div>
+                        <p className="text-2xl text-gray-300 mb-12 max-w-xl">Identity Audit Installed. Standards Set. You are no longer drifting.</p>
+                        
+                        <div className="grid grid-cols-2 gap-6 mb-12 w-full max-w-lg">
+                            <div className="bg-charcoal p-6 rounded border border-gray-700">
+                                <div className="text-4xl font-bold text-gold mb-1">4/4</div>
+                                <div className="text-xs uppercase text-gray-400 tracking-widest">Assignments</div>
+                            </div>
+                            <div className="bg-charcoal p-6 rounded border border-gray-700">
+                                <div className="text-4xl font-bold text-gold mb-1">100%</div>
+                                <div className="text-xs uppercase text-gray-400 tracking-widest">Completion</div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col md:flex-row gap-6 w-full max-w-lg">
+                            <button onClick={exportPDF} className="flex-1 flex items-center justify-center gap-3 bg-charcoal border border-gold text-gold px-8 py-4 rounded hover:bg-gold hover:text-black transition-all font-bold uppercase tracking-wide">
+                                <FileDown size={20} /> Download PDF
+                            </button>
+                            <button onClick={() => {setShowCompletion(false); setCurrentSlide(0);}} className="flex-1 bg-gray-900 text-gray-400 px-8 py-4 rounded hover:bg-gray-800 hover:text-white transition-all font-bold uppercase tracking-wide">
+                                Return to Start
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="h-screen w-full flex flex-col bg-obsidian overflow-hidden relative selection:bg-gold selection:text-black">
+                    <ProgressBar current={currentSlide} total={SLIDES.length} progress={progress} />
+
+                    {/* Header */}
+                    <header className="flex justify-between items-center p-6 z-30 fixed top-0 w-full pointer-events-none">
+                        <div className="flex items-center gap-3 pointer-events-auto">
+                             <div className="w-10 h-10 bg-gold flex items-center justify-center font-black text-black text-xl shadow-[0_0_15px_rgba(212,175,55,0.4)]">I</div>
+                             <span className="font-bold tracking-[0.2em] text-sm hidden md:block text-white">THE UNSHAKABLE INVESTOR</span>
+                        </div>
+                        <div className="flex items-center gap-6 pointer-events-auto">
+                            <span className="text-gray-500 text-xs uppercase tracking-widest hidden md:block">Phase 1 / Slide {currentSlide + 1}</span>
+                            <button onClick={() => setIsMenuOpen(true)} className="text-gold hover:text-white transition-colors bg-charcoal/50 p-2 rounded-full border border-gold/20 hover:border-gold">
+                                <MenuIcon size={24} />
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Main Content */}
+                    <main className="flex-1 relative z-20 pt-16 pb-20">
+                        {renderSlide()}
+                    </main>
+
+                    {/* Footer / Controls */}
+                    <footer className="fixed bottom-0 w-full p-6 md:px-12 md:py-8 flex justify-between items-center z-30 bg-gradient-to-t from-black to-transparent pointer-events-none">
+                         <div className="flex gap-4 pointer-events-auto">
+                            <button onClick={toggleSpeech} className={`flex items-center gap-2 text-gray-500 hover:text-gold transition-colors ${isReading ? 'text-gold' : ''}`} title="Read Slide">
+                                {isReading ? <Pause size={24} className="animate-pulse"/> : <Volume2 size={24} />}
+                                <span className="text-xs uppercase tracking-widest hidden md:block">{isReading ? 'Playing...' : 'Audio Mode'}</span>
+                            </button>
+                         </div>
+                         <div className="flex gap-4 pointer-events-auto">
+                            <button 
+                                onClick={prevSlide} 
+                                disabled={currentSlide === 0}
+                                className={`w-12 h-12 flex items-center justify-center rounded-full border border-gray-700 bg-charcoal/80 backdrop-blur transition-all ${currentSlide === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:border-gold hover:text-gold hover:scale-105'}`}
+                            >
+                                <ChevronLeft />
+                            </button>
+                            <button 
+                                onClick={nextSlide}
+                                disabled={currentSlide === SLIDES.length - 1 && Object.keys(assignments).length < 4}
+                                className="w-12 h-12 flex items-center justify-center rounded-full bg-gold text-black hover:bg-white hover:scale-105 transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]"
+                            >
+                                <ChevronRight />
+                            </button>
+                        </div>
+                    </footer>
+
+                    {/* Assignment Modals */}
+                    <Modal isOpen={activeModal === 'assessment'} onClose={() => setActiveModal(null)} title="Current Identity Assessment">
+                        <Assignment1 data={assignments.assessment} onSave={(d) => saveAssignment('assessment', d)} />
+                    </Modal>
+                    <Modal isOpen={activeModal === 'gapMap'} onClose={() => setActiveModal(null)} title="Identity Gap Map">
+                        <Assignment2 data={assignments.gapMap} onSave={(d) => saveAssignment('gapMap', d)} />
+                    </Modal>
+                    <Modal isOpen={activeModal === 'operatorStatement'} onClose={() => setActiveModal(null)} title="Future Operator Statement">
+                        <Assignment3 data={assignments.operatorStatement} onSave={(d) => saveAssignment('operatorStatement', d)} />
+                    </Modal>
+                    <Modal isOpen={activeModal === 'dailyAction'} onClose={() => setActiveModal(null)} title="Daily Protocol">
+                        <Assignment4 data={assignments.dailyAction} onSave={(d) => saveAssignment('dailyAction', d)} />
+                    </Modal>
+                    <Modal isOpen={activeModal === 'dailyLog'} onClose={() => setActiveModal(null)} title="Daily Tracking Log">
+                        <DailyLog logData={dailyLog} onSave={(d) => { setDailyLog(d); setActiveModal(null); }} />
+                    </Modal>
+
+                    {/* Sidebar Menu */}
+                    <div className={`fixed inset-y-0 right-0 w-80 bg-charcoal border-l border-gold/20 shadow-2xl transform transition-transform duration-300 z-50 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                        <div className="p-6 flex justify-between items-center border-b border-gray-800 bg-black/20">
+                            <h2 className="text-gold font-bold uppercase tracking-widest text-sm">System Menu</h2>
+                            <button onClick={() => setIsMenuOpen(false)} className="text-gray-400 hover:text-white"><X /></button>
+                        </div>
+                        <div className="p-6 space-y-4">
+                            <button onClick={() => { setActiveModal('dailyLog'); setIsMenuOpen(false); }} className="w-full text-left p-4 rounded bg-gray-900 border border-gray-800 hover:border-gold flex justify-between items-center group transition-all">
+                                <span className="font-bold text-white">Daily Tracking Log</span>
+                                <ChevronRight size={16} className="text-gold" />
+                            </button>
+                            <button onClick={exportPDF} className="w-full text-left p-4 rounded bg-gray-900 border border-gray-800 hover:border-gold flex justify-between items-center group transition-all">
+                                <span className="font-bold text-white">Download PDF</span>
+                                <FileDown size={16} className="text-gold" />
+                            </button>
+                             <div className="border-t border-gray-800 my-4 pt-4">
+                                <div className="text-xs text-gray-500 uppercase tracking-widest mb-4">Jump To Slide</div>
+                                <div className="grid grid-cols-4 gap-2">
+                                    {SLIDES.map((s, i) => (
+                                        <button 
+                                            key={s.id} 
+                                            onClick={() => { setCurrentSlide(i); setIsMenuOpen(false); }}
+                                            className={`h-8 flex items-center justify-center text-xs rounded border transition-all ${currentSlide === i ? 'border-gold bg-gold text-black font-bold' : 'border-gray-800 text-gray-500 hover:border-gray-500 hover:text-white'}`}
+                                        >
+                                            {i + 1}
+                                        </button>
+                                    ))}
+                                </div>
+                             </div>
+                             <div className="border-t border-gray-800 my-4 pt-4">
+                                 <button onClick={() => { localStorage.removeItem('ignite_w1_state'); window.location.reload(); }} className="text-red-900 hover:text-red-500 text-xs uppercase tracking-widest w-full text-center py-2 border border-transparent hover:border-red-900/30 rounded">
+                                    Reset All Progress
+                                 </button>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
