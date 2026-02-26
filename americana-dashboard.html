@@ -45,7 +45,8 @@ function Ic(name,sz,col){
     clock:["M12 2a10 10 0 100 20 10 10 0 000-20z","M12 6v6l4 2"],
     refresh:["M1 4v6h6","M23 20v-6h-6","M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"],
     target:["M12 2a10 10 0 100 20 10 10 0 000-20z","M12 6a6 6 0 100 12 6 6 0 000-12z","M12 10a2 2 0 100 4 2 2 0 000-4z"],
-    menu:["M3 12h18","M3 6h18","M3 18h18"]
+    menu:["M3 12h18","M3 6h18","M3 18h18"],
+    table:["M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"]
   };
   var paths=P[name]||P.home;
   return h("svg",{width:s,height:s,viewBox:"0 0 24 24",fill:"none",stroke:c,strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round",style:{flexShrink:0}},
@@ -242,7 +243,7 @@ function App(){
 
   function InEdit(p){return h("div",{style:{display:"flex",gap:4,alignItems:"center"}},h("input",{value:ev,onChange:function(e){setEv(e.target.value)},type:p.type||"text",autoFocus:true,onKeyDown:function(e){if(e.key==="Enter")p.onSave();if(e.key==="Escape")cancelEdit()},style:{background:C.bg,border:"1px solid "+C.pri,color:C.tx,borderRadius:6,padding:"6px 8px",fontSize:13,width:p.w||"100%",minHeight:36}}),h("button",{onClick:p.onSave,style:{background:C.pri+"18",border:"none",color:C.pri,borderRadius:6,padding:"6px 8px",cursor:"pointer",fontSize:14,minWidth:32,minHeight:32}},"\u2713"),h("button",{onClick:cancelEdit,style:{background:C.red+"18",border:"none",color:C.red,borderRadius:6,padding:"6px 8px",cursor:"pointer",fontSize:14,minWidth:32,minHeight:32}},"\u2715"))}
 
-  var navItems=[{id:"dashboard",label:"Home",icon:"home"},{id:"tasks",label:"Tasks",icon:"checkSq"},{id:"projects",label:"Projects",icon:"building"},{id:"financials",label:"Money",icon:"dollar"},{id:"compliance",label:"Comply",icon:"shield"},{id:"team",label:"Team",icon:"users"}];
+  var navItems=[{id:"dashboard",label:"Home",icon:"home"},{id:"tasks",label:"Tasks",icon:"checkSq"},{id:"projects",label:"Projects",icon:"building"},{id:"financials",label:"Money",icon:"dollar"},{id:"compliance",label:"Comply",icon:"shield"},{id:"team",label:"Team",icon:"users"},{id:"sheets",label:"Sheets",icon:"table"}];
 
   /* ═══ MOBILE PROJECT CARDS ═══ */
   function ProjCard(p){
@@ -331,6 +332,8 @@ function App(){
     content.push(h("div",{key:"fc",style:{background:C.amb+"10",border:"1px solid "+C.amb+"30",borderRadius:10,padding:mob?12:16}},h("div",{style:{fontSize:13,fontWeight:600,color:C.amb}},"Field Crew"),h("p",{style:{fontSize:11,color:C.mut,marginTop:4}},"7+ laborers at $20.50/hr. All 1099 \u2014 W-2 conversion required.")));
   }
 
+  var SHEET_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vTuaSvYR8Q_vi_Ywe8kdZECH5zSaaTZipetf313o0Hw3Hz7I5uEl-NtT2i-b1mrzqzc8WGimIMq5RlB/pubhtml?widget=true&headers=false";
+
   /* ═══ LAYOUT ═══ */
   return h("div",{style:{display:"flex",flexDirection:mob?"column":"row",height:"100vh",background:C.bg,color:C.tx,overflow:"hidden"}},
     /* SIDEBAR (desktop) */
@@ -352,7 +355,7 @@ function App(){
           h("button",{onClick:function(){setRst(true)},style:{background:C.card,border:"1px solid "+C.bdr,color:C.mut,borderRadius:6,padding:"6px 10px",cursor:"pointer",fontSize:11,display:"flex",alignItems:"center",gap:4,fontFamily:"DM Sans",minHeight:32}},Ic("refresh",12))
         )
       ),
-      h("div",{style:{flex:1,overflowY:"auto",padding:pad,WebkitOverflowScrolling:"touch"}},h("div",{style:{maxWidth:1300,display:"flex",flexDirection:"column",gap:mob?12:20}},content))
+      h("div",{style:{flex:1,overflowY:page==="sheets"?"hidden":"auto",padding:page==="sheets"?0:pad,WebkitOverflowScrolling:"touch"}},page==="sheets"?h("div",{style:{width:"100%",height:"100%",display:"flex",flexDirection:"column"}},h("div",{style:{padding:mob?"8px 14px":"10px 24px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid "+C.bdr,flexShrink:0,background:C.card}},h("div",null,h("div",{style:{fontSize:mob?13:14,fontWeight:600}},"Operations Workbook"),h("div",{style:{fontSize:10,color:C.mut}},"WIP \u00B7 AR \u00B7 Forecast \u00B7 Payroll \u00B7 Waivers")),h("a",{href:"https://docs.google.com/spreadsheets/d/e/2PACX-1vTuaSvYR8Q_vi_Ywe8kdZECH5zSaaTZipetf313o0Hw3Hz7I5uEl-NtT2i-b1mrzqzc8WGimIMq5RlB/pubhtml",target:"_blank",rel:"noopener",style:{fontSize:11,color:C.pri,textDecoration:"none",padding:"6px 12px",borderRadius:6,border:"1px solid "+C.pri+"30",background:C.pri+"10",fontFamily:"DM Sans"}},"Open in Google Sheets \u2197")),h("iframe",{src:SHEET_URL,style:{flex:1,width:"100%",border:"none",background:"#fff"}})):h("div",{style:{maxWidth:1300,display:"flex",flexDirection:"column",gap:mob?12:20}},content))
     ),
 
     /* BOTTOM TAB BAR (mobile) */
