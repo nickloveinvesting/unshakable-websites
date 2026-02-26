@@ -332,7 +332,7 @@ function App(){
     content.push(h("div",{key:"fc",style:{background:C.amb+"10",border:"1px solid "+C.amb+"30",borderRadius:10,padding:mob?12:16}},h("div",{style:{fontSize:13,fontWeight:600,color:C.amb}},"Field Crew"),h("p",{style:{fontSize:11,color:C.mut,marginTop:4}},"7+ laborers at $20.50/hr. All 1099 \u2014 W-2 conversion required.")));
   }
 
-  var SHEET_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vTuaSvYR8Q_vi_Ywe8kdZECH5zSaaTZipetf313o0Hw3Hz7I5uEl-NtT2i-b1mrzqzc8WGimIMq5RlB/pubhtml?widget=true&headers=false";
+  var SHEET_URL="https://docs.google.com/spreadsheets/d/1XfFTWSXQAFuUETMI50WkHBF6YbFbWvRevqyvheUG9cE/edit?usp=sharing&rm=minimal";
 
   /* ═══ LAYOUT ═══ */
   return h("div",{style:{display:"flex",flexDirection:mob?"column":"row",height:"100vh",background:C.bg,color:C.tx,overflow:"hidden"}},
@@ -355,7 +355,7 @@ function App(){
           h("button",{onClick:function(){setRst(true)},style:{background:C.card,border:"1px solid "+C.bdr,color:C.mut,borderRadius:6,padding:"6px 10px",cursor:"pointer",fontSize:11,display:"flex",alignItems:"center",gap:4,fontFamily:"DM Sans",minHeight:32}},Ic("refresh",12))
         )
       ),
-      h("div",{style:{flex:1,overflowY:page==="sheets"?"hidden":"auto",padding:page==="sheets"?0:pad,WebkitOverflowScrolling:"touch"}},page==="sheets"?h("div",{style:{width:"100%",height:"100%",display:"flex",flexDirection:"column"}},h("div",{style:{padding:mob?"8px 14px":"10px 24px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid "+C.bdr,flexShrink:0,background:C.card}},h("div",null,h("div",{style:{fontSize:mob?13:14,fontWeight:600}},"Operations Workbook"),h("div",{style:{fontSize:10,color:C.mut}},"WIP \u00B7 AR \u00B7 Forecast \u00B7 Payroll \u00B7 Waivers")),h("a",{href:"https://docs.google.com/spreadsheets/d/e/2PACX-1vTuaSvYR8Q_vi_Ywe8kdZECH5zSaaTZipetf313o0Hw3Hz7I5uEl-NtT2i-b1mrzqzc8WGimIMq5RlB/pubhtml",target:"_blank",rel:"noopener",style:{fontSize:11,color:C.pri,textDecoration:"none",padding:"6px 12px",borderRadius:6,border:"1px solid "+C.pri+"30",background:C.pri+"10",fontFamily:"DM Sans"}},"Open in Google Sheets \u2197")),h("iframe",{src:SHEET_URL,style:{flex:1,width:"100%",border:"none",background:"#fff"}})):h("div",{style:{maxWidth:1300,display:"flex",flexDirection:"column",gap:mob?12:20}},content))
+      h("div",{style:{flex:1,overflowY:page==="sheets"?"hidden":"auto",padding:page==="sheets"?0:pad,WebkitOverflowScrolling:"touch"}},page==="sheets"?h("div",{style:{width:"100%",height:"100%",display:"flex",flexDirection:"column"}},h("div",{style:{padding:mob?"8px 14px":"10px 24px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid "+C.bdr,flexShrink:0,background:C.card}},h("div",null,h("div",{style:{fontSize:mob?13:14,fontWeight:600}},"Operations Workbook"),h("div",{style:{fontSize:10,color:C.mut}},"WIP \u00B7 AR \u00B7 Forecast \u00B7 Payroll \u00B7 Waivers")),h("a",{href:"https://docs.google.com/spreadsheets/d/1XfFTWSXQAFuUETMI50WkHBF6YbFbWvRevqyvheUG9cE/edit",target:"_blank",rel:"noopener",style:{fontSize:11,color:C.pri,textDecoration:"none",padding:"6px 12px",borderRadius:6,border:"1px solid "+C.pri+"30",background:C.pri+"10",fontFamily:"DM Sans"}},"Open in Google Sheets \u2197")),h("iframe",{src:SHEET_URL,style:{flex:1,width:"100%",border:"none",background:"#fff"}})):h("div",{style:{maxWidth:1300,display:"flex",flexDirection:"column",gap:mob?12:20}},content))
     ),
 
     /* BOTTOM TAB BAR (mobile) */
