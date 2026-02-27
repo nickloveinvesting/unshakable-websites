@@ -4,622 +4,409 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#110f1a">
-<title>Empire OS — Blitz Dashboard</title>
+<meta name="theme-color" content="#ffffff">
+<title>Empire OS — Accountability Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════════════════════
-   RESET & TOKENS
-   ═══════════════════════════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root {
-  /* Surfaces — warm dark with depth */
-  --bg:        #110f1a;
-  --bg-sub:    #16141f;
-  --surface:   #1c1a27;
-  --surface-2: #232131;
-  --surface-3: #2c2a3a;
-  --glass:     rgba(28,26,39,.72);
-  --glass-border: rgba(255,255,255,.06);
-
-  /* Empire OS Gold palette */
-  --gold:      #d4a853;
-  --gold-dim:  rgba(212,168,83,.12);
-  --gold-glow: rgba(212,168,83,.25);
-
-  /* Functional */
-  --emerald:   #34d399;
-  --emerald-d: rgba(52,211,153,.12);
-  --coral:     #f87171;
-  --coral-d:   rgba(248,113,113,.10);
-  --sky:       #60a5fa;
-  --sky-d:     rgba(96,165,250,.10);
-  --violet:    #a78bfa;
-  --violet-d:  rgba(167,139,250,.10);
-  --amber:     #fbbf24;
-  --amber-d:   rgba(251,191,36,.10);
-
-  /* Text */
-  --t1: #f0ece2;
-  --t2: #9b95a8;
-  --t3: #5a5468;
-  --t4: #3a3548;
-
-  /* Type */
-  --display: 'Outfit', system-ui, sans-serif;
-  --body: 'DM Sans', system-ui, sans-serif;
-  --mono: 'JetBrains Mono', monospace;
-
-  /* Spacing & Radius */
-  --r-sm: 6px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px;
-
-  /* Mobile nav height */
-  --nav-h: 64px;
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+:root{
+  --white:#ffffff;--g50:#f7f7f8;--g100:#efefef;--g200:#e0e0e2;
+  --g300:#c4c4c8;--g400:#8e8e96;--g500:#6b6b73;--g600:#4a4a52;
+  --g700:#333338;--g800:#1f1f23;--g900:#111113;
+  --obsidian:#0c0c0e;--obsidian-soft:#161618;--obsidian-mid:#1e1e21;
+  --accent:#3b3b40;--accent-light:#e8e8ea;--accent-lighter:#f3f3f4;
+  --emerald:#059669;--emerald-light:#d1fae5;--emerald-dark:#047857;
+  --amber:#b45309;--amber-light:#fef3c7;
+  --rose:#dc2626;--rose-light:#fee2e2;
+  --violet:#6d28d9;--violet-light:#ede9fe;
+  --blue:#2563eb;--blue-light:#dbeafe;
+  --serif:'Source Serif 4',Georgia,serif;
+  --sans:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  --mono:'IBM Plex Mono','SF Mono',monospace;
+  --r:8px;--r-lg:12px;
+  --sidebar-w:224px;--nav-h:60px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
 }
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--g50);color:var(--g800);min-height:100vh;min-height:100dvh;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 
-html { font-size: 15px; scroll-behavior: smooth; }
-body {
-  font-family: var(--body);
-  background: var(--bg);
-  color: var(--t1);
-  min-height: 100vh;
-  min-height: 100dvh;
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-  overflow-x: hidden;
-}
+/* ── Icons (inline SVG via CSS) ── */
+.ico{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;flex-shrink:0}
+.ico svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ico-sm{width:15px;height:15px}
+.ico-lg{width:20px;height:20px}
 
-/* Subtle background texture */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: -1;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212,168,83,.06), transparent 60%),
-    radial-gradient(ellipse 60% 50% at 80% 100%, rgba(167,139,250,.04), transparent 50%),
-    var(--bg);
-}
+/* ── Loader ── */
+.loader{position:fixed;inset:0;z-index:1000;background:var(--white);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s,visibility .4s}
+.loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+.loader-ring{width:28px;height:28px;border:2.5px solid var(--g200);border-top-color:var(--g800);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{margin-top:12px;color:var(--g500);font-size:12px;font-family:var(--mono)}
+.sync-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:999;opacity:0;transition:opacity .3s}
+.sync-bar.saving{opacity:1;background:var(--amber)}
+.sync-bar.saved{opacity:1;background:var(--emerald)}
+.sync-bar.err{opacity:1;background:var(--rose)}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   LAYOUT
-   ═══════════════════════════════════════════════════════════════════════ */
-.app {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 16px calc(var(--nav-h) + var(--safe-bottom) + 24px);
-}
+/* Setup */
+.setup{max-width:520px;margin:60px auto;padding:0 24px;display:none}
+.setup h1{font-family:var(--serif);font-size:22px;color:var(--obsidian);margin-bottom:8px}
+.setup p{color:var(--g600);font-size:13px;line-height:1.8;margin-bottom:12px}
+.setup code{background:var(--g100);padding:2px 6px;border-radius:4px;font-family:var(--mono);font-size:11px;color:var(--g800)}
+.setup ol{color:var(--g600);font-size:13px;line-height:2.2;padding-left:20px}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   LOADING
-   ═══════════════════════════════════════════════════════════════════════ */
-.loader {
-  position: fixed; inset: 0; z-index: 1000;
-  background: var(--bg);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  transition: opacity .5s ease, visibility .5s;
+/* ═══════════════ SIDEBAR (Desktop) ═══════════════ */
+.sidebar{
+  display:none;position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+  background:var(--obsidian);color:var(--white);z-index:100;
+  padding:24px 0;flex-direction:column;
 }
-.loader.gone { opacity: 0; visibility: hidden; }
-.loader-ring {
-  width: 40px; height: 40px;
-  border: 2.5px solid var(--t4);
-  border-top-color: var(--gold);
-  border-radius: 50%;
-  animation: spin .9s cubic-bezier(.5,.15,.5,.85) infinite;
+.sb-brand{padding:0 20px 24px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-logo{font-family:var(--serif);font-size:17px;font-weight:800;color:var(--white);letter-spacing:-.3px}
+.sb-tag{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;font-weight:500}
+.sb-nav{flex:1;padding:16px 10px;display:flex;flex-direction:column;gap:1px}
+.sb-item{
+  display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;
+  background:transparent;border:none;color:rgba(255,255,255,.45);
+  font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;
+  transition:all .12s;text-align:left;width:100%;position:relative;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loader-text { margin-top: 16px; color: var(--t3); font-size: 12px; font-family: var(--mono); letter-spacing: .5px; }
+.sb-item:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.05)}
+.sb-item.on{color:var(--white);background:rgba(255,255,255,.08)}
+.sb-item.on::before{content:'';position:absolute;left:0;width:3px;height:20px;background:var(--white);border-radius:0 3px 3px 0}
+.sb-item .ico{color:inherit}
+.sb-conn{padding:14px 20px;border-top:1px solid rgba(255,255,255,.06);margin-top:auto}
+.sb-conn-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px}
+.sb-conn-dot.ok{background:#34d399}.sb-conn-dot.off{background:var(--amber)}
+.sb-conn-text{font-size:11px;color:rgba(255,255,255,.3)}
 
-/* Sync bar */
-.sync-bar {
-  position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 999;
-  transition: opacity .3s; opacity: 0;
+/* ═══════════════ MOBILE BOTTOM NAV ═══════════════ */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  height:calc(var(--nav-h) + var(--safe-bottom));padding-bottom:var(--safe-bottom);
+  background:var(--white);border-top:1px solid var(--g200);display:flex;
 }
-.sync-bar.saving { opacity:1; background: linear-gradient(90deg, var(--gold), var(--amber)); animation: shimmer 1.5s infinite; }
-.sync-bar.saved  { opacity:1; background: var(--emerald); }
-.sync-bar.err    { opacity:1; background: var(--coral); }
-@keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+.bn-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  background:none;border:none;cursor:pointer;color:var(--g400);
+  font-family:var(--sans);transition:color .15s;padding:6px 2px;position:relative;
+}
+.bn-item.on{color:var(--obsidian)}
+.bn-item.on::before{content:'';position:absolute;top:0;left:24%;right:24%;height:2px;background:var(--obsidian);border-radius:0 0 2px 2px}
+.bn-icon{display:flex;align-items:center;justify-content:center}
+.bn-icon .ico{width:20px;height:20px}
+.bn-label{font-size:9px;font-weight:700;letter-spacing:.3px}
 
-/* Setup screen */
-.setup { max-width: 520px; margin: 60px auto; padding: 0 20px; }
-.setup h1 { font-family: var(--display); font-size: 22px; font-weight: 800; color: var(--gold); margin-bottom: 10px; letter-spacing: -.3px; }
-.setup p { color: var(--t2); font-size: 13px; line-height: 1.8; margin-bottom: 14px; }
-.setup code { background: var(--surface); padding: 2px 7px; border-radius: 4px; font-family: var(--mono); font-size: 11px; color: var(--gold); }
-.setup ol { color: var(--t2); font-size: 13px; line-height: 2.1; padding-left: 20px; }
-.setup .warn { color: var(--coral); font-weight: 700; }
+/* ═══════════════ LAYOUT ═══════════════ */
+.main-area{padding:0 20px calc(var(--nav-h) + var(--safe-bottom) + 20px)}
+.panel{display:none;animation:fadeUp .2s ease}.panel.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   HEADER
-   ═══════════════════════════════════════════════════════════════════════ */
-.header { padding: 20px 0 0; }
-.header-row { display: flex; justify-content: space-between; align-items: center; }
-.brand-mark {
-  display: flex; align-items: center; gap: 10px;
-}
-.brand-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: linear-gradient(135deg, var(--gold), #b8872e);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--display); font-weight: 900; font-size: 14px; color: var(--bg);
-  box-shadow: 0 2px 12px rgba(212,168,83,.25);
-}
-.brand-text { font-family: var(--display); font-size: 13px; font-weight: 700; color: var(--t2); letter-spacing: 3px; text-transform: uppercase; }
-.header-meta { display: flex; align-items: center; gap: 8px; }
-.conn-dot { width: 6px; height: 6px; border-radius: 50%; }
-.conn-dot.ok { background: var(--emerald); box-shadow: 0 0 6px var(--emerald); }
-.conn-dot.off { background: var(--amber); }
-.conn-dot.err { background: var(--coral); }
-.blitz-pill {
-  font-family: var(--mono); font-size: 10px; font-weight: 700;
-  color: var(--gold); background: var(--gold-dim);
-  padding: 4px 10px; border-radius: 20px; letter-spacing: .8px;
-  border: 1px solid rgba(212,168,83,.15);
-}
-.date-display { font-size: 11px; color: var(--t3); font-family: var(--mono); margin-top: 14px; }
-
-/* ═══════════════════════════════════════════════════════════════════════
-   ALERT BANNER
-   ═══════════════════════════════════════════════════════════════════════ */
-.alert-bar {
-  margin-top: 14px; padding: 12px 14px;
-  background: var(--coral-d); border: 1px solid rgba(248,113,113,.18);
-  border-radius: var(--r-md); display: none;
-  align-items: flex-start; gap: 10px; font-size: 13px; color: #fca5a5; line-height: 1.5;
-  animation: slideDown .3s ease;
-}
-@keyframes slideDown { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
-.alert-bar.vis { display: flex; }
-.alert-bar strong { color: #fed7d7; }
-.alert-close {
-  margin-top: 6px; background: none; border: 1px solid rgba(248,113,113,.25);
-  color: #fca5a5; padding: 3px 10px; border-radius: 4px; cursor: pointer;
-  font-size: 11px; font-family: var(--body); font-weight: 600;
+@media(min-width:860px){
+  .sidebar{display:flex}
+  .bottom-nav{display:none!important}
+  .main-area{margin-left:var(--sidebar-w);padding:0 36px 40px;max-width:calc(760px + var(--sidebar-w))}
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   STAT CARDS — Horizontal scroll on mobile
-   ═══════════════════════════════════════════════════════════════════════ */
-.stats-scroll {
-  display: flex; gap: 8px; margin-top: 16px;
-  overflow-x: auto; scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; padding-bottom: 4px;
-}
-.stats-scroll::-webkit-scrollbar { display: none; }
-.stat {
-  flex: 0 0 140px; scroll-snap-align: start;
-  background: var(--surface);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--r-lg); padding: 14px;
-  position: relative; overflow: hidden;
-}
-.stat::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  border-radius: var(--r-lg) var(--r-lg) 0 0;
-}
-.stat.c-gold::before   { background: var(--gold); }
-.stat.c-emerald::before { background: var(--emerald); }
-.stat.c-sky::before    { background: var(--sky); }
-.stat.c-violet::before { background: var(--violet); }
-.stat.c-coral::before  { background: var(--coral); }
-.stat-val {
-  font-family: var(--mono); font-size: 26px; font-weight: 800;
-  line-height: 1; margin-bottom: 4px;
-}
-.stat-lbl { font-size: 10px; font-weight: 700; color: var(--t3); text-transform: uppercase; letter-spacing: 1px; }
+/* ── Mobile header ── */
+.page-header{padding:16px 0 0;display:flex;align-items:center;justify-content:space-between}
+.ph-brand{display:flex;align-items:center;gap:8px}
+.ph-mark{width:26px;height:26px;background:var(--obsidian);border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:11px;font-weight:800;color:var(--white)}
+.ph-name{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--obsidian)}
+.ph-meta{display:flex;align-items:center;gap:8px}
+.pill{font-family:var(--mono);font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px}
+.pill-dark{color:var(--white);background:var(--obsidian)}
+.pill-conn{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--g400)}
+.pill-conn-dot{width:5px;height:5px;border-radius:50%;background:var(--emerald)}
+@media(min-width:860px){.page-header{display:none}}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   BOTTOM NAV — Mobile-native feel
-   ═══════════════════════════════════════════════════════════════════════ */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 900;
-  height: calc(var(--nav-h) + var(--safe-bottom));
-  padding-bottom: var(--safe-bottom);
-  background: rgba(17,15,26,.92);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--glass-border);
-  display: flex; align-items: stretch;
-}
-.nav-item {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 3px;
-  background: none; border: none; cursor: pointer;
-  color: var(--t3); transition: color .2s;
-  font-family: var(--body); position: relative;
-  padding: 8px 4px;
-}
-.nav-item.on { color: var(--gold); }
-.nav-item.on::before {
-  content: ''; position: absolute; top: 0; left: 20%; right: 20%;
-  height: 2px; background: var(--gold); border-radius: 0 0 2px 2px;
-}
-.nav-icon { font-size: 20px; line-height: 1; }
-.nav-label { font-size: 10px; font-weight: 600; letter-spacing: .3px; }
+/* ═══════════════ HOME ═══════════════ */
+.home-hero{background:var(--obsidian);color:var(--white);border-radius:var(--r-lg);padding:28px 24px;margin:16px 0;position:relative;overflow:hidden}
+.home-hero::after{content:'';position:absolute;top:-30%;right:-8%;width:180px;height:180px;background:radial-gradient(circle,rgba(255,255,255,.03),transparent 70%);border-radius:50%}
+.hh-date{font-size:11px;color:rgba(255,255,255,.4);font-family:var(--mono)}
+.hh-title{font-family:var(--serif);font-size:24px;font-weight:800;margin:8px 0 4px;line-height:1.2;letter-spacing:-.3px}
+.hh-sub{font-size:14px;color:rgba(255,255,255,.55);line-height:1.5}
+.hh-pill{display:inline-block;background:var(--white);color:var(--obsidian);font-family:var(--mono);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;margin-top:14px;letter-spacing:.5px}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:16px 0}
+.stat-card{background:var(--white);border:1px solid var(--g200);border-radius:var(--r-lg);padding:14px;text-align:center}
+.sc-val{font-family:var(--mono);font-size:22px;font-weight:700}
+.sc-label{font-size:10px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.8px;margin-top:2px}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   PANELS
-   ═══════════════════════════════════════════════════════════════════════ */
-.panel { display: none; margin-top: 16px; animation: fadeIn .25s ease; }
-.panel.on { display: block; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+.blitz-info{background:var(--white);border:1px solid var(--g200);border-radius:var(--r-lg);padding:24px;margin:16px 0}
+.bi-heading{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--obsidian);margin-bottom:12px}
+.bi-text{font-size:13px;color:var(--g600);line-height:1.7;margin-bottom:14px}
+.bi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+@media(max-width:500px){.bi-grid{grid-template-columns:1fr}}
+.bi-week{background:var(--g50);border:1px solid var(--g200);border-radius:var(--r);padding:14px}
+.bi-wk-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.bi-wk-title{font-size:13px;font-weight:700;color:var(--g800);margin-bottom:4px}
+.bi-wk-desc{font-size:12px;color:var(--g500);line-height:1.5}
+.bi-targets{margin-top:16px}
+.bi-target-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--g100)}
+.bi-target-row:last-child{border-bottom:none}
+.bi-t-label{font-size:13px;color:var(--g700);font-weight:500;display:flex;align-items:center;gap:8px}
+.bi-t-val{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--obsidian)}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   DATE NAVIGATION
-   ═══════════════════════════════════════════════════════════════════════ */
-.date-nav {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 16px; padding: 0 4px;
-}
-.date-arrow {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: var(--surface); border: 1px solid var(--glass-border);
-  color: var(--t2); font-size: 16px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .15s; font-family: var(--mono);
-}
-.date-arrow:hover { border-color: var(--gold); color: var(--gold); }
-.date-arrow:active { transform: scale(.92); }
-.date-center { text-align: center; flex: 1; }
-.date-main { font-family: var(--display); font-size: 17px; font-weight: 700; }
-.date-sub { font-size: 11px; color: var(--t3); margin-top: 2px; font-family: var(--mono); }
-.pill-today {
-  display: inline-block; background: var(--emerald-d); color: var(--emerald);
-  border: 1px solid rgba(52,211,153,.2);
-  font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
-  letter-spacing: 1px; margin-left: 6px; vertical-align: middle; font-family: var(--mono);
-}
-.pill-yest {
-  display: inline-block; background: var(--amber-d); color: var(--amber);
-  border: 1px solid rgba(251,191,36,.2);
-  font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
-  letter-spacing: 1px; margin-left: 6px; vertical-align: middle; font-family: var(--mono);
-}
+.alert-bar{margin:12px 0;padding:12px 16px;background:var(--rose-light);border:1px solid #fecaca;border-radius:var(--r);display:none;align-items:flex-start;gap:10px;font-size:13px;color:#991b1b;line-height:1.5}
+.alert-bar.vis{display:flex}
+.alert-bar strong{color:#7f1d1d}
+.alert-close{margin-top:4px;background:none;border:1px solid #fecaca;color:#991b1b;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:600;font-family:var(--sans)}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   SECTIONS (Cards)
-   ═══════════════════════════════════════════════════════════════════════ */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--r-xl);
-  padding: 18px;
-  margin-bottom: 12px;
-  animation: cardIn .35s ease both;
-}
-.card:nth-child(2) { animation-delay: .05s; }
-.card:nth-child(3) { animation-delay: .1s; }
-.card:nth-child(4) { animation-delay: .15s; }
-@keyframes cardIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+/* ═══════════════ CARDS ═══════════════ */
+.card{background:var(--white);border:1px solid var(--g200);border-radius:var(--r-lg);padding:20px;margin-bottom:12px}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--obsidian)}
+.card-sub{font-size:11px;color:var(--g400);margin-top:1px}
+.tag{font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.3px}
+.tag-empire{color:var(--violet);background:var(--violet-light)}
+.tag-doxa{color:var(--g600);background:var(--accent-light)}
+.card.a-dark{border-left:3px solid var(--obsidian)}
+.card.a-violet{border-left:3px solid var(--violet)}
+.card.a-emerald{border-left:3px solid var(--emerald)}
+.card.a-amber{border-left:3px solid var(--amber)}
+.card.a-gray{border-left:3px solid var(--g400)}
 
-.card-head { margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
-.card-title {
-  font-family: var(--display); font-size: 13px; font-weight: 700;
-  color: var(--t2); letter-spacing: .5px;
-}
-.card-sub { font-size: 11px; color: var(--t4); margin-top: 2px; }
-.tag-empire {
-  font-size: 9px; font-weight: 700; color: var(--violet);
-  background: var(--violet-d); border: 1px solid rgba(167,139,250,.15);
-  padding: 2px 7px; border-radius: 20px; letter-spacing: .5px;
-}
-.tag-doxa {
-  font-size: 9px; font-weight: 700; color: var(--sky);
-  background: var(--sky-d); border: 1px solid rgba(96,165,250,.15);
-  padding: 2px 7px; border-radius: 20px; letter-spacing: .5px;
-}
+/* Date nav */
+.date-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.d-arrow{width:36px;height:36px;border-radius:var(--r);background:var(--white);border:1px solid var(--g200);color:var(--g500);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;font-family:var(--mono)}
+.d-arrow:hover{border-color:var(--g800);color:var(--g800)}
+.d-arrow:active{transform:scale(.93)}
+.d-center{text-align:center;flex:1}
+.d-main{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--obsidian)}
+.d-sub{font-size:11px;color:var(--g400);font-family:var(--mono);margin-top:2px}
+.pill-today{display:inline-block;background:var(--emerald-light);color:var(--emerald-dark);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.8px;margin-left:6px;vertical-align:middle;font-family:var(--mono)}
+.pill-yest{display:inline-block;background:var(--amber-light);color:var(--amber);font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.5px;margin-left:6px;vertical-align:middle;font-family:var(--mono)}
 
-/* Colored left accent on cards */
-.card.accent-gold   { border-left: 3px solid var(--gold); }
-.card.accent-violet { border-left: 3px solid var(--violet); }
-.card.accent-sky    { border-left: 3px solid var(--sky); }
-.card.accent-emerald{ border-left: 3px solid var(--emerald); }
+/* ═══════════════ FIELDS ═══════════════ */
+.field{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--g100);min-height:44px}
+.field:last-child{border-bottom:none}
+.f-info{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.f-info .ico{color:var(--g500)}
+.f-name{font-size:13px;color:var(--g700);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f-tgt{font-size:9px;color:var(--g400);font-family:var(--mono);margin-left:4px;flex-shrink:0}
+.f-ctrl{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.stepper{width:34px;height:34px;border-radius:var(--r);background:var(--g50);border:1px solid var(--g200);color:var(--g500);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s;font-family:var(--mono);user-select:none}
+.stepper:hover{border-color:var(--g800);color:var(--g800)}
+.stepper:active{transform:scale(.9);background:var(--g100)}
+.f-input{width:48px;height:34px;background:var(--white);border:1.5px solid var(--g300);border-radius:var(--r);color:var(--g800);text-align:center;font-size:14px;font-weight:700;font-family:var(--mono);outline:none;-moz-appearance:textfield}
+.f-input::-webkit-outer-spin-button,.f-input::-webkit-inner-spin-button{-webkit-appearance:none}
+.f-input:focus{border-color:var(--g800);box-shadow:0 0 0 3px rgba(12,12,14,.06)}
+.f-input.hit{border-color:var(--emerald);box-shadow:0 0 0 3px rgba(5,150,105,.1)}
+.f-pip{width:32px;height:3px;background:var(--g100);border-radius:2px;overflow:hidden}
+.f-pip-fill{height:100%;border-radius:2px;transition:width .3s,background .3s}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   FIELD ROWS — Large touch targets
-   ═══════════════════════════════════════════════════════════════════════ */
-.field {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.03);
-  min-height: 48px;
-}
-.field:last-child { border-bottom: none; }
-.field-info { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-.field-icon { font-size: 18px; width: 28px; text-align: center; flex-shrink: 0; }
-.field-name { font-size: 14px; color: var(--t1); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.field-tgt { font-size: 9px; color: var(--t4); font-family: var(--mono); margin-left: 4px; flex-shrink: 0; }
-.field-ctrl { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-.stepper {
-  width: 36px; height: 36px; border-radius: 8px;
-  background: var(--surface-2); border: 1px solid var(--glass-border);
-  color: var(--t2); font-size: 18px; font-weight: 600; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .12s; font-family: var(--mono);
-  -webkit-user-select: none; user-select: none;
-}
-.stepper:hover { border-color: var(--gold); color: var(--gold); }
-.stepper:active { transform: scale(.9); background: var(--surface-3); }
-.field-input {
-  width: 52px; height: 36px; background: var(--bg);
-  border: 1.5px solid var(--t4); border-radius: 8px;
-  color: var(--t1); text-align: center; font-size: 15px; font-weight: 700;
-  font-family: var(--mono); outline: none;
-  -moz-appearance: textfield;
-}
-.field-input::-webkit-outer-spin-button,
-.field-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-.field-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-dim); }
-.field-input.hit { border-color: var(--emerald); box-shadow: 0 0 0 3px var(--emerald-d); }
-.progress-pip {
-  width: 36px; height: 3px; background: var(--t4); border-radius: 2px; overflow: hidden;
-}
-.progress-pip-fill { height: 100%; border-radius: 2px; transition: width .3s ease, background .3s; }
+.toggle{height:34px;padding:0 16px;border-radius:var(--r);font-weight:700;font-size:12px;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s}
+.toggle-on{background:var(--emerald);color:var(--white)}
+.toggle-off{background:var(--g50);color:var(--rose);border:1px solid var(--g200)}
+.notes{width:100%;background:var(--g50);border:1.5px solid var(--g200);border-radius:var(--r);color:var(--g800);padding:12px;font-size:13px;resize:vertical;font-family:var(--sans);outline:none;margin-top:10px;min-height:56px;line-height:1.5}
+.notes::placeholder{color:var(--g400)}.notes:focus{border-color:var(--g800);box-shadow:0 0 0 3px rgba(12,12,14,.06)}
+.missed-warn{background:var(--amber-light);border:1px solid #fde68a;border-radius:var(--r);padding:10px 14px;margin-bottom:12px;font-size:12px;color:#92400e;display:flex;align-items:center;gap:8px}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TOGGLE + TEXTAREA
-   ═══════════════════════════════════════════════════════════════════════ */
-.toggle {
-  height: 36px; padding: 0 16px; border-radius: 8px;
-  font-weight: 700; font-size: 12px; cursor: pointer;
-  border: none; font-family: var(--display); letter-spacing: .3px;
-  transition: all .15s;
-}
-.toggle-on { background: var(--emerald); color: var(--bg); }
-.toggle-off { background: var(--surface-2); color: var(--coral); border: 1px solid rgba(248,113,113,.15); }
-.notes {
-  width: 100%; background: var(--bg); border: 1.5px solid var(--t4);
-  border-radius: var(--r-md); color: var(--t1); padding: 12px;
-  font-size: 13px; resize: vertical; font-family: var(--body);
-  outline: none; margin-top: 10px; min-height: 56px; line-height: 1.5;
-}
-.notes::placeholder { color: var(--t4); }
-.notes:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-dim); }
+/* Scorecard */
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:600px){.score-grid{grid-template-columns:repeat(4,1fr)}}
+.sc-cell{background:var(--g50);border-radius:var(--r);padding:12px 8px;text-align:center;border:1px solid var(--g100)}
+.sc-cell-v{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--obsidian)}
+.sc-cell-l{font-size:9px;color:var(--g500);margin-top:2px;text-transform:uppercase;font-weight:600;letter-spacing:.3px;line-height:1.3}
 
-/* Missed day inline */
-.missed-inline {
-  background: var(--amber-d); border: 1px solid rgba(251,191,36,.18);
-  border-radius: var(--r-md); padding: 10px 14px; margin-bottom: 12px;
-  font-size: 12px; color: #fde68a; display: flex; align-items: center; gap: 8px;
-  line-height: 1.4;
-}
+.tbl-wrap{overflow-x:auto;margin-top:8px;border-radius:var(--r)}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{padding:8px 4px;text-align:left;color:var(--g400);font-weight:700;font-size:9px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;border-bottom:1px solid var(--g200);background:var(--g50)}
+.tbl th.n{text-align:center}.tbl td{padding:5px 4px;border-bottom:1px solid var(--g100);color:var(--g400)}
+.tbl td.n{text-align:center;font-family:var(--mono);font-weight:600;font-size:11px}
+.tbl td.hv{color:var(--g800)}.tbl td.tot{color:var(--obsidian);font-weight:700}.tbl td.tod{color:var(--emerald)}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   SCORECARD GRID (Weekly)
-   ═══════════════════════════════════════════════════════════════════════ */
-.score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-.score-cell {
-  background: var(--bg); border-radius: var(--r-md);
-  padding: 12px 8px; text-align: center;
-  border: 1px solid var(--glass-border);
-}
-.score-val { font-family: var(--mono); font-size: 24px; font-weight: 800; color: var(--t1); }
-.score-lbl { font-size: 9px; color: var(--t3); margin-top: 3px; text-transform: uppercase; font-weight: 600; letter-spacing: .3px; line-height: 1.3; }
+/* Tasks */
+.wk-pills{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.wk-pill{padding:8px 18px;border-radius:20px;background:var(--white);border:1px solid var(--g200);color:var(--g500);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:all .15s}
+.wk-pill:hover{border-color:var(--g800);color:var(--g800)}
+.wk-pill.on{background:var(--obsidian);color:var(--white);border-color:var(--obsidian)}
+.prog-bar{height:6px;background:var(--g100);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.prog-fill{height:100%;border-radius:3px;transition:width .4s;background:var(--g800)}
+.prog-fill.done{background:var(--emerald)}
+.task{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--g100);cursor:pointer;user-select:none}
+.task:active{opacity:.7}.task:last-child{border-bottom:none}
+.t-check{width:22px;height:22px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;transition:all .15s;margin-top:1px}
+.t-check.off{border:2px solid var(--g300)}.t-check.on{background:var(--emerald);color:var(--white);border:2px solid var(--emerald)}
+.t-txt{font-size:13px;color:var(--g700);line-height:1.5}.t-txt.done{color:var(--g400);text-decoration:line-through}
+.ov-row{margin-bottom:10px}
+.ov-lbl{display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px}
+.ov-lbl span:first-child{color:var(--g600);font-weight:600}
+.ov-lbl span:last-child{color:var(--g400);font-family:var(--mono);font-size:10px}
+.prog-bar-sm{height:4px}
 
-/* Breakdown table */
-.tbl-wrap { overflow-x: auto; margin-top: 8px; border-radius: var(--r-md); }
-.tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
-.tbl th {
-  padding: 8px 4px; text-align: left; color: var(--t4);
-  font-weight: 700; font-size: 9px; text-transform: uppercase;
-  letter-spacing: .5px; white-space: nowrap;
-  border-bottom: 1px solid var(--glass-border);
-  position: sticky; top: 0; background: var(--surface);
-}
-.tbl th.n { text-align: center; }
-.tbl td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,.02); color: var(--t3); }
-.tbl td.n { text-align: center; font-family: var(--mono); font-weight: 600; font-size: 11px; }
-.tbl td.hv { color: var(--t1); } .tbl td.tot { color: var(--gold); font-weight: 800; } .tbl td.tod { color: var(--emerald); }
-
-/* ═══════════════════════════════════════════════════════════════════════
-   TASKS
-   ═══════════════════════════════════════════════════════════════════════ */
-.week-pills { display: flex; gap: 6px; justify-content: center; margin-bottom: 16px; }
-.week-pill {
-  padding: 8px 18px; border-radius: 20px;
-  background: var(--surface); border: 1px solid var(--glass-border);
-  color: var(--t3); font-size: 12px; font-weight: 700;
-  cursor: pointer; font-family: var(--display);
-  transition: all .15s;
-}
-.week-pill:hover { border-color: var(--gold); color: var(--t2); }
-.week-pill.on { background: var(--gold); color: var(--bg); border-color: var(--gold); }
-.prog-bar { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; margin-bottom: 14px; }
-.prog-fill { height: 100%; border-radius: 3px; transition: width .4s ease; background: linear-gradient(90deg, var(--gold), #e8c36a); }
-.prog-fill.done { background: linear-gradient(90deg, var(--emerald), #6ee7b7); }
-.task {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.03);
-  cursor: pointer; transition: opacity .15s;
-  -webkit-user-select: none; user-select: none;
-}
-.task:active { opacity: .7; }
-.task-check {
-  width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 800; transition: all .2s;
-  margin-top: 1px;
-}
-.task-check.off { border: 2px solid var(--t4); }
-.task-check.on { background: var(--emerald); color: var(--bg); border: 2px solid var(--emerald); }
-.task-txt { font-size: 13px; color: var(--t1); line-height: 1.5; }
-.task-txt.done { color: var(--t4); text-decoration: line-through; }
-
-.overview-row { margin-bottom: 10px; }
-.overview-lbl { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 3px; }
-.overview-lbl span:first-child { color: var(--t2); font-weight: 600; }
-.overview-lbl span:last-child { color: var(--t3); font-family: var(--mono); font-size: 10px; }
-.prog-bar-sm { height: 4px; }
-
-/* ═══════════════════════════════════════════════════════════════════════
-   HISTORY
-   ═══════════════════════════════════════════════════════════════════════ */
-.hist-item {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.03);
-  cursor: pointer; transition: opacity .15s;
-}
-.hist-item:active { opacity: .7; }
-.hist-date { font-family: var(--display); font-weight: 700; font-size: 13px; color: var(--t1); }
-.hist-sub { font-size: 10px; color: var(--t4); font-family: var(--mono); margin-top: 1px; }
-.hist-stats { display: flex; gap: 12px; align-items: center; }
-.hist-num { text-align: center; }
-.hist-nv { font-size: 14px; font-weight: 800; font-family: var(--mono); }
-.hist-nv.g { color: var(--emerald); } .hist-nv.n { color: var(--t1); } .hist-nv.z { color: var(--t4); }
-.hist-nl { font-size: 8px; color: var(--t4); text-transform: uppercase; letter-spacing: .5px; }
-.crm-dot { font-size: 10px; font-weight: 700; font-family: var(--mono); }
-.crm-dot.y { color: var(--emerald); } .crm-dot.n { color: var(--coral); }
-.empty-msg { text-align: center; padding: 40px 16px; color: var(--t4); font-size: 13px; }
-
-/* ═══════════════════════════════════════════════════════════════════════
-   RESPONSIVE — Desktop widths
-   ═══════════════════════════════════════════════════════════════════════ */
-@media (min-width: 768px) {
-  .app { padding-bottom: 40px; }
-  .bottom-nav { display: none; }
-  .desktop-tabs { display: flex !important; }
-  .stat { flex: 1 1 0; min-width: 0; }
-  .score-grid { grid-template-columns: repeat(4, 1fr); }
-}
-
-/* Desktop tab bar (hidden on mobile) */
-.desktop-tabs {
-  display: none;
-  gap: 2px; margin-top: 20px;
-  background: var(--surface); border-radius: var(--r-lg);
-  padding: 3px; border: 1px solid var(--glass-border);
-}
-.dtab {
-  flex: 1; padding: 10px 8px; border: none; background: transparent;
-  color: var(--t3); font-size: 13px; font-weight: 700; cursor: pointer;
-  border-radius: var(--r-md); transition: all .15s; font-family: var(--display);
-}
-.dtab:hover { color: var(--t2); }
-.dtab.on { background: var(--surface-2); color: var(--t1); }
+/* History */
+.hist-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--g100);cursor:pointer;transition:opacity .15s}
+.hist-item:active{opacity:.7}.hist-item:last-child{border-bottom:none}
+.h-date{font-size:13px;font-weight:600;color:var(--g800)}
+.h-sub{font-size:10px;color:var(--g400);font-family:var(--mono);margin-top:1px}
+.h-stats{display:flex;gap:10px;align-items:center}
+.h-num{text-align:center}
+.h-nv{font-size:13px;font-weight:700;font-family:var(--mono)}
+.h-nv.g{color:var(--emerald)}.h-nv.n{color:var(--g800)}.h-nv.z{color:var(--g300)}
+.h-nl{font-size:8px;color:var(--g400);text-transform:uppercase;letter-spacing:.5px}
+.crm-tag{font-size:9px;font-weight:700;font-family:var(--mono);padding:2px 6px;border-radius:4px}
+.crm-tag.y{color:var(--emerald);background:var(--emerald-light)}
+.crm-tag.n{color:var(--rose);background:var(--rose-light)}
+.empty{text-align:center;padding:32px 16px;color:var(--g400);font-size:13px}
 </style>
 </head>
 <body>
 
-<!-- Loading -->
-<div class="loader" id="loader">
-  <div class="loader-ring"></div>
-  <div class="loader-text" id="loadMsg">Connecting to sheet…</div>
-</div>
+<div class="loader" id="loader"><div class="loader-ring"></div><div class="loader-text" id="loadMsg">Connecting…</div></div>
 <div class="sync-bar" id="syncBar"></div>
+<div class="setup" id="setupScreen"><h1>Empire OS Dashboard</h1><p>Paste your Apps Script URL into the HTML source.</p></div>
 
-<!-- Setup -->
-<div class="setup" id="setupScreen" style="display:none">
-  <h1>EMPIRE OS</h1>
-  <p>Connect this dashboard to your Google Sheet to get started.</p>
-  <ol>
-    <li>Upload the <code>.xlsx</code> template to Google Drive → Open as Sheets</li>
-    <li>Extensions → Apps Script → paste the <code>.js</code> code</li>
-    <li>Deploy → New Deployment → Web app → Access: <span class="warn">Anyone</span></li>
-    <li>Copy the URL → paste it in this HTML where it says <code>https://script.google.com/macros/s/AKfycbx9ZGiePlOlb3z5qJ7-WIXdzpQQ3_KQKDLAmot82E4j6alPGgP21kcpeCVSqCNW79q3Sg/exec</code></li>
-    <li>Reload this page</li>
-  </ol>
-  <p style="margin-top:20px;color:var(--t4);font-size:12px">Test URL in browser first — should return JSON with <code>"success":true</code></p>
-</div>
+<!-- SVG Icon Defs (hidden) -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+  <symbol id="i-bar" viewBox="0 0 24 24"><rect x="12" y="2" width="4" height="20" rx="1"/><rect x="4" y="8" width="4" height="14" rx="1"/><rect x="20" y="6" width="0" height="0"/><rect x="20" y="12" width="0" height="0"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></symbol>
+  <symbol id="i-check-sq" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></symbol>
+  <symbol id="i-seat" viewBox="0 0 24 24"><path d="M4 18v-5a8 8 0 0 1 16 0v5"/><path d="M2 18h20v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2z"/></symbol>
+  <symbol id="i-trending-down" viewBox="0 0 24 24"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/></symbol>
+  <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+</svg>
 
-<!-- Main App -->
-<div class="app" id="app" style="display:none">
+<!-- SIDEBAR (Desktop) -->
+<nav class="sidebar" id="sidebar">
+  <div class="sb-brand"><div class="sb-logo">Empire OS</div><div class="sb-tag">Accountability Dashboard</div></div>
+  <div class="sb-nav" id="sidebarNav">
+    <button class="sb-item on" data-t="home"><span class="ico"><svg><use href="#i-home"/></svg></span>Overview</button>
+    <button class="sb-item" data-t="daily"><span class="ico"><svg><use href="#i-chart"/></svg></span>Daily Log</button>
+    <button class="sb-item" data-t="weekly"><span class="ico"><svg><use href="#i-clipboard"/></svg></span>Weekly → DOXA</button>
+    <button class="sb-item" data-t="tasks"><span class="ico"><svg><use href="#i-check-sq"/></svg></span>Blitz Tasks</button>
+    <button class="sb-item" data-t="history"><span class="ico"><svg><use href="#i-trend"/></svg></span>History</button>
+  </div>
+  <div class="sb-conn"><span class="sb-conn-dot ok" id="sbDot"></span><span class="sb-conn-text" id="sbConn">Sheet Connected</span></div>
+</nav>
 
-  <!-- Header -->
-  <header class="header">
-    <div class="header-row">
-      <div class="brand-mark">
-        <div class="brand-icon">E</div>
-        <div class="brand-text">Empire OS</div>
-      </div>
-      <div class="header-meta">
-        <div class="conn-dot ok" id="connDot"></div>
-        <div class="blitz-pill" id="blitzPill"></div>
-      </div>
-    </div>
-    <div class="date-display" id="todayDisplay"></div>
-
-    <!-- Alert -->
-    <div class="alert-bar" id="alertBar">
-      <div>⚠️</div>
-      <div>
-        <div id="alertText"></div>
-        <button class="alert-close" onclick="document.getElementById('alertBar').classList.remove('vis')">Dismiss</button>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="stats-scroll">
-      <div class="stat c-gold"><div class="stat-val" id="sStreak" style="color:var(--gold)">0d</div><div class="stat-lbl">Streak</div></div>
-      <div class="stat c-emerald"><div class="stat-val" id="sDays" style="color:var(--emerald)">0</div><div class="stat-lbl">Logged</div></div>
-      <div class="stat c-sky"><div class="stat-val" id="sOut" style="color:var(--sky)">0</div><div class="stat-lbl">Outreach</div></div>
-      <div class="stat c-violet"><div class="stat-val" id="sDisc" style="color:var(--violet)">0</div><div class="stat-lbl">Discovery</div></div>
-      <div class="stat c-coral"><div class="stat-val" id="sMiss" style="color:var(--coral)">0</div><div class="stat-lbl">Missed</div></div>
-    </div>
-
-    <!-- Desktop Tabs -->
-    <nav class="desktop-tabs" id="desktopTabs">
-      <button class="dtab on" data-t="daily">Daily Log</button>
-      <button class="dtab" data-t="weekly">Weekly → DOXA</button>
-      <button class="dtab" data-t="tasks">Blitz Tasks</button>
-      <button class="dtab" data-t="history">History</button>
-    </nav>
+<!-- MAIN -->
+<div class="main-area" id="app" style="display:none">
+  <header class="page-header">
+    <div class="ph-brand"><div class="ph-mark">E</div><div class="ph-name">Empire OS</div></div>
+    <div class="ph-meta"><div class="pill-conn"><span class="pill-conn-dot" id="mobDot"></span></div><div class="pill pill-dark" id="blitzPill"></div></div>
   </header>
+  <div class="alert-bar" id="alertBar"><span class="ico"><svg><use href="#i-alert"/></svg></span><div><div id="alertText"></div><button class="alert-close" onclick="document.getElementById('alertBar').classList.remove('vis')">Dismiss</button></div></div>
 
-  <!-- Panels -->
-  <div class="panel on" id="p-daily">
-    <div class="date-nav">
-      <button class="date-arrow" onclick="navDay(-1)">‹</button>
-      <div class="date-center"><div class="date-main" id="dLabel"></div><div class="date-sub" id="dSub"></div></div>
-      <button class="date-arrow" onclick="navDay(1)">›</button>
+  <!-- HOME -->
+  <div class="panel on" id="p-home">
+    <div class="home-hero"><div class="hh-date" id="todayStr"></div><div class="hh-title">30-Day Acquisition Blitz</div><div class="hh-sub">Your daily execution system — track every activity, hit every target, build unstoppable pipeline momentum.</div><div class="hh-pill" id="heroPill"></div></div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="sc-val" id="sStreak" style="color:var(--emerald)">0d</div><div class="sc-label">Streak</div></div>
+      <div class="stat-card"><div class="sc-val" id="sDays" style="color:var(--obsidian)">0</div><div class="sc-label">Days Logged</div></div>
+      <div class="stat-card"><div class="sc-val" id="sOut" style="color:var(--amber)">0</div><div class="sc-label">Outreach</div></div>
+      <div class="stat-card"><div class="sc-val" id="sDisc" style="color:var(--violet)">0</div><div class="sc-label">Discovery</div></div>
+      <div class="stat-card"><div class="sc-val" id="sMiss" style="color:var(--rose)">0</div><div class="sc-label">Missed</div></div>
     </div>
-    <div id="dWarn"></div>
-    <div id="dContent"></div>
-  </div>
-  <div class="panel" id="p-weekly">
-    <div class="date-nav">
-      <button class="date-arrow" onclick="navWeek(-1)">‹</button>
-      <div class="date-center"><div class="date-main" id="wLabel"></div><div class="date-sub" id="wSub"></div></div>
-      <button class="date-arrow" onclick="navWeek(1)">›</button>
+    <div class="blitz-info">
+      <div class="bi-heading">What Is the 30-Day Blitz?</div>
+      <div class="bi-text">This is a focused, 30-day acquisition sprint designed by Dr. Toby Potter to jump-start your client pipeline. The blitz takes your existing network — especially your 20-year oil &amp; gas contacts — and turns it into a structured, high-activity outreach engine. Every day you'll track outbound calls, LinkedIn messages, emails, follow-ups, and discovery calls. Every Friday you'll submit your DOXA scorecard using the exact numbers from this dashboard.</div>
+      <div class="bi-text">The goal is simple: consistent daily execution over 30 days creates enough pipeline activity to generate your first client placements. No more guessing on Fridays. No more zero weeks. The numbers don't lie — and this dashboard makes sure they're visible.</div>
+      <div class="bi-heading" style="margin-top:20px">The 4-Week Structure</div>
+      <div class="bi-grid">
+        <div class="bi-week"><div class="bi-wk-num">Week 1 — Foundation</div><div class="bi-wk-title">Setup &amp; Preparation</div><div class="bi-wk-desc">Prioritize your SOI list into tiers. Rewrite LinkedIn profile for O&amp;G positioning. Build your follow-up sequence. Set up CRM pipeline stages. Practice your pitch.</div></div>
+        <div class="bi-week"><div class="bi-wk-num">Week 2 — Activation</div><div class="bi-wk-title">Launch Outreach</div><div class="bi-wk-desc">Send 10 LinkedIn messages per day to Tier 1 contacts. Post your first O&amp;G article. Email top 25 SOI not on LinkedIn. Attend 1+ networking event. Log everything in D365.</div></div>
+        <div class="bi-week"><div class="bi-wk-num">Week 3 — Expansion</div><div class="bi-wk-title">Broaden &amp; Convert</div><div class="bi-wk-desc">Continue daily outreach — expand into Tier 2. Execute follow-up touches at Day 5 and Day 8. Conduct first discovery calls on Zoom. Request warm intros. Commit to a Chamber membership.</div></div>
+        <div class="bi-week"><div class="bi-wk-num">Week 4 — Close</div><div class="bi-wk-title">Push to Pipeline</div><div class="bi-wk-desc">Day 12 direct asks and Day 14 break-up messages. Send proposals to qualified prospects. Pull your first full CRM report. Begin Grand Opening planning. 30-day review call with Toby.</div></div>
+      </div>
+      <div class="bi-heading" style="margin-top:20px">Daily Targets</div>
+      <div class="bi-targets" id="targetsList"></div>
     </div>
-    <div id="wContent"></div>
   </div>
-  <div class="panel" id="p-tasks"><div class="week-pills" id="wSel"></div><div id="tContent"></div></div>
+
+  <!-- DAILY -->
+  <div class="panel" id="p-daily"><div class="date-nav"><button class="d-arrow" onclick="navDay(-1)">‹</button><div class="d-center"><div class="d-main" id="dLabel"></div><div class="d-sub" id="dSub"></div></div><button class="d-arrow" onclick="navDay(1)">›</button></div><div id="dWarn"></div><div id="dContent"></div></div>
+
+  <!-- WEEKLY -->
+  <div class="panel" id="p-weekly"><div class="date-nav"><button class="d-arrow" onclick="navWeek(-1)">‹</button><div class="d-center"><div class="d-main" id="wLabel"></div><div class="d-sub" id="wSub"></div></div><button class="d-arrow" onclick="navWeek(1)">›</button></div><div id="wContent"></div></div>
+
+  <!-- TASKS -->
+  <div class="panel" id="p-tasks"><div class="wk-pills" id="wSel"></div><div id="tContent"></div></div>
+
+  <!-- HISTORY -->
   <div class="panel" id="p-history"><div id="hContent"></div></div>
 </div>
 
-<!-- Bottom Nav (mobile) -->
+<!-- MOBILE NAV -->
 <nav class="bottom-nav" id="bottomNav" style="display:none">
-  <button class="nav-item on" data-t="daily"><span class="nav-icon">📊</span><span class="nav-label">Daily</span></button>
-  <button class="nav-item" data-t="weekly"><span class="nav-icon">📋</span><span class="nav-label">DOXA</span></button>
-  <button class="nav-item" data-t="tasks"><span class="nav-icon">✅</span><span class="nav-label">Tasks</span></button>
-  <button class="nav-item" data-t="history"><span class="nav-icon">📈</span><span class="nav-label">History</span></button>
+  <button class="bn-item on" data-t="home"><span class="bn-icon"><span class="ico"><svg><use href="#i-home"/></svg></span></span><span class="bn-label">Home</span></button>
+  <button class="bn-item" data-t="daily"><span class="bn-icon"><span class="ico"><svg><use href="#i-chart"/></svg></span></span><span class="bn-label">Daily</span></button>
+  <button class="bn-item" data-t="weekly"><span class="bn-icon"><span class="ico"><svg><use href="#i-clipboard"/></svg></span></span><span class="bn-label">DOXA</span></button>
+  <button class="bn-item" data-t="tasks"><span class="bn-icon"><span class="ico"><svg><use href="#i-check-sq"/></svg></span></span><span class="bn-label">Tasks</span></button>
+  <button class="bn-item" data-t="history"><span class="bn-icon"><span class="ico"><svg><use href="#i-trend"/></svg></span></span><span class="bn-label">History</span></button>
 </nav>
 
 <script>
-// ═════════════════════════════════════════════════════════════════════════
-//  CONFIG — Paste your Apps Script URL here
-// ═════════════════════════════════════════════════════════════════════════
-const API_URL = "https://script.google.com/macros/s/AKfycbx9ZGiePlOlb3z5qJ7-WIXdzpQQ3_KQKDLAmot82E4j6alPGgP21kcpeCVSqCNW79q3Sg/exec";
-// ═════════════════════════════════════════════════════════════════════════
+// ═══════════════ CONFIG ═══════════════
+const API_URL="https://script.google.com/macros/s/AKfycbx9ZGiePlOlb3z5qJ7-WIXdzpQQ3_KQKDLAmot82E4j6alPGgP21kcpeCVSqCNW79q3Sg/exec";
+const BLITZ_START="2026-03-02";
 
-const BLITZ_START = "2026-03-02";
-const DOXA=[{k:"outboundCalls",l:"Outbound Calls",t:10,i:"📞"},{k:"coffeesCocktails",l:"Coffees / Cocktails",t:1,i:"☕"},{k:"discoveryCalls",l:"Discovery Calls",t:1,i:"🎯"},{k:"networkingEvents",l:"Events Attended",t:1,i:"🤝"},{k:"localActivities",l:"Local Activities",t:0,i:"📍"}];
-const EMP=[{k:"linkedinMessages",l:"LinkedIn Messages",t:10,i:"💬"},{k:"emailsSent",l:"Emails Sent",t:5,i:"✉️"},{k:"followUps",l:"Follow-Ups",t:3,i:"🔄"},{k:"linkedinPosts",l:"LinkedIn Posts",t:1,i:"📝"},{k:"referralAsks",l:"Referral Asks",t:1,i:"🔗"},{k:"proposalsSent",l:"Proposals Sent",t:0,i:"📄"}];
-const PIPE=[{k:"msaSent",l:"MSA Sent",i:"📨"},{k:"msaSigned",l:"MSA Signed",i:"✅"},{k:"newJobOrders",l:"New Job Orders",i:"📋"},{k:"jobOrdersCancelled",l:"Cancelled",i:"❌"},{k:"jobOrdersFilled",l:"Filled",i:"🏆"},{k:"vipsInSeats",l:"VIPs in Seats",i:"💺"},{k:"lostClients",l:"Lost Clients",i:"📉"},{k:"lostSeats",l:"Lost Seats",i:"🪑"}];
+// Icon helper — returns SVG use tag
+function ic(id){return`<span class="ico"><svg><use href="#i-${id}"/></svg></span>`;}
+
+const DOXA=[
+  {k:"outboundCalls",l:"Outbound Calls",t:10,ic:"phone"},
+  {k:"coffeesCocktails",l:"Coffees / Cocktails",t:1,ic:"coffee"},
+  {k:"discoveryCalls",l:"Discovery Calls",t:1,ic:"target"},
+  {k:"networkingEvents",l:"Events Attended",t:1,ic:"users"},
+  {k:"localActivities",l:"Local Activities",t:0,ic:"pin"}
+];
+const EMP=[
+  {k:"linkedinMessages",l:"LinkedIn Messages",t:10,ic:"msg"},
+  {k:"emailsSent",l:"Emails Sent",t:5,ic:"mail"},
+  {k:"followUps",l:"Follow-Ups",t:3,ic:"refresh"},
+  {k:"linkedinPosts",l:"LinkedIn Posts",t:1,ic:"edit"},
+  {k:"referralAsks",l:"Referral Asks",t:1,ic:"link"},
+  {k:"proposalsSent",l:"Proposals Sent",t:0,ic:"file"}
+];
+const PIPE=[
+  {k:"msaSent",l:"MSA Sent",ic:"send"},
+  {k:"msaSigned",l:"MSA Signed",ic:"check-sq"},
+  {k:"newJobOrders",l:"New Job Orders",ic:"briefcase"},
+  {k:"jobOrdersCancelled",l:"Cancelled",ic:"x-circle"},
+  {k:"jobOrdersFilled",l:"Filled",ic:"award"},
+  {k:"vipsInSeats",l:"VIPs in Seats",ic:"seat"},
+  {k:"lostClients",l:"Lost Clients",ic:"trending-down"},
+  {k:"lostSeats",l:"Lost Seats",ic:"trending-down"}
+];
 const ALL=[...DOXA,...EMP,...PIPE];
-const TASKS={
-1:[{id:"w1-1",t:"Prioritize SOI: Tier 1 (50), Tier 2 (100), Tier 3"},{id:"w1-2",t:"Rewrite LinkedIn headline — O&G positioning"},{id:"w1-3",t:"Rewrite LinkedIn About section"},{id:"w1-4",t:"Request O&G one-pager from DOXA marketing"},{id:"w1-5",t:"Practice elevator pitch 10x (record last)"},{id:"w1-6",t:"Set up CRM pipeline stages in D365"},{id:"w1-7",t:"Build 14-day follow-up sequence"},{id:"w1-8",t:"Import Tier 1 SOI into D365 w/ O&G tag"},{id:"w1-9",t:"Schedule 2 daily Power Hour blocks for 30 days"}],
-2:[{id:"w2-1",t:"Send 10 LinkedIn msgs/day to Tier 1"},{id:"w2-2",t:"Post first O&G LinkedIn article"},{id:"w2-3",t:"Email batch to top 25 SOI not on LinkedIn"},{id:"w2-4",t:"Follow up all LI responses within 4 hrs"},{id:"w2-5",t:"Post 2 additional LinkedIn posts"},{id:"w2-6",t:"Log ALL activity in D365 daily"},{id:"w2-7",t:"Attend 1+ event with O&G pitch"},{id:"w2-8",t:"Weekly check-in call with Toby"}],
-3:[{id:"w3-1",t:"Continue 10 msg/day — Tier 1 + begin Tier 2"},{id:"w3-2",t:"Send second email batch to next 25 SOI"},{id:"w3-3",t:"Execute Day 5 and Day 8 follow-ups"},{id:"w3-4",t:"Conduct first discovery calls (Zoom)"},{id:"w3-5",t:"Post 3 LinkedIn posts this week"},{id:"w3-6",t:"Request 1 warm intro per positive convo"},{id:"w3-7",t:"Commit to Chamber membership"},{id:"w3-8",t:"Weekly check-in call with Toby"}],
-4:[{id:"w4-1",t:"Continue Tier 2; begin light Tier 3"},{id:"w4-2",t:"Execute Day 12 ask + Day 14 break-ups"},{id:"w4-3",t:"Send proposals to qualified prospects"},{id:"w4-4",t:"Post 3 LinkedIn posts (social proof)"},{id:"w4-5",t:"Pull first full CRM report"},{id:"w4-6",t:"Begin Grand Opening planning"},{id:"w4-7",t:"30-Day Blitz review call with Toby"}],
-};
+const TASKS={1:[{id:"w1-1",t:"Prioritize SOI: Tier 1 (50), Tier 2 (100), Tier 3"},{id:"w1-2",t:"Rewrite LinkedIn headline — O&G positioning"},{id:"w1-3",t:"Rewrite LinkedIn About section"},{id:"w1-4",t:"Request O&G one-pager from DOXA marketing"},{id:"w1-5",t:"Practice elevator pitch 10x (record last)"},{id:"w1-6",t:"Set up CRM pipeline stages in D365"},{id:"w1-7",t:"Build 14-day follow-up sequence"},{id:"w1-8",t:"Import Tier 1 SOI into D365 w/ O&G tag"},{id:"w1-9",t:"Schedule 2 daily Power Hour blocks for 30 days"}],2:[{id:"w2-1",t:"Send 10 LinkedIn msgs/day to Tier 1"},{id:"w2-2",t:"Post first O&G LinkedIn article"},{id:"w2-3",t:"Email batch to top 25 SOI not on LinkedIn"},{id:"w2-4",t:"Follow up all LI responses within 4 hrs"},{id:"w2-5",t:"Post 2 additional LinkedIn posts"},{id:"w2-6",t:"Log ALL activity in D365 daily"},{id:"w2-7",t:"Attend 1+ event with O&G pitch"},{id:"w2-8",t:"Weekly check-in call with Toby"}],3:[{id:"w3-1",t:"Continue 10 msg/day — Tier 1 + begin Tier 2"},{id:"w3-2",t:"Send second email batch to next 25 SOI"},{id:"w3-3",t:"Execute Day 5 and Day 8 follow-ups"},{id:"w3-4",t:"Conduct first discovery calls (Zoom)"},{id:"w3-5",t:"Post 3 LinkedIn posts this week"},{id:"w3-6",t:"Request 1 warm intro per positive convo"},{id:"w3-7",t:"Commit to Chamber membership"},{id:"w3-8",t:"Weekly check-in call with Toby"}],4:[{id:"w4-1",t:"Continue Tier 2; begin light Tier 3"},{id:"w4-2",t:"Execute Day 12 ask + Day 14 break-ups"},{id:"w4-3",t:"Send proposals to qualified prospects"},{id:"w4-4",t:"Post 3 LinkedIn posts (social proof)"},{id:"w4-5",t:"Pull first full CRM report"},{id:"w4-6",t:"Begin Grand Opening planning"},{id:"w4-7",t:"30-Day Blitz review call with Toby"}]};
 
 let D={entries:{},tasks:{}},curDate=todayS(),curTW=1,saveQ=null;
 
-// ── Date Utils ───────────────────────────────────────────────────────────
+// Build targets list on home
+const TGT_DATA=[
+  {ic:"phone",l:"Outbound Calls",v:"10 / day"},{ic:"msg",l:"LinkedIn Messages",v:"10 / day"},
+  {ic:"mail",l:"Emails Sent",v:"5 / day"},{ic:"refresh",l:"Follow-Ups",v:"3 / day"},
+  {ic:"coffee",l:"Coffees / Cocktails",v:"1 / day"},{ic:"target",l:"Discovery Calls",v:"1 / day"},
+  {ic:"edit",l:"LinkedIn Posts",v:"1 / day"},{ic:"link",l:"Referral Asks",v:"1 / day"},
+  {ic:"database",l:"CRM Logged",v:"Every day"}
+];
+
+// Date utils
 function todayS(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function addD(s,n){const d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().split("T")[0];}
-function fmt(s){return new Date(s+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});}
+function fmtFull(s){return new Date(s+"T12:00:00").toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});}
 function fmtS(s){return new Date(s+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});}
 function fmtD(s){return new Date(s+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"});}
 function dow(s){return new Date(s+"T12:00:00").getDay();}
@@ -628,18 +415,17 @@ function getMon(s){const d=new Date(s+"T12:00:00"),day=d.getDay();d.setDate(d.ge
 function wkDts(s){const m=getMon(s);return Array.from({length:7},(_,i)=>addD(m,i));}
 function bDay(s){const diff=Math.floor((new Date(s+"T12:00:00")-new Date(BLITZ_START+"T12:00:00"))/864e5);return diff>=0&&diff<30?diff+1:null;}
 function bWeek(s){const d=bDay(s);return d?Math.ceil(d/7):null;}
-
 function getE(s){if(!D.entries[s]){D.entries[s]={notes:"",crmLogged:false};ALL.forEach(f=>D.entries[s][f.k]=0);}return D.entries[s];}
 function hasAct(e){return e&&[...DOXA,...EMP].some(f=>(e[f.k]||0)>0);}
 
-// ── API ──────────────────────────────────────────────────────────────────
+// API
 function showSync(t){const b=document.getElementById("syncBar");b.className="sync-bar "+t;if(t==="saved"||t==="err")setTimeout(()=>b.className="sync-bar",2000);}
-async function apiLoad(){const r=await fetch(API_URL,{redirect:"follow"});const t=await r.text();if(t.trimStart().startsWith("<"))throw new Error("HTML returned — check deployment access");return JSON.parse(t);}
+async function apiLoad(){const r=await fetch(API_URL,{redirect:"follow"});const t=await r.text();if(t.trimStart().startsWith("<"))throw new Error("HTML returned");return JSON.parse(t);}
 async function apiPost(p){await fetch(API_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(p)});}
-function queueSave(ds){localStorage.setItem("eos_v4",JSON.stringify(D));showSync("saving");clearTimeout(saveQ);saveQ=setTimeout(async()=>{try{await apiPost({action:"saveEntry",date:ds,entry:D.entries[ds]});showSync("saved");}catch(e){showSync("err");}},800);}
-async function apiToggleTask(id,c){localStorage.setItem("eos_v4",JSON.stringify(D));try{await apiPost({action:"toggleTask",taskId:id,completed:c});showSync("saved");}catch(e){showSync("err");}}
+function queueSave(ds){localStorage.setItem("eos_v5",JSON.stringify(D));showSync("saving");clearTimeout(saveQ);saveQ=setTimeout(async()=>{try{await apiPost({action:"saveEntry",date:ds,entry:D.entries[ds]});showSync("saved");}catch(e){showSync("err");}},800);}
+async function apiToggleTask(id,c){localStorage.setItem("eos_v5",JSON.stringify(D));try{await apiPost({action:"toggleTask",taskId:id,completed:c});showSync("saved");}catch(e){showSync("err");}}
 
-// ── Calcs ────────────────────────────────────────────────────────────────
+// Calcs
 function calcStreak(){let s=0;for(let i=0;i<90;i++){const ds=addD(todayS(),-i);if(!isWD(ds))continue;const e=D.entries[ds];if(e&&(e.linkedinMessages||0)>=10)s++;else if(ds===todayS())continue;else break;}return s;}
 function calcLogged(){return Object.keys(D.entries).filter(ds=>hasAct(D.entries[ds])).length;}
 function calcBlitz(){const t={};ALL.forEach(f=>t[f.k]=0);Object.entries(D.entries).forEach(([ds,e])=>{if(bDay(ds))ALL.forEach(f=>t[f.k]+=(e[f.k]||0));});return t;}
@@ -647,12 +433,16 @@ function calcMissed(){let m=0,d=BLITZ_START;const t=todayS();while(d<t){if(isWD(
 function getMissedList(){const m=[];let d=BLITZ_START;const t=todayS();while(d<t){if(isWD(d)){const e=D.entries[d];if(!e||!hasAct(e))m.push(d);}d=addD(d,1);}return m;}
 function wTots(ds){const dates=wkDts(ds),t={};ALL.forEach(f=>{t[f.k]=dates.reduce((s,d)=>(s+((D.entries[d]||{})[f.k]||0)),0);});return t;}
 
-// ── Render ───────────────────────────────────────────────────────────────
+// Render
+function renderTargets(){
+  let h="";TGT_DATA.forEach(t=>{h+=`<div class="bi-target-row"><span class="bi-t-label">${ic(t.ic)} ${t.l}</span><span class="bi-t-val">${t.v}</span></div>`;});
+  document.getElementById("targetsList").innerHTML=h;
+}
 function renderHeader(){
-  document.getElementById("todayDisplay").textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
-  const bd=bDay(todayS()),pill=document.getElementById("blitzPill");
-  if(bd)pill.textContent=`DAY ${bd}/30`;
-  else{const diff=Math.ceil((new Date(BLITZ_START+"T12:00:00")-new Date(todayS()+"T12:00:00"))/864e5);pill.textContent=diff>0?`T-${diff} DAYS`:"COMPLETE";}
+  document.getElementById("todayStr").textContent=fmtFull(todayS());
+  const bd=bDay(todayS()),pill=document.getElementById("blitzPill"),hero=document.getElementById("heroPill");
+  if(bd){pill.textContent=`DAY ${bd}/30`;hero.textContent=`DAY ${bd} OF 30`;}
+  else{const diff=Math.ceil((new Date(BLITZ_START+"T12:00:00")-new Date(todayS()+"T12:00:00"))/864e5);const t=diff>0?`T-${diff} DAYS`:"COMPLETE";pill.textContent=t;hero.textContent=diff>0?`STARTS IN ${diff} DAYS`:"BLITZ COMPLETE";}
   document.getElementById("sStreak").textContent=calcStreak()+"d";
   document.getElementById("sDays").textContent=calcLogged();
   const bt=calcBlitz();
@@ -660,98 +450,65 @@ function renderHeader(){
   document.getElementById("sDisc").textContent=bt.discoveryCalls;
   document.getElementById("sMiss").textContent=calcMissed();
 }
-
 function renderAlert(){
   const missed=getMissedList(),bar=document.getElementById("alertBar"),txt=document.getElementById("alertText");
   const y=addD(todayS(),-1),ym=isWD(y)&&(!D.entries[y]||!hasAct(D.entries[y]));
-  if(ym&&missed.length>0){bar.classList.add("vis");txt.innerHTML=missed.length===1?`<strong>Yesterday has no activity.</strong> Log it now.`:`<strong>${missed.length} weekdays</strong> with no activity since blitz start.`;}
-  else if(missed.length>=3){bar.classList.add("vis");txt.innerHTML=`<strong>${missed.length} missed days.</strong> ${missed.slice(-2).map(fmtS).join(", ")}`;}
+  if(ym&&missed.length>0){bar.classList.add("vis");txt.innerHTML=missed.length===1?`<strong>Yesterday has no activity logged.</strong> Go back and enter your numbers.`:`<strong>${missed.length} weekdays</strong> with no activity since blitz start.`;}
+  else if(missed.length>=3){bar.classList.add("vis");txt.innerHTML=`<strong>${missed.length} missed weekdays.</strong> Recent: ${missed.slice(-2).map(fmtS).join(", ")}`;}
   else{bar.classList.remove("vis");}
 }
-
-function cO(t,s,tag,accent){
-  let cls="card";if(accent)cls+=" accent-"+accent;
-  let tagH="";if(tag==="empire")tagH='<span class="tag-empire">TOBY ONLY</span>';
-  else if(tag==="doxa")tagH='<span class="tag-doxa">→ DOXA</span>';
-  return`<div class="${cls}"><div class="card-head"><div><div class="card-title">${t}</div>${s?`<div class="card-sub">${s}</div>`:""}</div>${tagH}</div>`;
-}
+function cO(t,s,tag,accent){let cls="card";if(accent)cls+=" a-"+accent;let tagH="";if(tag==="empire")tagH='<span class="tag tag-empire">TOBY ONLY</span>';else if(tag==="doxa")tagH='<span class="tag tag-doxa">DOXA</span>';return`<div class="${cls}"><div class="card-head"><div><div class="card-title">${t}</div>${s?`<div class="card-sub">${s}</div>`:""}</div>${tagH}</div>`;}
 function cC(){return`</div>`;}
-
 function fR(f,e){
   const v=e[f.k]||0,hit=f.t>0&&v>=f.t,pct=f.t>0?Math.min(v/f.t*100,100):0;
-  const pip=f.t>0?`<div class="progress-pip"><div class="progress-pip-fill" style="width:${pct}%;background:${hit?'var(--emerald)':'var(--gold)'}"></div></div>`:"";
-  const tgt=f.t>0?`<span class="field-tgt">/ ${f.t}</span>`:"";
-  return`<div class="field"><div class="field-info"><span class="field-icon">${f.i}</span><span class="field-name">${f.l}</span>${tgt}</div><div class="field-ctrl"><button class="stepper" onclick="adj('${f.k}',-1)">−</button><input type="number" min="0" value="${v}" class="field-input${hit?' hit':''}" onchange="setF('${f.k}',+this.value||0)"><button class="stepper" onclick="adj('${f.k}',1)">+</button>${pip}</div></div>`;
+  const pip=f.t>0?`<div class="f-pip"><div class="f-pip-fill" style="width:${pct}%;background:${hit?'var(--emerald)':'var(--g800)'}"></div></div>`:"";
+  const tgt=f.t>0?`<span class="f-tgt">/ ${f.t}</span>`:"";
+  return`<div class="field"><div class="f-info">${ic(f.ic)}<span class="f-name">${f.l}</span>${tgt}</div><div class="f-ctrl"><button class="stepper" onclick="adj('${f.k}',-1)">−</button><input type="number" min="0" value="${v}" class="f-input${hit?' hit':''}" onchange="setF('${f.k}',+this.value||0)"><button class="stepper" onclick="adj('${f.k}',1)">+</button>${pip}</div></div>`;
 }
-
 function renderDaily(){
   const ds=curDate,e=getE(ds),bd=bDay(ds),bw=bWeek(ds),isT=ds===todayS(),isY=ds===addD(todayS(),-1);
   let badge=isT?'<span class="pill-today">TODAY</span>':isY?'<span class="pill-yest">YESTERDAY</span>':"";
   document.getElementById("dLabel").innerHTML=fmtS(ds)+" "+badge;
   document.getElementById("dSub").textContent=bd?`Blitz Day ${bd} · Week ${bw}`:new Date(ds+"T12:00:00")<new Date(BLITZ_START+"T12:00:00")?"Pre-blitz":"Post-blitz";
-  let warn="";
-  if(!isT&&isWD(ds)&&!hasAct(e)&&ds<todayS())warn=`<div class="missed-inline">⚡ <span>No activity logged — <strong>counts as missed</strong>. Enter now.</span></div>`;
+  let warn="";if(!isT&&isWD(ds)&&!hasAct(e)&&ds<todayS())warn=`<div class="missed-warn">${ic('alert')} <span>No activity logged — <strong>counts as missed</strong>.</span></div>`;
   document.getElementById("dWarn").innerHTML=warn;
-  let h=cO("Outreach Activity","DOXA scorecard + blitz metrics","doxa","sky");
-  DOXA.forEach(f=>{h+=fR(f,e);});h+=cC();
-  h+=cO("Empire OS — Blitz Metrics","Not reported to DOXA","empire","violet");
-  EMP.forEach(f=>{h+=fR(f,e);});h+=cC();
-  h+=cO("Pipeline","Deal progression → DOXA","doxa","gold");
-  PIPE.forEach(f=>{h+=fR(f,e);});h+=cC();
+  let h=cO("Outreach Activity","DOXA scorecard metrics","doxa","dark");DOXA.forEach(f=>{h+=fR(f,e);});h+=cC();
+  h+=cO("Empire OS — Blitz Metrics","Not reported to DOXA","empire","violet");EMP.forEach(f=>{h+=fR(f,e);});h+=cC();
+  h+=cO("Pipeline","Deal progression","doxa","amber");PIPE.forEach(f=>{h+=fR(f,e);});h+=cC();
   h+=cO("End of Day","CRM confirmation + notes",null,"emerald");
-  h+=`<div class="field"><div class="field-info"><span class="field-icon">🗄️</span><span class="field-name">D365 CRM Logged?</span></div><button class="toggle ${e.crmLogged?'toggle-on':'toggle-off'}" onclick="tglCRM()">${e.crmLogged?'YES ✓':'NO'}</button></div>`;
-  h+=`<textarea class="notes" placeholder="Notes: wins, blockers, key conversations…" onchange="updNotes(this.value)">${e.notes||""}</textarea>`;
-  h+=cC();
+  h+=`<div class="field"><div class="f-info">${ic('database')}<span class="f-name">D365 CRM Logged?</span></div><button class="toggle ${e.crmLogged?'toggle-on':'toggle-off'}" onclick="tglCRM()">${e.crmLogged?'YES ✓':'NO'}</button></div>`;
+  h+=`<textarea class="notes" placeholder="Notes: wins, blockers, key conversations…" onchange="updNotes(this.value)">${e.notes||""}</textarea>`;h+=cC();
   document.getElementById("dContent").innerHTML=h;
 }
-
 function renderWeekly(){
-  const wd=wkDts(curDate),mon=wd[0],sun=wd[6],t=wTots(curDate);
-  document.getElementById("wLabel").textContent="Week of "+fmtS(mon);
-  document.getElementById("wSub").textContent=fmtS(mon)+" — "+fmtS(sun);
-  let h=cO("DOXA Friday Scorecard","Copy into Microsoft Lists form","doxa","sky");
-  h+='<div class="score-grid">';
-  [{l:"Outbound Calls",k:"outboundCalls"},{l:"Coffees",k:"coffeesCocktails"},{l:"Discovery",k:"discoveryCalls"},{l:"Events",k:"networkingEvents"},{l:"Local Activities",k:"localActivities"},{l:"MSA Sent",k:"msaSent"},{l:"MSA Signed",k:"msaSigned"},{l:"New Orders",k:"newJobOrders"},{l:"Cancelled",k:"jobOrdersCancelled"},{l:"Filled",k:"jobOrdersFilled"},{l:"VIPs Seated",k:"vipsInSeats"},{l:"Lost Clients",k:"lostClients"},{l:"Lost Seats",k:"lostSeats"}].forEach(s=>{h+=`<div class="score-cell"><div class="score-val">${t[s.k]||0}</div><div class="score-lbl">${s.l}</div></div>`;});
-  h+='</div>'+cC();
-  h+=cO("Empire OS Weekly","Friday review with Toby","empire","violet");
-  h+='<div class="score-grid">';EMP.forEach(f=>{h+=`<div class="score-cell"><div class="score-val" style="color:var(--violet)">${t[f.k]||0}</div><div class="score-lbl">${f.l}</div></div>`;});
-  h+='</div>'+cC();
-  h+=cO("Daily Breakdown","Gaps are visible",null,"gold");
-  h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Metric</th>';
-  wd.forEach(d=>{h+=`<th class="n${d===todayS()?' tod':''}">${fmtD(d)}</th>`;});
-  h+='<th class="n" style="color:var(--gold)">Σ</th></tr></thead><tbody>';
-  [...DOXA,...EMP].forEach(f=>{h+=`<tr><td>${f.i} ${f.l}</td>`;wd.forEach(d=>{const v=(D.entries[d]||{})[f.k]||0;h+=`<td class="n${v>0?' hv':''}${d===todayS()?' tod':''}">${v}</td>`;});h+=`<td class="n tot">${t[f.k]||0}</td></tr>`;});
-  h+='</tbody></table></div>'+cC();
-  document.getElementById("wContent").innerHTML=h;
+  const wd=wkDts(curDate),mon=wd[0],t=wTots(curDate);
+  document.getElementById("wLabel").textContent="Week of "+fmtS(mon);document.getElementById("wSub").textContent=fmtS(mon)+" — "+fmtS(wd[6]);
+  let h=cO("DOXA Friday Scorecard","Copy into Microsoft Lists form","doxa","dark");h+='<div class="score-grid">';
+  [{l:"Outbound Calls",k:"outboundCalls"},{l:"Coffees",k:"coffeesCocktails"},{l:"Discovery",k:"discoveryCalls"},{l:"Events",k:"networkingEvents"},{l:"Local Activities",k:"localActivities"},{l:"MSA Sent",k:"msaSent"},{l:"MSA Signed",k:"msaSigned"},{l:"New Orders",k:"newJobOrders"},{l:"Cancelled",k:"jobOrdersCancelled"},{l:"Filled",k:"jobOrdersFilled"},{l:"VIPs Seated",k:"vipsInSeats"},{l:"Lost Clients",k:"lostClients"}].forEach(s=>{h+=`<div class="sc-cell"><div class="sc-cell-v">${t[s.k]||0}</div><div class="sc-cell-l">${s.l}</div></div>`;});h+='</div>'+cC();
+  h+=cO("Empire OS Weekly","Friday review with Toby","empire","violet");h+='<div class="score-grid">';EMP.forEach(f=>{h+=`<div class="sc-cell"><div class="sc-cell-v" style="color:var(--violet)">${t[f.k]||0}</div><div class="sc-cell-l">${f.l}</div></div>`;});h+='</div>'+cC();
+  h+=cO("Daily Breakdown","Activity gaps are visible",null,"gray");h+='<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Metric</th>';
+  wd.forEach(d=>{h+=`<th class="n${d===todayS()?' tod':''}">${fmtD(d)}</th>`;});h+='<th class="n" style="color:var(--obsidian)">Σ</th></tr></thead><tbody>';
+  [...DOXA,...EMP].forEach(f=>{h+=`<tr><td>${ic(f.ic)} ${f.l}</td>`;wd.forEach(d=>{const v=(D.entries[d]||{})[f.k]||0;h+=`<td class="n${v>0?' hv':''}${d===todayS()?' tod':''}">${v}</td>`;});h+=`<td class="n tot">${t[f.k]||0}</td></tr>`;});
+  h+='</tbody></table></div>'+cC();document.getElementById("wContent").innerHTML=h;
 }
-
 function renderTasks(){
-  let sel="";[1,2,3,4].forEach(w=>{sel+=`<button class="week-pill${w===curTW?' on':''}" onclick="selTW(${w})">Week ${w}</button>`;});
-  document.getElementById("wSel").innerHTML=sel;
+  let sel="";[1,2,3,4].forEach(w=>{sel+=`<button class="wk-pill${w===curTW?' on':''}" onclick="selTW(${w})">Week ${w}</button>`;});document.getElementById("wSel").innerHTML=sel;
   const tasks=TASKS[curTW]||[],done=tasks.filter(t=>D.tasks[t.id]).length,total=tasks.length,pct=total?Math.round(done/total*100):0;
-  let h=cO(`Week ${curTW} Actions`,`${done} of ${total} complete`,null,"gold");
-  h+=`<div class="prog-bar"><div class="prog-fill${pct===100?' done':''}" style="width:${pct}%"></div></div>`;
-  tasks.forEach(t=>{const d=D.tasks[t.id];h+=`<div class="task" onclick="tglTask('${t.id}')"><div class="task-check ${d?'on':'off'}">${d?'✓':''}</div><span class="task-txt${d?' done':''}">${t.t}</span></div>`;});h+=cC();
-  h+=cO("Overall Progress","All 4 weeks",null,"emerald");
-  [1,2,3,4].forEach(w=>{const wt=TASKS[w]||[],wd=wt.filter(t=>D.tasks[t.id]).length,wp=wt.length?Math.round(wd/wt.length*100):0;
-    h+=`<div class="overview-row"><div class="overview-lbl"><span>Week ${w}</span><span style="color:${wp===100?'var(--emerald)':'var(--t4)'}">${wd}/${wt.length}</span></div><div class="prog-bar prog-bar-sm"><div class="prog-fill${wp===100?' done':''}" style="width:${wp}%"></div></div></div>`;});
-  h+=cC();document.getElementById("tContent").innerHTML=h;
+  let h=cO(`Week ${curTW} Actions`,`${done} of ${total} complete`,null,"dark");h+=`<div class="prog-bar"><div class="prog-fill${pct===100?' done':''}" style="width:${pct}%"></div></div>`;
+  tasks.forEach(t=>{const d=D.tasks[t.id];h+=`<div class="task" onclick="tglTask('${t.id}')"><div class="t-check ${d?'on':'off'}">${d?'✓':''}</div><span class="t-txt${d?' done':''}">${t.t}</span></div>`;});h+=cC();
+  h+=cO("Overall Progress","All 4 weeks",null,"emerald");[1,2,3,4].forEach(w=>{const wt=TASKS[w]||[],wd=wt.filter(t=>D.tasks[t.id]).length,wp=wt.length?Math.round(wd/wt.length*100):0;h+=`<div class="ov-row"><div class="ov-lbl"><span>Week ${w}</span><span style="color:${wp===100?'var(--emerald)':'var(--g400)'}">${wd}/${wt.length}</span></div><div class="prog-bar prog-bar-sm"><div class="prog-fill${wp===100?' done':''}" style="width:${wp}%"></div></div></div>`;});h+=cC();document.getElementById("tContent").innerHTML=h;
 }
-
 function renderHistory(){
   const sorted=Object.keys(D.entries).filter(ds=>hasAct(D.entries[ds])).sort((a,b)=>b.localeCompare(a));
-  let h=cO("Entry History",`${sorted.length} days logged`,null,"gold");
-  if(!sorted.length)h+='<div class="empty-msg">No entries yet.</div>';
-  else sorted.forEach(ds=>{const e=D.entries[ds],li=e.linkedinMessages||0,ca=e.outboundCalls||0,em=e.emailsSent||0,dc=e.discoveryCalls||0,bd=bDay(ds);
-    function mc(v,th){return v>=th?'g':v>0?'n':'z';}
-    h+=`<div class="hist-item" onclick="goDay('${ds}')"><div><div class="hist-date">${fmtS(ds)}</div><div class="hist-sub">${bd?'Day '+bd:''}</div></div><div class="hist-stats"><div class="hist-num"><div class="hist-nv ${mc(li,10)}">${li}</div><div class="hist-nl">LI</div></div><div class="hist-num"><div class="hist-nv ${mc(ca,10)}">${ca}</div><div class="hist-nl">Call</div></div><div class="hist-num"><div class="hist-nv ${mc(em,5)}">${em}</div><div class="hist-nl">Mail</div></div><div class="hist-num"><div class="hist-nv ${mc(dc,1)}">${dc}</div><div class="hist-nl">Disc</div></div><div class="crm-dot ${e.crmLogged?'y':'n'}">${e.crmLogged?'✓':'✗'}</div></div></div>`;});
-  const missed=getMissedList();
-  if(missed.length){h+=cC();h+=cO("Missed Days",`${missed.length} weekdays`,null,"coral");
-    [...missed].reverse().forEach(ds=>{const bd=bDay(ds);h+=`<div class="hist-item" onclick="goDay('${ds}')" style="opacity:.6"><div><div class="hist-date" style="color:var(--coral)">${fmtS(ds)}</div><div class="hist-sub">${bd?'Day '+bd:''} — no entry</div></div><div style="color:var(--coral);font-size:11px;font-weight:700">Log →</div></div>`;});}
+  let h=cO("Entry History",`${sorted.length} days logged`,null,"dark");
+  if(!sorted.length)h+='<div class="empty">No entries yet. Start on the Daily Log tab.</div>';
+  else sorted.forEach(ds=>{const e=D.entries[ds],li=e.linkedinMessages||0,ca=e.outboundCalls||0,em=e.emailsSent||0,dc=e.discoveryCalls||0,bd=bDay(ds);function mc(v,th){return v>=th?'g':v>0?'n':'z';}
+    h+=`<div class="hist-item" onclick="goDay('${ds}')"><div><div class="h-date">${fmtS(ds)}</div><div class="h-sub">${bd?'Day '+bd:''}</div></div><div class="h-stats"><div class="h-num"><div class="h-nv ${mc(li,10)}">${li}</div><div class="h-nl">LI</div></div><div class="h-num"><div class="h-nv ${mc(ca,10)}">${ca}</div><div class="h-nl">Call</div></div><div class="h-num"><div class="h-nv ${mc(em,5)}">${em}</div><div class="h-nl">Mail</div></div><div class="h-num"><div class="h-nv ${mc(dc,1)}">${dc}</div><div class="h-nl">Disc</div></div><span class="crm-tag ${e.crmLogged?'y':'n'}">${e.crmLogged?'CRM ✓':'CRM ✗'}</span></div></div>`;});
+  const missed=getMissedList();if(missed.length){h+=cC();h+=cO("Missed Days",`${missed.length} weekdays`,null,"amber");
+    [...missed].reverse().forEach(ds=>{const bd=bDay(ds);h+=`<div class="hist-item" onclick="goDay('${ds}')" style="opacity:.6"><div><div class="h-date" style="color:var(--rose)">${fmtS(ds)}</div><div class="h-sub">${bd?'Day '+bd:''} — no entry</div></div><div style="color:var(--rose);font-size:11px;font-weight:700">Log →</div></div>`;});}
   h+=cC();document.getElementById("hContent").innerHTML=h;
 }
 
-// ── Actions ──────────────────────────────────────────────────────────────
 function adj(k,d){const e=getE(curDate);e[k]=Math.max(0,(e[k]||0)+d);queueSave(curDate);renderAll();}
 function setF(k,v){const e=getE(curDate);e[k]=Math.max(0,v);queueSave(curDate);renderAll();}
 function tglCRM(){const e=getE(curDate);e.crmLogged=!e.crmLogged;queueSave(curDate);renderAll();}
@@ -763,24 +520,21 @@ function selTW(w){curTW=w;renderTasks();}
 function goDay(ds){curDate=ds;switchTab("daily");renderAll();}
 
 function switchTab(id){
-  document.querySelectorAll(".dtab").forEach(b=>b.classList.toggle("on",b.dataset.t===id));
-  document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("on",b.dataset.t===id));
+  document.querySelectorAll(".sb-item").forEach(b=>b.classList.toggle("on",b.dataset.t===id));
+  document.querySelectorAll(".bn-item").forEach(b=>b.classList.toggle("on",b.dataset.t===id));
   document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+id));
 }
-document.querySelectorAll(".dtab,.nav-item").forEach(b=>b.addEventListener("click",()=>{switchTab(b.dataset.t);renderAll();}));
+document.querySelectorAll(".sb-item,.bn-item").forEach(b=>b.addEventListener("click",()=>{switchTab(b.dataset.t);renderAll();}));
 function renderAll(){renderHeader();renderAlert();renderDaily();renderWeekly();renderTasks();renderHistory();}
 
-// ── Init ─────────────────────────────────────────────────────────────────
 (async function(){
   const loader=document.getElementById("loader"),msg=document.getElementById("loadMsg");
   if(!API_URL||API_URL==="PASTE_YOUR_APPS_SCRIPT_URL_HERE"||!API_URL.startsWith("http")){loader.classList.add("gone");document.getElementById("setupScreen").style.display="block";return;}
-  msg.textContent="Loading from Google Sheets…";
-  try{const data=await apiLoad();if(data.success){D.entries=data.entries||{};D.tasks=data.tasks||{};document.getElementById("connDot").className="conn-dot ok";localStorage.setItem("eos_v4",JSON.stringify(D));}else throw new Error(data.error);}
-  catch(e){console.error(e);msg.textContent="Offline — loading local data…";document.getElementById("connDot").className="conn-dot off";try{const r=localStorage.getItem("eos_v4");if(r)D=JSON.parse(r);}catch(e2){}await new Promise(r=>setTimeout(r,800));}
-  document.getElementById("app").style.display="block";
-  document.getElementById("bottomNav").style.display="flex";
-  renderAll();loader.classList.add("gone");
-  setInterval(()=>{document.getElementById("todayDisplay").textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});},60000);
+  msg.textContent="Loading data…";
+  try{const data=await apiLoad();if(data.success){D.entries=data.entries||{};D.tasks=data.tasks||{};localStorage.setItem("eos_v5",JSON.stringify(D));}else throw new Error(data.error);}
+  catch(e){console.error(e);msg.textContent="Offline — loading local…";document.getElementById("sbDot").className="sb-conn-dot off";document.getElementById("sbConn").textContent="Offline";try{const r=localStorage.getItem("eos_v5");if(r)D=JSON.parse(r);}catch(e2){}await new Promise(r=>setTimeout(r,800));}
+  document.getElementById("app").style.display="block";document.getElementById("bottomNav").style.display="flex";
+  renderTargets();renderAll();loader.classList.add("gone");
 })();
 </script>
 </body>
