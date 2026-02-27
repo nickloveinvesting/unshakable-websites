@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Empire OS — Accountability Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0b1120; --card: #131c31; --input: #0b1120; --elevated: #1a2540;
+  --border: #1e2d4a; --focus: #4f6df5;
+  --t1: #e1e7ef; --t2: #7a8ba8; --t3: #3f5175; --inv: #0b1120;
+  --accent: #4f6df5; --green: #22c55e; --red: #ef4444;
+  --amber: #f59e0b; --purple: #a78bfa; --cyan: #22d3ee;
+  --body: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r: 8px;
+}
+html { font-size: 15px; }
+body { font-family: var(--body); background: var(--bg); color: var(--t1); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+.app { max-width: 920px; margin: 0 auto; padding: 0 20px 100px; }
+
+/* Loading */
+.load-wrap { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; transition: opacity .5s; }
+.load-wrap.gone { opacity: 0; pointer-events: none; }
+.spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-msg { margin-top: 14px; color: var(--t2); font-size: 13px; font-family: var(--mono); text-align: center; line-height: 1.6; }
+
+/* Sync bar */
+.sync-bar { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 998; transition: opacity .3s; opacity: 0; }
+.sync-bar.saving { opacity: 1; background: var(--amber); animation: pulse 1s infinite; }
+.sync-bar.saved { opacity: 1; background: var(--green); }
+.sync-bar.err { opacity: 1; background: var(--red); }
+@keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+/* Setup screen */
+.setup-screen { max-width: 600px; margin: 80px auto; padding: 0 20px; }
+.setup-screen h1 { font-size: 20px; color: var(--accent); margin-bottom: 8px; font-family: var(--mono); letter-spacing: 2px; }
+.setup-screen p { color: var(--t2); font-size: 14px; line-height: 1.7; margin-bottom: 16px; }
+.setup-screen code { background: var(--card); padding: 2px 6px; border-radius: 3px; font-family: var(--mono); font-size: 12px; color: var(--amber); }
+.setup-screen ol { color: var(--t2); font-size: 13px; line-height: 2; padding-left: 20px; }
+.setup-screen ol li { margin-bottom: 4px; }
+.setup-screen .warn { color: var(--red); font-weight: 700; }
+
+/* Header */
+.header { padding: 28px 0 12px; }
+.header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+.brand { font-size: 11px; font-weight: 800; letter-spacing: 5px; color: var(--accent); text-transform: uppercase; font-family: var(--mono); }
+.header-title { font-size: 15px; color: var(--t2); margin-top: 4px; font-weight: 500; }
+.header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.blitz-badge { background: var(--accent); color: #fff; font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 4px; letter-spacing: 1.5px; font-family: var(--mono); }
+.clock { font-size: 11px; color: var(--t3); font-family: var(--mono); }
+.conn { font-size: 10px; font-family: var(--mono); padding: 3px 8px; border-radius: 3px; }
+.conn.ok { color: var(--green); background: #22c55e12; }
+.conn.off { color: var(--amber); background: #f59e0b12; }
+.conn.err { color: var(--red); background: #ef444412; }
+
+/* Alert */
+.alert { background: #ef444418; border: 1px solid #ef444440; border-radius: var(--r); padding: 14px 18px; margin: 16px 0; display: none; align-items: flex-start; gap: 12px; }
+.alert.vis { display: flex; }
+.alert-text { font-size: 13px; color: #fca5a5; line-height: 1.5; }
+.alert-text strong { color: #fecaca; }
+.alert-btn { background: none; border: 1px solid #ef444450; color: #fca5a5; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-top: 6px; font-family: var(--body); font-weight: 600; }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 18px; }
+.st { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; position: relative; overflow: hidden; }
+.st::after { content:''; position: absolute; top:0; left:0; right:0; height: 2px; }
+.st.g::after{background:var(--green)} .st.a::after{background:var(--accent)} .st.am::after{background:var(--amber)} .st.p::after{background:var(--purple)} .st.r::after{background:var(--red)}
+.st-v { font-size: 28px; font-weight: 800; font-family: var(--mono); }
+.st-l { font-size: 10px; font-weight: 700; color: var(--t2); text-transform: uppercase; letter-spacing: 1.2px; margin-top: 2px; }
+.st-s { font-size: 10px; color: var(--t3); margin-top: 2px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 2px; margin-top: 22px; background: var(--card); border-radius: var(--r); padding: 3px; border: 1px solid var(--border); }
+.tb { flex:1; padding: 10px 6px; border: none; background: transparent; color: var(--t3); font-size: 13px; font-weight: 700; cursor: pointer; border-radius: 6px; transition: all .15s; font-family: var(--body); }
+.tb:hover { color: var(--t2); } .tb.on { background: var(--elevated); color: var(--t1); }
+.pn { display: none; margin-top: 18px; } .pn.on { display: block; }
+
+/* Date nav */
+.dn { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 18px; }
+.db { background: var(--card); border: 1px solid var(--border); color: var(--t2); padding: 8px 16px; border-radius: var(--r); cursor: pointer; font-size: 13px; font-weight: 600; font-family: var(--body); transition: all .15s; }
+.db:hover { border-color: var(--accent); color: var(--t1); }
+.dc { text-align: center; } .dm { font-size: 19px; font-weight: 800; }
+.ds { font-size: 12px; color: var(--t3); margin-top: 3px; font-family: var(--mono); }
+.bdg-t { display:inline-block; background:var(--green); color:var(--inv); font-size:9px; font-weight:800; padding:2px 8px; border-radius:3px; letter-spacing:1.5px; margin-left:8px; vertical-align:middle; font-family:var(--mono); }
+.bdg-y { display:inline-block; background:var(--amber); color:var(--inv); font-size:9px; font-weight:800; padding:2px 8px; border-radius:3px; letter-spacing:1px; margin-left:8px; vertical-align:middle; font-family:var(--mono); }
+
+/* Sections */
+.sec { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; margin-bottom: 14px; animation: fs .3s ease; }
+@keyframes fs { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+.sec-t { font-size: 11px; font-weight: 800; color: var(--t2); letter-spacing: 2px; text-transform: uppercase; font-family: var(--mono); }
+.sec-s { font-size: 12px; color: var(--t3); margin-top: 3px; }
+.sec-h { margin-bottom: 18px; }
+.emp { display:inline-block; background:#a78bfa20; color:var(--purple); font-size:9px; font-weight:700; padding:2px 6px; border-radius:3px; letter-spacing:.5px; margin-left:8px; vertical-align:middle; }
+
+/* Fields */
+.fr { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid #1e2d4a30; }
+.fr:last-child { border-bottom: none; }
+.fl { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.fi { font-size: 17px; width: 24px; text-align: center; flex-shrink: 0; }
+.fla { font-size: 14px; color: var(--t1); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ft { font-size: 10px; color: var(--t3); font-family: var(--mono); margin-left: 6px; flex-shrink: 0; }
+.fright { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.nb { width:32px; height:32px; border:1px solid var(--border); background:var(--input); color:var(--t2); border-radius:4px; cursor:pointer; font-size:17px; font-weight:700; display:flex; align-items:center; justify-content:center; transition:all .1s; font-family:var(--mono); user-select:none; }
+.nb:hover { border-color: var(--accent); color: var(--t1); } .nb:active { transform: scale(.93); }
+.ni { width:56px; height:32px; background:var(--input); border:1px solid var(--border); border-radius:4px; color:var(--t1); text-align:center; font-size:16px; font-weight:700; font-family:var(--mono); outline:none; -moz-appearance:textfield; }
+.ni::-webkit-outer-spin-button,.ni::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+.ni:focus { border-color: var(--focus); } .ni.hit { border-color: var(--green); }
+.mb { width:44px; height:4px; background:var(--input); border-radius:2px; overflow:hidden; margin-left:2px; }
+.mbf { height:100%; border-radius:2px; transition: width .3s, background .3s; }
+
+/* Toggle + Notes */
+.tgl { padding:7px 18px; border-radius:var(--r); font-weight:700; font-size:13px; cursor:pointer; border:none; font-family:var(--body); transition:all .15s; }
+.tgl-on { background:var(--green); color:var(--inv); } .tgl-off { background:var(--input); color:var(--red); border:1px solid var(--border); }
+.nta { width:100%; background:var(--input); border:1px solid var(--border); border-radius:var(--r); color:var(--t1); padding:12px; font-size:13px; resize:vertical; font-family:var(--body); outline:none; margin-top:12px; min-height:60px; }
+.nta:focus { border-color: var(--focus); }
+
+/* Scorecard */
+.sg { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+.si { background:var(--input); border-radius:var(--r); padding:14px 10px; text-align:center; border:1px solid var(--border); }
+.sv { font-size: 30px; font-weight: 800; font-family: var(--mono); }
+.sl { font-size: 10px; color: var(--t3); margin-top: 4px; text-transform: uppercase; font-weight: 700; letter-spacing: .5px; }
+
+/* Table */
+.bw { overflow-x: auto; margin-top: 10px; }
+.bt { width:100%; border-collapse:collapse; font-size:12px; }
+.bt th { padding:8px 5px; text-align:left; color:var(--t3); font-weight:700; border-bottom:1px solid var(--border); font-size:10px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; }
+.bt th.n { text-align: center; } .bt td { padding:6px 5px; border-bottom:1px solid #1e2d4a20; color:var(--t2); font-size:12px; }
+.bt td.n { text-align:center; font-family:var(--mono); font-weight:600; }
+.bt td.hv { color: var(--t1); } .bt td.tot { color: var(--amber); font-weight: 800; } .bt td.tod { color: var(--green); }
+
+/* Missed warning */
+.mw { background:#f59e0b18; border:1px solid #f59e0b40; border-radius:var(--r); padding:12px 16px; margin-bottom:14px; font-size:13px; color:#fcd34d; display:flex; align-items:center; gap:10px; }
+
+/* Tasks */
+.ws { display:flex; gap:6px; justify-content:center; margin-bottom:18px; flex-wrap:wrap; }
+.wb { padding:8px 22px; border:1px solid var(--border); background:var(--card); color:var(--t2); border-radius:var(--r); cursor:pointer; font-size:13px; font-weight:700; font-family:var(--body); transition:all .15s; }
+.wb:hover { border-color: var(--accent); } .wb.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+.pb { height:8px; background:var(--input); border-radius:4px; overflow:hidden; margin-bottom:14px; }
+.pbf { height:100%; border-radius:4px; transition:width .4s; background:var(--accent); } .pbf.c { background: var(--green); }
+.tr { display:flex; align-items:flex-start; gap:12px; padding:11px 0; border-bottom:1px solid #1e2d4a20; cursor:pointer; transition:opacity .15s; }
+.tr:hover { opacity: .85; }
+.tc { width:24px; height:24px; border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; transition:all .15s; }
+.tc.off { border:2px solid var(--border); background:transparent; } .tc.on { background:var(--green); color:var(--inv); border:2px solid var(--green); }
+.tt { font-size:14px; color:var(--t1); line-height:1.45; } .tt.d { color:var(--t3); text-decoration:line-through; }
+.or { margin-bottom: 12px; }
+.ol { display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; }
+.ol span:first-child { color:var(--t2); } .ol span:last-child { color:var(--t3); font-family:var(--mono); }
+.pbs { height: 5px; }
+
+/* History */
+.hr { display:flex; justify-content:space-between; align-items:center; padding:13px 0; border-bottom:1px solid #1e2d4a20; cursor:pointer; transition:opacity .15s; }
+.hr:hover { opacity: .8; }
+.hd { font-weight:700; color:var(--t1); font-size:14px; }
+.hs2 { color:var(--t3); font-size:11px; margin-top:2px; font-family:var(--mono); }
+.hst { display:flex; gap:18px; align-items:center; }
+.ms { text-align: center; }
+.msv { font-size:16px; font-weight:800; font-family:var(--mono); }
+.msv.g { color:var(--green); } .msv.n { color:var(--t1); } .msv.z { color:var(--t3); }
+.msl { font-size:9px; color:var(--t3); text-transform:uppercase; letter-spacing:.5px; }
+.cb { font-size:11px; font-weight:700; font-family:var(--mono); }
+.cb.y { color:var(--green); } .cb.no { color:var(--red); }
+.empty { text-align:center; padding:40px 20px; color:var(--t3); font-size:14px; }
+
+@media (max-width: 600px) {
+  .stats { grid-template-columns: repeat(2, 1fr); } .st-v { font-size: 22px; }
+  .sg { grid-template-columns: repeat(2, 1fr); } .hst { gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div class="load-wrap" id="loader">
+  <div class="spinner"></div>
+  <div class="load-msg" id="loadMsg">Connecting to Google Sheets…</div>
+</div>
+
+<!-- Sync bar -->
+<div class="sync-bar" id="syncBar"></div>
+
+<!-- Setup screen (hidden by default, shown if URL not configured) -->
+<div class="setup-screen" id="setupScreen" style="display:none">
+  <h1>EMPIRE OS</h1>
+  <p>The dashboard needs to be connected to your Google Sheet. Follow these steps:</p>
+  <ol>
+    <li>Upload <code>Empire_OS_Accountability_Tracker.xlsx</code> to Google Drive and open as Google Sheets</li>
+    <li>In the Sheet: <strong>Extensions → Apps Script</strong></li>
+    <li>Delete all default code, paste the contents of <code>Google_Apps_Script_v2.js</code></li>
+    <li>Click <strong>Save</strong> (floppy disk icon)</li>
+    <li>Click <strong>Deploy → New Deployment</strong></li>
+    <li>Type: <strong>Web app</strong> · Execute as: <strong>Me</strong> · Access: <span class="warn">Anyone</span> (not "Anyone with Google Account")</li>
+    <li>Click <strong>Deploy</strong>, then <strong>Authorize access</strong> and allow permissions</li>
+    <li>Copy the Web App URL</li>
+    <li>Open this HTML file and replace <code>PASTE_YOUR_APPS_SCRIPT_URL_HERE</code> with the URL</li>
+    <li>Reload this page</li>
+  </ol>
+  <p style="margin-top:20px;color:var(--t3)">Test your URL by opening it directly in a browser tab — you should see JSON starting with <code>{"success":true</code></p>
+</div>
+
+<!-- Main App -->
+<div class="app" id="app" style="display:none">
+  <header class="header">
+    <div class="header-top">
+      <div>
+        <div class="brand">EMPIRE OS</div>
+        <div class="header-title">30-Day Acquisition Blitz — Accountability Dashboard</div>
+      </div>
+      <div class="header-right">
+        <div class="conn ok" id="connStatus">● Sheet Connected</div>
+        <div class="clock" id="clock"></div>
+        <div class="blitz-badge" id="blitzBadge"></div>
+      </div>
+    </div>
+    <div class="alert" id="alertBanner">
+      <div>⚠️</div>
+      <div><div class="alert-text" id="alertText"></div>
+      <button class="alert-btn" onclick="document.getElementById('alertBanner').classList.remove('vis')">Got it — I'll log now</button></div>
+    </div>
+    <div class="stats">
+      <div class="st g"><div class="st-v" id="sStreak" style="color:var(--green)">0d</div><div class="st-l">Streak</div><div class="st-s">days ≥10 LI messages</div></div>
+      <div class="st a"><div class="st-v" id="sDays" style="color:var(--accent)">0</div><div class="st-l">Days Logged</div><div class="st-s">total entries</div></div>
+      <div class="st am"><div class="st-v" id="sOut" style="color:var(--amber)">0</div><div class="st-l">Total Outreach</div><div class="st-s">LI msgs + emails</div></div>
+      <div class="st p"><div class="st-v" id="sDisc" style="color:var(--purple)">0</div><div class="st-l">Discovery Calls</div><div class="st-s">completed in blitz</div></div>
+      <div class="st r"><div class="st-v" id="sMiss" style="color:var(--red)">0</div><div class="st-l">Missed Days</div><div class="st-s">weekdays no entry</div></div>
+    </div>
+  </header>
+  <nav class="tabs">
+    <button class="tb on" data-t="daily">Daily Log</button>
+    <button class="tb" data-t="weekly">Weekly → DOXA</button>
+    <button class="tb" data-t="tasks">Blitz Tasks</button>
+    <button class="tb" data-t="history">History</button>
+  </nav>
+  <div class="pn on" id="p-daily"><div class="dn"><button class="db" onclick="navDay(-1)">◀</button><div class="dc"><div class="dm" id="dLabel"></div><div class="ds" id="dSub"></div></div><button class="db" onclick="navDay(1)">▶</button></div><div id="dWarn"></div><div id="dContent"></div></div>
+  <div class="pn" id="p-weekly"><div class="dn"><button class="db" onclick="navWeek(-1)">◀ Prev</button><div class="dc"><div class="dm" id="wLabel"></div><div class="ds" id="wSub"></div></div><button class="db" onclick="navWeek(1)">Next ▶</button></div><div id="wContent"></div></div>
+  <div class="pn" id="p-tasks"><div class="ws" id="wSel"></div><div id="tContent"></div></div>
+  <div class="pn" id="p-history"><div id="hContent"></div></div>
+</div>
+
+<script>
+// ═════════════════════════════════════════════════════════════════════════════
+//  CONFIGURATION
+// ═════════════════════════════════════════════════════════════════════════════
+//
+//  Paste your Google Apps Script Web App URL below between the quotes.
+//  It looks like: https://script.google.com/macros/s/AKfycb.../exec
+//
+const API_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+//
+// ═════════════════════════════════════════════════════════════════════════════
+
+const BLITZ_START = "2026-03-02";
+const DOXA = [
+  {k:"outboundCalls",l:"Outbound Calls",t:10,i:"📞"},{k:"coffeesCocktails",l:"Coffee & Cocktails",t:1,i:"☕"},
+  {k:"discoveryCalls",l:"Discovery Calls",t:1,i:"🎯"},{k:"networkingEvents",l:"Events Attended",t:1,i:"🤝"},
+  {k:"localActivities",l:"Local Activities",t:0,i:"📍"},
+];
+const EMP = [
+  {k:"linkedinMessages",l:"LinkedIn Messages",t:10,i:"💬"},{k:"emailsSent",l:"Emails Sent",t:5,i:"✉️"},
+  {k:"followUps",l:"Follow-Ups Sent",t:3,i:"🔄"},{k:"linkedinPosts",l:"LinkedIn Posts",t:1,i:"📝"},
+  {k:"referralAsks",l:"Referral Asks",t:1,i:"🔗"},{k:"proposalsSent",l:"Proposals Sent",t:0,i:"📄"},
+];
+const PIPE = [
+  {k:"msaSent",l:"MSA Sent",i:"📨"},{k:"msaSigned",l:"MSA Signed",i:"✅"},
+  {k:"newJobOrders",l:"New Job Orders",i:"📋"},{k:"jobOrdersCancelled",l:"Orders Cancelled",i:"❌"},
+  {k:"jobOrdersFilled",l:"Orders Filled",i:"🏆"},{k:"vipsInSeats",l:"VIPs in Seats",i:"💺"},
+  {k:"lostClients",l:"Lost Clients",i:"📉"},{k:"lostSeats",l:"Lost Seats",i:"🪑"},
+];
+const ALL = [...DOXA,...EMP,...PIPE];
+const TASKS = {
+  1:[{id:"w1-1",t:"Prioritize SOI list into Tier 1 (50), Tier 2 (100), Tier 3"},{id:"w1-2",t:"Rewrite LinkedIn headline with O&G positioning"},{id:"w1-3",t:"Rewrite LinkedIn About section using framework"},{id:"w1-4",t:"Request O&G one-pager from DOXA marketing team"},{id:"w1-5",t:"Practice new elevator pitch 10x (record last one)"},{id:"w1-6",t:"Set up CRM pipeline stages in D365"},{id:"w1-7",t:"Build the 14-day follow-up sequence"},{id:"w1-8",t:"Import Tier 1 SOI into D365 with O&G tag"},{id:"w1-9",t:"Schedule 2 daily Power Hour blocks for 30 days"}],
+  2:[{id:"w2-1",t:"Send 10 LinkedIn messages/day to Tier 1 (Script A)"},{id:"w2-2",t:"Post first O&G-specific LinkedIn article"},{id:"w2-3",t:"Send email batch to top 25 SOI not on LinkedIn"},{id:"w2-4",t:"Follow up all LinkedIn responses within 4 hours"},{id:"w2-5",t:"Post 2 additional LinkedIn posts this week"},{id:"w2-6",t:"Log ALL activity in D365 daily"},{id:"w2-7",t:"Attend 1+ event with new O&G pitch"},{id:"w2-8",t:"Weekly check-in call with Toby"}],
+  3:[{id:"w3-1",t:"Continue 10 msg/day — Tier 1 + begin Tier 2"},{id:"w3-2",t:"Send second email batch to next 25 SOI"},{id:"w3-3",t:"Execute Day 5 and Day 8 follow-up touches"},{id:"w3-4",t:"Conduct first discovery calls (Zoom + record)"},{id:"w3-5",t:"Post 3 LinkedIn posts this week"},{id:"w3-6",t:"Request 1 warm intro from each positive conversation"},{id:"w3-7",t:"Commit to Frisco or Plano Chamber membership"},{id:"w3-8",t:"Weekly check-in call with Toby"}],
+  4:[{id:"w4-1",t:"Continue Tier 2 outreach; begin light Tier 3"},{id:"w4-2",t:"Execute Day 12 direct ask + Day 14 break-ups"},{id:"w4-3",t:"Send proposals to qualified prospects"},{id:"w4-4",t:"Post 3 LinkedIn posts (include social proof)"},{id:"w4-5",t:"Pull first full CRM report"},{id:"w4-6",t:"Begin Grand Opening planning with O&G angle"},{id:"w4-7",t:"30-Day Blitz review call with Toby"}],
+};
+
+// ── State ────────────────────────────────────────────────────────────────────
+let D = { entries: {}, tasks: {} };
+let curDate = todayS();
+let curTW = 1;
+let saveQ = null;
+let sheetConnected = false;
+
+// ── Date Utils ───────────────────────────────────────────────────────────────
+function todayS(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function addD(s,n){const d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return d.toISOString().split("T")[0];}
+function fmt(s){return new Date(s+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});}
+function fmtS(s){return new Date(s+"T12:00:00").toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric"});}
+function fmtD(s){return new Date(s+"T12:00:00").toLocaleDateString("en-US",{weekday:"short"});}
+function dow(s){return new Date(s+"T12:00:00").getDay();}
+function isWD(s){const d=dow(s);return d>=1&&d<=5;}
+function getMon(s){const d=new Date(s+"T12:00:00"),day=d.getDay();d.setDate(d.getDate()-(day===0?6:day-1));return d.toISOString().split("T")[0];}
+function wkDts(s){const m=getMon(s);return Array.from({length:7},(_,i)=>addD(m,i));}
+function bDay(s){const diff=Math.floor((new Date(s+"T12:00:00")-new Date(BLITZ_START+"T12:00:00"))/864e5);return diff>=0&&diff<30?diff+1:null;}
+function bWeek(s){const d=bDay(s);return d?Math.ceil(d/7):null;}
+
+// ── Entry Helpers ────────────────────────────────────────────────────────────
+function getE(s){if(!D.entries[s]){D.entries[s]={notes:"",crmLogged:false};ALL.forEach(f=>D.entries[s][f.k]=0);}return D.entries[s];}
+function hasAct(e){return e&&[...DOXA,...EMP].some(f=>(e[f.k]||0)>0);}
+
+// ═════════════════════════════════════════════════════════════════════════════
+//  API — Google Sheets Communication (redirect-safe)
+// ═════════════════════════════════════════════════════════════════════════════
+
+function showSync(t){
+  const b=document.getElementById("syncBar");
+  b.className="sync-bar "+t;
+  if(t==="saved"||t==="err") setTimeout(()=>b.className="sync-bar",2000);
+}
+
+function setConn(type, msg){
+  const el=document.getElementById("connStatus");
+  el.className="conn "+type;
+  el.textContent=msg;
+}
+
+// GET — Load all data from the sheet
+// Google Apps Script returns a 302 redirect. fetch follows it automatically.
+// We read as text first, then parse — this avoids .json() failing on HTML responses.
+async function apiLoad(){
+  const resp = await fetch(API_URL, { redirect: "follow" });
+  const text = await resp.text();
+
+  // If Google returned an HTML page (sign-in, error, etc), detect it
+  if(text.trimStart().startsWith("<")){
+    throw new Error("Google returned HTML instead of JSON. Check that your Apps Script deployment has 'Who has access' set to 'Anyone' (not 'Anyone with Google Account'). Also try opening the URL directly in your browser to test: " + API_URL);
+  }
+
+  return JSON.parse(text);
+}
+
+// POST — Save data to the sheet
+// Google's 302 redirect on POST causes browsers to convert POST→GET and lose the body.
+// Fix: use mode:'no-cors' so the browser sends the POST without following the redirect.
+// The server processes it. We can't read the response, so we optimistically assume success
+// and verify on next page load.
+async function apiPost(payload){
+  await fetch(API_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+  // With no-cors we get an opaque response — can't read it.
+  // The server still processes the request. We trust it worked.
+}
+
+// Debounced save — saves to localStorage immediately, pushes to sheet after 800ms idle
+function queueSave(ds){
+  localStorage.setItem("eos_v3", JSON.stringify(D));
+  showSync("saving");
+  clearTimeout(saveQ);
+  saveQ = setTimeout(async ()=>{
+    try {
+      await apiPost({ action:"saveEntry", date:ds, entry:D.entries[ds] });
+      showSync("saved");
+    } catch(e) {
+      console.error("Save error:", e);
+      showSync("err");
+      setConn("off","● Saving locally");
+    }
+  }, 800);
+}
+
+async function apiToggleTask(taskId, completed){
+  localStorage.setItem("eos_v3", JSON.stringify(D));
+  try {
+    await apiPost({ action:"toggleTask", taskId, completed });
+    showSync("saved");
+  } catch(e) {
+    showSync("err");
+  }
+}
+
+// ═════════════════════════════════════════════════════════════════════════════
+//  CALCULATIONS
+// ═════════════════════════════════════════════════════════════════════════════
+function calcStreak(){let s=0;for(let i=0;i<90;i++){const ds=addD(todayS(),-i);if(!isWD(ds))continue;const e=D.entries[ds];if(e&&(e.linkedinMessages||0)>=10)s++;else if(ds===todayS())continue;else break;}return s;}
+function calcLogged(){return Object.keys(D.entries).filter(ds=>hasAct(D.entries[ds])).length;}
+function calcBlitz(){const t={};ALL.forEach(f=>t[f.k]=0);Object.entries(D.entries).forEach(([ds,e])=>{if(bDay(ds))ALL.forEach(f=>t[f.k]+=(e[f.k]||0));});return t;}
+function calcMissed(){let m=0,d=BLITZ_START;const t=todayS();while(d<t){if(isWD(d)){const e=D.entries[d];if(!e||!hasAct(e))m++;}d=addD(d,1);}return m;}
+function getMissedList(){const m=[];let d=BLITZ_START;const t=todayS();while(d<t){if(isWD(d)){const e=D.entries[d];if(!e||!hasAct(e))m.push(d);}d=addD(d,1);}return m;}
+function wTots(ds){const dates=wkDts(ds),t={};ALL.forEach(f=>{t[f.k]=dates.reduce((s,d)=>(s+((D.entries[d]||{})[f.k]||0)),0);});return t;}
+
+// ═════════════════════════════════════════════════════════════════════════════
+//  RENDER
+// ═════════════════════════════════════════════════════════════════════════════
+function renderHeader(){
+  document.getElementById("clock").textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+  const bd=bDay(todayS()),badge=document.getElementById("blitzBadge");
+  if(bd)badge.textContent=`DAY ${bd}/30`;
+  else{const diff=Math.ceil((new Date(BLITZ_START+"T12:00:00")-new Date(todayS()+"T12:00:00"))/864e5);badge.textContent=diff>0?`BLITZ IN ${diff}d`:"BLITZ COMPLETE";}
+  document.getElementById("sStreak").textContent=calcStreak()+"d";
+  document.getElementById("sDays").textContent=calcLogged();
+  const bt=calcBlitz();
+  document.getElementById("sOut").textContent=bt.linkedinMessages+bt.emailsSent;
+  document.getElementById("sDisc").textContent=bt.discoveryCalls;
+  document.getElementById("sMiss").textContent=calcMissed();
+}
+
+function renderAlert(){
+  const missed=getMissedList(),banner=document.getElementById("alertBanner"),txt=document.getElementById("alertText");
+  const y=addD(todayS(),-1),ym=isWD(y)&&(!D.entries[y]||!hasAct(D.entries[y]));
+  if(ym&&missed.length>0){banner.classList.add("vis");txt.innerHTML=missed.length===1?`<strong>Yesterday (${fmtS(y)}) has no activity logged.</strong> Go back and enter your numbers.`:`<strong>${missed.length} weekdays have no activity logged</strong> since blitz start. Recent: ${missed.slice(-3).map(fmtS).join(", ")}`;}
+  else if(missed.length>=3){banner.classList.add("vis");txt.innerHTML=`<strong>${missed.length} weekdays with no activity.</strong> Gaps: ${missed.slice(-3).map(fmtS).join(", ")}`;}
+  else{banner.classList.remove("vis");}
+}
+
+function secO(t,s){return `<div class="sec"><div class="sec-h"><div class="sec-t">${t}</div>${s?`<div class="sec-s">${s}</div>`:""}</div>`;}
+function secC(){return `</div>`;}
+
+function fRow(f,e){
+  const v=e[f.k]||0,hit=f.t>0&&v>=f.t,pct=f.t>0?Math.min(v/f.t*100,100):0;
+  const bar=f.t>0?`<div class="mb"><div class="mbf" style="width:${pct}%;background:${hit?'var(--green)':'var(--accent)'}"></div></div>`:"";
+  const tgt=f.t>0?`<span class="ft">target: ${f.t}</span>`:"";
+  return `<div class="fr"><div class="fl"><span class="fi">${f.i}</span><span class="fla">${f.l}</span>${tgt}</div><div class="fright"><button class="nb" onclick="adj('${f.k}',-1)">−</button><input type="number" min="0" value="${v}" class="ni ${hit?'hit':''}" onchange="setF('${f.k}',+this.value||0)"><button class="nb" onclick="adj('${f.k}',1)">+</button>${bar}</div></div>`;
+}
+
+function renderDaily(){
+  const ds=curDate,e=getE(ds),bd=bDay(ds),bw=bWeek(ds),isT=ds===todayS(),isY=ds===addD(todayS(),-1);
+  let badge=isT?'<span class="bdg-t">TODAY</span>':isY?'<span class="bdg-y">YESTERDAY</span>':"";
+  document.getElementById("dLabel").innerHTML=fmt(ds)+" "+badge;
+  document.getElementById("dSub").textContent=bd?`Blitz Day ${bd} · Week ${bw}`:new Date(ds+"T12:00:00")<new Date(BLITZ_START+"T12:00:00")?"Pre-blitz":"Post-blitz";
+  let warn="";
+  if(!isT&&isWD(ds)&&!hasAct(e)&&ds<todayS()) warn=`<div class="mw"><span>⚡</span><span>This day has <strong>no activity logged</strong>. Enter numbers now or it counts as a missed day.</span></div>`;
+  document.getElementById("dWarn").innerHTML=warn;
+  let h=secO("OUTREACH ACTIVITY","Counts toward DOXA scorecard + Empire OS blitz");
+  DOXA.forEach(f=>{h+=fRow(f,e);});h+=secC();
+  h+=secO('EMPIRE OS — BLITZ METRICS <span class="emp">TOBY ONLY</span>',"O&G activation — not reported to DOXA");
+  EMP.forEach(f=>{h+=fRow(f,e);});h+=secC();
+  h+=secO("PIPELINE","Deal progression — feeds DOXA scorecard");
+  PIPE.forEach(f=>{h+=fRow(f,e);});h+=secC();
+  h+=secO("END OF DAY","Confirm D365 logging and add notes");
+  h+=`<div class="fr"><div class="fl"><span class="fi">🗄️</span><span class="fla">D365 CRM Logged Today?</span></div><button class="tgl ${e.crmLogged?'tgl-on':'tgl-off'}" onclick="tglCRM()">${e.crmLogged?'YES ✓':'NO'}</button></div>`;
+  h+=`<textarea class="nta" placeholder="Notes: wins, blockers, what worked…" onchange="updNotes(this.value)">${e.notes||""}</textarea>`;
+  h+=secC();
+  document.getElementById("dContent").innerHTML=h;
+}
+
+function renderWeekly(){
+  const wd=wkDts(curDate),mon=wd[0],sun=wd[6],t=wTots(curDate);
+  document.getElementById("wLabel").textContent="Week of "+fmtS(mon);
+  document.getElementById("wSub").textContent=fmtS(mon)+" — "+fmtS(sun);
+  let h=secO("📋 DOXA FRIDAY SCORECARD — READY TO SUBMIT","Copy these numbers into the Microsoft Lists form");
+  h+='<div class="sg">';
+  [{l:"Outbound Calls",k:"outboundCalls"},{l:"Coffee & Cocktails",k:"coffeesCocktails"},{l:"Discovery Calls",k:"discoveryCalls"},{l:"Events Attended",k:"networkingEvents"},{l:"Local Activities",k:"localActivities"},{l:"MSA Sent",k:"msaSent"},{l:"MSA Signed",k:"msaSigned"},{l:"New Job Orders",k:"newJobOrders"},{l:"Orders Cancelled",k:"jobOrdersCancelled"},{l:"Orders Filled",k:"jobOrdersFilled"},{l:"VIPs in Seats",k:"vipsInSeats"},{l:"Lost Clients",k:"lostClients"},{l:"Lost Seats",k:"lostSeats"}].forEach(s=>{h+=`<div class="si"><div class="sv">${t[s.k]||0}</div><div class="sl">${s.l}</div></div>`;});
+  h+='</div>'+secC();
+  h+=secO('🔒 EMPIRE OS WEEKLY <span class="emp">TOBY ONLY</span>',"For Friday review");
+  h+='<div class="sg">';EMP.forEach(f=>{h+=`<div class="si"><div class="sv" style="color:var(--purple)">${t[f.k]||0}</div><div class="sl">${f.l}</div></div>`;});
+  h+='</div>'+secC();
+  h+=secO("DAILY BREAKDOWN","Activity by day — gaps are visible");
+  h+='<div class="bw"><table class="bt"><thead><tr><th>Metric</th>';
+  wd.forEach(d=>{h+=`<th class="n${d===todayS()?' tod':''}">${fmtD(d)}</th>`;});
+  h+='<th class="n" style="color:var(--amber)">Total</th></tr></thead><tbody>';
+  [...DOXA,...EMP].forEach(f=>{h+=`<tr><td>${f.i} ${f.l}</td>`;wd.forEach(d=>{const v=(D.entries[d]||{})[f.k]||0;h+=`<td class="n${v>0?' hv':''}${d===todayS()?' tod':''}">${v}</td>`;});h+=`<td class="n tot">${t[f.k]||0}</td></tr>`;});
+  h+='</tbody></table></div>'+secC();
+  document.getElementById("wContent").innerHTML=h;
+}
+
+function renderTasks(){
+  let sel="";[1,2,3,4].forEach(w=>{sel+=`<button class="wb${w===curTW?' on':''}" onclick="selTW(${w})">Week ${w}</button>`;});
+  document.getElementById("wSel").innerHTML=sel;
+  const tasks=TASKS[curTW]||[],done=tasks.filter(t=>D.tasks[t.id]).length,total=tasks.length,pct=total?Math.round(done/total*100):0;
+  let h=secO(`WEEK ${curTW} ACTION ITEMS`,`${done}/${total} — ${pct}%`);
+  h+=`<div class="pb"><div class="pbf${pct===100?' c':''}" style="width:${pct}%"></div></div>`;
+  tasks.forEach(t=>{const d=D.tasks[t.id];h+=`<div class="tr" onclick="tglTask('${t.id}')"><div class="tc ${d?'on':'off'}">${d?'✓':''}</div><span class="tt${d?' d':''}">${t.t}</span></div>`;});h+=secC();
+  h+=secO("OVERALL BLITZ PROGRESS","All 4 weeks");
+  [1,2,3,4].forEach(w=>{const wt=TASKS[w]||[],wd=wt.filter(t=>D.tasks[t.id]).length,wp=wt.length?Math.round(wd/wt.length*100):0;
+    h+=`<div class="or"><div class="ol"><span>Week ${w}</span><span style="color:${wp===100?'var(--green)':'var(--t3)'}">${wd}/${wt.length} — ${wp}%</span></div><div class="pb pbs"><div class="pbf${wp===100?' c':''}" style="width:${wp}%"></div></div></div>`;});
+  h+=secC();document.getElementById("tContent").innerHTML=h;
+}
+
+function renderHistory(){
+  const sorted=Object.keys(D.entries).filter(ds=>hasAct(D.entries[ds])).sort((a,b)=>b.localeCompare(a));
+  let h=secO("ENTRY HISTORY",`${sorted.length} days logged`);
+  if(!sorted.length) h+='<div class="empty">No entries yet. Start on the Daily Log tab.</div>';
+  else sorted.forEach(ds=>{const e=D.entries[ds],li=e.linkedinMessages||0,ca=e.outboundCalls||0,em=e.emailsSent||0,dc=e.discoveryCalls||0,bd=bDay(ds);
+    function mc(v,th){return v>=th?'g':v>0?'n':'z';}
+    h+=`<div class="hr" onclick="goDay('${ds}')"><div><div class="hd">${fmtS(ds)}</div><div class="hs2">${bd?'Day '+bd:'Outside blitz'}</div></div><div class="hst"><div class="ms"><div class="msv ${mc(li,10)}">${li}</div><div class="msl">LI</div></div><div class="ms"><div class="msv ${mc(ca,10)}">${ca}</div><div class="msl">Calls</div></div><div class="ms"><div class="msv ${mc(em,5)}">${em}</div><div class="msl">Email</div></div><div class="ms"><div class="msv ${mc(dc,1)}">${dc}</div><div class="msl">Disc</div></div><div class="cb ${e.crmLogged?'y':'no'}">CRM ${e.crmLogged?'✓':'✗'}</div></div></div>`;});
+  const missed=getMissedList();
+  if(missed.length){h+=secC();h+=secO("⚠️ MISSED WEEKDAYS",`${missed.length} with no activity`);
+    [...missed].reverse().forEach(ds=>{const bd=bDay(ds);h+=`<div class="hr" onclick="goDay('${ds}')" style="opacity:.7"><div><div class="hd" style="color:var(--red)">${fmtS(ds)}</div><div class="hs2">${bd?'Day '+bd:''} — NO ENTRY</div></div><div style="color:var(--red);font-size:12px;font-weight:700">Click to log →</div></div>`;});}
+  h+=secC();document.getElementById("hContent").innerHTML=h;
+}
+
+// ── Actions ──────────────────────────────────────────────────────────────────
+function adj(k,d){const e=getE(curDate);e[k]=Math.max(0,(e[k]||0)+d);queueSave(curDate);renderAll();}
+function setF(k,v){const e=getE(curDate);e[k]=Math.max(0,v);queueSave(curDate);renderAll();}
+function tglCRM(){const e=getE(curDate);e.crmLogged=!e.crmLogged;queueSave(curDate);renderAll();}
+function updNotes(v){const e=getE(curDate);e.notes=v;queueSave(curDate);}
+function tglTask(id){D.tasks[id]=!D.tasks[id];apiToggleTask(id,D.tasks[id]);renderTasks();renderHeader();}
+function navDay(d){curDate=addD(curDate,d);renderAll();}
+function navWeek(d){curDate=addD(curDate,d*7);renderAll();}
+function selTW(w){curTW=w;renderTasks();}
+function goDay(ds){curDate=ds;switchTab("daily");renderAll();}
+
+function switchTab(id){
+  document.querySelectorAll(".tb").forEach(b=>b.classList.toggle("on",b.dataset.t===id));
+  document.querySelectorAll(".pn").forEach(p=>p.classList.toggle("on",p.id==="p-"+id));
+}
+document.querySelectorAll(".tb").forEach(b=>b.addEventListener("click",()=>{switchTab(b.dataset.t);renderAll();}));
+function renderAll(){renderHeader();renderAlert();renderDaily();renderWeekly();renderTasks();renderHistory();}
+
+// ═════════════════════════════════════════════════════════════════════════════
+//  INIT
+// ═════════════════════════════════════════════════════════════════════════════
+(async function init(){
+  const loader=document.getElementById("loader");
+  const loadMsg=document.getElementById("loadMsg");
+
+  // Check if URL is configured
+  if(!API_URL || API_URL==="PASTE_YOUR_APPS_SCRIPT_URL_HERE" || !API_URL.startsWith("http")){
+    loader.classList.add("gone");
+    document.getElementById("setupScreen").style.display="block";
+    return;
+  }
+
+  // Try loading from Google Sheet
+  loadMsg.textContent="Connecting to Google Sheets…";
+  try {
+    const data = await apiLoad();
+    if(data.success){
+      D.entries = data.entries || {};
+      D.tasks = data.tasks || {};
+      sheetConnected = true;
+      setConn("ok","● Sheet Connected");
+      // Also save to localStorage as backup
+      localStorage.setItem("eos_v3", JSON.stringify(D));
+    } else {
+      throw new Error(data.error || "Unknown error from Apps Script");
+    }
+  } catch(e){
+    console.error("Sheet load failed:", e.message);
+    loadMsg.textContent="Sheet connection failed — loading local backup…";
+    setConn("off","● Local Only");
+
+    // Fall back to localStorage
+    try {
+      const raw=localStorage.getItem("eos_v3");
+      if(raw) D=JSON.parse(raw);
+    } catch(e2){ console.warn("localStorage also empty"); }
+
+    await new Promise(r=>setTimeout(r,1000));
+  }
+
+  // Show the app
+  document.getElementById("app").style.display="block";
+  renderAll();
+  loader.classList.add("gone");
+
+  // Clock refresh
+  setInterval(()=>{document.getElementById("clock").textContent=new Date().toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"});},60000);
+})();
+</script>
+</body>
+</html>
