@@ -1,1 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The AI Real Estate Investor Vault | Unshakable Investor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --obsidian:#050505;
+  --charcoal:#1A1A1A;
+  --charcoal-light:#242424;
+  --gold-from:#FFD700;
+  --gold-mid:#FFA500;
+  --gold-to:#FF4500;
+  --gold-gradient:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#FF4500 100%);
+  --gold-flat:#FFA500;
+  --gold-dim:rgba(255,165,0,0.55);
+  --white:#FFFFFF;
+  --white-80:rgba(255,255,255,0.80);
+  --white-60:rgba(255,255,255,0.60);
+  --white-45:rgba(255,255,255,0.45);
+  --white-18:rgba(255,255,255,0.18);
+  --surface-border:rgba(255,165,0,0.15);
+  --font-display:'Montserrat',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --nav-h:60px;
+  --sidebar-w:240px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--obsidian);color:var(--white);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;background:none;font-family:var(--font-body)}
+input{font-family:var(--font-body)}
 
+/* Skip link */
+.skip-link{position:absolute;top:-100%;left:0;background:var(--gold-mid);color:#000;padding:8px 16px;z-index:9999;font-weight:700}
+.skip-link:focus{top:0}
+
+/* ── TOP NAV ── */
+#topnav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1000;
+  background:rgba(5,5,5,0.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--surface-border);
+  display:flex;align-items:center;padding:0 20px;gap:16px;
+}
+.nav-brand{flex-shrink:0}
+.nav-brand-main{font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:1px;color:var(--white)}
+.nav-brand-sub{font-size:10px;font-weight:600;letter-spacing:1.5px;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-search{flex:1;max-width:420px;position:relative;margin:0 auto}
+.nav-search input{
+  width:100%;padding:9px 14px 9px 38px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,165,0,0.2);
+  border-radius:8px;color:var(--white);font-size:14px;outline:none;
+  transition:border-color 0.2s;
+}
+.nav-search input::placeholder{color:var(--white-45)}
+.nav-search input:focus{border-color:rgba(255,165,0,0.5)}
+.nav-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.45;font-size:14px}
+#search-results-dropdown{
+  position:absolute;top:calc(100% + 6px);left:0;right:0;
+  background:#111;border:1px solid var(--surface-border);border-radius:10px;
+  max-height:400px;overflow-y:auto;display:none;z-index:2000;
+  box-shadow:0 20px 60px rgba(0,0,0,0.8);
+}
+.nav-cta{
+  flex-shrink:0;padding:9px 18px;background:var(--gold-gradient);
+  color:#050505;font-family:var(--font-display);font-weight:600;font-size:12px;
+  border-radius:8px;letter-spacing:0.5px;white-space:nowrap;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.nav-cta:hover{transform:scale(1.03);box-shadow:0 0 20px rgba(255,165,0,0.4)}
+.hamburger{display:none;flex-direction:column;gap:5px;padding:6px;cursor:pointer}
+.hamburger span{display:block;width:22px;height:2px;background:var(--white-80);border-radius:2px;transition:all 0.3s}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  position:fixed;top:var(--nav-h);left:0;bottom:0;width:var(--sidebar-w);
+  background:rgba(10,10,10,0.98);border-right:1px solid rgba(255,165,0,0.10);
+  overflow-y:auto;scrollbar-width:none;z-index:900;
+  transition:transform 0.3s;
+}
+#sidebar::-webkit-scrollbar{display:none}
+.sidebar-section-label{
+  padding:20px 16px 8px;
+  font-family:var(--font-display);font-size:10px;font-weight:600;
+  color:var(--white-45);letter-spacing:1.5px;text-transform:uppercase;
+}
+.sidebar-item{
+  display:flex;align-items:center;gap:10px;padding:10px 16px;
+  font-size:13px;font-weight:500;color:var(--white-80);cursor:pointer;
+  border-left:3px solid transparent;transition:all 0.15s;position:relative;
+}
+.sidebar-item:hover{background:rgba(255,255,255,0.04);color:var(--white)}
+.sidebar-item.active{
+  border-left-color:var(--gold-flat);
+  background:rgba(255,165,0,0.08);color:var(--white);
+}
+.sidebar-item .s-icon{font-size:15px;flex-shrink:0}
+.sidebar-item .s-name{flex:1}
+.sidebar-count{
+  font-size:10px;padding:2px 6px;border-radius:20px;
+  background:rgba(255,165,0,0.15);color:var(--gold-flat);font-weight:600;
+}
+.sidebar-divider{height:1px;background:rgba(255,255,255,0.05);margin:8px 0}
+
+/* ── MAIN ── */
+#main{
+  margin-left:var(--sidebar-w);padding-top:var(--nav-h);
+  min-height:100vh;transition:margin-left 0.3s;
+}
+.content-area{padding:40px 40px 80px}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:60px 20px 50px;max-width:900px;margin:0 auto}
+.hero-eyebrow{font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:3px;color:var(--gold-flat);margin-bottom:16px;text-transform:uppercase}
+.hero-title{font-family:var(--font-display);font-size:52px;font-weight:900;line-height:1.05;margin-bottom:16px}
+.hero-title .gold{background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:17px;color:var(--white-80);max-width:640px;margin:0 auto 36px;line-height:1.6}
+.hero-stats{display:flex;justify-content:center;gap:48px;flex-wrap:wrap;margin-bottom:40px}
+.hero-stat .num{font-family:var(--font-display);font-size:38px;font-weight:800;background:var(--gold-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-stat .lbl{font-size:12px;color:var(--white-45);font-weight:500;margin-top:2px}
+.hero-cta-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.btn-primary{padding:13px 28px;background:var(--gold-gradient);color:#050505;font-family:var(--font-display);font-weight:700;font-size:14px;border-radius:8px;letter-spacing:0.5px;transition:transform 0.2s,box-shadow 0.2s}
+.btn-primary:hover{transform:scale(1.03);box-shadow:0 0 24px rgba(255,165,0,0.4)}
+.btn-ghost{padding:13px 28px;border:1px solid rgba(255,165,0,0.4);color:var(--gold-flat);font-family:var(--font-display);font-weight:600;font-size:14px;border-radius:8px;transition:all 0.2s;letter-spacing:0.5px}
+.btn-ghost:hover{border-color:var(--gold-flat);background:rgba(255,165,0,0.08)}
+
+/* ── CATEGORY GRID ── */
+.section-title{font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--white-45);margin-bottom:20px}
+.category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:60px}
+.cat-card{
+  background:var(--charcoal);border:1px solid var(--surface-border);
+  border-radius:12px;padding:28px;cursor:pointer;
+  transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;
+}
+.cat-card:hover{border-color:rgba(255,165,0,0.40);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,0.5)}
+.cat-icon{font-size:30px;margin-bottom:14px}
+.cat-name{font-family:var(--font-display);font-size:16px;font-weight:700;margin-bottom:6px}
+.cat-desc{font-size:13px;color:var(--white-60);line-height:1.5;margin-bottom:14px}
+.cat-footer{display:flex;justify-content:space-between;align-items:center}
+.cat-count{font-size:12px;color:var(--gold-flat);font-weight:600}
+.cat-explore{font-size:12px;color:var(--white-45);transition:color 0.2s}
+.cat-card:hover .cat-explore{color:var(--gold-flat)}
+
+/* ── SECTION VIEW ── */
+.section-header{margin-bottom:32px}
+.section-header-top{display:flex;align-items:center;gap:16px;margin-bottom:10px}
+.section-header-icon{font-size:36px}
+.section-header-name{font-family:var(--font-display);font-size:30px;font-weight:800}
+.section-header-desc{font-size:15px;color:var(--white-80);line-height:1.55;max-width:720px;margin-bottom:6px}
+.section-header-meta{font-size:12px;color:var(--white-45)}
+
+/* Filter bar */
+.filter-bar{
+  position:sticky;top:var(--nav-h);z-index:100;
+  background:rgba(5,5,5,0.90);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:12px 0;margin-bottom:24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.filter-pill{
+  padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;
+  border:1px solid rgba(255,255,255,0.12);color:var(--white-60);
+  background:transparent;transition:all 0.15s;
+}
+.filter-pill:hover{border-color:var(--gold-flat);color:var(--white)}
+.filter-pill.active{background:rgba(255,165,0,0.15);border-color:var(--gold-flat);color:var(--gold-flat)}
+.toggle-group{display:flex;gap:4px;margin-left:auto}
+.toggle-btn{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.12);color:var(--white-60);transition:all 0.15s}
+.toggle-btn.active{background:var(--gold-gradient);color:#050505;border-color:transparent}
+
+/* ── RESOURCE CARDS ── */
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.resource-grid.list-view{grid-template-columns:1fr}
+
+.rcard{
+  background:var(--charcoal);border:1px solid rgba(255,165,0,0.12);
+  border-radius:10px;padding:20px;display:flex;flex-direction:column;
+  transition:border-color 0.2s,transform 0.2s;
+  animation:fadeInUp 0.4s ease-out both;
+}
+.rcard:hover{border-color:rgba(255,165,0,0.35);transform:translateY(-2px)}
+.rcard.featured{border-left:3px solid;border-image:var(--gold-gradient) 1;grid-column:1/-1}
+.rcard-badge{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--gold-flat);margin-bottom:10px;text-transform:uppercase}
+.rcard-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.rcard-title{font-family:var(--font-display);font-size:14px;font-weight:700;line-height:1.3;flex:1}
+.rcard-link{color:var(--white-45);font-size:16px;flex-shrink:0;transition:color 0.15s}
+.rcard-link:hover{color:var(--gold-flat)}
+.rcard-desc{font-size:12px;color:var(--white-80);line-height:1.55;flex:1;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.rcard-edge{font-size:11px;color:var(--gold-flat);line-height:1.4;margin-bottom:12px;padding:8px 10px;background:rgba(255,165,0,0.07);border-radius:6px}
+.rcard-edge-label{font-weight:700;margin-bottom:2px;text-transform:uppercase;font-size:10px;letter-spacing:0.5px}
+.rcard-footer{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.rcard-tag{font-size:10px;padding:3px 8px;border-radius:12px;background:rgba(255,255,255,0.07);color:var(--white-60);font-weight:500}
+.rcard-pricing{font-size:10px;padding:3px 8px;border-radius:12px;background:rgba(255,165,0,0.1);color:var(--gold-flat);font-weight:600}
+.rcard-verified{font-size:10px;color:rgba(255,100,0,0.8);margin-left:auto;align-self:center}
+
+/* Prompt cards */
+.rcard.prompt-card{border-color:rgba(255,165,0,0.2)}
+.prompt-preview{
+  background:#0a0a0a;border-radius:6px;padding:10px;
+  font-family:monospace;font-size:11px;color:var(--white-60);
+  line-height:1.5;margin-bottom:10px;max-height:80px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.06);
+}
+.prompt-full{display:none;flex-direction:column;gap:8px;margin-bottom:10px}
+.prompt-full.open{display:flex}
+.prompt-text{
+  background:#0a0a0a;border-radius:6px;padding:12px;
+  font-family:monospace;font-size:11px;color:var(--white-80);
+  line-height:1.6;max-height:260px;overflow-y:auto;
+  border:1px solid rgba(255,255,255,0.06);
+  scrollbar-width:thin;scrollbar-color:var(--gold-flat) transparent;
+}
+.prompt-tip{font-size:11px;color:var(--white-60);line-height:1.4;padding:6px 10px;background:rgba(255,255,255,0.04);border-radius:6px}
+.prompt-actions{display:flex;gap:8px;align-items:center}
+.btn-expand{font-size:11px;padding:5px 12px;border-radius:6px;border:1px solid rgba(255,165,0,0.3);color:var(--gold-flat);background:transparent;transition:all 0.15s}
+.btn-expand:hover{background:rgba(255,165,0,0.1)}
+.btn-copy{font-size:11px;padding:5px 12px;border-radius:6px;background:var(--gold-gradient);color:#050505;font-weight:700;transition:opacity 0.15s}
+.btn-copy:hover{opacity:0.9}
+.platform-badges{display:flex;gap:5px;margin-left:auto}
+.pbadge{font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,0.08);color:var(--white-60);font-weight:600}
+
+/* ── COMPARISON TABLE ── */
+.comp-table-wrap{overflow-x:auto;margin-bottom:32px;border-radius:10px;border:1px solid var(--surface-border)}
+.comp-table{width:100%;border-collapse:collapse;font-size:12px}
+.comp-table th{
+  background:var(--gold-gradient);color:#050505;
+  font-family:var(--font-display);font-weight:700;font-size:11px;
+  letter-spacing:0.5px;padding:12px 14px;text-align:left;
+  white-space:nowrap;
+}
+.comp-table td{padding:11px 14px;border-bottom:1px solid rgba(255,255,255,0.05);color:var(--white-80);vertical-align:top}
+.comp-table tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table .best{color:var(--gold-flat);font-weight:700;background:rgba(255,165,0,0.07)}
+.comp-table .task-col{font-weight:600;color:var(--white);font-size:12px}
+
+/* ── GAPS SECTION ── */
+.gaps-section{background:rgba(255,165,0,0.04);border:1px solid rgba(255,165,0,0.12);border-radius:10px;padding:24px;margin-top:32px}
+.gaps-title{font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold-flat);margin-bottom:12px}
+.gaps-text{font-size:13px;color:var(--white-60);line-height:1.6}
+
+/* ── COMING SOON ── */
+.coming-soon-card{background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.12);border-radius:10px;padding:18px 20px;opacity:0.7}
+.coming-soon-badge{font-size:10px;font-weight:700;color:var(--gold-mid);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.coming-soon-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.coming-soon-desc{font-size:12px;color:var(--white-45);line-height:1.4}
+.launched-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,165,0,0.15);color:var(--gold-flat);margin-bottom:8px}
+
+/* ── SEARCH RESULTS ── */
+.sr-group-label{padding:10px 14px 4px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--white-45)}
+.sr-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;transition:background 0.15s}
+.sr-item:hover{background:rgba(255,165,0,0.08)}
+.sr-item-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.sr-item-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.sr-item-desc{font-size:11px;color:var(--white-45);line-height:1.3}
+.sr-count{padding:10px 14px;font-size:11px;color:var(--white-45);border-top:1px solid rgba(255,255,255,0.06)}
+.sr-empty{padding:20px 14px;text-align:center;font-size:13px;color:var(--white-45)}
+
+/* ── FOOTER ── */
+#footer{
+  background:#0A0A0A;border-top:1px solid rgba(255,165,0,0.15);
+  padding:60px 40px 40px;
+}
+.footer-grid{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:40px;max-width:1100px;margin:0 auto}
+.footer-brand-name{font-family:var(--font-display);font-weight:800;font-size:18px;margin-bottom:6px}
+.footer-brand-tag{font-size:13px;color:var(--white-45);line-height:1.5}
+.footer-webinar-box{
+  background:rgba(255,165,0,0.08);border:1px solid rgba(255,165,0,0.25);
+  border-radius:12px;padding:28px;text-align:center;
+}
+.footer-webinar-title{font-family:var(--font-display);font-size:18px;font-weight:800;margin-bottom:8px}
+.footer-webinar-sub{font-size:13px;color:var(--white-60);margin-bottom:18px;line-height:1.5}
+.footer-webinar-btn{display:inline-block;padding:12px 28px;background:var(--gold-gradient);color:#050505;font-family:var(--font-display);font-weight:700;font-size:13px;border-radius:8px}
+.footer-copy{font-size:12px;color:var(--white-45)}
+.footer-copy p{margin-bottom:6px}
+.footer-copy a{color:var(--white-45);text-decoration:underline;text-decoration-color:rgba(255,255,255,0.2)}
+
+/* ── STICKY CTA ── */
+#sticky-cta{
+  position:fixed;bottom:0;left:0;right:0;z-index:800;
+  background:rgba(10,10,10,0.97);border-top:1px solid rgba(255,165,0,0.2);
+  padding:12px 24px;display:flex;align-items:center;gap:16px;
+  transform:translateY(100%);transition:transform 0.4s ease;
+}
+#sticky-cta.visible{transform:translateY(0)}
+.sticky-text{font-size:13px;color:var(--white-80);flex:1}
+.sticky-text strong{color:var(--gold-flat)}
+.sticky-close{font-size:18px;color:var(--white-45);cursor:pointer;padding:4px;transition:color 0.15s}
+.sticky-close:hover{color:var(--white)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  :root{--sidebar-w:48px}
+  .sidebar-item .s-name,.sidebar-count,.sidebar-section-label,.sidebar-divider{display:none}
+  .sidebar-item{justify-content:center;padding:12px}
+  .sidebar-item .s-icon{font-size:18px}
+  .content-area{padding:24px 20px 60px}
+  .hero-title{font-size:36px}
+  .footer-grid{grid-template-columns:1fr;gap:24px}
+  .hamburger{display:flex}
+}
+@media(max-width:600px){
+  :root{--sidebar-w:0px}
+  #sidebar{transform:translateX(-240px);width:240px}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  .hero-title{font-size:28px}
+  .hero-stats{gap:24px}
+  .hero-stat .num{font-size:28px}
+  .resource-grid{grid-template-columns:1fr}
+  .category-grid{grid-template-columns:1fr}
+  .nav-cta{display:none}
+  .nav-search{max-width:none;flex:1}
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- TOP NAV -->
+<nav id="topnav" role="navigation" aria-label="Main navigation">
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu" onclick="toggleSidebar()">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-brand">
+    <div class="nav-brand-main">THE UNSHAKABLE INVESTOR</div>
+    <div class="nav-brand-sub">AI REAL ESTATE VAULT</div>
+  </div>
+  <div class="nav-search">
+    <span class="nav-search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Search tools, prompts, skills..." aria-label="Search vault" autocomplete="off">
+    <div id="search-results-dropdown" role="listbox" aria-label="Search results"></div>
+  </div>
+  <a href="https://go.theunshakableinvestor.com/ai-realestate-webinar-database" class="nav-cta" target="_blank" rel="noopener">🔥 Access Free Webinar</a>
+</nav>
+
+<!-- LEFT SIDEBAR -->
+<aside id="sidebar" role="navigation" aria-label="Section navigation">
+  <div class="sidebar-section-label">Sections</div>
+  <div id="sidebar-nav"></div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main id="main" tabindex="-1">
+  <div class="content-area" id="content-area"></div>
+  <footer id="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-name">The Unshakable Investor</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--gold-flat);margin-bottom:10px;text-transform:uppercase">Global Integrity Finance</div>
+        <div class="footer-brand-tag">Built for investors who refuse to lose their edge.</div>
+      </div>
+      <div class="footer-webinar-box">
+        <div class="footer-webinar-title">See These Tools Live</div>
+        <div class="footer-webinar-sub">Join Toby Potter for the 2026 AI Real Estate Blueprint — every Tuesday at 6PM CST</div>
+        <a href="https://go.theunshakableinvestor.com/ai-realestate-webinar-database" class="footer-webinar-btn" target="_blank" rel="noopener">Reserve My Seat →</a>
+      </div>
+      <div class="footer-copy">
+        <p>© 2026 The Unshakable Investor</p>
+        <p>Global Integrity Finance</p>
+        <p style="margin-top:10px"><a href="#">Privacy</a> | <a href="#">Terms</a></p>
+        <p style="margin-top:16px;color:rgba(255,255,255,0.25);font-size:10px">All AI tool information verified as of March 2026. Status marked ⚠️ where unverified.</p>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<!-- STICKY CTA -->
+<div id="sticky-cta" role="banner" aria-label="Webinar CTA">
+  <span class="sticky-text">🔥 See these AI tools demonstrated <strong>LIVE</strong> — Join the Free Webinar every Tuesday</span>
+  <a href="https://go.theunshakableinvestor.com/ai-realestate-webinar-database" class="nav-cta" target="_blank" rel="noopener" style="flex-shrink:0">Reserve My Seat</a>
+  <span class="sticky-close" onclick="dismissSticky()" aria-label="Dismiss">✕</span>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// VAULT DATA
+// ═══════════════════════════════════════════════
+const VAULT_DATA = {
+  sections: [
+    {
+      id:"claude-skills",
+      title:"Claude Skills",
+      icon:"⚡",
+      description:"Slash-command capabilities for Claude — research, document creation, reasoning, and automation skills with cross-platform ChatGPT and Gemini equivalents.",
+      resources:[
+        {id:"research-orchestrator",title:"/research-orchestrator",type:"skill",description:"Multi-agent research coordinator that decomposes a question into parallel workstreams, launches sub-agents, monitors them, and synthesizes a structured report with citations. Designed for market thesis generation across multiple metros.",pricing:"Free (included with Claude Code)",url:"https://github.com/altmbr/claude-research-skill",investorEdge:"Point it at a target market and let it spawn workstreams for demographics, rental demand, new supply, recent flips, and financing terms simultaneously — far deeper than a one-shot chat answer.",keyFeature:"Spawns multiple research agents in parallel, each writing to its own markdown file, then runs a synthesis pass to produce a unified source-linked report.",worksWith:["Claude Code","Web Search","MCP Servers"],tags:["research","agents","free","claude-code"],featured:true,verified:true,promptText:`/research "Deep dive: Is [SUBMARKET] a buy for value-add SFR in 2026?" \\
+  --workspace ./projects/[SUBMARKET]-thesis \\
+  --outputs market.md supply_demand.md debt.md comps.md risk.md
+
+Scope the work into 5 parallel agents:
+1) Macro & population flows
+2) Rent growth, vacancy, absorption
+3) Construction pipeline & permitting
+4) Recent investor purchases and flips
+5) Debt terms, DSCR, rate scenarios
+
+Require: at least 12 distinct web sources, zoning map references
+where available, 2-3 recent sales and 2-3 current listings per ZIP.
+Produce a final thesis.md with: buy/hold/pass verdict, key risks,
+and action items.`,useCase:"Market thesis generation before committing under LOI",proTip:"Define a standard output schema (thesis, risks, recommended offer bands, watchlist triggers) and reuse it across every new metro so your team's underwriting language converges over time."},
+        {id:"web-search-deep",title:"/web-search-deep",type:"skill",description:"Deep web research command pattern that runs a focused web search, collects up to 15 URLs, fetches all pages in parallel, then compiles structured findings with citations.",pricing:"Free",url:"https://gist.github.com",investorEdge:"Pull everything published in the last 12-18 months about a specific corridor (I-35W north Fort Worth industrial, Arlington TX STR regulations) before writing offers.",keyFeature:"Enforces parallel WebFetch behavior and deduplicates URLs to avoid burning tokens crawling pages one-by-one.",worksWith:["Claude","Web Search","MCP"],tags:["research","web","free"],verified:true,promptText:`Deep web research — fetch and analyze multiple sources in parallel.
+Instructions:
+1. Search for the provided query
+2. Collect up to 15 unique, fetchable URLs (skip PDFs/login walls)
+3. Launch Task agents to fetch ALL URLs in a SINGLE tool call
+4. Extract key metrics, dates, and direct quotes
+5. Synthesize into a structured report with source URLs
+Always pin your time window (e.g., "Jan 2025–present") and ask
+for zoning code sections, ordinance IDs, and docket numbers.`,useCase:"Pull everything about a corridor or regulation before making offers",proTip:"Always include a time window and ask for ordinance IDs so you can verify anything regulatory independently."},
+        {id:"pdf-skill",title:"/pdf (Document Skill)",type:"skill",description:"Reads, edits, and programmatically generates PDFs via a Skill that wraps code for page layout, tables, and styling. Auto-generate lender-ready deal packages from project folders.",pricing:"Free Skill; Claude tokens",url:"https://code.claude.com/docs/en/skills",investorEdge:"Auto-generate investor-ready PDF deal packages for every accepted LOI — photos, investment thesis, underwriting summary, rent roll snapshot — built from your project folder without manual InDesign.",keyFeature:"Wired to read local files and spreadsheets, then renders a consistent branded PDF template.",worksWith:["Claude Code","Google Drive","Box","Notion"],tags:["documents","pdf","automation"],verified:true,promptText:`/pdf "Create an investor-ready deal package for [PROPERTY_NAME]." \\
+  --source ./deals/[PROPERTY_FOLDER] \\
+  --template ./templates/value-add-multifamily.pdf
+
+Include:
+- Property summary and photos
+- High-level business plan (hold period, value-creation levers)
+- Purchase terms, projected capex, and funding stack
+- 10-year cash flow summary and IRR / equity multiple bands
+- Key risks and mitigants`,useCase:"Creating lender and LP packages from deal folders",proTip:"Save standardized templates in your Project so Claude generates consistent formatting across all deals."},
+        {id:"docx-skill",title:"/docx (Word Document Skill)",type:"skill",description:"Creates and edits .docx documents with full formatting. Generate LOIs, seller credibility letters, SOW docs for GC bids, and private-lender note templates directly from deal folders.",pricing:"Free Skill",url:"https://support.claude.com",investorEdge:"Generate letters of intent, scope-of-work docs for GC bids, and private-lender note templates directly from your deal folders — Claude can open an existing LOI.docx, revise clauses, and re-export.",keyFeature:"Direct in-place editing: Claude can open an existing document, revise clauses, and re-export without touching Word.",worksWith:["Claude Code","Google Drive","Microsoft 365"],tags:["documents","word","automation"],verified:true,promptText:`/docx "Draft a formal LOI for [PROPERTY_ADDRESS]." \\
+  --template ./templates/sfr-purchase-loi.docx \\
+  --output ./deals/[PROPERTY_FOLDER]/LOI_[DATE].docx
+
+Use my standard earnest money terms from prior LOIs in this folder.
+Reference financing assumptions from underwriting.xlsx.
+Target close: 35 days, inspection: 10 business days, assignment allowed.`,useCase:"Generating LOIs, SOW docs, seller letters",proTip:"Build a library of templates per deal type and let Claude populate them from structured data rather than writing from scratch."},
+        {id:"sequential-thinking",title:"/sequential-thinking",type:"skill",description:"MCP Skill that gives Claude a structured, multi-step reasoning tool — explicitly tracking thought steps, revisions, and branches. Essential for complex creative financing scenarios.",pricing:"Free",url:"https://fastmcp.me/skills/details/3/sequential-thinking",investorEdge:"Complex deal structuring where you want the AI to think in numbered steps, backtrack, and explore branches like seller finance, subject-to, and JV equity before recommending one structure.",keyFeature:"Enforces explicit thoughtNumber/totalThoughts fields, letting you constrain or expand the reasoning budget and see the chain of thought evolve.",worksWith:["Claude Desktop","Claude Code","MCP"],tags:["reasoning","deal-structure","free","mcp"],verified:true,promptText:`Use the sequential-thinking tool to design the optimal capital stack
+for this deal.
+
+Goal: Acquire [PROPERTY_NAME] at [PRICE] with minimal cash out of pocket
+while keeping DSCR above 1.25 and investor IRR above 18%.
+
+Explore at least 3 branches:
+1) Conventional bank debt + LP equity
+2) Seller financing (2nd lien) + bank debt
+3) Private lender + equity partners
+
+At each thought step, document:
+- Assumptions (LTV, rate, amortization)
+- DSCR and projected cash-on-cash
+- Pros/cons and execution risks
+
+Stop when you've converged on the highest IRR structure that doesn't
+breach DSCR or regulatory constraints.`,useCase:"Creative financing analysis, deal structuring, capital stacks",proTip:"Use this before any deal where standard bank debt doesn't pencil — let it exhaust all creative structures before you decide."},
+        {id:"code-execution",title:"Code Execution (Calculations)",type:"skill",description:"Lets Claude write and run Python/JS for calculations, data wrangling, and simulations with results fed back into the conversation. Build MAO calculators, BRRRR models, portfolio stress tests.",pricing:"Included with Claude Pro/Max/Team",url:"https://platform.claude.com/docs/en/agents-and-tools/tool-use",investorEdge:"Build MAO calculators, BRRRR models, portfolio stress tests, and scenario tables off your rent rolls and T-12s without opening Excel — then export clean CSV/XLSX artifacts.",keyFeature:"Tight coupling with web search and file tools: ingest a rent roll, calculate DSCR distributions across rate scenarios, write out a new underwriting file.",worksWith:["Claude Code","Google Sheets","GitHub","Zapier"],tags:["calculation","python","analysis","automation"],verified:true,promptText:`You're my acquisitions analyst.
+
+1) Ingest ./deals/[PROPERTY]/rent_roll.csv and ./deals/[PROPERTY]/t12.csv.
+2) Build a Python-based underwriting model that calculates:
+   - DSCR by year under 3 rate scenarios
+   - Equity multiple and IRR for 5- and 10-year exit
+   - Sensitivity table for rent growth (+/-2%) and capex overruns (+/-15%)
+3) Export the model as underwriting_[PROPERTY].xlsx and a PDF summary.
+4) Flag any covenant risks if DSCR dips below 1.20 in any scenario.`,useCase:"MAO math, BRRRR models, deal calculators, portfolio stress tests",proTip:"Keep the underwriting assumptions as a separate JSON file so you can update them across all models without rewriting code."},
+        {id:"make-com-skill",title:"/make-com (Automation Connector)",type:"skill",description:"Connects Claude to Make.com so prompts can run and manage Make scenarios directly from chat or Claude Code. Trigger nurture automations conversationally.",pricing:"Free connector; Make paid required for volume",url:"https://claude.com/connectors/make",investorEdge:"When Claude tags a lead as 'warm seller' in a conversation, run the Make scenario that adds them to the correct pipeline, kicks off SMS follow-ups, and creates tasks in your CRM.",keyFeature:"Browse, run, and modify Make scenarios without leaving Claude — prototype automations conversationally then harden them in Make.",worksWith:["Make.com","CRM","Google Sheets","Twilio"],tags:["automation","make","crm","workflows"],verified:true,promptText:`/make-com "Wire this new acquisitions workflow."
+
+Goal: When a new lead form is submitted on [WEBSITE],
+1) Log the lead in Airtable (Seller Leads base)
+2) Enrich with property data from county API
+3) Send data to Claude for a quick deal score
+4) If score >= 7/10, add to High Priority pipeline and
+   trigger a 5-touch SMS + email follow-up via Twilio
+
+Show me the existing scenarios and propose a new one.
+Then create and enable it in Make.`,useCase:"Lead nurture automation, deal pipeline workflows",proTip:"Start with one scenario (lead scoring), prove it works, then add complexity. Fragile multi-step automations compound errors."},
+        {id:"excalidraw-skill",title:"/excalidraw (Diagram Skill)",type:"skill",description:"Uses the Excalidraw MCP server to turn natural-language descriptions into live, editable diagrams — flowcharts, architectures, process maps that your team can edit.",pricing:"Free (open-source)",url:"https://github.com/excalidraw/excalidraw",investorEdge:"Visualize your acquisition funnel, rehab process, or asset-management SOPs — then iterate on them in a shared whiteboard your team can edit in real time.",keyFeature:"Real-time sync between Claude and the Excalidraw canvas, so edits requested in chat show up immediately in the diagram.",worksWith:["Claude Code","Excalidraw Web"],tags:["visual","diagram","sop","team"],verified:true,promptText:`/excalidraw "Map our full acquisitions → dispo pipeline."
+
+Draw a left-to-right flowchart showing:
+- Lead intake sources
+- Qualification steps and exit paths
+- Underwriting, offers, and contract-to-close steps
+- Hand-offs to rehab, property management, or dispo
+
+Use swimlanes for Sales, Acquisitions, Finance, and Ops.
+Highlight any steps that are still manual in red.`,useCase:"Mapping deal flows, visualizing portfolio structure, SOP design",proTip:"After building the diagram, ask Claude to annotate which steps are automatable — then use it as a roadmap for Make.com workflows."},
+        {id:"claude-projects",title:"Claude Projects (Deal Rooms)",type:"skill",description:"Collaborative AI workspaces for CRE deal teams. Upload rent rolls, define investment criteria, and perform coordinated analysis for acquisitions, underwriting, and due diligence.",pricing:"Included with Claude Pro/Max/Team",url:"https://claude.ai/projects",investorEdge:"Create Projects for each major domain (Texas SFR acquisitions, Phoenix CRE underwriting, Investor Relations) and load them with playbooks, glossaries, and example deal files — so every conversation starts with your methodology baked in.",keyFeature:"Maintains shared context (docs + instructions) for your team so every conversation in that Project starts with your methodology already loaded.",worksWith:["Claude","Google Drive","Box"],tags:["memory","team","context","deals"],featured:true,verified:true,promptText:`Project System Prompt (paste in Project Instructions):
+
+You are the Senior Acquisitions Analyst for [FIRM_NAME], focused on
+value-add multifamily and SFR in [TARGET_MARKETS].
+
+Mandate:
+- Underwrite conservatively, prioritizing downside protection.
+- Favor deals with clear value-creation levers: classic-to-premium
+  interior upgrades, RUBS, operational efficiencies.
+- Always flag debt-coverage and liquidity risks.
+
+When analyzing a new deal:
+1) Read all documents in this Project tagged with the property name.
+2) Build a concise investment memo (max 2 pages) with:
+   - Deal snapshot | Business plan
+   - Returns (IRR, equity multiple, CoC)
+   - Risk factors & mitigants
+3) Compare to our existing portfolio and pipeline.
+4) Conclude with: BUY, WATCH, or PASS and explain why.`,useCase:"Persistent deal analysis context, team alignment, methodology encoding",proTip:"Store your buy box, underwriting assumptions, and preferred deal structures in Project knowledge so Claude never defaults to generic analysis."}
+      ]
+    },
+    {
+      id:"claude-plugins",
+      title:"Claude Plugins",
+      icon:"🔌",
+      description:"Native integrations and connectors in Claude — Google Workspace, Slack, Notion, Canva, Make, Zapier, and developer tools. No MCP server required.",
+      resources:[
+        {id:"google-workspace",title:"Google Workspace Integration",type:"tool",description:"Search and summarize Gmail, scan Calendar for commitments, and pull content from Google Docs without manual uploads — all inside a Claude chat. Launched April 2025.",pricing:"Included with paid Claude plans",url:"https://support.claude.com",investorEdge:"Auto-compile weekly pipeline summaries from seller emails, LOI threads, and lender responses. Prep for investor calls by summarizing all recent email back-and-forth on a given property.",keyFeature:"Read Gmail, Calendar, and Docs in context without re-uploading files.",worksWith:["Gmail","Google Calendar","Google Docs"],tags:["google","email","calendar","docs"],verified:true},
+        {id:"google-drive",title:"Google Drive Integration",type:"tool",description:"Search, summarize, and cross-reference large folders of leases, loan docs, and OMs without re-uploading files. Build a Deal Room folder per asset.",pricing:"Included with paid Claude plans",url:"https://support.claude.com",investorEdge:"Build a Deal Room folder per asset and let Claude pull every relevant file into context when you ask for updated underwriting, a lender package, or a legal summary.",keyFeature:"Cross-reference docs across large Drive folders in one context window.",worksWith:["Google Drive","Claude Projects"],tags:["storage","documents","drive"],verified:true},
+        {id:"slack-integration",title:"Slack Integration",type:"tool",description:"Ask Claude questions from Slack channels, summarize threads, and pipe structured outputs into Slack for team review. Install Claude's Slack app.",pricing:"Included with paid Claude plans",url:"https://slack.com/marketplace",investorEdge:"Dedicated #acquisitions-ai channel where analysts drop 'underwrite this' messages and receive AI-drafted memos, reviewed by principals before moving into the formal underwriting pipeline.",keyFeature:"Interactive app in Slack — Claude answers questions in-channel with full context.",worksWith:["Slack","Make","Zapier"],tags:["slack","team","communication"],verified:true},
+        {id:"notion-integration",title:"Notion Integration (via MCP)",type:"tool",description:"Read/write access to structured property databases, SOPs, and investment memos. Create or update Notion pages from Claude-generated content.",pricing:"Notion + Claude subscriptions",url:"https://zapier.com/mcp/notion",investorEdge:"Maintain a master investment playbook and deal log in Notion, while Claude updates comps tables, DD checklists, and meeting notes automatically after you upload new docs.",keyFeature:"AI updates your Notion pipeline automatically — no copy-paste from chat to database.",worksWith:["Notion","Zapier","Make"],tags:["notion","database","sop"],verified:true},
+        {id:"canva-integration",title:"Canva Integration",type:"tool",description:"Create and edit presentations, social posts, flyers, and other visuals directly from a Claude conversation, with Claude populating templates based on your brief.",pricing:"Canva paid + Claude paid",url:"https://canva.com",investorEdge:"Auto-generate listing flyers, social carousels, and investor one-pagers using a fixed brand kit and property data from your CRM — no designer required.",keyFeature:"Claude + Canva = marketing collateral from property data in minutes.",worksWith:["Canva","Google Drive"],tags:["design","marketing","visual"],verified:true},
+        {id:"gamma-integration",title:"Gamma (Presentations)",type:"tool",description:"Turn Claude-generated outlines into polished slide decks, docs, or microsites without leaving the Claude interface. Convert deal memos to partner-ready decks.",pricing:"Gamma subscription + Claude Pro",url:"https://gamma.app",investorEdge:"Convert a Claude market thesis or deal memo into a partner-ready investment deck in minutes, then export to PDF or PPTX.",keyFeature:"Claude → Gamma pipeline turns text analysis into formatted presentation in one step.",worksWith:["Gamma","Claude"],tags:["presentations","decks","investor"],verified:true},
+        {id:"github-integration",title:"GitHub Integration",type:"tool",description:"Claude reads, navigates, and refactors codebases, opens PRs, and suggests changes across repos. For shops with internal tools like deal dashboards or acquisition CRMs.",pricing:"Included with Claude + GitHub",url:"https://github.com",investorEdge:"For vertically integrated shops with internal tools — deal dashboards, acquisitions CRMs — Claude becomes a pair-programmer shipping features like new underwriting modules or reporting views faster.",keyFeature:"Full codebase context: Claude can navigate, refactor, and suggest changes across repos.",worksWith:["GitHub","Claude Code"],tags:["code","dev","automation"],verified:true},
+        {id:"zapier-integration",title:"Zapier MCP Integration",type:"tool",description:"Claude queries and updates data flowing through Zapier — CRMs, web forms, spreadsheets, and messaging tools — without touching Zapier's UI. Remote MCP approach.",pricing:"Zapier mid-tier + Claude",url:"https://zapier.com/mcp",investorEdge:"Automatically send new web leads to Claude for scoring, then route high-intent sellers to a hot leads list and kick off tailored follow-up sequences.",keyFeature:"One connector to orchestrate thousands of Zapier actions from Claude with scoped permissions.",worksWith:["Zapier","CRM","Email","SMS"],tags:["automation","zapier","leads","workflows"],verified:true},
+        {id:"make-integration",title:"Make.com Connector",type:"tool",description:"List, run, and modify Make scenarios from within Claude. Use Claude as the brain that orchestrates complex event-driven workflows across your stack.",pricing:"Make + Claude subscriptions",url:"https://make.com",investorEdge:"A scenario that reacts to a signed DocuSign contract by updating your CRM, tasking the TC, notifying acquisitions in Slack, and queuing a Claude-generated next-steps email for the seller.",keyFeature:"Claude orchestrates Make scenarios conversationally — then you harden them in Make.",worksWith:["Make.com","DocuSign","CRM","Slack"],tags:["automation","make","crm","workflows"],verified:true}
+      ]
+    },
+    {
+      id:"cowork-antigravity",
+      title:"Cowork & Antigravity",
+      icon:"🤖",
+      description:"Claude Cowork automates desktop file workflows on macOS. Google Antigravity is an agent-first IDE that builds software via autonomous agents. Two platforms, different power.",
+      resources:[
+        {id:"claude-cowork",title:"Claude Cowork",type:"tool",description:"Agentic desktop tool for macOS that automates multi-step workflows — reads, creates, and organizes files in designated folders with minimal supervision. Launched January 12, 2026.",pricing:"Pro ($20/mo), Max ($100-200/mo)",url:"https://claude.ai",investorEdge:"Drop a full DD package (rent roll, T-12, inspection photos, bids, zoning PDFs) into a new folder and get an initial underwriting pass before allocating analyst time.",keyFeature:"Persistent access to approved workspace folders — plans tasks, runs them over time, coordinates activity across local file system and connected services.",worksWith:["macOS","Claude","File System","Google Drive"],tags:["agentic","macos","automation","dd"],featured:true,verified:true},
+        {id:"cowork-dd",title:"Cowork: DD Folder Underwriter",type:"skill",description:"Drop a full due-diligence folder into a Mac directory. Cowork detects it, scans all files, extracts financials into structured tables, runs scenario analysis, and produces a memo and spreadsheet.",pricing:"Included with Claude Pro/Max",url:"https://claude.ai",investorEdge:"Standardize how every new deal gets a first-pass underwriting without analyst time — Cowork follows your written playbook file each time.",keyFeature:"Automatic detection of new deal folders plus structured output creation.",worksWith:["Claude Cowork","File System"],tags:["dd","underwriting","automation","cowork"],verified:true,promptText:`Cowork Playbook File (save as PLAYBOOK.md in your Deals folder):
+
+You are analyzing a new real estate deal.
+When a new property folder is detected:
+1) Scan all files and list what you found.
+2) Extract financials from rent rolls and T-12s into structured tables.
+3) Run scenario analysis: base, downside (+10% expenses, -5% rents), upside.
+4) Write a 2-page investment memo with: snapshot, business plan, returns, risks.
+5) Create a DD checklist with missing items flagged.
+6) Generate seller/lender questions for the next call.
+
+Output files: underwriting.xlsx, memo.pdf, dd_checklist.md, questions.md
+Follow my standard DSCR minimum (1.25) and target IRR (18%+).`,useCase:"First-pass underwriting from raw DD folder",proTip:"Constrain Cowork to a single project folder and state 'work only inside this folder' — prevents surprises with unintended file access."},
+        {id:"google-antigravity",title:"Google Antigravity",type:"tool",description:"Agent-first IDE that lets you delegate software and web-app development to autonomous agents powered by Gemini 3.1 Pro, Claude Sonnet/Opus 4.6, and GPT-OSS-120B. Launched November 2025.",pricing:"Free (limits), Pro (~$20/mo), Ultra (~$250/mo); Credits $25/2,500",url:"https://lab.google/antigravity",investorEdge:"Build custom internal tools — deal analyzers, lead portals, portfolio dashboards — using autonomous agents that plan, scaffold, implement, and test, without line-by-line coding.",keyFeature:"Manager View: mission control where you see tasks, agents, and status as they work across multiple workspaces. Planning Mode forces a review before any code ships.",worksWith:["Gemini","Claude Sonnet 4.6","Claude Opus 4.6","GPT-OSS-120B","Supabase","n8n","Stitch","GitHub","Figma","Airtable"],tags:["ide","agents","app-building","google"],featured:true,verified:true},
+        {id:"antigravity-deal-analyzer",title:"Antigravity: Deal Analyzer App",type:"tool",description:"Build a secure deal analyzer web app for acquisitions teams. Form to enter property data, compute DSCR/IRR/equity multiple, save scenarios, role-based access, dark-mode dashboard.",pricing:"Google AI Pro/Ultra + Antigravity credits",url:"https://lab.google/antigravity",investorEdge:"Standardized deal analysis tool accessible to every team member — no Excel skills required, consistent assumptions across every analysis.",keyFeature:"Full web app with database persistence and team access controls — not a spreadsheet.",worksWith:["Antigravity","Supabase","Next.js"],tags:["deal-analysis","app","antigravity"],verified:true,promptText:`Build a secure web app called "[Market] Deal Analyzer" for our acquisitions team.
+
+Features:
+- Form to enter property price, rents, expenses, financing terms
+- Compute DSCR, cash-on-cash, IRR, equity multiple over 10 years
+- Save scenarios to a Supabase database
+- Role-based access (Acquisitions, Partners, Read-only)
+- Dark-mode dashboard with charts
+
+Use modern stack (Next.js, Tailwind, shadcn/ui).
+Plan first, then implement.`,useCase:"Internal deal analysis tool for acquisitions teams",proTip:"Use Planning Mode — approve the implementation plan before any code ships. Saves 40% of debug time on complex apps."},
+        {id:"antigravity-portfolio",title:"Antigravity: Portfolio Dashboard",type:"tool",description:"Multi-asset portfolio dashboard with rent roll data, collections, delinquencies, occupancy, capex, and AI summary panel that explains monthly performance in plain English.",pricing:"Google AI Pro/Ultra credits",url:"https://lab.google/antigravity",investorEdge:"Executive-level command center for asset performance with AI commentary — built from your actual property management data, not a canned template.",keyFeature:"AI summary panel translates raw data into actionable narrative for operators and LPs.",worksWith:["Antigravity","Supabase","Postgres","MCP"],tags:["dashboard","portfolio","reporting"],verified:true,promptText:`Create a multi-asset portfolio dashboard for our real estate company.
+
+Data: rent rolls, collections, delinquencies, occupancy, capex, sales
+Visuals: asset cards, trend charts, KPIs by market and strategy
+Integrations: Supabase via MCP, Auth for internal staff only
+AI summary panel: explains monthly performance in plain English
+
+Stack: Next.js, Recharts, shadcn/ui, Supabase Auth.`,useCase:"Portfolio-level executive reporting with AI commentary",proTip:"Connect to your actual PM software export format first — Antigravity can build a custom parser if you paste a sample CSV."},
+        {id:"antigravity-stitch",title:"Stitch + Antigravity Workflow",type:"tool",description:"Stitch is Google's AI design tool. Its MCP server for Antigravity lets agents pull in high-fidelity designs and build production apps from them. Ideate in Stitch, build in Antigravity.",pricing:"Included with Google AI Pro/Ultra",url:"https://labs.google/stitch",investorEdge:"Design an investor deal package interface in Stitch, then hand it to Antigravity to build the actual database-connected app — design-to-production in one pipeline.",keyFeature:"Stitch MCP server imports designs as the basis for real apps, including deployment to Firebase or Cloud Run.",worksWith:["Stitch","Antigravity","Google AI Studio","Firebase"],tags:["design","app-building","google","workflow"],verified:true}
+      ]
+    },
+    {
+      id:"nano-banana",
+      title:"Nano Banana & Imagen",
+      icon:"🎨",
+      description:"Google's Gemini image generation family: Nano Banana (Flash), Nano Banana Pro, and Nano Banana 2. Listing visuals, investor decks, infographics, and direct mail — with complete prompt templates.",
+      resources:[
+        {id:"nano-banana-original",title:"Nano Banana (Gemini 2.5 Flash Image)",type:"tool",description:"High-speed text-to-image and image editing with multi-image blending, character consistency, and natural language editing. ~$0.039/image via API. Best for high-volume, lower-stakes visuals.",pricing:"~$0.039/image API; Free tier available",url:"https://ai.google.dev",investorEdge:"Fast generation of lifestyle scenes, neighborhood mood images, hero photos for blogs or social posts, and preliminary virtual staging ideas for internal review.",keyFeature:"Multi-image blending + character style consistency across shots; SynthID watermarking.",worksWith:["Gemini App","AI Studio","Vertex AI","Gemini API"],tags:["image","free-tier","high-volume","social"],verified:true},
+        {id:"nano-banana-pro",title:"Nano Banana Pro (Gemini 3 Pro Image)",type:"tool",description:"4K resolution, 94-96% text-in-image accuracy, up to 14 reference images, Google Search grounding, Thinking mode, and masked editing. For investor decks, pitch books, and infographics.",pricing:"~$0.134/2K image, ~$0.24/4K; batch discounts",url:"https://ai.google.dev",investorEdge:"Deal-package covers, investor-presentation visuals, complex neighborhood or market infographics, and direct-mail designs with heavy text that must be crisp.",keyFeature:"4K resolution + 94-96% text accuracy — critical for investor materials where every label must be readable.",worksWith:["Gemini App","AI Studio","Google Ads","Vertex AI","Workspace"],tags:["image","pro","4k","text-accuracy","investor-decks"],featured:true,verified:true},
+        {id:"nano-banana-2",title:"Nano Banana 2 (Gemini 3.1 Flash Image)",type:"tool",description:"Pro-quality images at Flash speed at ~50% lower cost than Pro. C2PA content credentials + SynthID. Default in Gemini app March 2026. Best for ongoing campaigns at scale.",pricing:"~50% lower than Pro per image",url:"https://ai.google.dev/gemini-api/docs/changelog",investorEdge:"Always-on pipelines: ad creative refreshes, MLS-style hero image experimentation, and automated reporting infographics that must look professional at sustainable cost.",keyFeature:"Pro-like text handling and visual fidelity with Flash-tier speed — the best cost-quality balance for volume campaigns.",worksWith:["Gemini App","AI Studio","Vertex AI","Antigravity","Search AI Mode"],tags:["image","fast","cost-effective","campaigns"],verified:true},
+        {id:"prompt-listing-hero",title:"Prompt: Property Listing Hero (Before/After)",type:"prompt",description:"Create a side-by-side before/after renovation image for MLS listings. Photorealistic, correct perspective, labeled corners.",pricing:"Nano Banana 2 recommended",url:"https://ai.google.dev",investorEdge:"Scroll-stopping listing image that shows the transformation story — before the renovation photos are even taken.",keyFeature:"Side-by-side comparison at correct camera angle with discreet labels.",worksWith:["Nano Banana 2","Canva"],tags:["listing","before-after","image","prompt"],verified:true,promptText:`Create two side-by-side photorealistic images for a real estate listing hero.
+
+[LEFT SIDE] "Before" condition: outdated [ROOM_TYPE] in a [PROPERTY_TYPE]
+at [ADDRESS] in [CITY]. Show worn carpet, beige walls, dated light fixtures,
+clutter, and poor lighting.
+
+[RIGHT SIDE] "After" renovation: same camera angle and layout, but with
+modern LVP flooring, white walls, black hardware, recessed lighting,
+and simple, neutral staging.
+
+Style: MLS-ready real estate photography, natural daylight from windows,
+realistic proportions, no fisheye distortion.
+Output: 16:9 horizontal image suitable for web banners and listing sites.
+Label each side discreetly in the corner as "Before" and "After" with
+clean sans-serif text.`,useCase:"MLS listings, social reveals, marketing emails",proTip:"If text labels glitch, regenerate with Pro or add labels later in Canva using the Nano Banana render as the background."},
+        {id:"prompt-postcard",title:"Prompt: Direct Mail Postcard Background",type:"prompt",description:"High-resolution background image for real estate direct mail postcards. Leave negative space for text overlay. Architecture matches the target region.",pricing:"Nano Banana (Flash) — high volume",url:"https://ai.google.dev",investorEdge:"You'll overlay text in your design tool — you mainly need mood and location cues at scale. Flash tier is fast and cheap for volume.",keyFeature:"Golden-hour neighborhood mood with correct regional architecture and negative space for copy.",worksWith:["Nano Banana","Canva"],tags:["direct-mail","postcard","image","prompt"],verified:true,promptText:`Generate a high-resolution background image for a real estate
+direct mail postcard for [CITY_NEIGHBORHOOD].
+
+Scene: Golden hour street view with tidy single-family homes, mature trees,
+clean sidewalks, and warm sunlight. Suburban but not generic — architecture
+should loosely match [REGION] style.
+
+Composition: Leave negative space in the top-right and bottom-right corners
+for headline and call-to-action text. Avoid people and cars in the foreground.
+
+Style: Photorealistic, lightly stylized for warmth. 3:2 landscape aspect ratio.`,useCase:"Direct mail campaigns, neighborhood farming",proTip:"Keep humans out of background prompts to avoid uncanny faces and fair-housing representation issues."},
+        {id:"prompt-investor-deck",title:"Prompt: Investor Presentation Hero",type:"prompt",description:"Wide cinematic hero image for investment presentation slide decks. Skyline with abstract data overlay. Mood: confident, disciplined, long-term. 16:9 full-bleed.",pricing:"Nano Banana Pro for boardroom quality",url:"https://ai.google.dev",investorEdge:"A visual that frames your strategy slide without competing with overlay text — establishes institutional credibility from slide 1.",keyFeature:"16:9 full-bleed with abstract data overlay suggesting systems and analytics. No text in image.",worksWith:["Nano Banana Pro","Gamma","PowerPoint"],tags:["investor","deck","presentation","image","prompt"],verified:true,promptText:`Generate a wide, cinematic hero image for an investor presentation
+slide titled "[FIRM_NAME] 2026 Acquisition Strategy".
+
+Scene: Abstract but real-estate-themed — skyline of [PRIMARY_MARKET],
+layered with faint line charts and subtle grid patterns suggesting
+data and systems. No text in the image.
+
+Mood: Confident, disciplined, long-term.
+Palette: Deep navy, charcoal, and a single accent color from [BRAND_COLORS].
+Aspect ratio: 16:9, optimized as a full-bleed slide background.`,useCase:"LP presentations, investor decks, annual reports",proTip:"Save successful styles as reference images and reuse them for future decks to build brand familiarity across your investor communications."},
+        {id:"prompt-virtual-staging",title:"Prompt: Virtual Staging Concept",type:"prompt",description:"Virtually stage an empty room from a reference photo. 3 variants with different furniture layouts for A/B testing. Preserves original camera angle and architecture.",pricing:"Nano Banana 2 for fast iteration",url:"https://ai.google.dev",investorEdge:"Cheap iteration before you pay for professional staging — get agent buy-in on the look before spending money on furniture.",keyFeature:"Reference-image input preserves original architecture while adding modern furnishings.",worksWith:["Nano Banana 2","Canva"],tags:["virtual-staging","listing","image","prompt"],verified:true,promptText:`Take this empty [ROOM_TYPE] photo from a [PROPERTY_TYPE] in [CITY]
+(reference image) and virtually stage it.
+
+Goals:
+- Target buyer: [TARGET_BUYER_PROFILE] (e.g., young professional couple)
+- Style: Modern, minimal, warm neutrals, light woods, black metal accents
+- Add tasteful furniture, art, rugs, and lighting consistent with room size
+- Maintain original architecture, windows, and flooring
+- Preserve original camera angle and perspective
+
+Output: 3 variants with different furniture layouts for A/B testing.`,useCase:"Pre-sale staging decisions, listing marketing, buyer presentations",proTip:"Keep these clearly disclosed as concept images in marketing materials to avoid misrepresentation."},
+        {id:"prompt-neighborhood-infographic",title:"Prompt: Neighborhood Investment Infographic",type:"prompt",description:"Investment-focused infographic with KPIs, price trends, rent ranges, vacancy rates, cap rates, and mini-map. Placeholder values you replace with real data.",pricing:"Nano Banana Pro for legible labels",url:"https://ai.google.dev",investorEdge:"Repeatable market snapshot shell your team fills in with actual data each month — looks institutional, built in minutes.",keyFeature:"Structured layout with placeholder values to prevent AI from hallucinating stats.",worksWith:["Nano Banana Pro","Canva","Figma"],tags:["infographic","market","neighborhood","image","prompt"],verified:true,promptText:`Design an investment-focused infographic for the [NEIGHBORHOOD] area
+in [CITY] for experienced real estate investors.
+
+Include visual sections for:
+- 5-year median home price trend (placeholder line chart)
+- Current average rent for 2BR and 3BR units
+- Vacancy rate range
+- Typical cap rate range for small multifamily
+- Map-style mini graphic showing proximity to downtown and major employers
+
+Use clean, modern fonts, dark text on light background, and accent colors
+matching [BRAND_COLORS].
+
+All numbers should be placeholders like "[X%]" and "[$X,XXX]".
+Aspect ratio: 4:5 vertical for Instagram and printable at 8.5x11.`,useCase:"Market updates for LPs, social content, investor newsletters",proTip:"Always instruct the model to use placeholder values — replace with real data in Figma/Canva to avoid fabricated stats."}
+      ]
+    },
+    {
+      id:"custom-gpts-gems",
+      title:"Custom GPTs & Gems",
+      icon:"🧩",
+      description:"ChatGPT Custom GPTs and Gemini Gems for real estate investors. Complete build guides for Deal Analyzer, Seller Script, and Market Research GPTs — copy-paste system prompts included.",
+      resources:[
+        {id:"deal-analyzer-gpt",title:"Build: Deal Analyzer GPT",type:"tool",description:"Complete system prompt + configuration for a deal analysis assistant. Produces structured IC memos with assumptions, sensitivity tables, risk registers, and stop/proceed recommendations. QUICK and IC modes.",pricing:"ChatGPT Plus/Team required",url:"https://chat.openai.com/gpts",investorEdge:"Institutionalized underwriting standard — every analyst produces the same output format with mandatory assumption documentation, sensitivity tables, and risk registers.",keyFeature:"Two modes: QUICK (5-10 min, limited depth) and IC (Investment Committee, full scenario tables and one-page memo).",worksWith:["ChatGPT","File Upload","Data Analysis"],tags:["underwriting","gpt","chatgpt","deal-analysis"],featured:true,verified:true,promptText:`You are "Deal Analyzer GPT" for an experienced real estate investor doing 5+ deals/year.
+Your job: turn messy deal inputs into a decision-quality underwriting summary.
+
+NON-NEGOTIABLE RULES:
+1) If any critical input is missing, ask targeted questions first (max 10), then
+   proceed with conservative defaults ONLY if user says "proceed with defaults."
+2) Never state comps, ARV, rent, taxes are "verified." Label user numbers as "User-provided."
+3) Always show calculations in a table labeled: User-provided / Derived / Assumption.
+4) Output must include: MAO, 0-100 risk score, and Stop/Proceed/Proceed-with-conditions.
+5) If user uploads docs (T-12, rent roll, inspection), extract into tables and warn
+   that legal review is required.
+
+OUTPUTS (always):
+A) Deal Snapshot (table)
+B) Key Metrics (table)
+C) MAO & Offer Structure (table + narrative)
+D) Sensitivities (3 variables min)
+E) Risk Register (top 10 risks + mitigations)
+F) Recommendation + conditions
+G) Questions to validate next (prioritized)`,useCase:"Standardized deal analysis across your acquisitions team",proTip:"Upload your buy box and default underwriting assumptions as knowledge files so the GPT never defaults to generic benchmarks."},
+        {id:"seller-script-gpt",title:"Build: Motivated Seller Script GPT",type:"tool",description:"Generates call scripts, objection handling, and follow-up sequences that match investor strategy and compliance constraints. Diagnoses seller type first, then produces exact lines.",pricing:"ChatGPT Plus/Team required",url:"https://chat.openai.com/gpts",investorEdge:"Consistent, compliant acquisition scripts for your entire team — built on your actual best calls, not generic real estate training.",keyFeature:"Call outline, exact lines, branching objection tree, SMS + voicemail drops, and 7-day follow-up plan in one output.",worksWith:["ChatGPT","CRM"],tags:["acquisitions","scripts","chatgpt","gpt","seller"],verified:true,promptText:`You are "Motivated Seller Script GPT" for an acquisitions team closing 5+ deals/year.
+Produce call scripts, objection handling, and follow-up sequences.
+
+RULES:
+1) Always diagnose seller type first (inherited, tired landlord, pre-foreclosure,
+   code violations, divorce, relocation, vacant, etc.)
+2) Never recommend illegal, deceptive, or discriminatory practices.
+3) Produce: (a) live call outline, (b) exact lines to say, (c) branching objection
+   tree, (d) SMS + voicemail drops, (e) 7-day follow-up plan.
+4) Always include discovery questions that surface: timeline, motivation, condition,
+   price anchor, and decision authority.
+5) Offer structure: present 2-3 options (cash, terms, hybrid) in plain language.
+
+OUTPUT:
+A) Seller Snapshot (what we know / what we need)
+B) 12-18 Discovery Questions (prioritized)
+C) Call Script (minute-by-minute)
+D) Objection Tree (10 common objections)
+E) SMS + Voicemail Pack (day 0-7)
+F) Next-Step Checklist for acquisitions rep`,useCase:"Acquisitions team training, consistent seller conversations",proTip:"Upload transcripts of your 5 best calls as knowledge files — the GPT learns your actual voice, not a generic script."},
+        {id:"market-research-gpt",title:"Build: Market Research GPT",type:"tool",description:"Given a ZIP code or city/neighborhood, produces an investment viability report with strategy fit, demand drivers, risk flags, and a data-to-verify checklist.",pricing:"ChatGPT Plus/Team required",url:"https://chat.openai.com/gpts",investorEdge:"Forces the model to switch to Research Plan Mode when it can't verify live data — prevents hallucinated statistics in underwriting.",keyFeature:"Always outputs: strategy recommendation, neighborhood segmentation hypotheses, comps/rent research checklist, regulatory gotchas, and top risk factors.",worksWith:["ChatGPT","Web Browse"],tags:["market-research","gpt","chatgpt","deal-analysis"],verified:true,promptText:`You are "Market Research GPT" for an experienced real estate investor.
+Task: given a ZIP code (or city + neighborhood), produce an investment
+viability report with strategy fit, demand drivers, risk flags, and a
+data-to-verify checklist.
+
+RULES:
+1) If you do not have live web access, say "I cannot verify live market data
+   in this environment" and switch to "Research Plan + Data Checklist" mode.
+2) Never invent stats (population, rent growth, crime, cap rates).
+3) Always output: (a) strategy recommendation by investor type, (b) neighborhood
+   segmentation hypotheses, (c) comps/rent research checklist, (d) regulatory
+   gotchas checklist, (e) top risk factors.
+
+OUTPUT:
+A) Strategy Fit (wholesale, BRRRR, buy/hold, flip, multifamily)
+B) Demand Drivers (jobs, schools, infrastructure, migration)
+C) Risk Flags (insurance, flood/fire, HOA concentration, liquidity)
+D) "Data I Need Next" checklist (exact fields)
+E) Go/No-Go gating questions (10 items)`,useCase:"Pre-LOI market validation, new market entry decisions",proTip:"Upload your market selection criteria and lender constraints as knowledge files — the GPT flags deals that won't work with your specific lending relationships."},
+        {id:"gemini-gems-deal",title:"Gemini Gem: Deal Analysis",type:"tool",description:"Lightweight repeatable deal analysis workflow in Gemini. Produces decision-quality underwriting summary from pasted numbers or uploaded docs. Best for Google Workspace teams.",pricing:"Google AI Pro/Ultra recommended",url:"https://gemini.google/app",investorEdge:"For teams already in Google Workspace — Gemini Gems share via Drive-style link, so every analyst runs the same analysis flow without a ChatGPT subscription.",keyFeature:"Shareable via Google Drive-style link — team standardization without complex GPT configuration.",worksWith:["Gemini App","Google Drive","Workspace"],tags:["gemini","gem","deal-analysis","google"],verified:true,promptText:`You are "Deal Analysis Gem" for an experienced real estate investor.
+Goal: produce a decision-quality underwriting summary from pasted
+numbers or uploaded docs.
+
+Always ask for missing critical inputs first.
+Never invent comps, rents, or expenses.
+
+Output must include:
+- Deal Snapshot table
+- MAO (max allowable offer)
+- Sensitivity table
+- Risk register
+- Stop/Proceed recommendation with conditions
+
+Use concise investor language.
+If the user uploads a document, extract facts into a table labeled
+"Extracted (needs verification)."`,useCase:"Quick deal screening for Google Workspace teams",proTip:"Gems are shareable via Drive-style link — send it to every acquisitions rep and they all use the same analysis standard."},
+        {id:"gemini-gems-investor-comms",title:"Gemini Gem: Investor Communications",type:"tool",description:"Produces monthly investor update email, lender update, partner Slack update, and 60-second video script from deal updates and KPIs. Factual, calm, no hype language.",pricing:"Google AI Pro recommended",url:"https://gemini.google/app",investorEdge:"One Gem produces 4 different communication formats from the same underlying data — monthly updates become systematic instead of manual.",keyFeature:"4 outputs from one input: LP email, lender update, ops Slack message, and video script.",worksWith:["Gemini App","Gmail","Workspace"],tags:["gemini","gem","investor-relations","communications"],verified:true,promptText:`You are "Investor Communications Gem" for a sponsor/operator.
+Inputs: deal updates, KPIs, risks, and next steps.
+Outputs:
+(a) monthly investor update email
+(b) lender update
+(c) partner/internal ops Slack update
+(d) 60-second video script
+
+Always include: what changed, why it matters, mitigation,
+and ask (what you need from the recipient).
+Never use hype language; keep it factual and calm.`,useCase:"Monthly LP updates, lender reporting, team communications",proTip:"Feed in the same performance data each month and let the Gem draft all 4 formats simultaneously — review, adjust, send."}
+      ]
+    },
+    {
+      id:"mcp-servers",
+      title:"MCP Servers",
+      icon:"🔗",
+      description:"Model Context Protocol servers that wire AI agents directly into your files, CRMs, databases, and deal systems. Remote (hosted) and Local (self-run) options.",
+      resources:[
+        {id:"mcp-explainer",title:"MCP Explained: Remote vs Local",type:"tool",description:"MCP (Model Context Protocol) is an open standard created by Anthropic that lets AI assistants talk to tools and data sources consistently. Claude + MCP is currently the path of least resistance for tool-connected agents.",pricing:"Varies by server",url:"https://modelcontextprotocol.io",investorEdge:"Remote MCP: quickly wire AI to SaaS tools like CRMs, Notion, Drive without running servers yourself. Local MCP: work with sensitive investor files that never leave your machine.",keyFeature:"Remote vs Local choice: Remote = speed and SaaS; Local = security for sensitive deal data.",worksWith:["Claude Desktop","Claude Code","Cursor","Windsurf"],tags:["mcp","explainer","remote","local"],featured:true,verified:true},
+        {id:"smithery",title:"Smithery (MCP Registry Hub)",type:"tool",description:"Registry and hosted MCP endpoints for 2,000+ servers. One-click install of GitHub, Slack, Notion, Google Drive, databases, and community servers. Connection pooling and hosted auth.",pricing:"Freemium/usage-based",url:"https://smithery.ai",investorEdge:"Wire Claude to Notion (IC memos, deal logs), Google Drive (OMs, models), and Slack (acquisitions channels) — search historical deals and draft updates without manual copy-paste.",keyFeature:"2,000+ MCP servers, connection pooling, and hosted auth — no per-server infrastructure management.",worksWith:["Claude","Notion","Google Drive","Slack","GitHub"],tags:["mcp","remote","registry","hub"],featured:true,verified:true},
+        {id:"zapier-notion-mcp",title:"Zapier Notion MCP",type:"tool",description:"Generate a secure MCP URL that gives AI scoped access to Notion databases and pages. Use Zapier actions as tools for creating, updating, and querying records without writing glue code.",pricing:"Zapier account required (free/paid)",url:"https://zapier.com/mcp/notion",investorEdge:"Centralize acquisitions pipeline, lender lists, and IC memos in Notion — let Claude update statuses, create new pages from deal analyses, and push tasks as part of a deal-review workflow.",keyFeature:"Scoped Notion access via Zapier's action catalog — no-code MCP integration for operators.",worksWith:["Notion","Claude","Zapier"],tags:["mcp","notion","zapier","remote"],verified:true},
+        {id:"composio-hub",title:"Composio Multi-App MCP Hub",type:"tool",description:"500+ SaaS apps through standardized MCP servers — Gmail, Slack, Google Calendar, Notion, CRMs, project tools — in one platform for AI agents.",pricing:"Usage-based (check current plans)",url:"https://composio.dev",investorEdge:"One hub to connect your AI stack to every business tool in your acquisitions workflow — CRM, email, calendar, PM software, and storage.",keyFeature:"500+ apps with standardized MCP servers plus auth management so you don't configure each separately.",worksWith:["Claude","Slack","Gmail","Calendar","CRM","Notion"],tags:["mcp","remote","hub","multi-app"],verified:true},
+        {id:"make-mcp-server",title:"Make MCP Server",type:"tool",description:"MCP server enabling AI systems to run scenarios and manage Make account resources. Converts AI into an automation operator across your existing Make scenarios. Launched January 12, 2026.",pricing:"Make paid plans required for certain tools",url:"https://developers.make.com/mcp-server",investorEdge:"AI triggers your lead routing + follow-up scenarios with structured inputs — turns manual scenario management into natural language commands.",keyFeature:"AI directly runs and manages Make automation scenarios — no UI required.",worksWith:["Make.com","Claude","CRM","SMS","Email"],tags:["mcp","remote","make","automation"],verified:true},
+        {id:"perplexity-mcp",title:"Perplexity MCP Server",type:"tool",description:"Official MCP server enabling assistants to access Perplexity search and reasoning. Makes research a callable tool inside agent stacks. Launched March 10, 2026.",pricing:"Perplexity subscription required",url:"https://docs.perplexity.ai/docs/getting-started/integrations/mcp-server",investorEdge:"MCP stack pulls regulatory changes → drafts action plan → stores in Notion/Airtable — research becomes an automated step in your agent workflow.",keyFeature:"Research as a callable MCP tool — not a separate app tab — inside agent orchestration.",worksWith:["Claude","Perplexity","Notion","Airtable"],tags:["mcp","remote","research","perplexity"],verified:true},
+        {id:"zapier-mcp",title:"Zapier MCP",type:"tool",description:"Remote MCP server connecting AI tools to Zapier's app and action network with scoped permissions. One connector to orchestrate thousands of business actions. Available March 2026.",pricing:"Zapier paid + verification needed",url:"https://zapier.com/mcp",investorEdge:"AI updates CRM + sends approval-gated communications + creates tasks automatically — full deal lifecycle automation from a single MCP connection.",keyFeature:"One MCP connection to Zapier's entire 5,000+ app catalog with permission controls.",worksWith:["Claude","Zapier","CRM","Slack","Email"],tags:["mcp","remote","zapier","automation"],verified:true},
+        {id:"filesystem-mcp",title:"Filesystem MCP (Local)",type:"tool",description:"Local MCP server for secure access to your local file system. AI reads and writes your deal files, templates, and models without sending raw documents to third-party cloud services.",pricing:"Free (open-source)",url:"https://modelcontextprotocol.io/docs/guides/servers",investorEdge:"Lease abstraction, DD exception logging, and IC memo drafting from large doc sets — all staying on your local machine. Never sends sensitive investor files to cloud integrations.",keyFeature:"Air-gapped file access — sensitive deal data never leaves your machine.",worksWith:["Claude Desktop","Claude Code"],tags:["mcp","local","filesystem","security"],verified:true},
+        {id:"postgres-mcp",title:"Postgres MCP (Local)",type:"tool",description:"Local MCP server for portfolio and pipeline analytics from your own database. AI queries your Postgres instance for deal data, KPIs, and underwriting histories.",pricing:"Free (open-source)",url:"https://modelcontextprotocol.io/docs/guides/servers",investorEdge:"Portfolio-level KPI reporting without exporting to spreadsheets — AI queries your live database and generates narrative performance summaries.",keyFeature:"Direct SQL query capability — AI reads your actual deal data, not a stale export.",worksWith:["Claude","PostgreSQL","Supabase"],tags:["mcp","local","database","portfolio"],verified:true},
+        {id:"notion-mcp",title:"Notion MCP (via Smithery)",type:"tool",description:"Full Notion read/write MCP access via Smithery's registry. AI reads deal rooms, writes meeting summaries, updates pipeline statuses, and creates DD checklists automatically.",pricing:"Smithery + Notion paid",url:"https://smithery.ai",investorEdge:"After each DD milestone, ask Claude to 'update the Notion card' with new risks or decisions — single source of truth with minimal data entry.",keyFeature:"Bi-directional Notion access: read pipeline data and write updates from deal analysis.",worksWith:["Claude","Notion","Smithery"],tags:["mcp","notion","remote","pipeline"],verified:true},
+        {id:"slack-mcp",title:"Slack MCP Server",type:"tool",description:"Open-source Go-based MCP server integrating with Slack API to read/search messages. Lets an agent digest operational Slack chatter and turn it into structured actions. Feb 2026.",pricing:"Free (open-source); Slack API costs apply",url:"https://github.com/bitovi/slack-mcp-server",investorEdge:"Daily ops summary from Slack + action list: work orders, follow-ups, approvals — extracted from acquisitions, construction, and PM channels automatically.",keyFeature:"Reads and searches Slack messages via MCP — operational intelligence from your existing channels.",worksWith:["Claude","Slack"],tags:["mcp","remote","slack","ops"],verified:true},
+        {id:"power-stack-dd",title:"Power Stack: Due Diligence",type:"tool",description:"Complete MCP stack for DD workflows: Filesystem (local docs) + Postgres (deal DB) + Notion (IC memos) + Slack (team alerts). End-to-end deal review with AI orchestration.",pricing:"Mix of free and paid servers",url:"https://smithery.ai",investorEdge:"AI reads local files, queries your deal database, writes Notion IC memos, and posts summary to Slack — without you touching any of those apps manually.",keyFeature:"4-server stack covering the full DD workflow from file to communication.",worksWith:["Claude","Filesystem","Postgres","Notion","Slack"],tags:["mcp","power-stack","dd","automation"],featured:true,verified:true},
+        {id:"mcp-gaps",title:"⚠️ Gap: CoStar / Yardi MCP (Doesn't Exist Yet)",type:"tool",description:"The highest-value missing MCP server: structured access to rent comps, inventory, construction pipeline, and performance metrics from major CRE data providers under existing licenses.",pricing:"N/A — not yet available",url:"#",investorEdge:"Would unlock automated comp analysis and market scanning directly from Claude — replacing hours of manual portal usage. The single biggest AI leverage point still missing for RE investors.",keyFeature:"Doesn't exist yet — the data providers themselves or a sanctioned partner would need to build it.",worksWith:["Claude","CoStar","Yardi","RealPage"],tags:["mcp","gap","coming-soon","data"],verified:false}
+      ]
+    },
+    {
+      id:"ai-platform-guide",
+      title:"AI Platform Guide",
+      icon:"⚖️",
+      description:"Which AI platform wins for which real estate task. Claude, ChatGPT, Gemini, Grok, Manus, and Perplexity — head-to-head comparison with a decision framework for experienced investors.",
+      resources:[
+        {id:"claude-profile",title:"Claude (Anthropic) — Platform Profile",type:"tool",description:"Best for: long-context document work, MCP tool-connected workflows, IC memo writing, and careful reasoning. Opus 4.6 at $5/$25/M tokens. 1M context window beta.",pricing:"Pro $20/mo; API Sonnet $3/$15M, Opus $5/$25M",url:"https://claude.ai",investorEdge:"Portfolio DD: ingest 100+ pages of leases and produce risk summaries. Pipeline operations: read/write to Notion/Drive/Slack and create repeatable deal-review workflows via MCP.",keyFeature:"MCP-native ecosystem leadership — most mature mainstream host for MCP servers today.",worksWith:["MCP Servers","Google Drive","Notion","Slack"],tags:["claude","platform","mcp","long-context"],featured:true,verified:true},
+        {id:"chatgpt-profile",title:"ChatGPT (OpenAI) — Platform Profile",type:"tool",description:"Best for: Custom GPTs, high-volume drafting, multimodal content, and the GPT Store ecosystem. GPT-4o at $2.50/$10M tokens. o3/o4-mini for reasoning tasks.",pricing:"Plus $20/mo; API GPT-4o $2.50/$10M",url:"https://chatgpt.com",investorEdge:"Create Custom GPTs for underwriting triage, seller scripts, and market memos to institutionalize your playbook. Draft outreach sequences and role-play negotiation.",keyFeature:"GPT Store distribution and highly flexible Actions framework for arbitrary API connections.",worksWith:["Custom GPTs","DALL-E","File Upload","Actions"],tags:["chatgpt","openai","gpts","platform"],verified:true},
+        {id:"gemini-profile",title:"Gemini (Google) — Platform Profile",type:"tool",description:"Best for: Google Workspace teams, Gems (repeatable workflows), image generation (Nano Banana), and teams where documents live in Drive and drafts happen in Docs/Sheets.",pricing:"AI Pro ~$20/mo; API Gemini 2.5 Pro tiered",url:"https://gemini.google.com",investorEdge:"Becomes unbeatable when documents are already in Drive and your team drafts in Docs/Sheets/Slides. Gems let you standardize outputs inside your existing Google workflow.",keyFeature:"Native Google Workspace integration + Nano Banana image generation + Gems for team workflow standardization.",worksWith:["Google Drive","Workspace","Nano Banana","Antigravity"],tags:["gemini","google","workspace","platform"],verified:true},
+        {id:"perplexity-profile",title:"Perplexity — Platform Profile",type:"tool",description:"Best for: evidence-sensitive research with auditable citations. Deep Research (Feb 2026 upgrade) and Model Council (3 frontier models in parallel). Max $200/mo.",pricing:"Pro $20/mo; Max $200/mo (includes Model Council)",url:"https://perplexity.ai",investorEdge:"Market claims, regulation changes, vendor comparisons — all with citations you can show partners and LPs. Model Council forces multi-model disagreement surfacing for critical thesis checks.",keyFeature:"Model Council runs three frontier models simultaneously and synthesizes disagreements — structural countermeasure to overconfidence.",worksWith:["Web Research","MCP Server"],tags:["perplexity","research","citations","platform"],featured:true,verified:true},
+        {id:"manus-profile",title:"Manus — Platform Profile",type:"tool",description:"Autonomous agent platform for multi-step workflows with minimal human intervention. Breaks down goals into steps, runs searches, browses pages, compiles findings. Credit-based pricing.",pricing:"Basic $19/mo, Plus $39/mo, Pro $199/mo",url:"https://manus.im",investorEdge:"Autonomous deal dossier builder: compile owner profile, property context, market narrative, and next steps in one run. Weekly market change briefs collected automatically.",keyFeature:"Architected as an operator that runs multi-step workflows by default — not a conversational assistant that waits for prompts.",worksWith:["Web Browse","Docs","Research"],tags:["manus","autonomous","agents","platform"],verified:true},
+        {id:"grok-profile",title:"Grok (xAI) — Platform Profile",type:"tool",description:"Best for: high-volume drafting, seller/buyer outreach at scale, and creative content. Grok 3 at $3/$15M, Grok 3 Mini at $0.30/$0.50M. X (Twitter) integration and Aurora image generation.",pricing:"SuperGrok ~$30/mo; API Grok 3 $3/$15M",url:"https://grok.com",investorEdge:"Scripts and outreach at scale — cheaper per token than competitors for high-volume seller messaging, follow-up sequences, and content generation.",keyFeature:"Grok 3 Mini is the cheapest capable model for high-volume applications where cost matters more than depth.",worksWith:["X (Twitter)","Aurora Image Gen","API"],tags:["grok","xai","outreach","platform"],verified:true},
+        {id:"platform-decision-guide",title:"Decision Framework: Right Tool for Any RE Task",type:"tool",description:"Three questions decide the platform: (1) Is the task evidence-sensitive? → Perplexity. (2) Is it document-heavy? → Claude or Gemini. (3) Does it need to execute across tools? → Claude + MCP or Manus.",pricing:"See individual platforms",url:"#",investorEdge:"Stop forcing one AI to do everything. Multi-AI workflows are the winning pattern: research in Perplexity → IC narrative in Claude → outreach scripts in ChatGPT.",keyFeature:"Treat AI like a team: research engine + document analyst + outreach writer = 3x speed, lower hallucination risk.",worksWith:["Claude","Perplexity","ChatGPT","Gemini","Manus","Grok"],tags:["decision","comparison","strategy","workflow"],featured:true,verified:true}
+      ]
+    },
+    {
+      id:"emerging-ai",
+      title:"Emerging AI",
+      icon:"🚀",
+      description:"Major AI launches from January–March 2026 that matter for real estate investors. Every item includes an exact launch date. Confidence levels noted throughout.",
+      resources:[
+        {id:"claude-opus-46",title:"Claude Opus 4.6 (Anthropic)",type:"tool",description:"Anthropic's upgraded flagship model. 1M token context window in beta — entire deal rooms in one context. Launched February 5, 2026.",pricing:"$5/$25 per million input/output tokens",url:"https://www.anthropic.com/news/claude-opus-4-6",investorEdge:"Lease abstraction at scale + DD exception logging — leases, OMs, inspection narratives, and operating assumptions in a single coherent workspace. Better cross-document inconsistency detection.",keyFeature:"1M token context window beta — handle entire deal rooms without chunking or losing context.",worksWith:["Claude","MCP","API"],tags:["anthropic","claude","model","long-context"],featured:true,verified:true},
+        {id:"claude-sonnet-46",title:"Claude Sonnet 4.6 (Anthropic)",type:"tool",description:"Updated Sonnet emphasizing coding, computer use, and professional knowledge work. Near-flagship-level operator work at a more scalable tier. Launched February 17, 2026.",pricing:"$3/$15 per million input/output tokens",url:"https://www.anthropic.com/news",investorEdge:"Team-wide use for SOP generation, deal checklists, and structured extraction on smaller DD packets — Opus-level quality at lower cost per seat.",keyFeature:"Near-Opus quality for coding and professional knowledge work at Sonnet pricing.",worksWith:["Claude","API","Antigravity"],tags:["anthropic","claude","model","coding"],verified:true},
+        {id:"perplexity-model-council",title:"Perplexity Model Council",type:"tool",description:"Runs three frontier models in parallel, synthesizes agreements/disagreements for higher-confidence answers. Available to Max subscribers ($200/mo). Launched February 6, 2026.",pricing:"Included with Perplexity Max ($200/mo)",url:"https://www.perplexity.ai/changelog",investorEdge:"Real estate investors lose money on overconfidence. Model Council is a structural countermeasure — especially for market/regulatory research and thesis checks before capital allocation.",keyFeature:"Three models run simultaneously and surface explicit disagreements — forces uncertainty into the open.",worksWith:["Perplexity","Web Research"],tags:["perplexity","research","verification","model-council"],featured:true,verified:true},
+        {id:"gemini-31-pro",title:"Gemini 3.1 Pro Preview (API)",type:"tool",description:"Higher-performance Gemini for teams building Google-native automations. Launched February 19, 2026 in the Gemini API.",pricing:"Pricing unverified",url:"https://ai.google.dev/gemini-api/docs/changelog",investorEdge:"Inbox/Drive-centered ops copilots — triage, summarize, draft, and organize from your existing Google Workspace.",keyFeature:"Pro-class performance in the API for automation-heavy Google-native workflows.",worksWith:["Gemini API","AI Studio","Vertex AI"],tags:["gemini","google","api","model"],verified:true},
+        {id:"gpt-53-codex",title:"GPT-5.3-Codex (OpenAI)",type:"tool",description:"Agentic coding model combining Codex + GPT-5 training stacks. Launched February 5, 2026. Accelerates internal tool development.",pricing:"Pricing unverified",url:"https://help.openai.com/articles/9624314-model-release-notes",investorEdge:"Real estate teams shipping internal automation — scrapers, underwriting apps, CRM tooling — can move faster on reliable code generation and refactoring.",keyFeature:"Agentic coding: generates, tests, and refactors internal tools with higher reliability than prior Codex models.",worksWith:["ChatGPT","OpenAI API"],tags:["openai","coding","model","automation"],verified:true},
+        {id:"gemini-embeddings",title:"Gemini Multimodal Embeddings (gemini-embedding-2-preview)",type:"tool",description:"Multimodal embedding model supporting text/image/video/audio/PDF in one embedding space. Launched March 10, 2026. Foundational for investor vault-style retrieval.",pricing:"Pricing unverified",url:"https://ai.google.dev/gemini-api/docs/changelog",investorEdge:"'Show me every lease clause about CAM caps across these 30 leases' — semantic search across your entire deal history without keyword matching.",keyFeature:"Text + image + video + audio + PDF in one embedding space — cross-modal semantic search across all your deal documents.",worksWith:["Gemini API","Vertex AI"],tags:["gemini","embeddings","search","retrieval"],featured:true,verified:true},
+        {id:"make-mcp-launch",title:"Make MCP Server Launch",type:"tool",description:"Official Make.com MCP server enabling AI systems to run scenarios and manage Make account resources. Launched January 12, 2026.",pricing:"Make paid plans required for certain tools",url:"https://developers.make.com/mcp-server",investorEdge:"AI triggers your lead routing + follow-up scenarios with structured inputs — turning natural language into automation execution.",keyFeature:"First official MCP server from a major automation platform — converts Claude into an automation operator.",worksWith:["Make.com","Claude","CRM"],tags:["make","mcp","automation","launch"],verified:true},
+        {id:"fundrise-realai",title:"Fundrise RealAI",type:"tool",description:"AI-powered real estate intelligence and analysis platform positioned as an 'AI real estate analyst.' Public launch January 27, 2026. Institutional-style underwriting automation.",pricing:"Pricing unverified",url:"https://www.businesswire.com/news/home/20260128547466/en/Fundrise-Launches-RealAI",investorEdge:"Benchmark for what fast underwriting products will look like — rapid market and property intelligence checks as input into your own workflow.",keyFeature:"Signals the move toward institutional-style underwriting automation for residential/multifamily data.",worksWith:["Fundrise Platform"],tags:["real-estate-ai","underwriting","institutional","launch"],verified:true},
+        {id:"cambio-launch",title:"Cambio — AI-Native CRE Operations",type:"tool",description:"AI-native CRE operations platform emphasizing agentic AI for building data/compliance/capital planning. Raised $18M. Launched January 21, 2026.",pricing:"Pricing unverified",url:"https://www.businesswire.com/news/home/20260122635473/en/Cambio-Raises-18M",investorEdge:"Portfolio-level retrofit prioritization and compliance planning — AI compresses months of work into minutes for CRE operators as regulations and energy mandates tighten.",keyFeature:"Agentic AI for CRE operations: building data, compliance, and capital planning in one platform.",worksWith:["CRE Portfolio Systems"],tags:["cre","compliance","agentic","launch"],verified:true},
+        {id:"homes-ai",title:"Homes.com 'Homes AI' (CoStar)",type:"tool",description:"Conversational AI experience on Homes.com portal for interactive home search via voice/text. Launched February 16, 2026. Signals AI-mediated discovery changing lead gen.",pricing:"Consumer-facing, not RE investor tool",url:"https://www.businesswire.com/news/home/20260217810823/en",investorEdge:"Monitor how portals surface inventory and how conversational search changes buyer behavior — adapt your marketing and acquisition funnels for AI-mediated discovery.",keyFeature:"First major portal to go fully conversational — indicates where consumer search is heading.",worksWith:["Homes.com"],tags:["consumer","portal","ai","lead-gen"],verified:true},
+        {id:"perplexity-mcp-launch",title:"Perplexity MCP Server",type:"tool",description:"Official MCP server enabling assistants to access Perplexity search and reasoning. Launched March 10, 2026. Makes research a callable tool inside agent stacks.",pricing:"Perplexity subscription required",url:"https://docs.perplexity.ai/docs/getting-started/integrations/mcp-server",investorEdge:"MCP stack pulls regulatory changes → drafts action plan → stores in Notion/Airtable — research becomes an automated step in your agent workflow, not a separate app.",keyFeature:"Research as MCP tool — not a separate tab — callable from Claude and other agent hosts.",worksWith:["Claude","Perplexity","Notion"],tags:["perplexity","mcp","research","launch"],verified:true}
+      ]
+    }
+  ]
+};
+
+// Category descriptions for homepage cards
+const CAT_DESCRIPTIONS = {
+  "claude-skills":"Power skills for market research, document creation, deal structuring & automation.",
+  "claude-plugins":"Native integrations: Google Workspace, Slack, Canva, Make, Zapier & more.",
+  "cowork-antigravity":"Agentic desktop automation (Cowork) + AI app builder IDE (Antigravity).",
+  "nano-banana":"Google's image generation suite with 10 ready-to-use real estate prompt templates.",
+  "custom-gpts-gems":"Build guides for Deal Analyzer, Seller Script & Market Research GPTs + Gemini Gems.",
+  "mcp-servers":"Wire AI directly into your files, CRMs & deal systems via MCP protocol.",
+  "ai-platform-guide":"Claude vs ChatGPT vs Gemini vs Grok vs Manus vs Perplexity — task-by-task.",
+  "emerging-ai":"Jan–Mar 2026 launches with exact dates: Opus 4.6, Model Council, RealAI & more."
+};
+
+// Platform comparison use-case matrix
+const PLATFORM_MATRIX = [
+  {task:"Long-doc DD (leases, OMs, lender docs)",rank1:"Claude",rank2:"Gemini",rank3:"ChatGPT",note:"Claude's long context + synthesis; Gemini if docs are in Drive."},
+  {task:"Market research with citations",rank1:"Perplexity",rank2:"Grok",rank3:"Claude",note:"Deep Research + Model Council for defensible market claims."},
+  {task:"Underwriting / IC memo drafting",rank1:"Claude",rank2:"ChatGPT",rank3:"Gemini",note:"Claude + Custom GPT framework gives best structured outputs."},
+  {task:"Seller / buyer outreach scripts",rank1:"ChatGPT",rank2:"Grok",rank3:"Claude",note:"ChatGPT and Grok Mini excel at high-volume drafting."},
+  {task:"Agent automation across tools",rank1:"Claude",rank2:"Manus",rank3:"ChatGPT",note:"Claude + MCP is most practical; Manus for autonomous execution."},
+  {task:"Image generation (listings, decks)",rank1:"ChatGPT",rank2:"Gemini",rank3:"Claude",note:"ChatGPT (DALL-E) and Gemini (Nano Banana) have first-party image models."},
+  {task:"Autonomous multi-step research",rank1:"Manus",rank2:"Perplexity",rank3:"Grok",note:"Manus built for autonomous execution; Perplexity for source-backed investigation."},
+  {task:"Investor update emails",rank1:"Claude",rank2:"Gemini",rank3:"Grok",note:"Claude for narrative + constraints; Gemini if pulling from Gmail/Docs."},
+  {task:"Deal scripts + negotiation roleplay",rank1:"Claude",rank2:"ChatGPT",rank3:"Perplexity",note:"Strategy requires reasoning and roleplay; Perplexity is research-first."},
+  {task:"LOI + legal document drafting",rank1:"ChatGPT",rank2:"Claude",rank3:"Grok",note:"Both handle structured templates well; always require legal review."},
+  {task:"Portfolio analytics + reporting",rank1:"Claude",rank2:"Gemini",rank3:"ChatGPT",note:"Claude + Postgres MCP; Gemini strong when data is in Sheets."},
+  {task:"Content + podcast creation",rank1:"ChatGPT",rank2:"Claude",rank3:"Perplexity",note:"ChatGPT/Claude for scripts; Perplexity for research inputs to content."}
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let currentSection = null;
+let activeTag = null;
+let mcpView = 'remote'; // 'remote' or 'local'
+let stickyDismissed = localStorage.getItem('vault-sticky-dismissed') === 'true';
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  buildSidebar();
+  routeFromHash();
+  window.addEventListener('hashchange', routeFromHash);
+  setupSearch();
+  setupStickyCTA();
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#search-results-dropdown') && !e.target.closest('#search-input')) {
+      closeSearch();
+    }
+  });
+});
+
+function routeFromHash() {
+  const hash = window.location.hash.replace('#','');
+  if (!hash || hash === 'home') {
+    showHome();
+  } else {
+    const sec = VAULT_DATA.sections.find(s => s.id === hash);
+    if (sec) showSection(sec.id);
+    else showHome();
+  }
+}
+
+// ═══════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════
+function buildSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = VAULT_DATA.sections.map(s => `
+    <div class="sidebar-item ${currentSection === s.id ? 'active' : ''}" 
+         onclick="navigate('${s.id}')"
+         aria-label="${s.title}"
+         tabindex="0"
+         onkeydown="if(event.key==='Enter') navigate('${s.id}')">
+      <span class="s-icon">${s.icon}</span>
+      <span class="s-name">${s.title}</span>
+      <span class="sidebar-count">${s.resources.length}</span>
+    </div>
+  `).join('<div class="sidebar-divider"></div>') + `
+    <div style="height:20px"></div>
+    <div class="sidebar-item" onclick="navigate('home')" aria-label="Dashboard Home" tabindex="0" onkeydown="if(event.key==='Enter') navigate('home')">
+      <span class="s-icon">🏠</span>
+      <span class="s-name">Dashboard</span>
+    </div>
+  `;
+}
+
+function updateSidebarActive() {
+  document.querySelectorAll('.sidebar-item').forEach(el => {
+    const isHome = currentSection === null && el.querySelector('.s-icon')?.textContent === '🏠';
+    const secId = el.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+    el.classList.toggle('active', secId === currentSection || isHome);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+function navigate(id) {
+  window.location.hash = id === 'home' ? '' : id;
+  closeSidebar();
+}
+
+function showHome() {
+  currentSection = null;
+  activeTag = null;
+  updateSidebarActive();
+  
+  const totalResources = VAULT_DATA.sections.reduce((a,s) => a + s.resources.length, 0);
+  const totalPrompts = VAULT_DATA.sections.flatMap(s => s.resources).filter(r => r.type === 'prompt').length;
+  
+  document.getElementById('content-area').innerHTML = `
+    <div class="hero" data-aos="fadeInUp">
+      <div class="hero-eyebrow">The Unshakable Investor</div>
+      <h1 class="hero-title">THE <span class="gold">AI REAL ESTATE</span> INVESTOR VAULT</h1>
+      <p class="hero-sub">Every cutting-edge AI tool, prompt, plugin, and platform — researched, organized, and ready to deploy for experienced investors doing 5+ deals/year.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">${totalResources}</div><div class="lbl">Tools Documented</div></div>
+        <div class="hero-stat"><div class="num">${totalPrompts}</div><div class="lbl">Ready-to-Use Prompts</div></div>
+        <div class="hero-stat"><div class="num">8</div><div class="lbl">Categories</div></div>
+      </div>
+      <div class="hero-cta-row">
+        <button class="btn-primary" onclick="document.getElementById('cat-grid').scrollIntoView({behavior:'smooth'})">Explore the Vault ↓</button>
+        <a href="https://go.theunshakableinvestor.com/ai-realestate-webinar-database" class="btn-ghost" target="_blank" rel="noopener">Watch the AI Real Estate Webinar →</a>
+      </div>
+    </div>
+    ${renderPlatformTable()}
+    <div id="cat-grid" style="margin-top:48px">
+      <div class="section-title">All Categories</div>
+      <div class="category-grid">
+        ${VAULT_DATA.sections.map((s,i) => `
+          <div class="cat-card" onclick="navigate('${s.id}')" tabindex="0" aria-label="${s.title}" onkeydown="if(event.key==='Enter') navigate('${s.id}')" style="animation-delay:${i*50}ms">
+            <div class="cat-icon">${s.icon}</div>
+            <div class="cat-name">${s.title}</div>
+            <div class="cat-desc">${CAT_DESCRIPTIONS[s.id]}</div>
+            <div class="cat-footer">
+              <span class="cat-count">${s.resources.length} resources</span>
+              <span class="cat-explore">Explore →</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div class="gaps-section" style="margin-top:32px">
+      <div class="gaps-title">🎯 Quick Decision Rules</div>
+      <div class="gaps-text">
+        <strong style="color:var(--white)">Need citations or "what changed this week?"</strong> → Perplexity first.<br><br>
+        <strong style="color:var(--white)">Need a clean memo from a messy doc stack</strong> → Claude (or Gemini if docs live in Drive).<br><br>
+        <strong style="color:var(--white)">Need scripts and outreach at scale</strong> → ChatGPT (or Grok Mini for cheaper high-volume).<br><br>
+        <strong style="color:var(--white)">Need agents that operate across tools</strong> → Claude + MCP, or Manus for more autonomous execution.<br><br>
+        <strong style="color:var(--white)">Winning pattern:</strong> Research in Perplexity (citations) → IC narrative in Claude → outreach scripts in ChatGPT. Split by strengths, cut hallucination risk.
+      </div>
+    </div>
+  `;
+}
+
+function renderPlatformTable() {
+  return `
+    <div style="margin-top:40px">
+      <div class="section-title">Platform Decision Matrix — Right Tool for the Job</div>
+      <div class="comp-table-wrap">
+        <table class="comp-table" role="table">
+          <thead>
+            <tr>
+              <th>Real Estate Task</th>
+              <th>🥇 Best</th>
+              <th>🥈 Second</th>
+              <th>🥉 Third</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${PLATFORM_MATRIX.map(row => `
+              <tr>
+                <td class="task-col">${row.task}</td>
+                <td class="best">${row.rank1}</td>
+                <td>${row.rank2}</td>
+                <td>${row.rank3}</td>
+                <td style="color:var(--white-45);font-size:11px">${row.note}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+function showSection(id) {
+  currentSection = id;
+  activeTag = null;
+  updateSidebarActive();
+  const sec = VAULT_DATA.sections.find(s => s.id === id);
+  if (!sec) return showHome();
+
+  const allTags = [...new Set(sec.resources.flatMap(r => r.tags || []))].slice(0,12);
+  const hasToggle = id === 'mcp-servers';
+  const hasPrompts = sec.resources.some(r => r.type === 'prompt');
+  const hasPlatform = id === 'ai-platform-guide';
+
+  document.getElementById('content-area').innerHTML = `
+    <div class="section-header">
+      <div class="section-header-top">
+        <span class="section-header-icon">${sec.icon}</span>
+        <h1 class="section-header-name">${sec.title}</h1>
+      </div>
+      <p class="section-header-desc">${sec.description}</p>
+      <div class="section-header-meta">${sec.resources.length} resources in this section</div>
+    </div>
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-pill active" onclick="filterTag(null)" id="tag-all">All</button>
+      ${allTags.map(t => `<button class="filter-pill" onclick="filterTag('${t}')" id="tag-${t}">${t}</button>`).join('')}
+      ${hasToggle ? `
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="toggle-remote" onclick="setMcpView('remote')">Remote Servers</button>
+          <button class="toggle-btn" id="toggle-local" onclick="setMcpView('local')">Local Servers</button>
+        </div>` : ''}
+    </div>
+    ${hasPlatform ? renderPlatformTable() + '<div style="margin-top:32px"></div>' : ''}
+    <div class="resource-grid" id="resource-grid">
+      ${renderCards(sec.resources)}
+    </div>
+    ${renderGapsSection(id)}
+  `;
+}
+
+function renderGapsSection(id) {
+  const gaps = {
+    "claude-skills":"Most Skills are community-maintained and require encoding your firm's playbook. No out-of-the-box 'Real Estate Deal Room Skill' that understands rent rolls, T-12s, and loan docs as first-class artifacts. Expected: more domain Skills in 2026-2027 and richer orchestration UI.",
+    "claude-plugins":"Most turnkey connectors cover generic workflows. Investors who want tightly integrated AI copilots still need custom MCP servers. Expect more vertical templates — real-estate-specific connector packages for PM software, loan servicing platforms, and MLS-style feeds.",
+    "cowork-antigravity":"Neither Cowork nor Antigravity is a turnkey 'real estate OS.' Cowork understands files but not leases or capital stacks. Antigravity is optimized for app development, not domain-specific analytics. Expect: domain-aware templates and Cowork playbook marketplaces.",
+    "nano-banana":"Image models remain visual tools, not valuation engines. Most workflows require juggling Gemini + Canva + spreadsheets. Expect: closer fusing of Gemini reasoning and imaging, tighter Antigravity/Workspace integration for automated report visuals.",
+    "custom-gpts-gems":"The biggest gap is operational governance: most off-the-shelf GPTs optimize for 'helpful' rather than 'defensible.' No stable public directory of verified Real Estate GPTs. Expect: deeper integration with systems of record and permissioning + logging.",
+    "mcp-servers":"No CoStar, Yardi, or RealPage MCP servers. No title/lien verification server. No LP reporting/waterfall MCP. Expect: vertical proptech MCP servers, richer host experiences with visual orchestration, and regulatory attention on agentic actions.",
+    "ai-platform-guide":"The biggest gap is integration into real systems of record: CRMs, PM systems, fund admin, lender portals, and commercial data providers. Expect: platform competition to shift from 'which model is smartest' to 'which can safely operate your workflows.'",
+    "emerging-ai":"The market is full of drafting and summarization — far fewer systems reliably verify county/tax/permit/insurance reality. Winning investor stacks will standardize: (1) deal packet schema, (2) verification checklist with citations, (3) risk register template, (4) automation layer requiring approvals for irreversible steps."
+  };
+  if (!gaps[id]) return '';
+  return `<div class="gaps-section"><div class="gaps-title">⚡ Gaps & What's Coming</div><div class="gaps-text">${gaps[id]}</div></div>`;
+}
+
+function renderCards(resources) {
+  return resources.map((r, i) => {
+    if (r.type === 'prompt') return renderPromptCard(r, i);
+    const isComingSoon = r.verified === false;
+    const isFeatured = r.featured;
+    return `
+      <div class="rcard ${isFeatured ? 'featured' : ''} ${isComingSoon ? 'coming-soon-card' : ''}" 
+           style="animation-delay:${(i%12)*50}ms" id="card-${r.id}">
+        ${isFeatured ? '<div class="rcard-badge">⭐ Featured</div>' : ''}
+        ${isComingSoon ? '<div class="coming-soon-badge">⚠️ Gap / Not Yet Available</div>' : ''}
+        <div class="rcard-header">
+          <div class="rcard-title">${r.title}</div>
+          ${r.url && r.url !== '#' ? `<a href="${r.url}" target="_blank" rel="noopener" class="rcard-link" aria-label="Visit ${r.title}">↗</a>` : ''}
+        </div>
+        <div class="rcard-desc">${r.description}</div>
+        ${r.investorEdge ? `<div class="rcard-edge"><div class="rcard-edge-label">🎯 Investor Edge</div>${r.investorEdge}</div>` : ''}
+        <div class="rcard-footer">
+          ${(r.tags||[]).slice(0,4).map(t => `<span class="rcard-tag">${t}</span>`).join('')}
+          ${r.pricing ? `<span class="rcard-pricing">${r.pricing}</span>` : ''}
+          ${!r.verified ? '<span class="rcard-verified">⚠️ unverified</span>' : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderPromptCard(r, i) {
+  const preview = (r.promptText || '').substring(0,120) + '...';
+  const platforms = r.worksWith || [];
+  return `
+    <div class="rcard prompt-card" style="animation-delay:${(i%12)*50}ms" id="card-${r.id}">
+      <div class="rcard-badge">📋 Prompt Template</div>
+      <div class="rcard-header">
+        <div class="rcard-title">${r.title}</div>
+      </div>
+      <div class="rcard-desc">${r.description}</div>
+      ${r.investorEdge ? `<div class="rcard-edge"><div class="rcard-edge-label">🎯 Use Case</div>${r.useCase||r.investorEdge}</div>` : ''}
+      <div class="prompt-preview">${preview.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+      <div class="prompt-full" id="pf-${r.id}">
+        <div class="prompt-text">${(r.promptText||'').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>')}</div>
+        ${r.proTip ? `<div class="prompt-tip">💡 Pro Tip: ${r.proTip}</div>` : ''}
+      </div>
+      <div class="prompt-actions">
+        <button class="btn-expand" onclick="togglePrompt('${r.id}')" id="btn-${r.id}">Expand Prompt ↓</button>
+        <button class="btn-copy" onclick="copyPrompt('${r.id}')">Copy Prompt</button>
+        <div class="platform-badges">
+          ${platforms.slice(0,3).map(p => `<span class="pbadge">${p}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════
+function togglePrompt(id) {
+  const pf = document.getElementById('pf-'+id);
+  const btn = document.getElementById('btn-'+id);
+  if (!pf) return;
+  const isOpen = pf.classList.toggle('open');
+  pf.style.display = isOpen ? 'flex' : 'none';
+  btn.textContent = isOpen ? 'Collapse ↑' : 'Expand Prompt ↓';
+}
+
+function copyPrompt(id) {
+  const res = VAULT_DATA.sections.flatMap(s => s.resources).find(r => r.id === id);
+  if (!res || !res.promptText) return;
+  navigator.clipboard.writeText(res.promptText).then(() => {
+    const btn = document.querySelector(`[onclick="copyPrompt('${id}')"]`);
+    if (btn) { btn.textContent = 'Copied! ✓'; setTimeout(() => btn.textContent = 'Copy Prompt', 2000); }
+  });
+}
+
+function filterTag(tag) {
+  activeTag = tag;
+  const sec = VAULT_DATA.sections.find(s => s.id === currentSection);
+  if (!sec) return;
+  
+  document.querySelectorAll('.filter-pill').forEach(p => {
+    const t = p.id === 'tag-all' ? null : p.id.replace('tag-','');
+    p.classList.toggle('active', t === tag);
+  });
+  
+  let filtered = sec.resources;
+  if (tag) filtered = filtered.filter(r => (r.tags||[]).includes(tag));
+  if (currentSection === 'mcp-servers' && mcpView === 'local') {
+    filtered = filtered.filter(r => (r.tags||[]).includes('local'));
+  } else if (currentSection === 'mcp-servers' && mcpView === 'remote') {
+    filtered = filtered.filter(r => !(r.tags||[]).includes('local') || (r.tags||[]).includes('power-stack'));
+  }
+  
+  document.getElementById('resource-grid').innerHTML = renderCards(filtered);
+}
+
+function setMcpView(view) {
+  mcpView = view;
+  document.getElementById('toggle-remote')?.classList.toggle('active', view === 'remote');
+  document.getElementById('toggle-local')?.classList.toggle('active', view === 'local');
+  filterTag(activeTag);
+}
+
+// ═══════════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════════
+function setupSearch() {
+  const input = document.getElementById('search-input');
+  input.addEventListener('input', (e) => {
+    const q = e.target.value.trim();
+    if (q.length < 2) { closeSearch(); return; }
+    const results = fuzzySearch(q);
+    renderSearchResults(results, q);
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSearch();
+  });
+}
+
+function fuzzySearch(q) {
+  const ql = q.toLowerCase();
+  const results = [];
+  VAULT_DATA.sections.forEach(sec => {
+    const matches = sec.resources.filter(r => {
+      const text = [r.title, r.description, r.investorEdge, r.keyFeature, ...(r.tags||[])].join(' ').toLowerCase();
+      return text.includes(ql);
+    });
+    if (matches.length) results.push({section:sec, matches:matches.slice(0,3)});
+  });
+  return results.slice(0,6);
+}
+
+function renderSearchResults(results, q) {
+  const dd = document.getElementById('search-results-dropdown');
+  if (!results.length) {
+    dd.innerHTML = `<div class="sr-empty">No results for "${q}" — try broader terms</div>`;
+    dd.style.display = 'block'; return;
+  }
+  const total = results.reduce((a,r) => a + r.matches.length, 0);
+  let html = '';
+  results.forEach(({section, matches}) => {
+    html += `<div class="sr-group-label">${section.icon} ${section.title}</div>`;
+    matches.forEach(r => {
+      html += `<div class="sr-item" onclick="gotoResult('${section.id}','${r.id}')" role="option" tabindex="0">
+        <span class="sr-item-icon">${r.type === 'prompt' ? '📋' : '🔧'}</span>
+        <div>
+          <div class="sr-item-title">${highlight(r.title, q)}</div>
+          <div class="sr-item-desc">${(r.description||'').substring(0,80)}...</div>
+        </div>
+      </div>`;
+    });
+  });
+  html += `<div class="sr-count">${total} result${total>1?'s':''} across ${results.length} section${results.length>1?'s':''}</div>`;
+  dd.innerHTML = html;
+  dd.style.display = 'block';
+}
+
+function highlight(text, q) {
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark style="background:rgba(255,165,0,0.25);color:inherit;border-radius:2px">$1</mark>');
+}
+
+function gotoResult(sectionId, resourceId) {
+  closeSearch();
+  document.getElementById('search-input').value = '';
+  navigate(sectionId);
+  setTimeout(() => {
+    const el = document.getElementById('card-'+resourceId);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 300);
+}
+
+function closeSearch() {
+  document.getElementById('search-results-dropdown').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════
+// STICKY CTA
+// ═══════════════════════════════════════════════
+function setupStickyCTA() {
+  if (stickyDismissed) return;
+  window.addEventListener('scroll', () => {
+    const shown = window.scrollY > 600;
+    document.getElementById('sticky-cta').classList.toggle('visible', shown && !stickyDismissed);
+  });
+}
+
+function dismissSticky() {
+  stickyDismissed = true;
+  localStorage.setItem('vault-sticky-dismissed', 'true');
+  document.getElementById('sticky-cta').classList.remove('visible');
+}
+
+// ═══════════════════════════════════════════════
+// SIDEBAR MOBILE
+// ═══════════════════════════════════════════════
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+}
+</script>
+</body>
+</html>
