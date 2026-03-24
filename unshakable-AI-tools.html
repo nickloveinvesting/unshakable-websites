@@ -148,8 +148,8 @@ input{font-family:inherit;color:inherit}
   border-bottom:1px solid var(--line-s);
 }
 .hero-left{
-  padding:44px 44px 40px 48px;
-  display:flex;flex-direction:column;justify-content:flex-start;
+  padding:36px 44px 36px 48px;
+  display:flex;flex-direction:column;justify-content:center;
   border-right:1px solid var(--line-s);
   background:linear-gradient(140deg,#070707 0%,#111 100%);
   position:relative;overflow:hidden;
@@ -167,22 +167,22 @@ input{font-family:inherit;color:inherit}
   display:inline-flex;align-items:center;gap:8px;
   font-family:var(--fd);font-size:9px;font-weight:700;
   letter-spacing:3px;text-transform:uppercase;color:var(--gold-b);
-  margin-bottom:16px;position:relative;
+  margin-bottom:10px;position:relative;
 }
 .hero-tag::before{content:'';display:block;width:20px;height:1px;background:var(--grad-h)}
 .hero-h1{
   font-family:var(--fd);font-size:40px;font-weight:900;
   line-height:1.0;letter-spacing:-0.5px;
-  margin-bottom:16px;position:relative;
+  margin-bottom:12px;position:relative;
 }
 .hero-h1 .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{
   font-size:13px;color:var(--w60);line-height:1.6;
-  max-width:480px;margin-bottom:24px;position:relative;
+  max-width:480px;margin-bottom:20px;position:relative;
 }
 .hero-stats{
   display:grid;grid-template-columns:repeat(4,1fr);gap:0;
-  margin-bottom:36px;position:relative;
+  margin-bottom:24px;position:relative;
   border:1px solid var(--line-s);border-radius:8px;overflow:hidden;
 }
 .hstat{
@@ -218,10 +218,10 @@ input{font-family:inherit;color:inherit}
 .hero-right{
   background:var(--ink-1);
   display:flex;flex-direction:column;
-  max-height:520px;
+  max-height:440px;
 }
 .widget-header{
-  padding:22px 22px 0;
+  padding:16px 18px 0;
   border-bottom:1px solid var(--line-s);
   flex-shrink:0;
 }
@@ -230,7 +230,7 @@ input{font-family:inherit;color:inherit}
   letter-spacing:1.5px;text-transform:uppercase;color:var(--w100);
   margin-bottom:4px;
 }
-.widget-sub{font-size:11px;color:var(--w40);margin-bottom:14px}
+.widget-sub{font-size:11px;color:var(--w40);margin-bottom:10px}
 .widget-tabs{display:flex;gap:0;border-top:1px solid var(--line-s)}
 .wtab{
   padding:9px 14px;font-size:11px;font-weight:600;
@@ -332,7 +332,7 @@ input{font-family:inherit;color:inherit}
 .cat-card:hover .cat-card-arrow{color:var(--gold-b);transform:translateX(3px)}
 
 /* ── START HERE PATHWAY ── */
-.start-here{margin-bottom:40px}
+.start-here{margin-bottom:28px}
 .sh-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
 .sh-badge{background:var(--grad);color:#050505;font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:3px 8px;border-radius:4px;font-family:var(--fd)}
 .sh-label{font-family:var(--fd);font-size:13px;font-weight:700;color:var(--w60)}
@@ -3472,7 +3472,7 @@ function showHome(){
       </div>
     </div>
 
-    <div id="below-hero" style="padding:40px 44px 80px">
+    <div id="below-hero" style="padding:32px 44px 60px">
 
       <!-- START HERE PATHWAY -->
       <div class="start-here">
