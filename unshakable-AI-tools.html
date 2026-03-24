@@ -163,9 +163,8 @@ input{font-family:inherit;color:inherit}
   pointer-events:none;
 }
 .hero-top{
-  display:grid;grid-template-columns:1fr auto;
-  align-items:center;gap:32px;
-  padding:40px 48px 28px;position:relative;
+  display:block;
+  padding:44px 48px 28px;position:relative;
 }
 .hero-left{display:flex;flex-direction:column;gap:0}
 .hero-tag{
@@ -183,7 +182,7 @@ input{font-family:inherit;color:inherit}
 .hero-h1 .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{
   font-size:13px;color:var(--w60);line-height:1.65;
-  max-width:520px;margin-bottom:24px;
+  max-width:680px;margin-bottom:24px;
 }
 .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
 .btn-solid{
@@ -3509,12 +3508,7 @@ function showHome(){
             <a href="https://go.theunshakableinvestor.com/checkout-reai-legacy" class="btn-outline" target="_blank" rel="noopener">Join the Community →</a>
           </div>
         </div>
-        <div class="hero-right">
-          <div class="hstat"><span class="hstat-n" id="c1">0</span><div class="hstat-l">Tools</div></div>
-          <div class="hstat"><span class="hstat-n" id="c2">0</span><div class="hstat-l">Prompts</div></div>
-          <div class="hstat"><span class="hstat-n" id="c3">0</span><div class="hstat-l">Featured</div></div>
-          <div class="hstat"><span class="hstat-n" id="c4">0</span><div class="hstat-l">Sections</div></div>
-        </div>
+
       </div>
       <div class="hero-stats-bar">
         <div class="hsi"><span class="hsi-n" id="c1b">133</span><span class="hsi-l">AI Tools &amp; Resources</span></div>
@@ -3638,10 +3632,10 @@ function showHome(){
       </div>
     </div>
   `;
-  animCount('c1',total,1100);
-  animCount('c2',prompts,850);
-  animCount('c3',featured,700);
-  animCount('c4',D.sections.length,600);
+  animCount('c1b',total,1100);
+  animCount('c2b',prompts,850);
+  animCount('c3b',featured,700);
+  animCount('c4b',D.sections.length,600);
 }
 
 function animCount(id,target,dur){
