@@ -142,84 +142,131 @@ input{font-family:inherit;color:inherit}
 #main::-webkit-scrollbar-thumb{background:rgba(255,165,0,0.15);border-radius:2px}
 
 /* ── HERO — two-column ── */
+/* ── HERO — full-width compact ── */
 .hero-wrap{
-  display:grid;grid-template-columns:1fr 400px;gap:0;
-  align-items:stretch;
+  display:flex;flex-direction:column;
   border-bottom:1px solid var(--line-s);
-}
-.hero-left{
-  padding:36px 44px 36px 48px;
-  display:flex;flex-direction:column;justify-content:center;
-  border-right:1px solid var(--line-s);
-  background:linear-gradient(140deg,#070707 0%,#111 100%);
+  background:linear-gradient(160deg,#050505 0%,#0d0d0d 60%,#111 100%);
   position:relative;overflow:hidden;
 }
-/* subtle grid pattern */
-.hero-left::before{
+.hero-wrap::before{
   content:'';position:absolute;inset:0;
   background-image:
-    linear-gradient(rgba(255,165,0,0.03) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,165,0,0.03) 1px,transparent 1px);
-  background-size:48px 48px;
+    linear-gradient(rgba(255,165,0,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,165,0,0.025) 1px,transparent 1px);
+  background-size:56px 56px;pointer-events:none;
+}
+.hero-wrap::after{
+  content:'';position:absolute;top:-120px;right:-80px;
+  width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,165,0,0.06) 0%,transparent 70%);
   pointer-events:none;
 }
+.hero-top{
+  display:grid;grid-template-columns:1fr auto;
+  align-items:center;gap:32px;
+  padding:40px 48px 28px;position:relative;
+}
+.hero-left{display:flex;flex-direction:column;gap:0}
 .hero-tag{
   display:inline-flex;align-items:center;gap:8px;
   font-family:var(--fd);font-size:9px;font-weight:700;
   letter-spacing:3px;text-transform:uppercase;color:var(--gold-b);
-  margin-bottom:10px;position:relative;
+  margin-bottom:14px;
 }
 .hero-tag::before{content:'';display:block;width:20px;height:1px;background:var(--grad-h)}
 .hero-h1{
-  font-family:var(--fd);font-size:40px;font-weight:900;
-  line-height:1.0;letter-spacing:-0.5px;
-  margin-bottom:12px;position:relative;
+  font-family:var(--fd);font-size:44px;font-weight:900;
+  line-height:0.95;letter-spacing:-1px;
+  margin-bottom:14px;
 }
 .hero-h1 .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{
-  font-size:13px;color:var(--w60);line-height:1.6;
-  max-width:480px;margin-bottom:20px;position:relative;
+  font-size:13px;color:var(--w60);line-height:1.65;
+  max-width:520px;margin-bottom:24px;
 }
-.hero-stats{
-  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
-  margin-bottom:24px;position:relative;
-  border:1px solid var(--line-s);border-radius:8px;overflow:hidden;
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-solid{
+  padding:11px 22px;background:var(--grad);color:#050505;
+  font-family:var(--fd);font-weight:800;font-size:11px;
+  letter-spacing:0.8px;text-transform:uppercase;border-radius:4px;
+  transition:opacity 0.2s,box-shadow 0.2s;cursor:pointer;border:none;
+}
+.btn-solid:hover{opacity:0.88;box-shadow:0 0 28px rgba(255,165,0,0.4)}
+.btn-outline{
+  padding:11px 22px;border:1px solid rgba(255,165,0,0.35);
+  color:var(--gold-b);font-family:var(--fd);font-weight:700;
+  font-size:11px;letter-spacing:0.8px;text-transform:uppercase;
+  border-radius:4px;transition:all 0.2s;display:inline-block;
+}
+.btn-outline:hover{border-color:var(--gold-b);background:rgba(255,165,0,0.07)}
+
+/* hero right: 4-stat block */
+.hero-right{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--line-s);border:1px solid var(--line-s);
+  border-radius:8px;overflow:hidden;min-width:240px;align-self:center;
 }
 .hstat{
-  padding:13px 16px;text-align:center;
-  border-right:1px solid var(--line-s);
-  transition:background 0.2s;
+  background:var(--ink-1);padding:16px 20px;text-align:center;
+  transition:background 0.2s;cursor:default;
 }
-.hstat:last-child{border-right:none}
-.hstat:hover{background:var(--w04)}
+.hstat:hover{background:var(--ink-3)}
 .hstat-n{
-  font-family:var(--fd);font-size:26px;font-weight:900;
+  font-family:var(--fd);font-size:30px;font-weight:900;
   background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  display:block;line-height:1;margin-bottom:4px;
+  display:block;line-height:1;margin-bottom:5px;
 }
-.hstat-l{font-size:10px;color:var(--w40);font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;position:relative}
-.btn-solid{
-  padding:12px 24px;background:var(--grad);color:#050505;
-  font-family:var(--fd);font-weight:700;font-size:11px;
-  letter-spacing:1px;text-transform:uppercase;border-radius:5px;
-  transition:opacity 0.2s,box-shadow 0.2s;
-}
-.btn-solid:hover{opacity:0.9;box-shadow:0 0 24px rgba(255,165,0,0.35)}
-.btn-outline{
-  padding:12px 24px;border:1px solid rgba(255,165,0,0.3);
-  color:var(--gold-b);font-family:var(--fd);font-weight:700;
-  font-size:11px;letter-spacing:1px;text-transform:uppercase;
-  border-radius:5px;transition:all 0.2s;
-}
-.btn-outline:hover{border-color:var(--gold-b);background:rgba(255,165,0,0.08)}
+.hstat-l{font-size:9px;color:var(--w40);font-weight:700;letter-spacing:0.8px;text-transform:uppercase}
 
-/* ── HERO RIGHT — compact dashboard ── */
-.hero-right{
-  background:var(--ink-1);
-  display:flex;flex-direction:column;
-  max-height:440px;
+/* hero bottom stats bar */
+.hero-stats-bar{
+  display:flex;align-items:center;gap:0;
+  border-top:1px solid var(--line-s);
+  padding:0 48px;
+  background:rgba(255,165,0,0.02);
 }
+.hero-stats-bar .hsi{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 24px 12px 0;
+  margin-right:24px;
+  border-right:1px solid var(--line-s);
+}
+.hero-stats-bar .hsi:last-child{border-right:none}
+.hero-stats-bar .hsi-n{
+  font-family:var(--fd);font-size:22px;font-weight:900;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.hero-stats-bar .hsi-l{font-size:10px;color:var(--w40);font-weight:600;letter-spacing:0.5px;text-transform:uppercase;line-height:1.2}
+
+/* ── INTELLIGENCE PANEL (widget moved here) ── */
+.intel-panel{
+  border-bottom:1px solid var(--line-s);
+  background:var(--ink-1);
+}
+.intel-toggle{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 48px;cursor:pointer;
+  border:none;background:transparent;width:100%;text-align:left;
+  transition:background 0.15s;
+}
+.intel-toggle:hover{background:var(--w04)}
+.intel-toggle-label{
+  font-family:var(--fd);font-size:10px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--w60);
+}
+.intel-toggle-badge{
+  font-size:9px;color:var(--w40);margin-left:auto;transition:transform 0.2s;
+}
+.intel-toggle.open .intel-toggle-badge{transform:rotate(180deg)}
+.intel-body{
+  display:none;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  gap:0;border-top:1px solid var(--line-s);
+}
+.intel-body.open{display:grid}
+
 .widget-header{
   padding:16px 18px 0;
   border-bottom:1px solid var(--line-s);
@@ -511,33 +558,40 @@ input{font-family:inherit;color:inherit}
 
 /* Responsive */
 @media(max-width:1100px){
-  .hero-wrap{grid-template-columns:1fr 340px}
   .hero-h1{font-size:38px}
+  .hero-top{padding:36px 36px 24px}
+  .hero-stats-bar{padding:0 36px}
+  .intel-toggle{padding:12px 36px}
 }
 @media(max-width:900px){
   :root{--side-w:44px}
   .sb-name,.sb-cnt,.sb-group-label,.sb-sep{display:none}
   .sb-item{justify-content:center;padding:10px}
   .sb-icon{font-size:16px;width:auto}
-  .hero-wrap{grid-template-columns:1fr}
-  .hero-right{display:none}
+  .hero-top{grid-template-columns:1fr;gap:20px;padding:28px 24px 20px}
+  .hero-right{grid-template-columns:repeat(4,1fr);min-width:unset}
+  .hero-stats-bar{display:none}
   .ca{padding:24px 20px 60px}
   .hero-h1{font-size:32px}
   .foot-g{grid-template-columns:1fr;gap:20px}
   .pstack{grid-column:span 1}
   .hbg{display:flex}
+  .intel-toggle{padding:12px 24px}
+  .intel-body{grid-template-columns:1fr 1fr}
 }
 @media(max-width:600px){
   :root{--side-w:0px}
   #sidebar{width:240px;position:absolute;top:0;bottom:0;left:0;z-index:300;transform:translateX(-100%);transition:transform 0.3s}
   #sidebar.open{transform:translateX(0)}
   #main{width:100%}
-  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .hero-right{grid-template-columns:repeat(2,1fr)}
   .res-grid{grid-template-columns:1fr}
   .cat-grid{grid-template-columns:1fr}
   .hero-h1{font-size:28px}
   .nav-cta{display:none}
   .nav-search{max-width:none;flex:1}
+  .intel-body{grid-template-columns:1fr}
+  .sh-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -3427,6 +3481,14 @@ function updateSB(){
 }
 function toggleSB(){document.getElementById('sidebar').classList.toggle('open')}
 function closeSB(){document.getElementById('sidebar').classList.remove('open')}
+function toggleIntel(btn){
+  const body=document.getElementById('intel-body');
+  if(!body)return;
+  const open=body.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  btn.setAttribute('aria-expanded',open);
+  if(open)setTimeout(drawRadar,80);
+}
 
 // ── HOME ──
 function showHome(){
@@ -3437,42 +3499,63 @@ function showHome(){
 
   document.getElementById('ca').innerHTML=`
     <div class="hero-wrap">
-      <div class="hero-left">
-        <div class="hero-tag">The Unshakable Investor</div>
-        <h1 class="hero-h1">THE <span class="g">AI REAL<br>ESTATE</span> INVESTOR<br>VAULT</h1>
-        <p class="hero-sub">Every cutting-edge AI tool, prompt, plugin, and platform — researched, organized, and ready to deploy for experienced investors doing 5+ deals/year.</p>
-        <div class="hero-stats">
+      <div class="hero-top">
+        <div class="hero-left">
+          <div class="hero-tag">The Unshakable Investor</div>
+          <h1 class="hero-h1">THE <span class="g">AI REAL<br>ESTATE</span> INVESTOR<br>VAULT</h1>
+          <p class="hero-sub">Every cutting-edge AI tool, prompt, plugin, and platform — researched, organized, and ready to deploy for experienced investors doing 5+ deals/year.</p>
+          <div class="hero-actions">
+            <button class="btn-solid" onclick="document.getElementById('below-hero').scrollIntoView({behavior:'smooth'})">Explore the Vault ↓</button>
+            <a href="https://go.theunshakableinvestor.com/checkout-reai-legacy" class="btn-outline" target="_blank" rel="noopener">Join the Community →</a>
+          </div>
+        </div>
+        <div class="hero-right">
           <div class="hstat"><span class="hstat-n" id="c1">0</span><div class="hstat-l">Tools</div></div>
           <div class="hstat"><span class="hstat-n" id="c2">0</span><div class="hstat-l">Prompts</div></div>
           <div class="hstat"><span class="hstat-n" id="c3">0</span><div class="hstat-l">Featured</div></div>
           <div class="hstat"><span class="hstat-n" id="c4">0</span><div class="hstat-l">Sections</div></div>
         </div>
-        <div class="hero-actions">
-          <button class="btn-solid" onclick="document.getElementById('below-hero').scrollIntoView({behavior:'smooth'})">Explore the Vault ↓</button>
-          <a href="https://go.theunshakableinvestor.com/checkout-reai-legacy" class="btn-outline" target="_blank" rel="noopener">Join the Community →</a>
-        </div>
       </div>
-      <div class="hero-right">
-        <div class="widget-header">
-          <div class="widget-title">AI Investment Intelligence</div>
-          <div class="widget-sub">Interactive platform analysis & workflow guide</div>
-          <div class="widget-tabs">
-            <div class="wtab active" onclick="wTab('radar',this)">Radar</div>
-            <div class="wtab" onclick="wTab('workflow',this)">Workflow</div>
-            <div class="wtab" onclick="wTab('timeline',this)">Timeline</div>
-            <div class="wtab" onclick="wTab('stats',this)">Stats</div>
-          </div>
-        </div>
-        <div class="widget-body">
-          <div id="wp-radar">${renderRadarPanel()}</div>
-          <div id="wp-workflow" style="display:none">${renderWorkflowPanel()}</div>
-          <div id="wp-timeline" style="display:none">${renderTimelinePanel()}</div>
-          <div id="wp-stats" style="display:none">${renderStatsPanel(total,prompts,featured)}</div>
+      <div class="hero-stats-bar">
+        <div class="hsi"><span class="hsi-n" id="c1b">133</span><span class="hsi-l">AI Tools &amp; Resources</span></div>
+        <div class="hsi"><span class="hsi-n" id="c2b">44</span><span class="hsi-l">Prompt Templates</span></div>
+        <div class="hsi"><span class="hsi-n" id="c3b">25</span><span class="hsi-l">Editor Picks</span></div>
+        <div class="hsi"><span class="hsi-n" id="c4b">13</span><span class="hsi-l">Sections</span></div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:12px 0">
+          <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+          <span style="font-size:10px;color:var(--w40);font-weight:600;letter-spacing:0.5px;text-transform:uppercase">Updated Mar 2026</span>
         </div>
       </div>
     </div>
 
-    <div id="below-hero" style="padding:32px 44px 60px">
+    <!-- AI INTELLIGENCE PANEL -->
+    <div class="intel-panel">
+      <button class="intel-toggle" onclick="toggleIntel(this)" aria-expanded="false">
+        <span style="font-size:14px">📊</span>
+        <span class="intel-toggle-label">AI Platform Intelligence — Radar, Workflows, Timeline &amp; Stats</span>
+        <span class="intel-toggle-badge">▼</span>
+      </button>
+      <div class="intel-body" id="intel-body">
+        <div style="padding:20px 24px;border-right:1px solid var(--line-s)">
+          <div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--w40);margin-bottom:12px">Platform Radar</div>
+          ${renderRadarPanel()}
+        </div>
+        <div style="padding:20px 24px;border-right:1px solid var(--line-s)">
+          <div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--w40);margin-bottom:12px">Workflow Guide</div>
+          ${renderWorkflowPanel()}
+        </div>
+        <div style="padding:20px 24px;border-right:1px solid var(--line-s)">
+          <div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--w40);margin-bottom:12px">Launch Timeline</div>
+          ${renderTimelinePanel()}
+        </div>
+        <div style="padding:20px 24px">
+          <div style="font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--w40);margin-bottom:12px">Vault Stats</div>
+          ${renderStatsPanel(total,prompts,featured)}
+        </div>
+      </div>
+    </div>
+
+    <div id="below-hero" style="padding:28px 48px 60px">
 
       <!-- START HERE PATHWAY -->
       <div class="start-here">
@@ -3559,7 +3642,6 @@ function showHome(){
   animCount('c2',prompts,850);
   animCount('c3',featured,700);
   animCount('c4',D.sections.length,600);
-  setTimeout(drawRadar,120);
 }
 
 function animCount(id,target,dur){
