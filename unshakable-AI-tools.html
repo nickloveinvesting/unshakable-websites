@@ -331,6 +331,30 @@ input{font-family:inherit;color:inherit}
 .cat-card-arrow{font-size:11px;color:var(--w40);transition:all 0.15s}
 .cat-card:hover .cat-card-arrow{color:var(--gold-b);transform:translateX(3px)}
 
+/* ── START HERE PATHWAY ── */
+.start-here{margin-bottom:40px}
+.sh-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sh-badge{background:var(--grad);color:#050505;font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:3px 8px;border-radius:4px;font-family:var(--fd)}
+.sh-label{font-family:var(--fd);font-size:13px;font-weight:700;color:var(--w60)}
+.sh-sub{font-size:11px;color:var(--w40);margin-left:auto}
+.sh-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.sh-card{background:var(--ink-1);border:1px solid var(--line);border-radius:8px;padding:16px 14px;cursor:pointer;transition:all 0.2s;display:flex;flex-direction:column;gap:6px;position:relative}
+.sh-card:hover{border-color:var(--gold-b);background:var(--ink-3)}
+.sh-card::before{content:attr(data-step);position:absolute;top:10px;right:12px;font-size:9px;font-weight:800;font-family:var(--fd);color:var(--gold-b);opacity:0.7}
+.sh-card-icon{font-size:18px}
+.sh-card-name{font-size:11px;font-weight:700;font-family:var(--fd);line-height:1.3}
+.sh-card-desc{font-size:10px;color:var(--w40);line-height:1.4;flex:1}
+.sh-card-link{font-size:10px;color:var(--gold-b);font-weight:600;margin-top:4px}
+@media(max-width:900px){.sh-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.sh-grid{grid-template-columns:1fr}}
+
+/* ── HOME FILTER BAR ── */
+.hfbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--line-s)}
+.hfp{background:transparent;border:1px solid var(--line);border-radius:20px;padding:5px 13px;font-size:11px;font-family:var(--fd);font-weight:600;color:var(--w60);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.hfp:hover{border-color:var(--gold-b);color:var(--gold-b)}
+.hfp.active{background:var(--grad);color:#050505;border-color:transparent}
+.cat-card.hidden{display:none}
+
 /* ── PLATFORM TABLE ── */
 .tbl-wrap{overflow-x:auto;border:1px solid var(--line-s);border-radius:8px;margin-bottom:32px}
 .ptbl{width:100%;border-collapse:collapse;font-size:11px}
@@ -534,8 +558,8 @@ input{font-family:inherit;color:inherit}
     <div id="srDrop"></div>
   </div>
   <div class="nav-spacer"></div>
-  <a href="https://go.theunshakableinvestor.com/ai-realestate-webinar-database" class="nav-cta" target="_blank" rel="noopener">
-    🔥 Free Webinar
+  <a href="https://go.theunshakableinvestor.com/checkout-reai-legacy" class="nav-cta" target="_blank" rel="noopener">
+    🏠 Join the Community
   </a>
 </nav>
 <div id="body-row">
@@ -552,9 +576,9 @@ input{font-family:inherit;color:inherit}
         <div class="foot-tag">Built for investors who refuse to lose their edge. All tools verified March 2026.</div>
       </div>
       <div class="foot-web">
-        <div class="foot-wt">See These Tools Live</div>
-        <div class="foot-ws">Join Toby Potter every Tuesday 6PM CST — 2026 AI Real Estate Blueprint webinar with live deal analysis.</div>
-        <a href="https://go.theunshakableinvestor.com/ai-realestate-webinar-database" class="foot-wb" target="_blank" rel="noopener">Reserve My Seat →</a>
+        <div class="foot-wt">Join Our Real Estate Community</div>
+        <div class="foot-ws">Get access to the full AI Real Estate Investor toolkit — live sessions, deal analysis, and the tools that actually move the needle.</div>
+        <a href="https://go.theunshakableinvestor.com/checkout-reai-legacy" class="foot-wb" target="_blank" rel="noopener">Join the Community →</a>
       </div>
       <div class="foot-copy">
         <p>© 2026 The Unshakable Investor</p>
@@ -565,8 +589,8 @@ input{font-family:inherit;color:inherit}
     </div>
   </footer>
   <div id="sCTA">
-    <span class="sc-txt">🔥 See these AI tools <strong>LIVE</strong> — Free Webinar every Tuesday 6PM CST</span>
-    <a href="https://go.theunshakableinvestor.com/ai-realestate-webinar-database" class="nav-cta" target="_blank" rel="noopener" style="flex-shrink:0">Reserve Seat</a>
+    <span class="sc-txt">🏠 Get the full AI investor toolkit — <strong>Join Our Real Estate Community</strong></span>
+    <a href="https://go.theunshakableinvestor.com/checkout-reai-legacy" class="nav-cta" target="_blank" rel="noopener" style="flex-shrink:0">Join Now</a>
     <span class="sc-x" onclick="dismissCTA()">✕</span>
   </div>
 </main>
@@ -2137,6 +2161,1111 @@ Instruct me to check AirDNA or Rabbu for that specific market before underwritin
 useCase:"STR acquisition decisions. Strategy selection (STR vs. LTR). Lender STR income documentation.",
 proTip:"Before running this prompt, pull the AirDNA Market Report for the ZIP and paste the ADR, occupancy, and RevPAR data into the prompt. Verified inputs = an STR model you can actually defend to a lender or partner."}
 
+]},
+
+// ────────────────────────────────────────
+// 10. MODEL-SPECIFIC ADVANCED PROMPTS
+// ────────────────────────────────────────
+{id:"model-specific-prompts",title:"Model-Specific Advanced Prompts",icon:"🧠",
+description:"Prompts engineered for the specific capabilities of Claude Opus/Sonnet 4.6, Gemini 3.1 Pro, and GPT-5.4. Each prompt exploits unique model features — 1M context, extended thinking, multimodal document analysis, computer use, and Excel integration — that generic prompts miss entirely.",
+resources:[
+
+{id:"prompt-claude-1m-deal-room",title:"Claude Opus 4.6: Full Deal Room in 1M Context",type:"prompt",featured:true,
+description:"Load an entire acquisition package — OM, rent roll, T-12, inspection report, appraisal, title commitment, and comparable sales — into one Claude Opus 4.6 session. Ask cross-document questions with zero context loss. The 1M token window holds ~750,000 words, enough for a complete 20-asset portfolio review.",
+pricing:"Claude Max ($100/mo) or API at $5/M input tokens",url:"https://claude.ai",
+investorEdge:"Eliminates the 'which document was that in?' problem. One session holds the entire deal room and answers cross-document questions instantly — no switching between tabs, no copy-paste.",
+keyFeature:"Cross-document analysis at scale: 'Where does the T-12 contradict the rent roll?' surfaces in seconds across a 500-page document package.",
+worksWith:["Claude Opus 4.6","Filesystem MCP","PDF Skill"],tags:["claude","opus","1m-context","due-diligence","prompt","advanced"],verified:true,
+promptText:`[LOAD ALL DOCUMENTS FIRST — paste or upload: OM, rent roll, T-12, inspection, appraisal, title commitment, comps]
+
+You now have the complete acquisition package for [PROPERTY_NAME] in your context.
+Do NOT ask me to provide more documents — everything is already loaded.
+
+Run this full deal room analysis:
+
+PHASE 1 — DOCUMENT INTEGRITY CHECK
+- Cross-reference rent roll against T-12: flag any unit where stated rent ≠ collected rent
+- Cross-reference inspection deferred maintenance against seller's proforma capex reserve
+- Flag any disclosure in the title commitment that contradicts the OM
+
+PHASE 2 — UNDERWRITING VALIDATION
+- Recalculate NOI from the T-12 (do not use seller's stated NOI)
+- Calculate actual cap rate at asking price using verified NOI
+- Model DSCR at: (a) current financing terms and (b) refi at 7.0% DSCR loan
+
+PHASE 3 — RED FLAG SUMMARY
+- List the 5 highest-capital-impact issues found across all documents
+- Rank by estimated dollar exposure
+- Flag any single issue that is a potential deal-killer
+
+PHASE 4 — IC MEMO DRAFT
+Write a 400-word Investment Committee summary covering:
+thesis, verified NOI, cap rate, deal risks, and recommended next steps.
+
+Format all outputs in clearly labeled sections. Show your document sources for every claim.`,
+useCase:"Full acquisition due diligence. IC memo preparation. Portfolio-level cross-document analysis.",
+proTip:"Use Opus 4.6 for the first analysis pass, then switch to Sonnet 4.6 for follow-up Q&A — Opus handles the heavy context lift, Sonnet handles the faster iteration at lower cost."},
+
+{id:"prompt-claude-adaptive-thinking",title:"Claude Sonnet 4.6: Adaptive Thinking Deal Structurer",type:"prompt",featured:true,
+description:"Trigger Claude Sonnet 4.6's adaptive thinking mode for complex capital stack and creative financing problems. At the default 'high' effort level, Sonnet thinks through every branch before committing — catching math errors and structural flaws before they reach a lender.",
+pricing:"Claude Pro ($20/mo) — adaptive thinking included",url:"https://claude.ai",
+investorEdge:"Adaptive thinking means Claude re-evaluates its own assumptions mid-analysis. On a subject-to deal with a balloon payment and a JV equity kicker, it will catch the waterfall error a standard prompt misses.",
+keyFeature:"Self-revision mid-analysis: Claude identifies when an assumption is wrong and backtracks before giving you the final answer.",
+worksWith:["Claude Sonnet 4.6","Code Execution","Sequential Thinking"],tags:["claude","sonnet","adaptive-thinking","deal-structure","prompt","advanced"],verified:true,
+promptText:`Think carefully and deeply before answering — use your full reasoning capability.
+This is a complex deal structure that requires checking multiple assumptions simultaneously.
+
+DEAL: [PROPERTY ADDRESS / DESCRIPTION]
+Purchase price: $[PRICE] | ARV: $[ARV] | Current NOI: $[NOI]
+Seller situation: [FREE & CLEAR / HAS MORTGAGE at [RATE]% / MOTIVATED]
+
+OBJECTIVE: Design the optimal acquisition structure that achieves:
+- IRR ≥ [TARGET]% over [HOLD] year hold
+- CoC ≥ [TARGET]% Year 1
+- Cash to close ≤ $[MAX_CASH]
+
+CONSTRAINTS:
+- [CONSTRAINT 1 — e.g., "No personal guarantee"]
+- [CONSTRAINT 2 — e.g., "Must cash flow from day one"]
+- [CONSTRAINT 3 — e.g., "LP equity limited to 30% of deal"]
+
+REQUIRED: Before giving your final answer:
+1. Explore at least 4 distinct structures
+2. For each structure, calculate DSCR, CoC, and 5-yr IRR explicitly
+3. Identify where each structure could fail
+4. Check your own math on the winning structure before presenting it
+5. Flag any assumption you're uncertain about
+
+Do not give me a quick answer. I want to see your full reasoning process.`,
+useCase:"Creative financing analysis. Capital stack optimization. Complex JV structures.",
+proTip:"Add this line at the end for even deeper analysis: 'Now argue against your own recommendation — what is the strongest case that this structure fails?' Adaptive thinking models respond well to adversarial follow-ups."},
+
+{id:"prompt-gemini-multimodal-docs",title:"Gemini 3.1 Pro: Multimodal Document Analysis",type:"prompt",featured:true,
+description:"Upload rent roll images, hand-written inspection notes, architectural drawings, property photos, and financial PDFs simultaneously. Gemini 3.1 Pro processes all modalities in one context — text, images, and PDFs — delivering cross-format analysis impossible with text-only models.",
+pricing:"Gemini Advanced ($19.99/mo) or Vertex AI API",url:"https://gemini.google.com",
+investorEdge:"Your GC hands you a hand-written punch list and a photo set — upload both and ask Gemini to cross-reference the photos against the punch list items. No transcription needed.",
+keyFeature:"True multimodal reasoning: a photo of water damage + an inspection report + a contractor bid are analyzed together as one coherent input.",
+worksWith:["Gemini 3.1 Pro","Google Drive","Google Sheets"],tags:["gemini","multimodal","documents","images","prompt","advanced"],verified:true,
+promptText:`[UPLOAD: property photos, inspection report PDF, rent roll image/PDF, any hand-written notes]
+
+You are analyzing a real estate acquisition package using all uploaded materials simultaneously.
+
+PROPERTY: [ADDRESS] | Type: [ASSET CLASS] | Asking: $[PRICE]
+
+TASK 1 — PHOTO ANALYSIS
+Review the uploaded property photos:
+- List every visible defect or deferred maintenance item
+- Estimate repair category: cosmetic / functional / structural
+- Flag anything in the photos NOT mentioned in the inspection report
+
+TASK 2 — DOCUMENT CROSS-REFERENCE
+Compare the uploaded rent roll image against the T-12 PDF:
+- Flag any unit where the rent roll and T-12 income don't match
+- Identify any unit appearing in one document but not the other
+- Calculate actual occupancy from the rent roll image
+
+TASK 3 — INTEGRATED RISK ASSESSMENT
+Using the photos, inspection report, and financial documents together:
+- What is the total estimated deferred maintenance capital need?
+- Does the inspection report appear to understate physical issues shown in photos?
+- What is the single biggest risk this combined analysis reveals?
+
+Note: Leverage your ability to see and read all formats simultaneously.
+Do not limit your analysis to text — interpret the visual evidence directly.`,
+useCase:"Property acquisition with mixed document formats. GC bid validation. Photo-to-report cross-referencing.",
+proTip:"Gemini 3.1 Pro performs best when you describe what each uploaded file is before asking questions. Start with: 'File 1 is the inspection report. File 2 is the rent roll. Files 3-15 are property photos.' Then ask your questions."},
+
+{id:"prompt-gemini-google-workspace",title:"Gemini 3.1 Pro: Google Workspace Deal Pipeline",type:"prompt",
+description:"Gemini 3.1 Pro with Google Workspace integration reads your Gmail deal flow, pulls data from Google Sheets underwriting models, and writes summaries to Google Docs — all in one session. The tightest AI-to-Google integration available in 2026.",
+pricing:"Gemini Advanced ($19.99/mo) — requires Google Workspace connection",url:"https://gemini.google.com",
+investorEdge:"Your deal pipeline lives in Gmail and Sheets. Gemini reads both natively — no export, no copy-paste, no MCP setup required. Fastest path to 'AI knows my actual deal data.'",
+keyFeature:"Native Google Workspace read/write: pulls from Sheets, reads Gmail threads, writes summaries to Docs — zero export friction.",
+worksWith:["Gemini 3.1 Pro","Google Sheets","Gmail","Google Docs"],tags:["gemini","google-workspace","pipeline","automation","prompt","advanced"],verified:true,
+promptText:`Connect to my Google Workspace and run a weekly deal pipeline review.
+
+STEP 1 — EMAIL PIPELINE SCAN (Gmail)
+Search my Gmail for emails in the last 7 days containing:
+"LOI" OR "offer" OR "under contract" OR "deal" OR "property" OR "asking price"
+List every unique deal thread with: property address (if mentioned), status, and last activity date.
+
+STEP 2 — UNDERWRITING SHEET PULL (Google Sheets)
+Open [SHEET NAME or URL] and extract:
+- All deals with status = "Active" or "Under Analysis"
+- For each: address, asking price, ARV, estimated rehab, projected CoC
+- Flag any deal where CoC < [TARGET]% or rehab estimate is blank
+
+STEP 3 — SYNTHESIS (Google Docs)
+Create a new Google Doc titled "Deal Pipeline Review — [DATE]" containing:
+- Executive summary: # deals active, # deals stalled, # requiring immediate action
+- Top 3 deals ranked by projected CoC
+- Action items: which deals need follow-up this week and why
+- Deals to kill: any deal that no longer meets minimum criteria
+
+Format the Doc with clear headings. Share it with [EMAIL] when complete.`,
+useCase:"Weekly deal pipeline reviews. Team deal status updates. Acquisition funnel management.",
+proTip:"Save this as a Gemini Gem with your specific sheet names, email filters, and target metrics pre-filled. Run it every Monday morning for a consistent pipeline review in under 2 minutes."},
+
+{id:"prompt-gpt54-computer-use",title:"GPT-5.4: Computer Use — Property Portal Research",type:"prompt",featured:true,
+description:"GPT-5.4's native computer use processes raw screenshots, identifies UI elements, and navigates property portals, county sites, and MLS platforms — no API key needed. At 95% first-attempt success across 30,000 property portals (verified production data from Mainstay), it's the fastest off-market research automation available.",
+pricing:"ChatGPT Pro ($200/mo) — computer use included",url:"https://chat.openai.com",
+investorEdge:"Navigate Zillow, Redfin, county assessor sites, and PropStream simultaneously. Extract comps, ownership data, and tax records without an API. Three times faster than manual research with 70% fewer tokens than prior computer-use models.",
+keyFeature:"Native computer use — no plugin, no API, no browser extension. GPT-5.4 sees your screen and operates it.",
+worksWith:["GPT-5.4","ChatGPT Pro","County Assessor Sites","PropStream"],tags:["gpt54","computer-use","research","comps","prompt","advanced"],verified:true,
+promptText:`[ENABLE COMPUTER USE MODE IN CHATGPT PRO BEFORE RUNNING]
+
+You are my real estate research assistant with computer use enabled.
+Complete this comp research workflow for: [SUBJECT PROPERTY ADDRESS]
+
+STEP 1 — ZILLOW COMPS
+Navigate to Zillow.com. Search [ADDRESS].
+Screenshot and extract: list price, days on market, beds/baths/sqft, price per sqft.
+Then search the surrounding area for sold comps in the last 6 months within [RADIUS] miles,
+[BED_RANGE] beds, [SQFT_RANGE] sqft. Extract all sold prices and dates.
+
+STEP 2 — COUNTY ASSESSOR
+Navigate to [COUNTY] county assessor website.
+Search [ADDRESS]. Extract: assessed value, last sale date, last sale price, owner name, mailing address (for absentee owner check), and any open permits.
+
+STEP 3 — REDFIN MARKET STATS
+Navigate to Redfin.com, search the ZIP code [ZIP].
+Extract: median sale price, median days on market, sale-to-list ratio, and inventory trend (rising/falling).
+
+STEP 4 — SYNTHESIS
+Compile all extracted data into a comp analysis table:
+| Address | Sqft | Sale Price | Price/sqft | DOM | Date |
+Calculate: avg sold price/sqft, adjusted ARV for subject property, and confidence level (High/Medium/Low) based on comp quality.
+
+Screenshot each page before extracting data so I can verify the source.`,
+useCase:"Off-market comp research. Pre-offer due diligence. County record verification. Portfolio comp reviews.",
+proTip:"GPT-5.4 computer use works best when you specify the exact sites to visit in order. Vague instructions like 'find comps' will produce worse results than explicit navigation steps. Treat it like writing a script for a VA."},
+
+{id:"prompt-gpt54-excel-model",title:"GPT-5.4: Excel Financial Model Builder",type:"prompt",
+description:"GPT-5.4 natively integrates with Microsoft Excel and Google Sheets — it reads your existing models, identifies formula errors, rebuilds broken calculations, and generates new tabs. The Moody's and MSCI data integrations (launched March 2026) add live CRE market data directly into your models.",
+pricing:"ChatGPT Pro ($200/mo) or Microsoft 365 Copilot with GPT-5.4",url:"https://chat.openai.com",
+investorEdge:"Upload a broken underwriting model and GPT-5.4 fixes it, explains every formula it changed, and flags any cell where your assumption deviates from current market benchmarks — using live Moody's CRE data.",
+keyFeature:"Live Moody's + MSCI data integration: cap rates, rent growth, and vacancy benchmarks pulled directly into your Excel model — not manual inputs.",
+worksWith:["GPT-5.4","Microsoft Excel","Google Sheets","Moody's CRE"],tags:["gpt54","excel","financial-model","underwriting","prompt","advanced"],verified:true,
+promptText:`[ATTACH YOUR EXCEL/SHEETS FILE OR PASTE THE MODEL STRUCTURE]
+
+You are a CRE financial modeling specialist with access to my Excel file.
+
+TASK 1 — MODEL AUDIT
+Review the attached underwriting model for [PROPERTY_NAME]:
+- Identify any formula errors or broken cell references
+- Flag any hardcoded values that should be formula-driven
+- List any missing line items for a complete [ASSET_CLASS] underwriting model
+
+TASK 2 — MARKET BENCHMARK CHECK
+For this property in [MARKET, STATE]:
+- Pull current market cap rates for [ASSET_CLASS] from Moody's/MSCI data
+- Compare my assumed cap rate ([MY_CAP_RATE]%) against market benchmark
+- Compare my rent growth assumption ([MY_RENT_GROWTH]%) against market benchmark
+- Flag any assumption that deviates more than 15% from market data
+
+TASK 3 — MODEL REBUILD / ENHANCEMENT
+- Fix all identified formula errors
+- Add a Sensitivity Table: NOI on Y-axis (±15% in 5% increments), Cap Rate on X-axis (±75bps in 25bp increments)
+- Add a Scenario Tab: Base / Upside / Downside with clearly labeled assumption sets
+- Format: professional dark header rows, alternating row shading, $ and % formatting throughout
+
+TASK 4 — EXECUTIVE SUMMARY TAB
+Create a new tab called "Summary" with:
+- Key metrics dashboard (IRR, CoC, DSCR, equity multiple, break-even occupancy)
+- Chart: 5-year cash flow waterfall
+- One-paragraph deal narrative auto-generated from model outputs`,
+useCase:"Underwriting model audits. New model builds. Sensitivity analysis. LP presentation financials.",
+proTip:"GPT-5.4's Excel integration is significantly stronger than previous models at following formatting instructions. Include specific formatting requirements (colors, number formats, header styles) and it will execute them precisely — producing IC-ready output in one pass."},
+
+{id:"prompt-claude-portfolio-review",title:"Claude Opus 4.6: 1M Context Portfolio Stress Test",type:"prompt",
+description:"Load your entire portfolio — all rent rolls, T-12s, loan schedules, and lease abstracts — into one Claude Opus 4.6 session. Run a simultaneous stress test across all assets: interest rate sensitivity, occupancy shock, rent rollback, and cap rate expansion. Output: asset-by-asset risk ranking and a capital plan.",
+pricing:"Claude Max ($100/mo) or API",url:"https://claude.ai",
+investorEdge:"What used to take a CFO and a weekend of spreadsheet work — a full portfolio stress test — now happens in one session. Every asset stress-tested against the same assumptions simultaneously, with cross-portfolio insights no spreadsheet produces.",
+keyFeature:"Simultaneous multi-asset stress test: all properties analyzed in parallel within a single 1M context window — consistent assumptions, no spreadsheet errors.",
+worksWith:["Claude Opus 4.6","Filesystem MCP","Postgres MCP"],tags:["claude","opus","portfolio","stress-test","prompt","advanced"],verified:true,
+promptText:`[LOAD ALL PORTFOLIO DOCUMENTS: rent rolls, T-12s, loan schedules, lease abstracts for all [N] assets]
+
+You are my portfolio CFO. You have the complete financial data for my [N]-asset portfolio in context.
+Run a full portfolio stress test. Do not ask for additional data — use only what is loaded.
+
+STRESS SCENARIOS (run all simultaneously):
+
+SCENARIO A — Rate Shock
+Assume all variable-rate debt reprices +200bps immediately.
+Which assets breach DSCR < 1.10x? By how much? What is the monthly cash shortfall?
+
+SCENARIO B — Occupancy Shock
+Assume occupancy drops to [%] across all assets simultaneously (e.g., 80%).
+Which assets go cash-flow negative? What is the monthly portfolio burn rate?
+
+SCENARIO C — Rent Rollback
+Assume market rents compress 10% at next lease renewal for all units.
+Which assets breach their loan covenants? Which drop below breakeven?
+
+SCENARIO D — Cap Rate Expansion
+Assume exit cap rates expand 75bps from current underwriting.
+What is the impact on projected equity returns (IRR and equity multiple) at each asset?
+Which assets are now underwater relative to current debt balance?
+
+OUTPUT FORMAT:
+1) Asset-by-asset risk matrix: score each asset 1-5 on each scenario
+2) Portfolio-level: total monthly cash shortfall at worst combined scenario
+3) Top 3 assets requiring immediate capital action — with recommended action (refi, sell, inject equity)
+4) Top 3 assets that are resilient across all scenarios — these are your holds
+5) Capital plan: total estimated capital needed to weather a combined Scenario A+B simultaneously`,
+useCase:"Quarterly portfolio reviews. Lender covenant monitoring. LP reporting preparation. Refinance planning.",
+proTip:"Run this quarterly and save each output as a dated file. The delta between quarters — which assets improved, which deteriorated — tells you more than any single snapshot."},
+
+{id:"prompt-perplexity-market-intel",title:"Perplexity: Real-Time Market Intelligence Stack",type:"prompt",
+description:"Perplexity's Model Council (3 frontier models in parallel) with Deep Research delivers cited, real-time market intelligence that no single model produces. For RE investors, this replaces hours of manual research with a 10-minute cited report. Verify every claim before it goes into an IC memo.",
+pricing:"Perplexity Max ($200/mo) — Model Council + Deep Research",url:"https://perplexity.ai",
+investorEdge:"Model Council runs 3 models simultaneously and surfaces disagreements between them — when two models agree and one dissents, you know exactly where to dig deeper. Eliminates single-model hallucination risk on market data.",
+keyFeature:"Citation-first output: every market statistic comes with a source URL. IC-ready market data with zero fabrication.",
+worksWith:["Perplexity","Claude","Gemini"],tags:["perplexity","research","market-intel","citations","prompt","advanced"],verified:true,
+promptText:`[USE PERPLEXITY DEEP RESEARCH MODE — toggle in the interface before submitting]
+
+Research [SUBMARKET, STATE] for [ASSET CLASS: SFR / Multifamily / Industrial / Retail] investment in 2026.
+
+REQUIRED OUTPUT SECTIONS (all claims must have cited sources):
+
+1) MACROECONOMIC DRIVERS
+   - Population inflow/outflow (last 2 years, cited)
+   - Employment: top 5 employers, job growth rate (cited)
+   - Migration patterns: where are people coming from / going to (cited)
+
+2) RENTAL MARKET DATA
+   - Current average rent: [ASSET CLASS], [BEDS] BR (cited, within 90 days)
+   - Rent growth YoY (cited)
+   - Vacancy rate (cited, specify source: CoStar / RealPage / Census)
+   - Concessions: are landlords offering free rent? (cited)
+
+3) INVESTMENT MARKET
+   - Cap rate range for [ASSET CLASS] (cited, within 6 months)
+   - Recent comparable sales (last 90 days, at least 3 transactions)
+   - Buyer profile: who is purchasing in this market (institutions / local / 1031)
+
+4) SUPPLY PIPELINE
+   - Units under construction (cited)
+   - Permits issued last 12 months vs. prior 12 months (cited)
+   - Major projects delivering in next 12 months (names and unit counts)
+
+5) RISK FLAGS
+   - Any pending legislation affecting landlords (rent control, eviction moratorium)
+   - Major employer relocations or layoffs announced
+   - Any natural disaster or environmental risk data
+
+If conflicting data exists between sources, flag it explicitly.
+Do NOT include any statistic without a citation. Mark any claim below 85% confidence.`,
+useCase:"New market entry research. IC memo market sections. Quarterly portfolio market reviews.",
+proTip:"After Perplexity delivers the cited report, paste it into Claude with: 'Synthesize this into a 3-paragraph IC-ready market section. Confident, institutional tone. Keep all statistics but remove citation brackets — I will footnote separately.' Best two-model workflow in RE research."},
+
+{id:"prompt-gpt54-seller-script-personalized",title:"GPT-5.4: Hyper-Personalized Seller Script Generator",type:"prompt",
+description:"GPT-5.4's stronger instruction-following and self-verification means it produces seller scripts that actually adapt to specific seller psychology — not generic templates. Feed it public records data and it generates a tailored call approach for that specific owner's situation.",
+pricing:"ChatGPT Plus ($20/mo) or Pro",url:"https://chat.openai.com",
+investorEdge:"Most seller scripts fail because they're generic. GPT-5.4's precision instruction-following means you can specify exact psychological triggers for each seller archetype and it executes them correctly — every time.",
+keyFeature:"Self-verification: GPT-5.4 checks its own script against your specified tone and guardrails before delivering the final version.",
+worksWith:["GPT-5.4","ChatGPT","Make.com"],tags:["gpt54","seller-outreach","cold-call","personalized","prompt","advanced"],verified:true,
+promptText:`Generate a hyper-personalized seller outreach script for this specific lead.
+
+SELLER DATA (from skip trace / public records):
+- Owner name: [NAME]
+- Property address: [ADDRESS]
+- Purchase date: [DATE] — owned [X] years
+- Purchase price: $[PRICE] — current estimated value: $[CURRENT_VALUE]
+- Mortgage balance (if known): $[BALANCE] or "unknown"
+- Owner mailing address: [ADDRESS] — same as property? [YES/NO]
+- Any lis pendens / NOD filed? [YES/NO]
+- Inferred situation: [SELECT: Long-term landlord / Recent inheritance / Pre-foreclosure / Vacant property / High equity absentee]
+
+GENERATE:
+1) OPENING (first 15 seconds) — reference one specific, verifiable fact about their ownership to establish credibility without being creepy
+2) BRIDGE — transition from opener to reason for calling using [SITUATION]-appropriate language
+3) SOFT DISCOVERY QUESTION — one question that reveals their motivation without asking "are you interested in selling?"
+4) VALUE PROPOSITION — one sentence, specific to [SITUATION], no generic "cash offer" language
+5) TWO OBJECTION HANDLERS — write for the two most statistically common objections for [SITUATION] sellers
+6) CLOSE — a low-pressure ask for a next step (not "can I make you an offer")
+
+CONSTRAINTS:
+- Total script: under 90 seconds spoken at normal pace
+- No phrases: "cash offer," "as-is," "we buy houses," "fair offer"
+- Verify the script follows all rules before outputting. If any constraint is violated, rewrite that section.`,
+useCase:"Cold call campaigns with skip trace data. VA training scripts. High-conversion seller outreach.",
+proTip:"After generating the script, add: 'Now score this script 1-10 on each of these criteria: credibility, empathy, curiosity-building, and pressure level. Rewrite any section scoring below 7.' GPT-5.4's self-evaluation is accurate enough to use as a QA pass."},
+
+{id:"prompt-claude-negotiation-prep",title:"Claude Sonnet 4.6: Negotiation Strategy Prep",type:"prompt",
+description:"Feed Claude every known fact about the seller, property, and deal history. It outputs a complete negotiation playbook: seller motivation score, your leverage points, their likely objections, counter-offer ranges, and a walk-away analysis. Adaptive thinking catches the variables most investors miss.",
+pricing:"Claude Pro ($20/mo)",url:"https://claude.ai",
+investorEdge:"Goes beyond 'offer low and counter.' Models the seller's psychology, financial position, and alternatives — so you know exactly how hard you can push and where the deal actually breaks.",
+keyFeature:"Walk-away analysis: tells you the exact terms at which the deal stops making sense for you — so you never negotiate past your own threshold.",
+worksWith:["Claude Sonnet 4.6","Sequential Thinking"],tags:["claude","negotiation","seller","prompt","advanced","deal-structure"],verified:true,
+promptText:`You are my negotiation strategist. Analyze everything I know about this deal and build my playbook.
+
+DEAL CONTEXT:
+- Property: [ADDRESS] | Type: [ASSET CLASS]
+- Asking price: $[ASK] | My target price: $[TARGET] | My walk-away: $[MAX]
+- Days on market: [DOM]
+- Prior offers (if known): [DETAILS or "none"]
+- Listing agent: [REPRESENTED / UNREPRESENTED seller]
+
+SELLER INTELLIGENCE (share everything you know):
+- Seller situation: [DETAILS — probate, divorce, tired landlord, relocating, etc.]
+- Seller's timeline: [URGENCY or "unknown"]
+- Financial position: [EQUITY ESTIMATE, mortgage balance if known]
+- Seller's alternatives: [Other offers? Can they re-list? Hold and rent?]
+- Personal details observed: [Property condition, responsiveness, tone in communications]
+
+MY POSITION:
+- My financing: [CASH / HM / Conventional — how fast can I close?]
+- My flexibility: [WHAT CAN I GIVE ON? Close date, EMD, AS-IS, leaseback?]
+- My leverage: [WHAT DO I KNOW THAT GIVES ME NEGOTIATING POWER?]
+
+OUTPUT:
+1) SELLER MOTIVATION SCORE (1-10) with rationale — how motivated are they really?
+2) MY LEVERAGE POINTS — ranked by strength
+3) THEIR LIKELY OBJECTIONS — top 3 and my counter for each
+4) NEGOTIATION SEQUENCE — what to offer first, what to hold back, when to walk
+5) COUNTER-OFFER RANGES — what I concede on price vs. terms to protect my return
+6) WALK-AWAY ANALYSIS — the exact combination of price AND terms at which I exit
+7) OPENING SCRIPT — the first 60 seconds of my negotiation call`,
+useCase:"Pre-negotiation deal prep. Offer strategy. Agent-to-agent negotiation calls. Acquisition team coaching.",
+proTip:"Run this before every negotiation call, not after. Paste the output into your notes and keep it open during the call. Review your walk-away analysis last — it's the most important number in the document."}
+
+]},
+
+// ────────────────────────────────────────
+// 11. WHOLESALING WORKFLOWS
+// ────────────────────────────────────────
+{id:"wholesaling-workflows",title:"Wholesaling Workflows",icon:"🏚️",
+description:"AI-powered systems for the full wholesale operation — off-market lead sourcing, skip trace enrichment, lead scoring, acquisition scripts, assignment contract generation, buyer list management, and disposition. Built for volume operators running 10–100+ leads per week.",
+resources:[
+
+{id:"wholesale-lead-scoring",title:"AI Lead Scoring System",type:"prompt",featured:true,
+description:"Feed raw skip trace data into Claude or GPT-5.4 and get a lead score (0-100), motivation tier (Hot/Warm/Cold), and a recommended first-touch channel and script approach — for every lead in your list. Built for batch processing at scale.",
+pricing:"Claude Pro / ChatGPT Plus",url:"https://claude.ai",
+investorEdge:"Replaces the VA's manual lead classification that costs $5-10/hour. Process 100 leads in 10 minutes with a consistent scoring model your whole team follows.",
+keyFeature:"Batch processing: paste a list of leads and get all of them scored in one run — no lead-by-lead manual review.",
+worksWith:["Claude","ChatGPT","Make.com","REI/kit"],tags:["wholesaling","lead-scoring","skip-trace","automation","prompt"],verified:true,
+promptText:`You are a real estate wholesale acquisitions specialist. Score the following leads.
+
+SCORING CRITERIA (weight each):
+- Equity position: estimated equity > 40% = HIGH motivation signal (+30 pts)
+- Length of ownership: 10+ years = likely tired landlord (+20 pts)
+- Absentee owner (mailing ≠ property address): strong motivation signal (+20 pts)
+- Lis pendens / NOD filed: urgent motivation (+25 pts)
+- Vacancy indicators (utility shutoffs, property condition): motivated seller signal (+15 pts)
+- Days since last contact attempt: 30+ days no response = cooling (-10 pts)
+
+LEADS TO SCORE (paste your list in this format):
+Name | Property Address | Mailing Address | Est. Value | Est. Mortgage | Ownership Years | Lis Pendens | Notes
+
+[PASTE LEAD LIST HERE]
+
+OUTPUT PER LEAD:
+- Score (0-100)
+- Tier: HOT (75+) / WARM (50-74) / COLD (<50)
+- Top motivation signal (1 sentence)
+- Recommended first touch: [Cold call / Text / Direct mail / RVM]
+- Recommended script angle: [Equity / Timeline / Situation]
+
+Sort final output by score (highest first). Flag any lead needing immediate action.`,
+useCase:"Weekly lead list scoring. VA training and QA. CRM priority queuing. Marketing sequence assignment.",
+proTip:"Save this as a ChatGPT Custom GPT or Claude Project so your team accesses it with a single click. Build the scoring criteria once — everyone runs the same model every week."},
+
+{id:"wholesale-skip-trace-enrichment",title:"Skip Trace Data Enrichment Prompt",type:"prompt",
+description:"Turn raw skip trace exports into enriched seller profiles. Feed the raw data and Claude cross-references ownership duration, equity position, absentee status, and motivation signals to build a complete acquisition brief for your top leads.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Skip trace gives you phone and email. This prompt turns that into a seller psychology brief — what they likely want, what's driving their decision, and how to open the conversation.",
+keyFeature:"Motivation hypothesis output: for each lead, Claude infers the most likely seller motivation from the available data signals.",
+worksWith:["Claude","BatchData MCP","ATTOM MCP"],tags:["wholesaling","skip-trace","enrichment","prompt","lead-gen"],verified:true,
+promptText:`You are a wholesale acquisitions analyst. Enrich the following skip trace data into actionable seller profiles.
+
+For each lead, build an acquisition brief using the data provided. Where data is missing, note the gap — do not fabricate.
+
+RAW SKIP TRACE DATA:
+[PASTE SKIP TRACE EXPORT — name, address, phone, email, purchase date, purchase price, estimated value, mortgage data if available]
+
+FOR EACH LEAD OUTPUT:
+
+SELLER PROFILE:
+- Estimated equity: $[AMOUNT] ([%] of value)
+- Ownership duration: [X] years
+- Absentee owner: [YES/NO] — mailing address: [ADDRESS]
+- Motivation hypothesis: [1-2 sentences — what is this seller's most likely pain point based on the data?]
+- Data gaps: [what information is missing that would sharpen the hypothesis]
+
+OUTREACH BRIEF:
+- Best contact method: [Phone / Text / Mail] based on data signals
+- Opening angle: [Equity / Time / Situation] — one sentence on how to open
+- Red flags: [anything in the data that suggests this lead is NOT worth pursuing]
+
+Sort output: highest equity leads first.`,
+useCase:"Pre-call lead preparation. VA cold call briefing. Direct mail list refinement.",
+proTip:"Run this after every skip trace batch, before your VAs start dialing. The motivation hypothesis turns a generic cold call into a targeted conversation — and your connect-to-appointment rate will show it."},
+
+{id:"wholesale-assignment-contract",title:"Assignment Contract Generator",type:"prompt",
+description:"Generate a state-specific assignment of purchase agreement from deal inputs. Claude populates all variables — buyer, seller, property, purchase price, assignment fee, and key terms — and flags any clause that may not be enforceable in the target state.",
+pricing:"Claude Pro + /docx Skill",url:"https://claude.ai",
+investorEdge:"Eliminates the copy-paste errors that blow up assignment closings. Claude checks its own output against the input variables before finalizing — catching transposition errors in prices and dates.",
+keyFeature:"State-specific flag: Claude flags any term that may conflict with assignment restrictions in the target state and suggests alternative language.",
+worksWith:["Claude","/docx Skill","Google Drive"],tags:["wholesaling","assignment","contract","documents","prompt"],verified:true,
+promptText:`Generate an Assignment of Purchase and Sale Agreement for the following wholesale transaction.
+Output as a complete, professional document ready for attorney review.
+
+TRANSACTION DETAILS:
+- Property address: [ADDRESS], [CITY, STATE, ZIP]
+- Assignor (wholesaler): [YOUR NAME / ENTITY]
+- Assignee (end buyer): [BUYER NAME / ENTITY]
+- Original purchase price (Assignor to Seller): $[PURCHASE_PRICE]
+- Assignment fee: $[FEE]
+- Total price (Assignee pays): $[TOTAL = PURCHASE_PRICE + FEE]
+- Original contract date: [DATE]
+- Original closing date: [DATE]
+- Earnest money on original contract: $[EMD]
+- Assignment consideration: $[CONSIDERATION] paid by Assignee to Assignor upon execution
+- Remaining assignment fee: $[BALANCE] due at closing
+
+STATE: [STATE] — apply [STATE] assignment law. Flag any provision that may require modification for this state.
+
+REQUIRED CLAUSES:
+1) Assignment and assumption of all rights and obligations
+2) Assignor representations: contract is valid, in full force, no defaults
+3) Assignee assumption of all obligations from date of assignment
+4) Payment schedule for assignment fee
+5) Default provisions
+6) Governing law and dispute resolution
+
+OUTPUT: Complete document with signature blocks.
+THEN: Flag any clause that may be unenforceable or restricted in [STATE].
+NOTE: This is a template for attorney review — not legal advice.`,
+useCase:"Wholesale transaction closings. Assignment fee documentation. Buyer onboarding.",
+proTip:"Add your standard attorney's name and review note at the bottom of every generated contract: 'This document prepared for review by [ATTORNEY NAME]. Not for execution without attorney approval.' Keeps your process compliant and your buyer confident."},
+
+{id:"wholesale-buyer-list-email",title:"Cash Buyer List Blast Generator",type:"prompt",
+description:"Turn a deal summary into a high-converting cash buyer blast email. GPT-5.4's instruction precision means it follows your exact format, hit the key numbers buyers actually need, and generates a subject line split test in the same run.",
+pricing:"ChatGPT Plus / Claude Pro",url:"https://claude.ai",
+investorEdge:"Stops the 'I'll write it later' delay that kills deal momentum. Deal summary goes in, cash buyer blast goes out — in under 5 minutes from contract execution.",
+keyFeature:"Built-in subject line A/B test: two subject line variants with predicted open rate rationale included in every output.",
+worksWith:["ChatGPT","Claude","Mailchimp","ActiveCampaign"],tags:["wholesaling","buyer-list","email","marketing","prompt"],verified:true,
+promptText:`Write a cash buyer blast email for this wholesale deal. Generate two subject line variants for A/B testing.
+
+DEAL DETAILS:
+- Property: [ADDRESS], [CITY, STATE]
+- Type: [SFR / MF / etc.] | Beds/Baths: [BR/BA] | Sqft: [SQFT]
+- Assignment price: $[PRICE]
+- ARV: $[ARV] (source: [MLS comps / appraisal / agent opinion])
+- Estimated rehab: $[REHAB] ([LIGHT / MEDIUM / HEAVY])
+- Projected equity at purchase: $[ARV - PRICE - REHAB]
+- Strategy fit: [Flip / BRRRR / Rental hold]
+- Projected flip profit (if flip): $[PROFIT] based on $[COMPS]/sqft ARV
+- CoC if rental (if hold): [%] at [%] down conventional
+- Photos available: [YES / NO]
+- Closing deadline: [DATE]
+- Showing availability: [DETAILS]
+
+EMAIL FORMAT:
+- Opening: one punchy sentence on the deal's key number (equity spread or flip profit)
+- Deal summary: bullet format, 6 bullets max
+- Call to action: single CTA — reply or call [PHONE] to get the full package
+- No fluff, no "amazing opportunity" language — buyers see through it
+- Under 200 words total
+
+SUBJECT LINE A: [formula: number + result — e.g., "$47K spread — [CITY] [TYPE]"]
+SUBJECT LINE B: [formula: location + strategy — e.g., "[NEIGHBORHOOD] BRRRR — [PRICE]"]
+
+For each subject line, predict: open rate (High/Medium/Low) and explain why in one sentence.`,
+useCase:"Wholesale deal disposition. Cash buyer list management. JV partner deal sharing.",
+proTip:"Use Subject Line A for your investor list who knows you. Use Subject Line B for cold or warm buyers who don't — the location/strategy format gets higher opens from unfamiliar recipients."},
+
+{id:"wholesale-deal-analyzer-v2",title:"Wholesale Deal Analyzer (MAO + Assignment Fee Stack)",type:"prompt",
+description:"Full wholesale deal math in one prompt: MAO calculation, suggested list price to buyers, assignment fee range, and a quick go/no-go based on your minimum spread requirement. Works for flip-exit and rental-exit wholesale simultaneously.",
+pricing:"Claude / ChatGPT",url:"https://claude.ai",
+investorEdge:"Runs the full wholesale math stack — MAO, list price, assignment fee, and minimum buyer margin — in one shot. No switching between calculators.",
+keyFeature:"Dual-exit math: calculates assignment pricing for both a flip buyer AND a rental buyer simultaneously so you know which buyer pool to target.",
+worksWith:["Claude","ChatGPT"],tags:["wholesaling","mao","deal-analysis","assignment","prompt"],verified:true,
+promptText:`Run full wholesale deal math for this property.
+
+PROPERTY DATA:
+- Address: [ADDRESS] | Type: [SFR / MF]
+- ARV (After Repair Value): $[ARV] — source: [COMPS / AGENT / APPRAISAL]
+- Estimated rehab: $[REHAB]
+- Current market rent: $[RENT]/mo
+- My minimum assignment fee: $[MIN_FEE]
+- Typical buyer closing costs in this market: [%]
+
+FLIP BUYER MATH:
+- Flip buyer's target profit: $[PROFIT] (or [%] of ARV, use [%] if unknown)
+- Flip buyer MAO = ARV - Rehab - Closing costs - Profit margin
+- My max purchase price for flip exit: Flip Buyer MAO - My Min Fee - My closing costs
+- Assignment list price to flip buyers: [My purchase price + My fee]
+
+RENTAL BUYER MATH:
+- Target CoC for rental buyer: [%]
+- Rental buyer max price based on: [RENT] × 12 / target cap rate, minus rehab
+- My max purchase price for rental exit: Rental Buyer Max Price - My Min Fee
+- Assignment list price to rental buyers: [My purchase price + My fee]
+
+OUTPUT:
+1) My maximum offer to seller (lower of flip or rental exit): $[PRICE]
+2) Assignment list price — FLIP buyers: $[PRICE] (projected buyer margin: $[MARGIN])
+3) Assignment list price — RENTAL buyers: $[PRICE] (projected buyer CoC: [%])
+4) Recommended buyer pool: [FLIP / RENTAL / BOTH] with one-sentence rationale
+5) GO / NO-GO: Does this deal meet minimum spread at asking? [YES at $X / NO — need $Y or below]`,
+useCase:"Pre-offer wholesale deal screening. Disposition pricing strategy. JV partner deal evaluation.",
+proTip:"Run this before you make ANY offer. If the no-go threshold is less than 10% below asking, pass — the negotiation room isn't there. Save your energy for deals where the math has room."},
+
+{id:"wholesale-disposition-strategy",title:"Disposition & Buyer Matching Strategy",type:"prompt",
+description:"Given your deal details and buyer list profile, Claude recommends the optimal disposition sequence — which buyers to call first, in what order, with what pitch — to maximize close rate and assignment fee within your closing deadline.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Stops the spray-and-pray blast that trains your buyer list to ignore you. Targeted disposition means faster closes, higher fees, and a buyer list that stays engaged.",
+keyFeature:"Deadline-aware sequencing: Claude builds a day-by-day disposition plan calibrated to your closing date — not a generic 'blast then follow up' template.",
+worksWith:["Claude","Make.com","ActiveCampaign"],tags:["wholesaling","disposition","buyer-list","strategy","prompt"],verified:true,
+promptText:`Build a disposition strategy for this wholesale deal.
+
+DEAL DETAILS:
+- Property: [ADDRESS] | Type: [SFR / MF] | Assignment price: $[PRICE]
+- ARV: $[ARV] | Rehab: $[REHAB] | Strategy fit: [Flip / BRRRR / Rental]
+- Photos ready: [YES/NO] | Inspection report available: [YES/NO]
+- Contract closing date: [DATE] — I have [X] days to close with my buyer
+
+MY BUYER LIST PROFILE (describe your list):
+- Total active buyers: [#]
+- Flip buyers: [#] — typical buy range: $[RANGE]
+- BRRRR / Rental buyers: [#] — typical buy range: $[RANGE]
+- Buyers who've closed with me before: [#]
+- Geographic focus of most buyers: [AREAS]
+
+DISPOSITION CONSTRAINTS:
+- Minimum fee I will accept: $[MIN]
+- Will I JV if I can't move it solo? [YES/NO]
+- Will I extend the contract if needed? [YES/NO]
+
+OUTPUT: Day-by-day disposition plan from today through [CLOSING DATE]:
+- Day 1: Who to call first (warm buyers who fit this exact deal profile) and what to say
+- Day 2-3: Email blast sequence to broader list
+- Day 4-5: Follow-up protocol for interested buyers
+- Day [X-3]: Escalation if no buyer locked — what options to exercise
+- Pricing strategy: when and how much to reduce the assignment fee if needed
+
+Include: what information to send at each stage (teaser vs. full package).`,
+useCase:"Active deal disposition. Assignment fee maximization. Closing deadline management.",
+proTip:"After running this prompt, schedule the day-by-day actions in your CRM immediately — before you do anything else. Deals die during disposition because the sequence stalls. Claude's plan only works if it's executed on the timeline it gives you."}
+
+]},
+
+// ────────────────────────────────────────
+// 12. CAPITAL RAISING & SYNDICATION
+// ────────────────────────────────────────
+{id:"capital-raising",title:"Capital Raising & Syndication",icon:"💼",
+description:"AI tools for the full capital stack — LP deck generation, accredited investor outreach, 506(b) vs 506(c) communication guardrails, investor onboarding, K-1 explanation, quarterly reporting, and fund performance narrative. Built for operators raising $500K to $50M.",
+resources:[
+
+{id:"capital-lp-deck",title:"LP Investment Deck Prompt (Full Structure)",type:"prompt",featured:true,
+description:"Generate a complete LP investment deck outline and narrative for a specific deal or fund. Claude produces every section — executive summary, market thesis, deal economics, team bio, risk factors, and ask — with the institutional tone that sophisticated investors expect.",
+pricing:"Claude Pro + Gamma or PowerPoint",url:"https://claude.ai",
+investorEdge:"The #1 reason LP decks get ignored: they sound like the operator wrote them for themselves, not for the investor. This prompt forces the output into investor-first language — what's the risk, what's the return, why now, why you.",
+keyFeature:"Investor-first framing: every section is structured around what an LP needs to know to make a decision, not what you want to say about the deal.",
+worksWith:["Claude","Gamma","PowerPoint","/pptx Skill"],tags:["capital-raising","lp-deck","syndication","prompt","presentation"],verified:true,
+promptText:`You are a capital markets specialist writing an LP investment deck for a sophisticated investor audience.
+Write every section in investor-first language: what's the risk, what's the return, why now, why this team.
+
+DEAL / FUND OVERVIEW:
+- Offering name: [NAME]
+- Structure: [506(b) / 506(c) / Fund / Single-asset syndication]
+- Asset class: [SFR / MF / Commercial / Mixed]
+- Market: [CITY, STATE]
+- Total raise: $[AMOUNT] | Minimum investment: $[MIN]
+- Preferred return: [%] | Target IRR: [%] | Target equity multiple: [X]x
+- Hold period: [YEARS] | Distribution schedule: [QUARTERLY / ANNUAL]
+- GP experience: [DEALS CLOSED, TOTAL VOLUME, YEARS]
+
+GENERATE COMPLETE DECK OUTLINE WITH NARRATIVE FOR EACH SECTION:
+
+SLIDE 1 — EXECUTIVE SUMMARY (3 bullet points max — the deal in 15 seconds)
+SLIDE 2 — MARKET THESIS (why this market, why now — data-driven, 2-3 paragraphs)
+SLIDE 3 — THE OPPORTUNITY (what the deal is, why it exists, why it's actionable)
+SLIDE 4 — INVESTMENT STRUCTURE (waterfall, preferred return, fees — plain language)
+SLIDE 5 — DEAL ECONOMICS (pro forma summary table — purchase, rehab, NOI, returns)
+SLIDE 6 — VALUE CREATION PLAN (what you will do operationally to create value)
+SLIDE 7 — EXIT STRATEGY (primary exit + backup — realistic, not aspirational)
+SLIDE 8 — RISK FACTORS (3-5 genuine risks with your mitigation for each — do not sanitize)
+SLIDE 9 — TEAM (GP credentials in investor-relevant terms: deals closed, capital deployed, exits)
+SLIDE 10 — THE ASK (minimum, maximum, timeline, how to invest)
+
+TONE: Confident but not promotional. Specific not vague. Every return claim must be caveated as projected.
+FLAG: Any claim that requires a securities attorney review before use.`,
+useCase:"Single-asset syndications. Fund raises. JV equity pitches. Family office presentations.",
+proTip:"After generating the deck narrative, run each slide through this follow-up: 'A sophisticated LP is skeptical of this slide. What's the hardest question they'll ask, and is this slide's content sufficient to answer it?' Iterate until each slide can withstand the hardest question."},
+
+{id:"capital-investor-outreach",title:"Accredited Investor Outreach Sequence",type:"prompt",
+description:"Generate a 5-touch accredited investor outreach sequence for a specific deal or fund. Built around 506(b) communication guardrails — no general solicitation, relationship-first approach, value before ask. Each touch is a different format: email, LinkedIn, text, call script, and follow-up.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Most operators send one email and give up. This sequence is built for the 5-7 touch reality of LP conversion — each touch adds value and moves the relationship forward without triggering securities compliance issues.",
+keyFeature:"506(b) guardrails built in: no general solicitation language, pre-existing relationship framing, and a flag if any touch crosses into prohibited territory.",
+worksWith:["Claude","ActiveCampaign","HubSpot MCP"],tags:["capital-raising","investor-outreach","506b","sequence","prompt"],verified:true,
+promptText:`Write a 5-touch accredited investor outreach sequence for [DEAL/FUND NAME].
+
+COMPLIANCE CONTEXT:
+- Offering structure: [506(b) — no general solicitation / 506(c) — general solicitation allowed]
+- Relationship with this prospect: [Prior investor / Professional contact / Referral from [NAME] / Met at [EVENT]]
+- State: [STATE] — note any state-specific blue sky requirements
+
+DEAL / FUND SUMMARY (for context — do not pitch in early touches):
+- Asset class: [TYPE] | Market: [MARKET] | Target return: [IRR]% IRR | Min investment: $[MIN]
+
+GENERATE 5 TOUCHES:
+
+TOUCH 1 — EMAIL (Day 1): Value-first, no pitch. Share a relevant market insight or resource. Re-establish relationship context. No deal mention.
+
+TOUCH 2 — LINKEDIN MESSAGE (Day 3): Brief, personal. Reference shared context. Mention you have something you'd like their perspective on (don't reveal it's an investment — yet).
+
+TOUCH 3 — EMAIL (Day 7): Soft introduction to the opportunity. Frame as "thought of you when I saw this." Include one-paragraph deal summary. Ask if they'd like to see the deck — not to invest.
+
+TOUCH 4 — CALL SCRIPT (Day 10): 2-minute script. Assumes they received the deck. Ask for their reaction — not for a check. Listen for objections. Offer to answer questions.
+
+TOUCH 5 — FOLLOW-UP EMAIL (Day 14): Address the most common objection for this deal type. Include one social proof element (prior investor, prior deal result). Soft close: "Allocation closes [DATE] — happy to hold a spot if timing works."
+
+[IF 506(b)] FLAG any touch that uses general solicitation language — replace it before sending.`,
+useCase:"Single-asset syndication raises. Fund LP prospecting. Family office relationship building.",
+proTip:"Before running this prompt, list every known fact about the prospect — their investment history, risk tolerance, sectors they like, and prior conversations. The more context you give Claude, the more personalized the sequence. Generic sequences get ignored."},
+
+{id:"capital-onboarding-qa",title:"LP Onboarding Q&A Bot Prompt",type:"prompt",
+description:"Build the system prompt for a Claude-powered LP Q&A assistant that answers investor questions about your deal — structure, distributions, tax treatment, preferred return waterfalls — without you on every call. Handles the top 20 LP questions automatically.",
+pricing:"Claude Pro / Claude API",url:"https://claude.ai",
+investorEdge:"Every LP call costs you 30-60 minutes. An AI Q&A system handles the standard questions so your investor calls are reserved for relationship-building and closing — not explaining what a preferred return is for the 40th time.",
+keyFeature:"Guardrails built in: the Q&A bot knows what it can't answer (legal, securities-specific) and routes those questions to you directly.",
+worksWith:["Claude","Claude Projects","Notion MCP"],tags:["capital-raising","lp-onboarding","investor-relations","prompt","automation"],verified:true,
+promptText:`[THIS PROMPT IS A SYSTEM PROMPT — paste into a Claude Project or API system prompt field]
+
+You are an investor relations assistant for [COMPANY NAME], a real estate investment firm.
+You answer questions from accredited investors about [DEAL/FUND NAME].
+
+YOUR KNOWLEDGE BASE:
+[PASTE: PPM summary, offering memorandum highlights, FAQ document, deal economics table]
+
+ANSWERING RULES:
+1) Only answer questions using the information in your knowledge base. Never fabricate details.
+2) For legal questions (securities law, tax treatment specifics, enforceability): say "That's a great question for our attorney — I'll have [GP NAME] connect you with our legal team."
+3) For questions about projected returns: always include "all returns are projected and not guaranteed."
+4) For questions about current deal status, timeline, or allocation availability: say "Let me connect you with [GP NAME] directly for the most current information."
+5) Never pressure or create urgency. Never make representations beyond what's in the PPM.
+
+QUESTIONS YOU CAN ANSWER:
+- How does the preferred return work?
+- What is the waterfall structure?
+- When are distributions paid?
+- How are K-1s issued?
+- What is the minimum investment?
+- What happens if the deal underperforms?
+- How long is the hold period?
+- What fees does the GP charge?
+- How do I wire funds?
+- What documents will I receive?
+
+TONE: Professional, clear, patient. Use plain English — no jargon without explanation.
+END EVERY RESPONSE: "Is there anything else I can clarify, or would you like to speak with [GP NAME] directly?"`,
+useCase:"LP onboarding automation. Investor FAQ handling. Post-deck follow-up support.",
+proTip:"Build this as a Claude Project and share the link with investors after they receive your deck. Send it as: 'Here's a direct link to answer any questions about the deal 24/7 — if anything needs a deeper conversation, it'll flag me automatically.'"},
+
+{id:"capital-k1-explainer",title:"K-1 Explanation Email Generator",type:"prompt",
+description:"K-1 season generates more LP support tickets than any other event. This prompt generates a plain-English K-1 explanation email for your specific deal — covering box-by-box what each line means, common questions, and how to provide it to their CPA.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Cuts K-1 support tickets by 60-80%. Investors who understand what they're receiving don't panic — and don't call you at 9pm during tax season.",
+keyFeature:"Deal-specific output: Claude tailors the explanation to your actual K-1 structure — not a generic K-1 primer that doesn't match what your investors received.",
+worksWith:["Claude","Notion MCP","Gmail MCP"],tags:["capital-raising","k1","tax","investor-relations","prompt"],verified:true,
+promptText:`Write an LP K-1 explanation email for investors in [DEAL/FUND NAME].
+
+DEAL TAX CONTEXT:
+- Entity structure: [LLC / LP / Partnership]
+- Tax treatment: [Pass-through / Cost segregation used: YES/NO]
+- Significant items this year: [DEPRECIATION TAKEN / INCOME / LOSS / DISTRIBUTIONS]
+- K-1 issuer: [ENTITY NAME]
+- Tax preparer / CPA contact: [NAME, EMAIL if applicable]
+
+GENERATE A PLAIN-ENGLISH LP EMAIL covering:
+
+1) SUBJECT LINE: clear, not alarming — e.g., "Your [YEAR] K-1 from [DEAL NAME] — What You Need to Know"
+
+2) OPENING: acknowledge K-1 season, set calm expectation tone
+
+3) K-1 OVERVIEW: 2 sentences on what a K-1 is and why they receive one as a passive investor
+
+4) BOX-BY-BOX GUIDE (plain English for the boxes that are populated in this deal):
+   - Box 1 (Ordinary business income/loss): what it means, is it good or bad for them
+   - Box 2 (Net rental income): context for RE investments
+   - Box 19 (Distributions): clarify this is NOT all taxable income
+   - Any depreciation or depletion boxes: explain cost seg if applicable
+   - Box 20 (Other information): what to tell their CPA
+
+5) TOP 3 FAQs this deal specifically generates — with answers
+
+6) WHAT TO DO NEXT: forward to CPA by [DATE], any action required from LP
+
+7) CLOSING: reassuring, professional — they are in good hands
+
+TONE: Calm. Clear. No jargon without definition. This goes to investors who range from CPAs to retirees with no accounting background.`,
+useCase:"K-1 season LP communications. New investor education. CPA coordination.",
+proTip:"Send this email 3 days BEFORE K-1s are delivered, not after. 'Your K-1 is coming and here's exactly what it means' eliminates 90% of the support volume before it starts."},
+
+{id:"capital-quarterly-narrative",title:"Quarterly LP Report Narrative Generator",type:"prompt",
+description:"Input your quarterly performance data and get a complete, institutional-quality LP report narrative — property performance, capital events, market commentary, and forward outlook. Calibrated for passive investors who want the truth delivered confidently, not spun.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Turns a spreadsheet of performance data into a narrative that builds LP confidence — even in quarters where performance was below plan. The framing is everything.",
+keyFeature:"Below-plan performance protocol: when a metric misses target, Claude reports it plainly and pairs it with a specific mitigation plan — never euphemisms.",
+worksWith:["Claude","Notion MCP","Gamma"],tags:["capital-raising","lp-reporting","quarterly","prompt","investor-relations"],verified:true,
+promptText:`Write a quarterly LP report narrative for [FUND/DEAL NAME] — Q[#] [YEAR].
+
+PERFORMANCE DATA:
+- Portfolio properties: [#] | Total units: [#]
+- Occupancy: [%] actual vs. [%] projected (variance: [+/-]%)
+- Gross collected rents: $[AMOUNT] vs. $[BUDGET] (variance: $[AMOUNT])
+- Operating expenses: $[AMOUNT] vs. $[BUDGET] (variance: $[AMOUNT])
+- NOI: $[AMOUNT] vs. $[BUDGET] (variance: $[AMOUNT])
+- CapEx deployed: $[AMOUNT] on [PROJECT DESCRIPTION]
+- Distributions: $[AMOUNT] paid on [DATE] / next distribution: $[AMOUNT] on [DATE]
+- Preferred return status: [ON TRACK / [X] quarters behind]
+
+CAPITAL EVENTS THIS QUARTER:
+[ACQUISITIONS / DISPOSITIONS / REFINANCES / EQUITY CALLS — or "None"]
+
+MARKET CONDITIONS:
+[2-3 sentences on local market trends affecting the portfolio]
+
+FORWARD OUTLOOK:
+[1-2 sentences on Q[NEXT] expectations and any known headwinds]
+
+GENERATE:
+1) EXECUTIVE SUMMARY (3 bullets — the quarter in 15 seconds)
+2) PROPERTY PERFORMANCE NARRATIVE (2-3 paragraphs — factual, specific)
+3) CAPITAL EVENTS SUMMARY (if any)
+4) MARKET COMMENTARY (1 paragraph)
+5) FORWARD OUTLOOK (1 paragraph)
+6) DISTRIBUTION CONFIRMATION (1 sentence)
+
+RULE: Any metric below plan must be stated plainly with: (a) root cause, (b) what was done, (c) expected resolution timeline.
+TONE: Institutional. Confident. Never promotional. Never evasive.`,
+useCase:"Quarterly LP reports. Annual fund summaries. Investor update packages.",
+proTip:"After generating the narrative, run: 'Read this from the perspective of an LP who has invested $250,000 and is worried about their capital. What questions does this report NOT answer that they will ask?' Fill every gap before sending."},
+
+{id:"capital-fund-pitch-one-pager",title:"Fund One-Pager Generator",type:"prompt",
+description:"Generate a one-page fund overview for networking events, email intros, and warm prospect follow-up. The one-pager is not the PPM — it's the hook that gets the conversation started. Designed for print and digital delivery.",
+pricing:"Claude Pro + Canva or /pdf Skill",url:"https://claude.ai",
+investorEdge:"The one-pager does the first 80% of the LP conversion before you ever get on a call. Most operators write them poorly — too much about the deal, not enough about the investor's outcome.",
+keyFeature:"Investor-outcome framing: every section is written around what the LP receives, not what you're building. 'You receive quarterly distributions from day 90' not 'We plan to distribute quarterly.'",
+worksWith:["Claude","Canva","/pdf Skill"],tags:["capital-raising","one-pager","fund","prompt","marketing"],verified:true,
+promptText:`Write a one-page fund overview for [FUND NAME].
+This is NOT the PPM — it is the conversation starter. Keep it to one page.
+
+FUND DETAILS:
+- Asset focus: [SFR / MF / CRE / Mixed]
+- Geography: [MARKETS]
+- Fund size: $[TARGET RAISE]
+- Minimum investment: $[MIN]
+- Investor type: [Accredited only — 506(b) / 506(c)]
+- Preferred return: [%] | Target IRR: [%] | Target equity multiple: [X]x
+- Distributions: [QUARTERLY / MONTHLY / AT EXIT]
+- Hold period: [YEARS]
+- GP track record: [DEALS CLOSED / TOTAL VOLUME / NOTABLE EXITS]
+
+STRUCTURE (one page, six sections):
+
+1) HEADLINE: One sentence. What the investor gets. Not what you do.
+   Example: "Passive income and equity growth from institutional-quality RE — without the landlord headaches."
+
+2) THE OPPORTUNITY (3 bullets max):
+   - Why this market / asset class right now
+   - What inefficiency or gap you're exploiting
+   - What changes when you own it
+
+3) INVESTOR RETURNS (clean table):
+   | Preferred Return | Target IRR | Equity Multiple | Hold Period |
+   | [%]             | [%]        | [X]x            | [Y] years   |
+   Note: All returns projected. Past performance not indicative of future results.
+
+4) HOW IT WORKS (4 steps max):
+   Step 1: Invest minimum $[MIN]
+   Step 2: We acquire, manage, and optimize assets
+   Step 3: Receive [quarterly] distributions starting [TIMELINE]
+   Step 4: Full return of capital + upside at exit in [YEARS]
+
+5) THE TEAM (2-3 sentences on GP — deals closed, capital deployed, investor returns delivered)
+
+6) NEXT STEP: One clear CTA — schedule a call, request the full deck, or reply to this email.
+
+COMPLIANCE NOTE: Include at bottom — "This is not an offer to sell securities. Securities offered only to accredited investors via PPM."`,
+useCase:"Investor networking events. Email prospecting. Warm lead follow-up. LinkedIn outreach attachment.",
+proTip:"Design the one-pager in Canva using your brand kit — the narrative Claude generates goes into the template. A well-designed one-pager that matches your brand signals professionalism before a single word is read."}
+
+]},
+
+// ────────────────────────────────────────
+// 13. PROPERTY MANAGEMENT AI
+// ────────────────────────────────────────
+{id:"property-management-ai",title:"Property Management AI",icon:"🔑",
+description:"AI systems for the full PM operation — tenant screening criteria, lease renewal analysis, maintenance request triage, collections communications, move-out damage assessment, and portfolio performance narrative. For self-managing investors and PM operators running 10–500 units.",
+resources:[
+
+{id:"pm-tenant-screening",title:"Tenant Screening Criteria & Decision Framework",type:"prompt",featured:true,
+description:"Build a consistent, legally defensible tenant screening criteria document for a specific property and market. Claude generates the criteria framework, application scoring rubric, and adverse action letter template — all calibrated to your state's fair housing requirements.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Inconsistent screening is your #1 fair housing liability. This prompt builds a written, documented screening standard you apply identically to every applicant — protecting you legally while improving tenant quality.",
+keyFeature:"State-specific fair housing compliance flag: Claude identifies any criterion that may conflict with protected class rules in the target state and suggests compliant alternatives.",
+worksWith:["Claude","Notion MCP","/docx Skill"],tags:["property-management","tenant-screening","fair-housing","prompt","compliance"],verified:true,
+promptText:`Build a tenant screening criteria and decision framework for [PROPERTY ADDRESS].
+
+PROPERTY DETAILS:
+- Property type: [SFR / Duplex / Apartment]
+- Monthly rent: $[RENT]
+- State: [STATE] — apply [STATE] fair housing law
+- Target tenant profile: [FAMILY / PROFESSIONAL / STUDENT / UNRESTRICTED]
+
+GENERATE:
+
+PART 1 — WRITTEN SCREENING CRITERIA (post this publicly and apply uniformly):
+- Minimum income requirement: [X]x monthly rent — document how to verify
+- Credit score minimum: [SCORE] — list exceptions process
+- Rental history: [YEARS] verifiable rental history — what disqualifies
+- Criminal background: [POLICY] — must be individualized assessment per HUD guidance
+- Employment: [REQUIREMENTS]
+- Pets: [POLICY and deposit structure]
+
+PART 2 — APPLICATION SCORING RUBRIC (0-100 points):
+Create a weighted scorecard covering: income ratio, credit, rental history, employment stability, references.
+Each criterion: weight, scoring method, and disqualifying threshold.
+
+PART 3 — DECISION TIERS:
+- Approve: [score range + no disqualifying factors]
+- Approve with conditions: [score range + specific conditions]
+- Decline: [disqualifying factors list]
+
+PART 4 — ADVERSE ACTION LETTER TEMPLATE:
+[STATE]-compliant adverse action letter for declined applicants citing specific criteria, not protected characteristics.
+
+FLAG: Any criterion in Parts 1-3 that may conflict with [STATE] fair housing law.
+NOTE: This is a framework for attorney review — not legal advice. Have your attorney review before implementing.`,
+useCase:"New property setup. Screening policy standardization. Fair housing compliance documentation.",
+proTip:"Once your attorney approves the framework, save it as a Claude Project document. When evaluating any applicant, paste their application into the project and ask: 'Score this applicant against our screening criteria and provide a Tier 1/2/3 decision with rationale.' Consistent, documented decisions every time."},
+
+{id:"pm-maintenance-triage",title:"Maintenance Request Triage & Response Generator",type:"prompt",
+description:"Paste a tenant maintenance request and get: urgency classification (Emergency / Urgent / Routine), recommended response timeline, draft tenant response, and a contractor work order. Handles the full communication and dispatch workflow in one prompt run.",
+pricing:"Claude / ChatGPT",url:"https://claude.ai",
+investorEdge:"Emergency vs. routine misclassification is the #1 PM liability risk. A burst pipe treated as 'routine' creates a mold claim. This prompt forces systematic triage before anyone picks up the phone.",
+keyFeature:"Legal escalation flag: if the request describes a habitability issue, Claude flags it as requiring immediate response under your state's implied warranty of habitability.",
+worksWith:["Claude","Notion MCP","Make.com"],tags:["property-management","maintenance","triage","prompt","automation"],verified:true,
+promptText:`Triage this tenant maintenance request and generate the full response workflow.
+
+PROPERTY: [ADDRESS] | Unit: [UNIT] | Tenant: [NAME]
+State: [STATE] — apply [STATE] landlord-tenant habitability law
+
+MAINTENANCE REQUEST (paste exact text):
+"[PASTE TENANT'S REQUEST MESSAGE HERE]"
+
+OUTPUT:
+
+1) URGENCY CLASSIFICATION:
+   ☐ EMERGENCY — respond within 1 hour (fire, flood, gas, no heat below 50°F, sewage backup, security breach)
+   ☐ URGENT — respond within 24 hours (HVAC failure, hot water, significant leak, appliance affecting habitability)
+   ☐ ROUTINE — schedule within 3-5 business days (cosmetic, minor appliance, non-essential)
+
+   Classification: [SELECTION] | Rationale: [1 sentence]
+   Habitability flag: [YES — potential warranty of habitability issue / NO]
+
+2) TENANT RESPONSE EMAIL:
+   - Acknowledge receipt
+   - State your response timeline
+   - If emergency: provide emergency contact number immediately
+   - If routine: provide scheduling window
+   - Professional, empathetic tone — no dismissiveness
+
+3) CONTRACTOR WORK ORDER:
+   - Property address and unit
+   - Issue description (technical, not tenant's exact words)
+   - Priority: [EMERGENCY / URGENT / ROUTINE]
+   - Access instructions
+   - Work authorization limit: $[AMOUNT] without additional approval
+   - Contact tenant at [PHONE] to schedule
+
+4) INTERNAL NOTE (for your PM records):
+   Date received, classification, action taken, follow-up date`,
+useCase:"Daily maintenance request processing. VA and PM team training. Property management SOP.",
+proTip:"Build this as a Make.com automation: tenant submits request via form → Claude classifies and drafts response → you approve with one click → response sent and work order created. The full workflow automated in under 2 minutes per request."},
+
+{id:"pm-collections-communication",title:"Rent Collections Communication Sequence",type:"prompt",
+description:"Generate a state-compliant rent collections communication sequence: friendly reminder (day 1), firm notice (day 5), formal demand (day 10), and pre-eviction notice (day 15+). Each touch escalates appropriately while maintaining professionalism and legal defensibility.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Inconsistent collections communication is what turns a 5-day late payment into a 30-day problem. A documented, consistent sequence is also your legal protection if you proceed to eviction — every step on record.",
+keyFeature:"State-specific compliance: each notice includes the legally required language for the target state's pay-or-quit notice requirements.",
+worksWith:["Claude","Make.com","ActiveCampaign"],tags:["property-management","collections","eviction","prompt","compliance"],verified:true,
+promptText:`Generate a rent collections communication sequence for this tenant situation.
+
+PROPERTY: [ADDRESS] | Unit: [UNIT]
+State: [STATE] — apply [STATE] eviction notice requirements
+Tenant name: [NAME] | Lease end date: [DATE] | Monthly rent: $[RENT]
+Amount past due: $[AMOUNT] | Days late: [#]
+Prior late payments this lease: [#] | Any prior eviction filings: [YES/NO]
+
+GENERATE FOUR COMMUNICATIONS:
+
+TOUCH 1 — DAY 1 PAST DUE: Friendly reminder
+- Tone: Warm, assume it's an oversight
+- Content: Amount due, due date, payment methods, offer to discuss if there's a hardship
+- NO legal language yet
+
+TOUCH 2 — DAY 5 PAST DUE: Firm notice
+- Tone: Professional, more direct
+- Content: Remind of late fee triggered (if applicable per lease), reiterate amount, request contact by [DATE]
+- Light legal reference: "per your lease agreement..."
+
+TOUCH 3 — DAY 10 PAST DUE: Formal demand
+- Tone: Formal, no emotion
+- Content: Total amount due including late fees, demand payment by [DATE]
+- Reference next step: "failure to pay by [DATE] may result in legal action"
+
+TOUCH 4 — [STATE]-COMPLIANT PAY OR QUIT NOTICE:
+- Generate the legally required [STATE] pay-or-quit notice
+- Include: exact statutory language required by [STATE] law
+- Specify: notice period ([X] days per [STATE] statute)
+- Delivery method requirements for [STATE]
+- FLAG: have this reviewed by a [STATE]-licensed eviction attorney before serving
+
+COMPLIANCE NOTE: Touch 4 is a legal document. Have it reviewed before serving.`,
+useCase:"Self-managing investors. PM operators standardizing collections. Legal documentation for eviction proceedings.",
+proTip:"Automate Touches 1-3 in Make.com triggered by your accounting software when rent hits day 1, 5, and 10 past due. Touch 4 always requires human review before serving. The automation handles 80% of the work — you handle the legal escalation decision."},
+
+{id:"pm-move-out-assessment",title:"Move-Out Damage Assessment & Security Deposit Letter",type:"prompt",
+description:"Upload move-out photos or describe observed damage. Claude generates a damage assessment comparing move-in vs. move-out condition, calculates deductions vs. normal wear and tear, and produces the state-compliant security deposit disposition letter with itemized deductions.",
+pricing:"Claude Pro (with image upload) or Gemini 3.1 Pro",url:"https://claude.ai",
+investorEdge:"Security deposit disputes are the #1 small claims court filing against landlords. A documented, itemized, state-law-compliant disposition letter with photo evidence eliminates 90% of disputes before they're filed.",
+keyFeature:"Normal wear and tear distinction: Claude explicitly separates damage (deductible) from normal wear and tear (not deductible) — the most common source of security deposit disputes.",
+worksWith:["Claude","Gemini 3.1 Pro","Notion MCP"],tags:["property-management","security-deposit","move-out","prompt","compliance"],verified:true,
+promptText:`Generate a security deposit disposition letter for this move-out.
+
+STATE: [STATE] — apply [STATE] security deposit law (notice deadline: [X] days)
+Property: [ADDRESS] | Unit: [UNIT]
+Tenant: [NAME] | Move-in: [DATE] | Move-out: [DATE] | Tenancy: [X] years
+Security deposit held: $[AMOUNT]
+Tenant's forwarding address: [ADDRESS]
+
+DAMAGE OBSERVED (describe or paste from inspection notes):
+[DESCRIBE EACH DAMAGE ITEM — room, issue, estimated repair cost]
+
+[IF USING CLAUDE WITH IMAGES: attach move-in and move-out photos side by side]
+
+GENERATE:
+
+PART 1 — DAMAGE ASSESSMENT:
+For each item, classify:
+- DAMAGE (deductible): beyond normal wear and tear, caused by tenant
+- NORMAL WEAR AND TEAR (not deductible): expected degradation from ordinary use
+- PRE-EXISTING (not deductible): documented on move-in checklist
+
+PART 2 — DEDUCTION CALCULATION:
+| Item | Category | Repair Cost | Deductible Amount | Rationale |
+
+Total deductions: $[AMOUNT]
+Deposit returned: $[DEPOSIT] - $[DEDUCTIONS] = $[RETURNED]
+
+PART 3 — [STATE]-COMPLIANT DISPOSITION LETTER:
+- Itemized list of deductions with costs
+- Any required statutory language for [STATE]
+- Deadline for returning remaining deposit: [DATE — per [STATE] law]
+- Include: where to send disputes / contact information
+
+FLAG: [STATE] deadline for disposition letter: [X] days from move-out
+COMPLIANCE NOTE: Have a [STATE] landlord-tenant attorney review before sending if deductions exceed $[THRESHOLD].`,
+useCase:"Move-out processing. Security deposit dispute prevention. Landlord legal documentation.",
+proTip:"Use Gemini 3.1 Pro if you have photos — upload move-in and move-out photos directly and ask it to identify damage vs. normal wear and tear from the visual comparison. The photo evidence output becomes your dispute defense documentation."},
+
+{id:"pm-lease-renewal-analysis",title:"Lease Renewal & Rent Increase Strategy",type:"prompt",
+description:"Analyze a tenant's renewal position — payment history, market rents, occupancy cost ratio, and renewal probability — and generate the optimal renewal offer strategy plus the renewal letter itself. Balances rent maximization against vacancy risk.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Every renewal is a pricing decision disguised as an administrative task. Most operators just raise rent by a flat % without modeling vacancy risk. This prompt forces the math: what rent increase is worth the risk of the tenant leaving?",
+keyFeature:"Vacancy risk model: calculates the net cost of the tenant leaving (vacancy + turnover costs) vs. the gain from a rent increase — tells you the exact rent ceiling where retaining the tenant is the better financial decision.",
+worksWith:["Claude","ATTOM MCP","Notion MCP"],tags:["property-management","lease-renewal","rent-increase","prompt","strategy"],verified:true,
+promptText:`Analyze this lease renewal and recommend an optimal pricing strategy.
+
+PROPERTY: [ADDRESS] | Unit: [UNIT] | Tenant: [NAME]
+Current rent: $[RENT]/mo | Lease expiration: [DATE]
+Tenancy length: [X] years | Payment history: [PERFECT / [#] late payments in [PERIOD]]
+Market rent for comparable unit today: $[MARKET_RENT]
+Average days vacant between tenants in this market: [DAYS]
+Turnover cost estimate (cleaning, repairs, advertising): $[COST]
+
+RENEWAL ANALYSIS:
+
+1) RENT INCREASE OPTIONS (model 3 scenarios):
+   - Scenario A: Market rate ($[MARKET_RENT]) — [%] increase
+   - Scenario B: Moderate ([%] increase — $[AMOUNT])
+   - Scenario C: Retention rate ([%] increase — $[AMOUNT])
+
+2) VACANCY RISK MODEL (for each scenario):
+   - Estimated probability tenant leaves at this rent: [%]
+   - If tenant leaves: months of vacancy × market rent = lost income
+   - Turnover costs: $[COST]
+   - Total vacancy + turnover cost: $[AMOUNT]
+   - Monthly premium to recover: $[AMOUNT] over [MONTHS]
+   - Break-even: how many months until higher rent covers vacancy risk?
+
+3) RECOMMENDATION:
+   Optimal rent: $[AMOUNT] | Rationale: [2 sentences — math-based]
+
+4) RENEWAL LETTER (generate the letter):
+   - Professional tone, appreciative of their tenancy
+   - State new rent and effective date
+   - Renewal term options (1-year / month-to-month with premium)
+   - Response deadline: [DATE — typically 60 days before expiration]
+   - Contact information for questions`,
+useCase:"Annual lease renewal processing. Rent increase strategy. Portfolio rent roll optimization.",
+proTip:"Run this for every renewal 90 days before expiration — not 30. You need time to market the unit if the tenant declines. The vacancy risk model will often tell you to offer a slightly below-market rate to a great tenant — the math always beats the instinct to maximize."},
+
+{id:"pm-portfolio-performance",title:"Monthly Portfolio Performance Summary",type:"prompt",
+description:"Input monthly actuals from your property management software and get a complete portfolio performance narrative, asset-level variance analysis, and a prioritized action list. Built for self-managing investors reviewing their own numbers and for PM operators reporting to clients.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Turns a spreadsheet of numbers into a narrative that tells you exactly where to focus. Most investors look at their PM reports and see data — this prompt tells you what the data means and what to do about it.",
+keyFeature:"Priority action list: Claude doesn't just report variances — it ranks them by financial impact and tells you the specific action required for each, with a suggested deadline.",
+worksWith:["Claude","Postgres MCP","Notion MCP"],tags:["property-management","reporting","portfolio","prompt","monthly-review"],verified:true,
+promptText:`Generate a monthly portfolio performance summary and action plan.
+
+REPORTING PERIOD: [MONTH, YEAR]
+PORTFOLIO: [NAME] | Total units: [#] | Total properties: [#]
+
+MONTHLY ACTUALS (paste from your PM software or enter manually):
+
+INCOME:
+- Gross potential rent: $[AMOUNT]
+- Collected rent: $[AMOUNT] (collection rate: [%])
+- Late fees collected: $[AMOUNT]
+- Other income: $[AMOUNT]
+- Total collected: $[AMOUNT]
+
+EXPENSES:
+- Property management fee: $[AMOUNT]
+- Repairs & maintenance: $[AMOUNT]
+- Capex: $[AMOUNT] (describe: [PROJECT])
+- Insurance: $[AMOUNT]
+- Taxes: $[AMOUNT]
+- Utilities (if owner-paid): $[AMOUNT]
+- Other: $[AMOUNT]
+- Total expenses: $[AMOUNT]
+
+NET OPERATING INCOME: $[AMOUNT]
+Debt service: $[AMOUNT]
+Net cash flow: $[AMOUNT]
+
+OCCUPANCY: [#] occupied / [#] total = [%]
+Vacancies: [UNIT, days vacant, reason]
+Delinquencies: [TENANT, amount owed, days past due]
+
+VS. BUDGET: [attach budget or state variance on key lines]
+
+OUTPUT:
+1) EXECUTIVE SUMMARY (3 bullets: collections, NOI, occupancy vs. targets)
+2) VARIANCE ANALYSIS: any line deviating >10% from budget — root cause and status
+3) DELINQUENCY STATUS: each past-due tenant, current status, next action
+4) VACANCY STATUS: each vacant unit, days vacant, leasing activity, projected fill date
+5) PRIORITY ACTION LIST (ranked by $ impact):
+   For each item: Action required | Responsible party | Deadline | Expected $ impact`,
+useCase:"Monthly self-management review. PM client reporting. Investor portfolio oversight.",
+proTip:"Paste this output directly into your LP monthly update prompt afterward. You now have the data narrative and the investor communication generated in two sequential prompts — your entire monthly reporting workflow in under 30 minutes."}
+
 ]}
 ]};
 
@@ -2242,7 +3371,12 @@ const CATD = {
   "custom-gpts-gems":"Complete build guides for Deal Analyzer, Seller Script & Market Research GPTs + Gemini Gems.",
   "mcp-servers":"Wire AI into files, CRMs & databases. 5 Power Stacks + Remote vs Local guide + gap map.",
   "ai-platform-guide":"Claude vs ChatGPT vs Gemini vs Grok vs Manus vs Perplexity — task-by-task decision framework.",
-  "emerging-ai":"Jan–Mar 2026 launches with exact dates: Opus 4.6, Model Council, RealAI, Nano Banana 2 & more."
+  "emerging-ai":"Jan–Mar 2026 launches with exact dates: Opus 4.6, Model Council, RealAI, Nano Banana 2 & more.",
+  "re-investor-prompts":"10 copy-paste prompts for deal analysis, underwriting, seller outreach, market research & STR analysis.",
+  "model-specific-prompts":"Advanced prompts built specifically for Claude Opus/Sonnet 4.6, Gemini 3.1 Pro & GPT-5.4 capabilities.",
+  "wholesaling-workflows":"End-to-end AI workflows for lead scoring, skip tracing, contract drafting, buyer outreach & disposition.",
+  "capital-raising":"LP deck generation, investor outreach scripts, onboarding Q&A, K-1 explainers & fund pitch assets.",
+  "property-management-ai":"Tenant screening, maintenance triage, collections messaging, lease renewal analysis & portfolio KPIs."
 };
 // ═══════════════════════════════════════════════════════
 // STATE + INIT
@@ -2311,11 +3445,11 @@ function showHome(){
           <div class="hstat"><span class="hstat-n" id="c1">0</span><div class="hstat-l">Tools</div></div>
           <div class="hstat"><span class="hstat-n" id="c2">0</span><div class="hstat-l">Prompts</div></div>
           <div class="hstat"><span class="hstat-n" id="c3">0</span><div class="hstat-l">Featured</div></div>
-          <div class="hstat"><span class="hstat-n" id="c4">8</span><div class="hstat-l">Sections</div></div>
+          <div class="hstat"><span class="hstat-n" id="c4">0</span><div class="hstat-l">Sections</div></div>
         </div>
         <div class="hero-actions">
           <button class="btn-solid" onclick="document.getElementById('below-hero').scrollIntoView({behavior:'smooth'})">Explore the Vault ↓</button>
-          <a href="https://go.theunshakableinvestor.com/ai-realestate-webinar-database" class="btn-outline" target="_blank" rel="noopener">Watch the Webinar →</a>
+          <a href="https://go.theunshakableinvestor.com/checkout-reai-legacy" class="btn-outline" target="_blank" rel="noopener">Join the Community →</a>
         </div>
       </div>
       <div class="hero-right">
@@ -2339,15 +3473,69 @@ function showHome(){
     </div>
 
     <div id="below-hero" style="padding:40px 44px 80px">
+
+      <!-- START HERE PATHWAY -->
+      <div class="start-here">
+        <div class="sh-header">
+          <span class="sh-badge">Start Here</span>
+          <span class="sh-label">New to AI investing? Start with these 5</span>
+          <span class="sh-sub">Recommended first stops →</span>
+        </div>
+        <div class="sh-grid">
+          <div class="sh-card" data-step="1" onclick="nav('ai-platform-guide')" tabindex="0">
+            <div class="sh-card-icon">🗺️</div>
+            <div class="sh-card-name">Pick Your AI Platform</div>
+            <div class="sh-card-desc">Claude vs ChatGPT vs Gemini — find out which tool fits each investing task.</div>
+            <div class="sh-card-link">AI Platform Guide →</div>
+          </div>
+          <div class="sh-card" data-step="2" onclick="nav('re-investor-prompts')" tabindex="0">
+            <div class="sh-card-icon">📋</div>
+            <div class="sh-card-name">Copy Your First Prompt</div>
+            <div class="sh-card-desc">10 plug-and-play prompts for deal analysis, underwriting, and seller outreach.</div>
+            <div class="sh-card-link">RE Investor Prompts →</div>
+          </div>
+          <div class="sh-card" data-step="3" onclick="nav('claude-skills')" tabindex="0">
+            <div class="sh-card-icon">🧩</div>
+            <div class="sh-card-name">Add Skills to Claude</div>
+            <div class="sh-card-desc">Install Claude Skills to unlock deal structuring, DD automation, and memory.</div>
+            <div class="sh-card-link">Claude Skills →</div>
+          </div>
+          <div class="sh-card" data-step="4" onclick="nav('mcp-servers')" tabindex="0">
+            <div class="sh-card-icon">🔌</div>
+            <div class="sh-card-name">Connect Your Tools</div>
+            <div class="sh-card-desc">Wire Claude into your CRM, Drive, or database using MCP server stacks.</div>
+            <div class="sh-card-link">MCP Servers →</div>
+          </div>
+          <div class="sh-card" data-step="5" onclick="nav('model-specific-prompts')" tabindex="0">
+            <div class="sh-card-icon">🧠</div>
+            <div class="sh-card-name">Level Up Your Prompts</div>
+            <div class="sh-card-desc">Use model-native features: Claude 1M context, Gemini multimodal, GPT-5.4 computer use.</div>
+            <div class="sh-card-link">Advanced Prompts →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="hfbar" id="hfbar">
+        <button class="hfp active" onclick="homeFilter('all',this)">All Sections</button>
+        <button class="hfp" onclick="homeFilter('prompts',this)">📋 Prompts</button>
+        <button class="hfp" onclick="homeFilter('underwriting',this)">📊 Underwriting</button>
+        <button class="hfp" onclick="homeFilter('outreach',this)">📨 Outreach</button>
+        <button class="hfp" onclick="homeFilter('automation',this)">⚙️ Automation</button>
+        <button class="hfp" onclick="homeFilter('advanced',this)">🧠 Advanced AI</button>
+        <button class="hfp" onclick="homeFilter('capital',this)">💼 Capital Raising</button>
+        <button class="hfp" onclick="homeFilter('management',this)">🔑 Management</button>
+      </div>
+
       <div class="st">All Sections</div>
-      <div class="cat-grid">
+      <div class="cat-grid" id="home-cat-grid">
         ${D.sections.map((s,i)=>`
-          <div class="cat-card" onclick="nav('${s.id}')" tabindex="0" onkeydown="if(event.key==='Enter')nav('${s.id}')" style="animation:fu 0.4s ${i*55}ms ease-out both">
+          <div class="cat-card" onclick="nav('${s.id}')" tabindex="0" onkeydown="if(event.key==='Enter')nav('${s.id}')" style="animation:fu 0.4s ${i*55}ms ease-out both" data-tags="${s.id}">
             <div class="cat-card-top">
               <span class="cat-card-icon">${s.icon}</span>
               <div class="cat-card-name">${s.title}</div>
             </div>
-            <div class="cat-card-desc">${CATD[s.id]}</div>
+            <div class="cat-card-desc">${CATD[s.id]||s.description}</div>
             <div class="cat-card-foot">
               <span class="cat-card-cnt">${s.resources.length} resources</span>
               <span class="cat-card-arrow">→</span>
@@ -2370,6 +3558,7 @@ function showHome(){
   animCount('c1',total,1100);
   animCount('c2',prompts,850);
   animCount('c3',featured,700);
+  animCount('c4',D.sections.length,600);
   setTimeout(drawRadar,120);
 }
 
@@ -2382,6 +3571,27 @@ function animCount(id,target,dur){
     el.textContent=Math.round(e*target);
     if(t<1)requestAnimationFrame(step);
   })(performance.now());
+}
+
+// HOME FILTER
+const HOME_FILTER_MAP={
+  all:()=>true,
+  prompts:id=>['re-investor-prompts','model-specific-prompts'].includes(id),
+  underwriting:id=>['re-investor-prompts','model-specific-prompts','custom-gpts-gems'].includes(id),
+  outreach:id=>['re-investor-prompts','wholesaling-workflows','custom-gpts-gems'].includes(id),
+  automation:id=>['mcp-servers','cowork-antigravity','claude-skills','wholesaling-workflows'].includes(id),
+  advanced:id=>['model-specific-prompts','emerging-ai','ai-platform-guide','mcp-servers'].includes(id),
+  capital:id=>['capital-raising','re-investor-prompts','model-specific-prompts'].includes(id),
+  management:id=>['property-management-ai','mcp-servers','claude-skills'].includes(id)
+};
+function homeFilter(key,btn){
+  document.querySelectorAll('.hfp').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const fn=HOME_FILTER_MAP[key]||HOME_FILTER_MAP.all;
+  document.querySelectorAll('#home-cat-grid .cat-card').forEach(card=>{
+    const id=card.getAttribute('data-tags');
+    card.classList.toggle('hidden',!fn(id));
+  });
 }
 
 // ── WIDGET PANELS ──
