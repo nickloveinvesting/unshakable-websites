@@ -1750,6 +1750,393 @@ pricing:"Consumer-facing; B2B impact indirect",url:"https://www.businesswire.com
 investorEdge:"Monitor how portals surface inventory and how conversational search changes buyer behavior — adapt acquisition funnels for AI-mediated discovery. First major portal to go fully conversational.",
 keyFeature:"Conversational property search at portal scale — signals where consumer real estate search is heading.",
 worksWith:["Homes.com"],tags:["consumer","portal","ai","lead-gen","search","launch"],verified:true}
+]},
+
+// ────────────────────────────────────────
+// 9. AI PROMPTS FOR REAL ESTATE INVESTORS
+// ────────────────────────────────────────
+{id:"re-investor-prompts",title:"AI Prompts for RE Investors",icon:"📋",
+description:"Copy-paste prompts for the full investor workflow — deal analysis, underwriting, due diligence, seller outreach, lease review, scope of work, market research, LP communications, creative financing, and short-term rental modeling. Each prompt is tested, bracketed for your variables, and includes a pro tip for sharper output.",
+resources:[
+
+{id:"prompt-mao-deal-analysis",title:"Prompt: MAO & Deal Score",type:"prompt",featured:true,
+description:"Drop in raw deal inputs and get a Maximum Allowable Offer, deal score (0-10), DSCR, cash-on-cash, and a plain-English pass/proceed verdict. Works for SFR, small multifamily, and BRRRR candidates.",
+pricing:"Claude Pro / ChatGPT Plus",url:"https://claude.ai",
+investorEdge:"Eliminates mental math errors on fast offers. Forces the model to show its assumptions — so you can audit every number before submitting the LOI.",
+keyFeature:"Structured output: MAO, deal score, key ratios, and a one-paragraph verdict in a single run.",
+worksWith:["Claude","ChatGPT","Gemini"],tags:["underwriting","mao","deal-analysis","prompt","sfr","brrrr"],verified:true,
+promptText:`You are a real estate investment analyst. Analyze this deal and output:
+1) Maximum Allowable Offer (MAO)
+2) Deal Score 0–10
+3) DSCR (if rental hold)
+4) Cash-on-cash return (Year 1)
+5) Pass / Proceed / Strong Buy verdict with one-paragraph rationale
+
+DEAL INPUTS:
+- Property type: [SFR / Duplex / Small MF]
+- Address / market: [ADDRESS or CITY, STATE]
+- Asking price: $[PRICE]
+- ARV (After Repair Value): $[ARV]
+- Estimated rehab: $[REHAB_COST]
+- Exit strategy: [Flip / BRRRR / Rental Hold]
+- Financing: [Cash / Hard money / Conventional / Seller finance]
+- Market rent (if hold): $[MONTHLY_RENT]
+- Vacancy assumption: [%]
+- OpEx ratio assumption: [%]
+- Target profit margin (flip) or CoC (rental): [%]
+
+RULES:
+- Show all formulas before stating the result
+- If any input is missing, state your assumption explicitly
+- Flag any ratio that falls outside acceptable thresholds
+- Never round MAO up — always round down to nearest $500`,
+useCase:"Pre-offer analysis. Team underwriting reviews. Wholesaler offer screening.",
+proTip:"Paste the output into a follow-up prompt: 'Now stress-test this deal at ARV 10% lower and rehab 20% over budget. Does it still pencil?' — one more run catches most deal-killers before the LOI goes out."},
+
+{id:"prompt-brrrr-model",title:"Prompt: Full BRRRR Model",type:"prompt",featured:true,
+description:"End-to-end BRRRR analysis — acquisition, rehab, stabilization, refinance, and long-term hold returns. Outputs cash recaptured, equity left in, ongoing cash flow, and a 5-year projection table.",
+pricing:"Claude Pro / ChatGPT Plus",url:"https://claude.ai",
+investorEdge:"See exactly how much cash you pull back at refi and whether the remaining equity still delivers your target CoC — before you wire the earnest money.",
+keyFeature:"Cash-recaptured calculation + residual CoC on remaining equity — the two numbers BRRRR investors actually need.",
+worksWith:["Claude","ChatGPT","Code Execution"],tags:["brrrr","underwriting","refinance","prompt","rental"],verified:true,
+promptText:`Run a full BRRRR model for this deal. Present results in a structured table.
+
+ACQUISITION PHASE:
+- Purchase price: $[PURCHASE_PRICE]
+- Acquisition costs (title, closing): $[ACQ_COSTS]
+- Hard money rate: [%] for [MONTHS] months
+- Hard money points: [POINTS]
+- Rehab budget: $[REHAB]
+- Carry cost during rehab: $[CARRY]
+
+STABILIZATION:
+- ARV: $[ARV]
+- Market rent: $[RENT]/mo
+- Vacancy: [%]
+- Operating expenses (taxes, insurance, mgmt, maintenance): $[OPEX]/mo
+
+REFINANCE:
+- Refi LTV: [%] (typically 70–75% DSCR loan)
+- Refi rate: [%], [AMORT]-year amortization
+- Refi closing costs: $[REFI_COSTS]
+
+OUTPUT REQUIRED:
+1) Total capital deployed (acquisition through stabilization)
+2) Refi proceeds
+3) Cash remaining in deal after refi
+4) Cash-on-cash return on remaining equity
+5) Monthly cash flow after DSCR loan payment
+6) 5-year equity build table (principal paydown + appreciation at [%] annual)
+7) Verdict: Does this meet the BRRRR standard (≥80% cash recapture, ≥8% CoC on residual)?`,
+useCase:"BRRRR acquisition underwriting. Refi timing decisions. Lender package preparation.",
+proTip:"Run this twice: once with your base-case ARV and once at ARV minus 10%. If the deal still recaptures >70% of cash at the downside ARV, you have a real margin of safety."},
+
+{id:"prompt-dd-checklist",title:"Prompt: Due Diligence Red Flag Scan",type:"prompt",
+description:"Feed a property address, asking price, and any documents you have (T-12, rent roll, inspection report, tax records). Model returns a prioritized red flag list, questions for the seller, and items to verify before closing.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"Surfaces the 3–5 deal-killers most investors miss on a first pass — deferred maintenance patterns, rent-to-expense ratio anomalies, tenant concentration risk, and title red flags.",
+keyFeature:"Prioritized red flag output ranked by capital impact — not an alphabetical checklist.",
+worksWith:["Claude","Filesystem MCP","PDF Skill"],tags:["due-diligence","red-flags","prompt","documents","mf"],verified:true,
+promptText:`You are a senior acquisition analyst conducting pre-LOI due diligence.
+Analyze the information below and output:
+
+A) RED FLAGS (ranked by estimated capital impact, highest first)
+B) QUESTIONS TO ASK THE SELLER / BROKER before going under contract
+C) ITEMS TO VERIFY INDEPENDENTLY (title, county records, physical inspection)
+D) DEAL-KILLER THRESHOLD: identify the single most likely reason this deal fails
+
+PROPERTY INFORMATION:
+- Address: [ADDRESS]
+- Asking price: $[PRICE]
+- Property type: [SFR / MF unit count / Asset class]
+- Year built: [YEAR]
+- Stated gross rents: $[GROSS_RENTS]/mo
+- Stated expenses: $[EXPENSES]/mo (or attach T-12)
+- Occupancy: [%]
+- Known issues: [LIST ANY DISCLOSED DEFECTS]
+
+DOCUMENTS PROVIDED (paste or describe):
+[PASTE RENT ROLL, T-12 SUMMARY, OR INSPECTION HIGHLIGHTS HERE]
+
+RULES:
+- Do not assume clean title — always flag title verification
+- Treat any occupancy above 97% as a potential red flag (lease-up masking)
+- Flag expense ratios below 35% for MF as potentially under-reported
+- Output in bullet format, ranked by $impact`,
+useCase:"Pre-LOI screening. IC package preparation. Wholesale deal vetting.",
+proTip:"After generating the red flag list, paste it into a second prompt: 'For each red flag, write the exact question I should ask the listing broker.' One more pass = a complete diligence call script."},
+
+{id:"prompt-seller-outreach",title:"Prompt: Motivated Seller Outreach Script",type:"prompt",
+description:"Generate a cold outreach sequence (cold call script, voicemail, SMS, and follow-up letter) for a motivated seller lead. Adapts tone based on seller situation — probate, pre-foreclosure, tired landlord, or absentee owner.",
+pricing:"Claude / ChatGPT",url:"https://claude.ai",
+investorEdge:"Covers all four outreach channels from one prompt run — stops the copy-paste grind between call script, text, and mailer.",
+keyFeature:"Situation-specific tone: probate script is different from tired-landlord script. This prompt forces that distinction.",
+worksWith:["Claude","ChatGPT","Make.com"],tags:["seller-outreach","cold-call","sms","prompt","lead-gen"],verified:true,
+promptText:`Write a motivated seller outreach sequence for this lead situation.
+
+LEAD PROFILE:
+- Seller situation: [Probate / Pre-foreclosure / Tired landlord / Absentee owner / Divorce / Estate sale]
+- Property type: [SFR / Duplex / MF]
+- Property address: [ADDRESS]
+- How we got the lead: [Direct mail / Cold call list / Driving for dollars / MLS expired]
+- Any known facts about seller: [DETAILS — equity, length of ownership, out-of-state, etc.]
+
+GENERATE FOUR ASSETS:
+1) COLD CALL SCRIPT (45–60 seconds, natural language, two objection handlers: "I'm not interested" and "I already have an agent")
+2) VOICEMAIL (20 seconds, no price mention, create curiosity)
+3) TEXT MESSAGE (under 160 characters, one CTA)
+4) FOLLOW-UP HANDWRITTEN-STYLE LETTER (3 short paragraphs, empathetic, no high-pressure language)
+
+TONE RULES:
+- Never use: "cash offer," "as-is," "we buy houses" in the first touch
+- Lead with curiosity and empathy, not your offer
+- Match formality to situation (probate = more formal; absentee landlord = casual)`,
+useCase:"Cold call campaigns. SMS sequences. Direct mail follow-up. VA scripts.",
+proTip:"Run this prompt, then immediately follow up with: 'Now write 3 objection-handler responses for the most common pushback in [SELLER_SITUATION] situations.' You'll have a complete call guide in two runs."},
+
+{id:"prompt-market-research",title:"Prompt: Market Viability Report (ZIP → Verdict)",type:"prompt",featured:true,
+description:"Drop in a ZIP code or submarket name and get a structured investment viability report: demand drivers, supply risks, rent trends, strategy fit, and a buy/hold/avoid verdict. Switches to Research Plan Mode when live data unavailable — never fabricates.",
+pricing:"Claude Pro / Perplexity",url:"https://claude.ai",
+investorEdge:"Forces the model to separate verified data from assumptions — so your IC memo never contains a hallucinated vacancy rate or fabricated cap rate.",
+keyFeature:"Research Plan Mode fallback: when live data is unavailable, outputs a prioritized list of exactly what to verify and where — no fabricated stats.",
+worksWith:["Claude","Perplexity","Web Search"],tags:["market-research","zip","viability","prompt","research"],verified:true,
+promptText:`Analyze [ZIP_CODE or SUBMARKET NAME, STATE] as an investment target for [STRATEGY: SFR rental / Value-add MF / STR / Fix-and-flip].
+
+OUTPUT STRUCTURE:
+
+1) MARKET SNAPSHOT
+   - Population trend (3-yr): growth / flat / decline
+   - Median household income
+   - Major employers / economic drivers
+   - Supply pipeline: permits issued in last 12 months
+
+2) RENTAL DEMAND SIGNALS
+   - Avg days on market (rentals)
+   - Vacancy rate estimate
+   - Rent growth trend (YoY)
+   - Renter-to-owner ratio
+
+3) STRATEGY FIT SCORE (1–10 for requested strategy)
+   - What makes this market good for [STRATEGY]
+   - What makes it risky for [STRATEGY]
+
+4) COMPARABLE METRICS
+   - Median SFR price
+   - Median cap rate range (if available)
+   - Price-to-rent ratio
+
+5) VERDICT: Buy / Watch / Avoid — with one paragraph justification
+
+CRITICAL RULE: If you cannot verify a statistic with a live source, do NOT fabricate it.
+Instead, switch to Research Plan Mode: list each missing data point and where to find it
+(county assessor, CoStar, Census ACS, FRED, local PM company).`,
+useCase:"New market entry decisions. IC memo market sections. Portfolio expansion analysis.",
+proTip:"Run this in Perplexity first for cited real-time data, then paste the output into Claude and say 'Synthesize this into an IC-ready market section, 3 paragraphs, confident tone.' Two-model workflow = better output than either alone."},
+
+{id:"prompt-lease-review",title:"Prompt: Lease Red Flag Review",type:"prompt",
+description:"Paste a lease or lease summary and get a prioritized red flag analysis covering tenant protections, unusual clauses, maintenance obligations, rent escalation terms, and early termination exposure.",
+pricing:"Claude Pro (long context)",url:"https://claude.ai",
+investorEdge:"Catches non-standard clauses — particularly below-market rent locks, unlimited maintenance obligations, and tenant improvement allowances — before you close on a property and inherit them.",
+keyFeature:"Capital-impact ranking: every red flag comes with an estimated dollar exposure so you can decide what to renegotiate.",
+worksWith:["Claude","PDF Skill","Filesystem MCP"],tags:["lease","due-diligence","prompt","mf","legal","documents"],verified:true,
+promptText:`You are a real estate attorney's paralegal reviewing a lease for an investor acquiring this property.
+Flag every clause that is (a) non-standard, (b) landlord-unfavorable, or (c) creates financial exposure.
+
+PROPERTY CONTEXT:
+- Asset type: [SFR / MF / Commercial]
+- State: [STATE] — apply [STATE] landlord-tenant law standards
+- Acquisition price: $[PRICE]
+- Intended hold: [YEARS] years
+- Current tenant: [Month-to-month / Fixed term through DATE]
+
+LEASE TEXT (paste below or describe key terms):
+[PASTE LEASE OR SUMMARIZE KEY PROVISIONS]
+
+OUTPUT FORMAT:
+RED FLAGS (ranked by estimated $ exposure):
+For each flag:
+- Clause reference
+- What it says vs. what is standard
+- Estimated financial exposure ($)
+- Recommended action (renegotiate / accept / seek counsel)
+
+WATCH LIST (non-urgent but monitor):
+[Lower-priority items]
+
+QUESTIONS FOR SELLER BEFORE CLOSING:
+[3–5 specific questions about lease terms or tenant history]
+
+NOTE: This is analytical support only, not legal advice.
+Flag anything that warrants actual attorney review.`,
+useCase:"Acquisition due diligence on tenanted properties. Portfolio lease audits. MF underwriting.",
+proTip:"For multi-tenant properties, run this prompt once per lease, then run a final prompt: 'Summarize all lease red flags across [N] leases. What is the total estimated exposure and which tenant creates the most risk?' — gives you a single IC-ready lease risk summary."},
+
+{id:"prompt-rehab-scope",title:"Prompt: Rehab Scope of Work Generator",type:"prompt",
+description:"Convert voice notes, walkthrough bullet points, or inspection report excerpts into a formatted scope of work document with line-item categories, sequencing, and GC bid instructions. Outputs a document ready to send to contractors.",
+pricing:"Claude Pro / Claude Cowork",url:"https://claude.ai",
+investorEdge:"Eliminates the 2–3 hour SOW drafting bottleneck. Standardizes GC bid formats so you're comparing apples to apples — not three different formats that take an afternoon to reconcile.",
+keyFeature:"Bid-ready output: each line item formatted with quantity, unit, and blank 'Unit Cost' and 'Total' columns so GCs fill in a standardized sheet.",
+worksWith:["Claude","Cowork","/docx Skill"],tags:["rehab","scope-of-work","prompt","gc","documents","flip"],verified:true,
+promptText:`Convert the following walkthrough notes into a professional Scope of Work document
+for a general contractor bid package.
+
+PROPERTY DETAILS:
+- Address: [ADDRESS]
+- Property type: [SFR / Duplex / etc.]
+- Strategy: [Flip / BRRRR hold / Rental turnover]
+- Target finish quality: [Basic rental / Mid-grade retail / High-end flip]
+- Budget range: $[LOW]–$[HIGH]
+- Target completion: [WEEKS] weeks from start
+
+WALKTHROUGH NOTES (paste your raw notes or inspection excerpts):
+[PASTE NOTES, VOICE TRANSCRIPT, OR INSPECTION ITEMS HERE]
+
+OUTPUT STRUCTURE:
+Organize by trade category in proper construction sequence:
+1. Demo & Haul-Away
+2. Structural / Foundation
+3. Roofing
+4. HVAC
+5. Plumbing
+6. Electrical
+7. Insulation / Drywall
+8. Flooring
+9. Cabinets & Countertops
+10. Fixtures & Hardware
+11. Interior Paint
+12. Exterior / Landscaping
+13. Final Clean / Punch List
+
+For each line item include:
+- Description (specific — not "fix bathroom")
+- Quantity and unit (LF, SF, EA, LS)
+- Blank columns: Unit Cost | Total
+- Notes for GC (material spec, match existing, owner-supplied, etc.)
+
+End with: BID INSTRUCTIONS section stating deadlines, format requirements,
+and that all subs must be licensed and insured in [STATE].`,
+useCase:"Fix-and-flip rehab scopes. BRRRR renovation packages. Rental turnover bids.",
+proTip:"After the SOW is generated, follow up with: 'Now create a separate allowance sheet for the 5 highest-variance line items (flooring, counters, fixtures, HVAC, roofing) with low/mid/high tiers.' Separating allowances from fixed-bid items cuts GC confusion and budget surprises."},
+
+{id:"prompt-lp-update",title:"Prompt: LP Investor Update (4 Formats)",type:"prompt",
+description:"Input one set of performance data and output four communication formats simultaneously: monthly LP email, lender update, partner Slack message, and 60-second video script. Factual, calm tone. No hype.",
+pricing:"Claude Pro",url:"https://claude.ai",
+investorEdge:"One prompt run produces all four formats from the same data set — monthly updates become systematic instead of a half-day manual drafting exercise.",
+keyFeature:"Calibrated tone per audience: LP email is formal and measured; partner Slack is direct; video script is conversational.",
+worksWith:["Claude","Gamma","Notion MCP"],tags:["lp-reporting","investor-comms","prompt","reporting","fund"],verified:true,
+promptText:`You are an investor relations specialist for a real estate fund.
+Generate four communication formats from the performance data below.
+Tone: factual, calm, confident. No hype. No euphemisms for bad news.
+
+REPORTING PERIOD: [MONTH YEAR]
+FUND / PORTFOLIO NAME: [NAME]
+
+PERFORMANCE DATA:
+- Properties in portfolio: [#]
+- Portfolio occupancy: [%] (vs. [%] prior month)
+- Gross collected rents: $[AMOUNT] (vs. $[BUDGET] budget)
+- Total OpEx: $[AMOUNT] (vs. $[BUDGET] budget)
+- Net operating income: $[NOI]
+- CapEx deployed this period: $[CAPEX] on [PROJECT]
+- Distributions sent: $[AMOUNT] on [DATE]
+- Key events: [ACQUISITIONS, DISPOSITIONS, LEASE-UPS, ISSUES]
+- Forward outlook: [1–2 sentences on next 30–60 days]
+
+GENERATE:
+1) LP MONTHLY EMAIL (formal, 250 words max, subject line included)
+2) LENDER UPDATE (bullet format, 5 bullets max, focus on DSCR and occupancy)
+3) PARTNER SLACK MESSAGE (casual, 3–4 sentences, action items bolded)
+4) 60-SECOND VIDEO SCRIPT (conversational, first-person, 3 sections: what happened / why it matters / what's next)
+
+RULE: If any metric missed budget, state it plainly and include one sentence on mitigation.`,
+useCase:"Monthly LP updates. Quarterly reporting. Lender covenant reporting. Fund management.",
+proTip:"Save this prompt in a Claude Project with your fund's standard voice guidelines. After 3–4 monthly runs, Claude will mirror your writing style without additional instruction."},
+
+{id:"prompt-creative-finance",title:"Prompt: Creative Financing Deal Structurer",type:"prompt",
+description:"Input deal economics and constraints and get a ranked comparison of 4+ creative financing structures — seller finance, subject-to, JV equity, private lending, DSCR refi, master lease option. Each structure includes full assumptions, DSCR, CoC, and execution risk score.",
+pricing:"Claude Pro (with /sequential-thinking for best output)",url:"https://claude.ai",
+investorEdge:"Stops you from defaulting to conventional debt when a better structure exists. Forces explicit modeling of seller finance and subject-to alternatives that most investors never calculate.",
+keyFeature:"Execution risk score (1–10) on each structure — so you're not just picking the highest IRR, you're picking the highest risk-adjusted IRR.",
+worksWith:["Claude","Sequential Thinking","Code Execution"],tags:["creative-finance","seller-finance","subject-to","prompt","deal-structure","capital-stack"],verified:true,
+promptText:`You are a creative real estate finance specialist. Design and rank financing structures for this deal.
+
+DEAL PARAMETERS:
+- Property: [ADDRESS or DESCRIPTION]
+- Purchase price: $[PRICE]
+- ARV: $[ARV]
+- Current rents (if tenanted): $[RENTS]/mo
+- Market rent (if vacant/below market): $[MARKET_RENT]/mo
+- Seller situation: [Motivated / Tired landlord / Estate / Free & clear / Has mortgage]
+- Existing debt (if any): $[BALANCE] at [%] rate, [YEARS] remaining
+- My available cash: $[CASH]
+- Target hold: [YEARS]
+- Target CoC: [%] minimum
+- Target IRR: [%] minimum
+
+GENERATE 4+ STRUCTURES — must include at minimum:
+1) Conventional bank / DSCR loan
+2) Seller financing (first or second position)
+3) Subject-to existing financing (if mortgage present)
+4) Private lender bridge + DSCR refi at [MONTHS]
++ any additional structure you identify as superior
+
+FOR EACH STRUCTURE:
+- Full assumption table (LTV, rate, term, amortization, points)
+- Monthly cash flow breakdown
+- DSCR
+- Year-1 Cash-on-Cash
+- Total cash required to close
+- 5-year IRR estimate
+- Execution risk score: 1 (easy) – 10 (complex/uncertain)
+- Key risk: one sentence on the main failure mode
+
+FINAL RANKING: Order by risk-adjusted return (not raw IRR).
+Recommend one structure with a 2-sentence rationale.`,
+useCase:"Acquisition structuring. Seller negotiation prep. Capital stack optimization. IC presentations.",
+proTip:"Pair this with /sequential-thinking: 'Use sequential thinking to explore each capital stack branch before scoring.' The reasoning chain catches errors in DSCR math before you present to a lender or seller."},
+
+{id:"prompt-str-analysis",title:"Prompt: Short-Term Rental Feasibility Analysis",type:"prompt",
+description:"Analyze a property's STR potential — platform fit, projected ADR and occupancy, regulatory risk score, seasonality exposure, and a net income comparison vs. long-term rental. Outputs a go/no-go recommendation.",
+pricing:"Claude / Perplexity for AirDNA data verification",url:"https://claude.ai",
+investorEdge:"Prevents STR acquisition mistakes by forcing explicit regulatory risk scoring before you underwrite ADR assumptions — the most common STR underwriting error.",
+keyFeature:"Side-by-side STR vs. LTR net income comparison with a regulatory risk score so the decision is explicit, not emotional.",
+worksWith:["Claude","Perplexity","AirDNA"],tags:["str","short-term-rental","airbnb","prompt","underwriting","feasibility"],verified:true,
+promptText:`Analyze the short-term rental feasibility for this property. Compare STR vs. long-term rental returns.
+
+PROPERTY DETAILS:
+- Address: [ADDRESS]
+- City/Neighborhood: [LOCATION]
+- Property type: [Cabin / Beach house / Urban condo / SFR / etc.]
+- Bedrooms / Bathrooms: [BR/BA]
+- Unique amenities: [HOT TUB / LAKE ACCESS / POOL / etc.]
+- Purchase price: $[PRICE]
+- All-in cost (purchase + furnishing + setup): $[TOTAL_COST]
+- Financing: [Cash / DSCR / Conventional] at [%] rate
+
+MARKET ASSUMPTIONS (provide what you know, model will flag gaps):
+- Estimated ADR: $[ADR]/night (or say "unknown")
+- Estimated occupancy: [%] (or say "unknown")
+- Market: [primary / secondary / tertiary STR market]
+- Nearest major demand drivers: [ATTRACTION, CITY, EVENT]
+
+LONG-TERM RENTAL BASELINE:
+- Market long-term rent: $[LTR_RENT]/mo
+- LTR vacancy assumption: [%]
+
+OUTPUT REQUIRED:
+1) REGULATORY RISK SCORE (1–10): current STR rules in [CITY/COUNTY], permit requirements, HOA flags
+2) SEASONALITY PROFILE: estimated high/low/shoulder season occupancy breakdown
+3) PLATFORM FIT: Airbnb vs. VRBO vs. direct booking recommendation with rationale
+4) STR PRO FORMA: ADR × occupancy → Gross revenue → OpEx (PM 25–30%, cleaning, supplies, utilities, insurance, platform fees) → Net operating income → Cash-on-cash
+5) LTR PRO FORMA: Gross rent → standard OpEx → Net operating income → Cash-on-cash
+6) SIDE-BY-SIDE COMPARISON TABLE
+7) GO / NO-GO VERDICT: recommend strategy with one-paragraph rationale
+
+CRITICAL: Flag any ADR or occupancy assumption you cannot verify.
+Instruct me to check AirDNA or Rabbu for that specific market before underwriting.`,
+useCase:"STR acquisition decisions. Strategy selection (STR vs. LTR). Lender STR income documentation.",
+proTip:"Before running this prompt, pull the AirDNA Market Report for the ZIP and paste the ADR, occupancy, and RevPAR data into the prompt. Verified inputs = an STR model you can actually defend to a lender or partner."}
+
 ]}
 ]};
 
