@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Excavation — The Unshakable Investor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100vh;background:#050505;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+.grad-text{background:linear-gradient(135deg,#FFD700 0%,#FFA500 50%,#FF4500 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.site-header{text-align:center;padding:1.5rem 1rem 0}
+.wordmark{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.25rem,4vw,2.1rem);letter-spacing:-.025em;text-transform:uppercase;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.subtitle{font-size:clamp(.6rem,1.8vw,.76rem);color:rgba(255,255,255,.45);letter-spacing:.25em;margin-top:.4rem;text-transform:uppercase}
+.divider{height:2px;background:linear-gradient(90deg,transparent,#FFD700,#FFA500,#FF4500,transparent);margin:.8rem 0}
+.badge-line{font-family:'Montserrat',sans-serif;font-weight:700;font-size:clamp(.57rem,1.5vw,.7rem);letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:.4rem 0;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hook{text-align:center;padding:1.4rem 1.2rem;max-width:900px;margin:0 auto}
+.hook-h{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1rem,3.5vw,1.8rem);letter-spacing:-.025em;text-transform:uppercase;line-height:1.25;margin-bottom:.65rem;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hook-sub{font-size:clamp(.87rem,2vw,1rem);color:rgba(255,255,255,.8);line-height:1.55}
+.timer-row{display:flex;justify-content:center;padding:.5rem;text-align:center}
+.timer-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.55rem;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.timer-lbl{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.52rem;letter-spacing:.2em;color:rgba(255,255,255,.3);text-transform:uppercase}
+.eyebrow-date{text-align:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.68rem;letter-spacing:.25em;color:rgba(255,165,0,.68);text-transform:uppercase;padding:.4rem 0}
+/* DIG AREA */
+.dig-area{max-width:960px;margin:.5rem auto;padding:0 1rem}
+.dig-instruction{text-align:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.65rem;letter-spacing:.18em;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:.7rem}
+.dig-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.zone{position:relative;height:160px;background:#0e0e0e;border:1px solid rgba(255,165,0,.25);border-radius:3px;overflow:hidden;cursor:crosshair;user-select:none;-webkit-tap-highlight-color:transparent}
+.zone-canvas{position:absolute;inset:0;width:100%;height:100%}
+.tablet{position:absolute;inset:6px;background:#1A1A1A;border:1px solid #FFA500;border-radius:2px;box-shadow:0 4px 32px rgba(0,0,0,.7),0 0 20px rgba(255,165,0,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.7rem;pointer-events:none;z-index:0}
+.tablet-cat{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.35rem;text-align:center}
+.tablet-val{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.35rem;letter-spacing:-.025em;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tablet-ok{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.58rem;letter-spacing:.15em;color:#4CAF50;text-transform:uppercase;margin-top:.2rem}
+.zone-progress{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-family:'Montserrat',sans-serif;font-weight:700;font-size:.58rem;letter-spacing:.12em;color:rgba(255,255,255,.35);text-transform:uppercase;z-index:2;white-space:nowrap}
+/* FORMULA */
+.formula-section{max-width:960px;margin:.8rem auto;padding:0 1rem}
+.formula-card{background:#1A1A1A;border:1px solid #FFA500;border-radius:3px;box-shadow:0 4px 32px rgba(0,0,0,.7);padding:1rem 1.25rem}
+.formula-ttl{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.58rem;letter-spacing:.25em;color:rgba(255,255,255,.38);text-transform:uppercase;margin-bottom:.65rem}
+.formula-row{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(.9rem,2.5vw,1.3rem);letter-spacing:-.025em;text-align:center;display:flex;align-items:center;justify-content:center;gap:.2rem;flex-wrap:wrap;line-height:2}
+.fv{color:rgba(255,255,255,.2);transition:all .35s}
+.fv.lit{color:#fff}
+.fo{color:rgba(255,255,255,.25)}
+.formula-prog{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.6rem;letter-spacing:.18em;color:rgba(255,165,0,.6);text-transform:uppercase;text-align:center;margin-top:.4rem;min-height:1em}
+/* VAULT CHEST */
+.vault-section{display:none;max-width:500px;margin:.8rem auto;padding:0 1rem}
+.vault-section.show{display:block}
+.vault-card{background:#1A1A1A;border:1px solid #FFA500;border-radius:3px;box-shadow:0 4px 32px rgba(0,0,0,.7);padding:1.5rem;text-align:center}
+.vault-ttl{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.58rem;letter-spacing:.25em;color:rgba(255,255,255,.38);text-transform:uppercase;margin-bottom:1rem}
+.chest-wrap{width:160px;height:120px;margin:0 auto .9rem;perspective:600px;position:relative}
+.chest-body{position:absolute;bottom:0;left:0;right:0;height:75%;background:#111;border:2px solid #FFA500;border-radius:2px 2px 3px 3px;box-shadow:inset 0 0 20px rgba(0,0,0,.8),0 0 15px rgba(255,165,0,.1)}
+.chest-lid{position:absolute;top:0;left:0;right:0;height:40%;background:#0e0e0e;border:2px solid #FFA500;border-radius:3px 3px 2px 2px;transform-origin:bottom center;transform:rotateX(0deg);will-change:transform;box-shadow:0 0 15px rgba(255,165,0,.1)}
+.chest-band{position:absolute;left:0;right:0;top:55%;height:3px;background:linear-gradient(90deg,#FFD700,#FFA500,#FF4500)}
+.chest-lock{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22px;height:22px;border:2px solid #FFA500;border-radius:2px;background:#0a0a0a}
+.chest-lock::before{content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:12px;height:10px;border:2px solid #FFA500;border-radius:50% 50% 0 0;border-bottom:none}
+.ans-input{width:100%;background:#080808;border:1.5px solid rgba(255,165,0,.42);border-radius:3px;color:#FFD700;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.45rem;text-align:center;padding:.7rem;outline:none;transition:border-color .2s;-moz-appearance:textfield;appearance:textfield;letter-spacing:.05em}
+.ans-input::-webkit-inner-spin-button,.ans-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.ans-input:focus{border-color:#FFD700;box-shadow:0 0 16px rgba(255,215,0,.1)}
+.submit-btn{width:100%;margin-top:.6rem;padding:.8rem;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);border:none;border-radius:3px;color:#050505;font-family:'Montserrat',sans-serif;font-weight:900;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;min-height:44px}
+.submit-btn:active{opacity:.9}
+.err-msg{display:none;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.66rem;letter-spacing:.15em;color:#D32F2F;text-transform:uppercase;margin-top:.4rem}
+.attempt-info{font-family:'Inter',sans-serif;font-size:.7rem;color:rgba(255,255,255,.25);margin-top:.3rem}
+/* SUCCESS */
+.success-screen{display:none;position:fixed;inset:0;background:rgba(5,5,5,.97);z-index:300;overflow-y:auto}
+.success-screen.show{display:flex;flex-direction:column;align-items:center;justify-content:center;animation:fadeUp .6s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.success-inner{max-width:560px;width:100%;text-align:center;padding:2rem 1.2rem}
+.s-h1{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(1.5rem,5vw,2.5rem);letter-spacing:-.025em;text-transform:uppercase;line-height:1.15;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.s-h2{font-family:'Montserrat',sans-serif;font-weight:900;font-size:clamp(.9rem,2.8vw,1.3rem);text-transform:uppercase;color:rgba(255,255,255,.6);margin:.35rem 0 1rem}
+.s-stats{display:flex;justify-content:center;gap:1.4rem;margin:1.1rem 0;flex-wrap:wrap}
+.s-stat{background:#1A1A1A;border:1px solid rgba(255,165,0,.28);border-radius:3px;padding:.8rem 1.25rem;text-align:center}
+.s-stat-n{font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.4rem;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.s-stat-l{font-family:'Montserrat',sans-serif;font-weight:700;font-size:.5rem;letter-spacing:.2em;color:rgba(255,255,255,.28);text-transform:uppercase;margin-top:.2rem}
+.s-badge{display:inline-block;margin:.6rem 0;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.reward-txt{font-family:'Inter',sans-serif;font-size:.86rem;color:rgba(255,255,255,.53);line-height:1.6;margin:.9rem 0}
+.cta-btn{display:inline-flex;align-items:center;background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);color:#050505;font-family:'Montserrat',sans-serif;font-weight:900;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;padding:.9rem 1.8rem;border-radius:3px;margin:.8rem 0;min-height:44px}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(255,165,0,.3)}
+.share-row{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:.8rem}
+.dl-btn{background:linear-gradient(135deg,#FFD700,#FFA500,#FF4500);color:#050505;font-family:'Montserrat',sans-serif;font-weight:900;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;border:none;padding:.66rem 1.05rem;border-radius:3px;cursor:pointer;min-height:44px}
+.sh-btn{background:transparent;color:#FFA500;font-family:'Montserrat',sans-serif;font-weight:700;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;border:1px solid #FFA500;padding:.66rem 1.05rem;border-radius:3px;cursor:pointer;min-height:44px}
+.site-footer{text-align:center;padding:1.4rem 1rem;font-size:.67rem;color:rgba(255,255,255,.18);border-top:1px solid rgba(255,255,255,.05);margin-top:1.5rem}
+@media(max-width:560px){.dig-grid{grid-template-columns:1fr 1fr}.zone{height:140px}.tablet-val{font-size:1.1rem}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wordmark">THE UNSHAKABLE INVESTOR</div>
+  <div class="subtitle">DR. TOBY POTTER — GLOBAL INTEGRITY FINANCE</div>
+  <div class="divider"></div>
+  <div class="badge-line">7,000+ INVESTORS · $1.8B FUNDED · INC. 5000 TOP 100</div>
+</header>
+
+<div class="hook">
+  <div class="hook-h">IF YOU'RE A TRUE REAL ESTATE INVESTOR, YOU CAN FIND THE PROFIT ON THIS DEAL.</div>
+  <div class="hook-sub">Toby Potter has funded $1.8B in real estate transactions. He spotted the profit in 30 seconds. Can you?</div>
+</div>
+
+<div class="timer-row">
+  <div><div class="timer-val" id="timer">00:00</div><div class="timer-lbl">TIME ELAPSED</div></div>
+</div>
+<div class="eyebrow-date">TODAY'S DEAL · <span id="today-date"></span></div>
+
+<div class="dig-area">
+  <div class="dig-instruction">EXCAVATE EACH SITE — CLICK OR DRAG TO UNCOVER THE BURIED DATA</div>
+  <div class="dig-grid" id="dig-grid"></div>
+</div>
+
+<div class="formula-section">
+  <div class="formula-card">
+    <div class="formula-ttl">EXCAVATION LOG — UNCOVER ALL 4 FIGURES</div>
+    <div class="formula-row">
+      <span class="fv" id="fv-arv">$___,___</span>
+      <span class="fo">−</span>
+      <span class="fv" id="fv-pp">$___,___</span>
+      <span class="fo">−</span>
+      <span class="fv" id="fv-rc">$__,___</span>
+      <span class="fo">−</span>
+      <span class="fv" id="fv-sc">$__,___</span>
+      <span class="fo">=</span>
+      <span class="fv" id="fv-result">?</span>
+    </div>
+    <div class="formula-prog" id="formula-prog"></div>
+  </div>
+</div>
+
+<div class="vault-section" id="vault-section">
+  <div class="vault-card">
+    <div class="vault-ttl">EXCAVATION COMPLETE — OPEN THE VAULT</div>
+    <div class="chest-wrap">
+      <div class="chest-body"><div class="chest-band"></div><div class="chest-lock"></div></div>
+      <div class="chest-lid" id="chest-lid"></div>
+    </div>
+    <input type="number" class="ans-input" id="ans-input" placeholder="Enter profit ($)" inputmode="numeric" autocomplete="off">
+    <button class="submit-btn" id="submit-btn">OPEN THE CHEST</button>
+    <div class="err-msg" id="err-msg">INCORRECT PROFIT — RECHECK YOUR EXCAVATION DATA</div>
+    <div class="attempt-info" id="attempt-info">Attempt 1</div>
+  </div>
+</div>
+
+<footer class="site-footer">© 2026 The Unshakable Investor | Global Integrity Finance | go.theunshakableinvestor.com</footer>
+
+<div class="success-screen" id="success-screen">
+  <div class="success-inner">
+    <div class="wordmark" style="font-size:clamp(.95rem,3vw,1.4rem)">THE UNSHAKABLE INVESTOR</div>
+    <div class="divider"></div>
+    <div class="s-h1">YOU FOUND THE DEAL.</div>
+    <div class="s-h2">TOBY KNEW YOU COULD.</div>
+    <div class="s-stats">
+      <div class="s-stat"><div class="s-stat-n" id="s-time">0:00</div><div class="s-stat-l">SOLVED IN</div></div>
+      <div class="s-stat"><div class="s-stat-n" id="s-att">1</div><div class="s-stat-l">ATTEMPT(S)</div></div>
+    </div>
+    <div class="s-badge" id="s-badge">ELITE INVESTOR</div>
+    <div class="divider"></div>
+    <div class="reward-txt">133 AI Tools · 44 Prompt Templates · 25 Editor Picks<br><span style="font-size:.78rem;color:rgba(255,255,255,.33)">Every AI tool Dr. Toby Potter uses to analyze deals — free.</span></div>
+    <a href="https://go.theunshakableinvestor.com/unshakable-ai-vault" class="cta-btn" target="_blank">CLAIM YOUR FREE AI VAULT ACCESS →</a>
+    <div class="share-row">
+      <button class="dl-btn" id="dl-btn">DOWNLOAD YOUR PROOF</button>
+      <button class="sh-btn" id="sh-btn">SHARE THE CHALLENGE</button>
+    </div>
+    <div class="divider" style="margin-top:1rem"></div>
+    <div class="badge-line">7,000+ INVESTORS · $1.8B FUNDED · INC. 5000 TOP 100</div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+function mkRng(seed){var s=0;for(var i=0;i<seed.length;i++)s=(s*31+seed.charCodeAt(i))>>>0;return function(){s=((s^(s<<13))^(s>>17)^(s<<5))>>>0;return s/4294967296}}
+function pad(n){return String(n).padStart(2,'0')}
+
+var DEAL=[
+  {key:'arv',cat:'MARKET VALUE (ARV)',val:310000,fmt:'$310,000',fid:'fv-arv'},
+  {key:'pp', cat:'ACQUISITION PRICE',val:185000,fmt:'$185,000',fid:'fv-pp'},
+  {key:'rc', cat:'REPAIR BUDGET',val:47000,fmt:'$47,000',fid:'fv-rc'},
+  {key:'sc', cat:'EXIT COSTS (8%)',val:24800,fmt:'$24,800',fid:'fv-sc'}
+];
+var CORRECT=53200;
+var state={collected:{},attempts:1,start:Date.now(),solved:false,solvedSecs:0};
+var zoneData=[];
+
+var today=new Date();
+document.getElementById('today-date').textContent=today.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).toUpperCase();
+var rng=mkRng(today.toDateString());
+var order=[0,1,2,3];
+for(var i=3;i>0;i--){var j=Math.floor(rng()*(i+1));var t=order[i];order[i]=order[j];order[j]=t}
+var items=order.map(function(k){return DEAL[k]});
+
+// Timer
+var timerInt=setInterval(function(){
+  if(state.solved)return;
+  var s=Math.floor((Date.now()-state.start)/1000);
+  document.getElementById('timer').textContent=pad(Math.floor(s/60))+':'+pad(s%60);
+},500);
+
+// Render dig zones
+var grid=document.getElementById('dig-grid');
+items.forEach(function(deal,i){
+  var zone=document.createElement('div');zone.className='zone';
+  zone.innerHTML='<div class="tablet"><div class="tablet-cat">'+deal.cat+'</div><div class="tablet-val grad-text">'+deal.fmt+'</div><div class="tablet-ok">EXCAVATED</div></div>'
+    +'<canvas class="zone-canvas" id="zc'+i+'"></canvas>'
+    +'<div class="zone-progress" id="zp'+i+'">CLICK TO DIG</div>';
+  grid.appendChild(zone);
+
+  var cvs=document.getElementById('zc'+i);
+  var ctx=cvs.getContext('2d');
+  var W=0,H=0;
+  var clicks=0,needed=8;
+  var revealed=false;
+  var positions=[];
+
+  function resize(){
+    W=zone.clientWidth;H=zone.clientHeight;
+    cvs.width=W;cvs.height=H;
+    if(!revealed)drawDirt(ctx,W,H,positions);
+  }
+  setTimeout(resize,50);
+
+  function drawDirt(ctx,w,h,holes){
+    ctx.fillStyle='#0e0e0e';ctx.fillRect(0,0,w,h);
+    // Noise texture
+    for(var p=0;p<2000;p++){
+      var px=Math.random()*w,py=Math.random()*h;
+      var gray=Math.floor(Math.random()*30+10);
+      ctx.fillStyle='rgba('+gray+','+gray+','+gray+',0.8)';
+      ctx.fillRect(px,py,1,1);
+    }
+    // Scratch lines
+    ctx.strokeStyle='rgba(255,255,255,0.03)';
+    for(var l=0;l<15;l++){
+      ctx.beginPath();ctx.moveTo(Math.random()*w,Math.random()*h);ctx.lineTo(Math.random()*w,Math.random()*h);ctx.stroke();
+    }
+    // Erased holes
+    holes.forEach(function(pos){
+      ctx.save();ctx.globalCompositeOperation='destination-out';
+      var grad=ctx.createRadialGradient(pos.x,pos.y,0,pos.x,pos.y,pos.r);
+      grad.addColorStop(0,'rgba(0,0,0,1)');grad.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=grad;ctx.beginPath();ctx.arc(pos.x,pos.y,pos.r,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  function dig(x,y){
+    if(revealed)return;
+    clicks++;
+    positions.push({x:x,y:y,r:Math.min(W,H)*0.18});
+    drawDirt(ctx,W,H,positions);
+    var pct=Math.min(100,Math.round(clicks/needed*100));
+    document.getElementById('zp'+i).textContent=pct+'% EXCAVATED';
+    if(clicks>=needed&&!revealed){
+      revealed=true;
+      revealTablet(deal,zone,i);
+    }
+  }
+
+  zone.addEventListener('pointerdown',function(e){
+    e.preventDefault();
+    var rect=zone.getBoundingClientRect();
+    dig(e.clientX-rect.left,e.clientY-rect.top);
+  });
+  var dragging=false;
+  zone.addEventListener('pointermove',function(e){
+    if(e.buttons===0)return;
+    e.preventDefault();
+    var rect=zone.getBoundingClientRect();
+    dig(e.clientX-rect.left,e.clientY-rect.top);
+  });
+
+  zoneData.push({deal:deal,canvas:cvs,revealed:false,clicks:0});
+});
+
+function revealTablet(deal,zone,i){
+  var zpEl=document.getElementById('zp'+i);
+  zpEl.textContent='EXCAVATED';zpEl.style.color='rgba(76,175,80,0.7)';
+  state.collected[deal.key]=true;
+  // Dust particles via confetti burst
+  confetti({particleCount:30,spread:50,origin:{x:(i%2===0?0.25:0.75),y:0.5},colors:['#8a7a6a','#6a5a4a','#FFD700'],shapes:['circle'],scalar:0.5});
+  var fvEl=document.getElementById(deal.fid);
+  fvEl.classList.add('lit');fvEl.textContent=deal.fmt;
+  gsap.from(fvEl,{y:-8,opacity:0,duration:.38,ease:'back.out'});
+  var cnt=Object.keys(state.collected).length;
+  var msgs=['','1/4 UNCOVERED','2/4 UNCOVERED','3/4 UNCOVERED','ALL 4 UNCOVERED — VAULT IS OPEN'];
+  document.getElementById('formula-prog').textContent=msgs[cnt]||'';
+  if(cnt===4){
+    setTimeout(function(){
+      var vs=document.getElementById('vault-section');vs.classList.add('show');
+      gsap.from(vs,{y:28,opacity:0,duration:.55,ease:'back.out'});
+    },350);
+  }
+}
+
+// Vault
+document.getElementById('ans-input').addEventListener('keydown',function(e){if(e.key==='Enter')checkAnswer()});
+document.getElementById('submit-btn').addEventListener('pointerdown',function(e){e.preventDefault();checkAnswer()});
+
+function checkAnswer(){
+  if(state.solved)return;
+  var v=parseInt(document.getElementById('ans-input').value)||0;
+  if(v===CORRECT){openChest()}else{wrongAnswer()}
+}
+function wrongAnswer(){
+  state.attempts++;
+  document.getElementById('attempt-info').textContent='Attempt '+state.attempts;
+  var err=document.getElementById('err-msg');err.style.display='block';
+  gsap.from(err,{opacity:0,duration:.18});
+  setTimeout(function(){err.style.display='none'},2800);
+  gsap.to('#vault-section',{x:-9,duration:.06,repeat:6,yoyo:true,ease:'none',onComplete:function(){gsap.set('#vault-section',{x:0})}});
+}
+function openChest(){
+  state.solved=true;
+  state.solvedSecs=Math.floor((Date.now()-state.start)/1000);
+  clearInterval(timerInt);
+  gsap.to('#chest-lid',{rotateX:-120,duration:.8,ease:'elastic.out(1,0.5)',transformPerspective:600,onComplete:function(){
+    confetti({particleCount:200,spread:100,origin:{y:.45},colors:['#FFD700','#FFA500','#FF4500','#fff']});
+    setTimeout(showSuccess,600);
+  }});
+}
+function showSuccess(){
+  var s=state.solvedSecs;
+  document.getElementById('s-time').textContent=pad(Math.floor(s/60))+':'+pad(s%60);
+  document.getElementById('s-att').textContent=state.attempts;
+  document.getElementById('s-badge').textContent=s<60?'ELITE INVESTOR':s<120?'SHARP EYE':'YOU GOT THERE';
+  document.getElementById('success-screen').classList.add('show');
+}
+
+document.getElementById('dl-btn').addEventListener('pointerdown',function(e){e.preventDefault();genCard()});
+document.getElementById('sh-btn').addEventListener('pointerdown',function(e){
+  e.preventDefault();
+  var txt='Excavated the $53,200 profit on The Unshakable Investor deal. Can you dig it? https://go.theunshakableinvestor.com/unshakable-ai-vault';
+  if(navigator.share){navigator.share({title:'The Unshakable Investor',text:txt,url:'https://go.theunshakableinvestor.com/unshakable-ai-vault'})}
+  else if(navigator.clipboard){navigator.clipboard.writeText(txt)}
+});
+function genCard(){
+  var c=document.createElement('canvas');c.width=1080;c.height=1080;
+  var ctx=c.getContext('2d');
+  ctx.fillStyle='#050505';ctx.fillRect(0,0,1080,1080);
+  var g=ctx.createLinearGradient(0,0,1080,1080);g.addColorStop(0,'#FFD700');g.addColorStop(.5,'#FFA500');g.addColorStop(1,'#FF4500');
+  ctx.strokeStyle=g;ctx.lineWidth=8;ctx.strokeRect(4,4,1072,1072);
+  ctx.textAlign='center';
+  ctx.fillStyle='#FFA500';ctx.font='700 46px Montserrat,sans-serif';ctx.fillText('THE UNSHAKABLE INVESTOR',540,110);
+  ctx.fillStyle='#fff';ctx.font='900 76px Montserrat,sans-serif';ctx.fillText('I CRACKED THE DEAL.',540,265);
+  ctx.fillStyle=g;ctx.font='900 60px Montserrat,sans-serif';ctx.fillText('$53,200 PROFIT FOUND.',540,382);
+  if(state.attempts===1){ctx.fillStyle='#FFD700';ctx.font='700 30px Montserrat,sans-serif';ctx.fillText('[ FIRST ATTEMPT ]',540,445)}
+  ctx.strokeStyle=g;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(80,505);ctx.lineTo(1000,505);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.8)';ctx.font='400 32px Inter,sans-serif';
+  ctx.fillText("If you're a TRUE real estate investor,",540,585);ctx.fillText("can you find the profit?",540,630);
+  ctx.fillStyle='rgba(255,255,255,0.45)';ctx.font='400 24px Inter,sans-serif';ctx.fillText('go.theunshakableinvestor.com/unshakable-ai-vault',540,700);
+  var s=state.solvedSecs;
+  ctx.fillStyle='rgba(255,255,255,0.22)';ctx.font='700 20px Montserrat,sans-serif';ctx.fillText('SOLVED IN '+pad(Math.floor(s/60))+':'+pad(s%60)+' · '+state.attempts+' ATTEMPT(S)',540,795);
+  c.toBlob(function(blob){var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='excavation-deal-proof.png';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(function(){URL.revokeObjectURL(url)},1000)});
+}
+})();
+</script>
+</body>
+</html>
