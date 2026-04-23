@@ -1,0 +1,3329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal Analysis Prompt Library — The Unshakable Investor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0B0B0F;--bg-card:rgba(255,215,0,0.04);--bg-card-hover:rgba(255,215,0,0.08);
+  --border:rgba(255,215,0,0.12);--border-hover:rgba(255,215,0,0.3);
+  --gold:#FFD700;--gold-mid:#FFA500;--gold-deep:#FF4500;
+  --text:#F0EDE8;--text-muted:#9A9590;--text-dim:#666;
+  --green:#22C55E;--blue:#3B82F6;--purple:#A855F7;--red:#EF4444;
+  --font-display:'Montserrat',sans-serif;--font-body:'Inter',sans-serif;
+  --font-accent:'Plus Jakarta Sans',sans-serif;--font-mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(11,11,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem}
+.topbar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-family:var(--font-display);font-weight:800;font-size:14px;letter-spacing:.18em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),var(--gold-mid));-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.nav-pills::-webkit-scrollbar{display:none}
+.nav-pill{font-family:var(--font-accent);font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;white-space:nowrap;transition:all .2s;background:transparent;text-decoration:none}
+.nav-pill:hover,.nav-pill.active{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,0.08)}
+.search-box{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:6px 12px;width:220px}
+.search-box input{background:none;border:none;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;width:100%}
+.search-box svg{width:16px;height:16px;stroke:var(--text-muted);flex-shrink:0}
+
+/* HERO */
+.hero{text-align:center;padding:5rem 2rem 3rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(255,165,0,0.12),transparent 70%);pointer-events:none}
+.hero h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.1;letter-spacing:-0.02em;background:linear-gradient(135deg,var(--gold),var(--gold-mid),var(--gold-deep));-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:1rem;position:relative}
+.hero p{color:var(--text-muted);font-size:16px;max-width:640px;margin:0 auto 2rem;position:relative}
+.stat-row{display:flex;justify-content:center;gap:3rem;position:relative}
+.stat{text-align:center}
+.stat-num{font-family:var(--font-display);font-weight:800;font-size:28px;background:linear-gradient(135deg,var(--gold),var(--gold-mid));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;font-family:var(--font-accent)}
+
+/* FILTERS */
+.filters{max-width:1200px;margin:0 auto;padding:1rem 2rem;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-btn{font-family:var(--font-accent);font-size:11px;font-weight:600;padding:5px 12px;border-radius:16px;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;transition:all .2s;background:transparent;text-transform:uppercase;letter-spacing:.06em}
+.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,0.06)}
+.filter-btn[data-level="beginner"].active{border-color:var(--green);color:var(--green);background:rgba(34,197,94,0.08)}
+.filter-btn[data-level="intermediate"].active{border-color:var(--blue);color:var(--blue);background:rgba(59,130,246,0.08)}
+.filter-btn[data-level="advanced"].active{border-color:var(--purple);color:var(--purple);background:rgba(168,85,247,0.08)}
+.filter-label{font-size:11px;color:var(--text-dim);font-family:var(--font-accent);letter-spacing:.06em;text-transform:uppercase;margin-right:4px}
+
+/* SECTIONS */
+.section{max-width:1200px;margin:0 auto;padding:2rem}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;scroll-margin-top:80px}
+.section-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(255,215,0,0.08);border:1px solid var(--border)}
+.section-title{font-family:var(--font-display);font-weight:800;font-size:22px;color:var(--text)}
+.section-count{font-family:var(--font-mono);font-size:12px;color:var(--text-dim);background:rgba(255,255,255,0.04);padding:2px 8px;border-radius:10px}
+
+/* PROMPT CARDS */
+.prompt-grid{display:grid;grid-template-columns:1fr;gap:16px}
+.prompt-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .25s}
+.prompt-card:hover{border-color:var(--border-hover);background:var(--bg-card-hover)}
+.prompt-card.hidden{display:none}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;gap:12px}
+.card-title-area{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.card-number{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);background:rgba(255,255,255,0.04);padding:2px 8px;border-radius:6px;flex-shrink:0}
+.card-title{font-family:var(--font-accent);font-weight:600;font-size:14px;color:var(--text)}
+.card-badges{display:flex;gap:6px;flex-shrink:0}
+.badge{font-family:var(--font-accent);font-size:10px;font-weight:600;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.04em}
+.badge-beginner{color:var(--green);border:1px solid rgba(34,197,94,0.3);background:rgba(34,197,94,0.06)}
+.badge-intermediate{color:var(--blue);border:1px solid rgba(59,130,246,0.3);background:rgba(59,130,246,0.06)}
+.badge-advanced{color:var(--purple);border:1px solid rgba(168,85,247,0.3);background:rgba(168,85,247,0.06)}
+.badge-toby{color:var(--gold);border:1px solid rgba(255,215,0,0.3);background:rgba(255,215,0,0.06)}
+.badge-generic{color:var(--text-muted);border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04)}
+.expand-icon{color:var(--text-dim);transition:transform .2s;flex-shrink:0}
+.prompt-card.open .expand-icon{transform:rotate(180deg)}
+.card-body{display:none;padding:0 20px 20px}
+.prompt-card.open .card-body{display:block}
+.prompt-context{font-size:13px;color:var(--text-muted);margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.prompt-block{position:relative;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:16px;margin-bottom:10px}
+.prompt-block-label{font-family:var(--font-accent);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.prompt-block-label.toby-label{color:var(--gold)}
+.prompt-block-label.generic-label{color:var(--text-muted)}
+.prompt-text{font-family:var(--font-mono);font-size:13px;line-height:1.7;color:var(--text);white-space:pre-wrap;word-break:break-word}
+.copy-btn{position:absolute;top:10px;right:10px;background:rgba(255,215,0,0.1);border:1px solid var(--border);color:var(--gold);font-family:var(--font-accent);font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px}
+.copy-btn:hover{background:rgba(255,215,0,0.2);border-color:var(--gold)}
+.copy-btn.copied{background:rgba(34,197,94,0.15);border-color:var(--green);color:var(--green)}
+.prompt-tip{font-size:12px;color:var(--text-dim);font-style:italic;margin-top:8px;padding-left:12px;border-left:2px solid rgba(255,215,0,0.2)}
+
+/* FOOTER */
+.footer{text-align:center;padding:4rem 2rem 2rem;border-top:1px solid var(--border);margin-top:3rem}
+.footer p{font-size:12px;color:var(--text-dim);font-family:var(--font-accent)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .topbar-inner{flex-wrap:wrap;height:auto;padding:12px 0;gap:8px}
+  .search-box{width:100%;order:3}
+  .nav-pills{order:2;width:100%}
+  .stat-row{flex-direction:column;gap:1rem}
+  .card-badges{flex-wrap:wrap}
+  .filters{padding:1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">Unshakable Investor</div>
+    <nav class="nav-pills">
+      <a class="nav-pill active" href="#" data-cat="all">All</a>
+      <a class="nav-pill" href="#arv" data-cat="arv">ARV &amp; Comps</a>
+      <a class="nav-pill" href="#rehab" data-cat="rehab">Rehab</a>
+      <a class="nav-pill" href="#offer" data-cat="offer">Offer &amp; Negotiation</a>
+      <a class="nav-pill" href="#funding" data-cat="funding">Funding &amp; Exit</a>
+      <a class="nav-pill" href="#market" data-cat="market">Market Analysis</a>
+      <a class="nav-pill" href="#diligence" data-cat="diligence">Due Diligence</a>
+      <a class="nav-pill" href="#compare" data-cat="compare">Deal Comparison</a>
+    </nav>
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Search prompts...">
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Deal Analysis Prompt Library</h1>
+  <p>55 ready-to-use AI prompts for analyzing fix-and-flip deals. Built on Toby Potter's methodology. Copy, paste, close.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num">55</div><div class="stat-label">Prompts</div></div>
+    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Categories</div></div>
+    <div class="stat"><div class="stat-num">2</div><div class="stat-label">Versions Each</div></div>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters">
+  <span class="filter-label">Skill Level:</span>
+  <button class="filter-btn active" data-level="all">All Levels</button>
+  <button class="filter-btn" data-level="beginner">Beginner</button>
+  <button class="filter-btn" data-level="intermediate">Intermediate</button>
+  <button class="filter-btn" data-level="advanced">Advanced</button>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 1: ARV & COMPS -->
+<!-- ============================================ -->
+<div class="section" id="arv" data-category="arv">
+  <div class="section-header">
+    <div class="section-icon">📊</div>
+    <div class="section-title">ARV &amp; Comps Analysis</div>
+    <div class="section-count">9 prompts</div>
+  </div>
+  <div class="prompt-grid">
+
+    <!-- 1 -->
+    <div class="prompt-card" data-level="beginner" data-cat="arv">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">01</span><span class="card-title">Quick ARV Estimate from Address</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Use when you have a property address and want a fast ARV range before going deeper. Best for initial screening.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I need an ARV analysis on this property:
+
+Address: [FULL ADDRESS WITH ZIP CODE]
+Asking Price: $[PRICE]
+Property Type: Single Family / [ADJUST]
+Bed/Bath: [X] bed / [X] bath
+Approx Sq Ft: [X]
+
+Give me:
+1. Confidence Level (HIGH / MEDIUM / LOW)
+2. ARV Range (low to high)
+3. Rehab Range (Low / Medium / High scenarios)
+4. Offer Range (Lowball start and Win ceiling)
+
+Use only closed comps from the last 90 days within 1 mile. Do not use active listings or Zillow estimates for ARV.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I'm analyzing a potential fix-and-flip property and need an After Repair Value (ARV) estimate.
+
+Property Details:
+- Address: [FULL ADDRESS WITH ZIP CODE]
+- Asking Price: $[PRICE]
+- Property Type: [Single Family / Duplex / etc.]
+- Bedrooms/Bathrooms: [X/X]
+- Approximate Square Footage: [X]
+
+Please provide:
+1. An estimated ARV range based on comparable sold properties
+2. Key factors that could push the value higher or lower
+3. What comparable properties I should be looking for (square footage range, distance, recency of sale)
+4. Any red flags about this price point relative to the neighborhood
+
+Important: Only reference recently CLOSED sales (last 90 days preferred, 6 months max), not active listings or automated valuations. Closed sales within 1 mile, within 200-300 sq ft of subject, similar bed/bath count.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: Always input the full address including zip code. The AI uses this to locate comparable sales data in the correct market.</div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="arv">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">02</span><span class="card-title">Comp Validation and Adjustment</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Use after pulling comps to validate whether they're truly comparable. Catches bad comps before they wreck your ARV.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I pulled these comps for my subject property. Validate each one.
+
+Subject Property:
+- Address: [ADDRESS]
+- Sq Ft: [X] | Bed/Bath: [X/X] | Year Built: [YEAR]
+- Post-rehab condition target: [Describe finish level]
+
+Comp 1: [ADDRESS] - Sold $[X] on [DATE] - [SQ FT] sqft - [BED/BATH]
+Comp 2: [ADDRESS] - Sold $[X] on [DATE] - [SQ FT] sqft - [BED/BATH]
+Comp 3: [ADDRESS] - Sold $[X] on [DATE] - [SQ FT] sqft - [BED/BATH]
+Comp 4: [ADDRESS] - Sold $[X] on [DATE] - [SQ FT] sqft - [BED/BATH]
+Comp 5: [ADDRESS] - Sold $[X] on [DATE] - [SQ FT] sqft - [BED/BATH]
+
+For each comp, tell me:
+1. Is this truly comparable? (YES / MARGINAL / NO)
+2. What adjustments are needed? (size, condition, age, lot, amenities)
+3. Adjusted $/sqft after adjustments
+4. Should this comp be kept or dropped?
+
+Then give me the adjusted ARV range using only the valid comps. Flag if any comp is the highest-priced home in its neighborhood.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I have 5 comparable sales for a fix-and-flip property. Help me validate whether each comp is truly comparable and calculate an adjusted ARV.
+
+My Subject Property:
+- Address: [ADDRESS]
+- Square Footage: [X] | Bed/Bath: [X/X] | Year Built: [YEAR]
+- After rehab, this will be: [describe intended finish level]
+
+Here are my comps (all closed sales):
+1. [ADDRESS] — Sold $[X] on [DATE] — [SQ FT] sqft — [BED/BATH]
+2. [ADDRESS] — Sold $[X] on [DATE] — [SQ FT] sqft — [BED/BATH]
+3. [ADDRESS] — Sold $[X] on [DATE] — [SQ FT] sqft — [BED/BATH]
+4. [ADDRESS] — Sold $[X] on [DATE] — [SQ FT] sqft — [BED/BATH]
+5. [ADDRESS] — Sold $[X] on [DATE] — [SQ FT] sqft — [BED/BATH]
+
+For each comp:
+- Rate comparability (Strong / Acceptable / Weak / Drop)
+- List needed adjustments (square footage, condition, age, lot size, amenities)
+- Calculate adjusted price per square foot
+- Note if it crossed a freeway, railroad, or school district boundary from the subject
+
+Give me a final adjusted ARV range using only the strong and acceptable comps.</div>
+        </div>
+        <div class="prompt-tip">Never use the highest-priced home in the neighborhood as your target ARV. If your rehabbed property would be the most expensive on the block, your ARV is likely optimistic.</div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="prompt-card" data-level="beginner" data-cat="arv">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">03</span><span class="card-title">The 30-Second Deal Filter</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Your first pass on any lead. Quick yes/no/maybe before you spend real time. Run 3+ of these per day.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Quick screen this deal in 30 seconds:
+
+Address: [FULL ADDRESS]
+Asking: $[PRICE]
+Condition: [Brief description — e.g., "needs full rehab, roof looks bad, vacant 2 years"]
+Source: [Wholesaler / Direct to seller / MLS / Driving for dollars]
+
+Answer these 3 questions only:
+1. Does this meet a standard fix-and-flip buy box? (location, property type, price range for the market)
+2. Is there a plausible path to $30K+ net profit at first glance?
+3. Can I identify at least two profitable exit strategies? (flip, hold, wholesale)
+
+Give me: PURSUE / PASS / NEEDS MORE INFO
+One sentence explaining why.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I need a quick pass/fail screen on this potential deal:
+
+Property: [FULL ADDRESS]
+Asking Price: $[PRICE]
+Condition Notes: [Brief description]
+How I Found It: [Source]
+
+Based on general market knowledge for this zip code, give me a quick assessment:
+1. Does the asking price leave room for a profitable flip?
+2. Are there likely comparable sales supporting an ARV significantly above the asking + estimated rehab?
+3. What exit strategies could work? (flip, rental, wholesale)
+
+Verdict: WORTH ANALYZING / LIKELY PASS / NEED MORE DATA
+Keep the answer to 3-4 sentences max.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="arv">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">04</span><span class="card-title">Thin Market / Rural ARV Analysis</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Rural and small-town markets have fewer comps. This prompt forces conservative ARV assumptions when data is thin.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">This property is in a rural / thin market where comps are sparse:
+
+Address: [FULL ADDRESS]
+Market Context: [Small town, rural county, low transaction volume]
+Asking: $[PRICE]
+Property: [SQ FT] sqft, [BED/BATH], built [YEAR]
+
+I need a conservative ARV analysis. Rules for thin markets:
+1. Extend comp search to 2-3 mile radius if needed
+2. Go back up to 6 months for closed sales
+3. Apply a 5-10% DISCOUNT to your ARV estimate due to thin data
+4. Flag if fewer than 3 valid comps exist — that means insufficient data to make an offer
+5. Note the average days on market for sold comps (DOM affects holding cost estimates)
+6. Assess: is this market "cattle or people"? (Low density = long DOM = hard exit)
+
+Give me the ARV range with explicit confidence level and note how many valid comps you found.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I'm evaluating a property in a low-transaction-volume market where comparable sales are limited:
+
+Address: [FULL ADDRESS]
+Asking Price: $[PRICE]
+Details: [SQ FT] sqft, [BED/BATH], built [YEAR]
+Market: [Describe — rural, small town, etc.]
+
+Help me estimate the ARV with these constraints:
+- Widen the comp search radius to 2-3 miles
+- Accept comps up to 6 months old
+- Apply conservative assumptions since data is thin
+- Note how many valid comps you can find
+- If fewer than 3 solid comps exist, flag that ARV confidence is low
+- Estimate average days on market for this area
+
+Give me a conservative ARV range and your confidence level (High / Medium / Low / Insufficient Data).</div>
+        </div>
+        <div class="prompt-tip">In thin markets, be MORE conservative, not less. When you can't find 3-5 comparable closed sales, you don't have enough information to make an offer.</div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="prompt-card" data-level="advanced" data-cat="arv">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">05</span><span class="card-title">ARV Stress Test — 3 Scenarios</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Run this after you have a base ARV. Tests whether the deal survives a market downturn. Required before committing capital.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Stress test this deal under 3 scenarios:
+
+Property: [ADDRESS]
+Base ARV: $[X]
+Rehab Budget (medium): $[X]
+Acquisition Price: $[X]
+Estimated Hold Time: [X] months
+Hard Money Rate: [X]%
+
+Scenario 1 — BASE CASE:
+ARV as stated, rehab on budget, hold time as estimated
+
+Scenario 2 — PESSIMISTIC:
+ARV drops 10%, hold time adds 6 months, interest rate +2%, rehab runs to HIGH estimate
+
+Scenario 3 — OPTIMISTIC:
+ARV up 5%, hold time minus 1 month, rehab comes in at LOW estimate
+
+For each scenario, calculate:
+- Total investment (acquisition + rehab + carrying costs + closing/selling costs at 8-10% of ARV)
+- Net profit or loss
+- ROI percentage
+- Does the deal survive scenario 2? YES / NO
+
+The deal must survive the pessimistic scenario. If it doesn't, what price would I need to buy at for it to work?</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I need to stress test a fix-and-flip deal under three scenarios before I commit:
+
+Property Details:
+- ARV Estimate: $[X]
+- Purchase Price: $[X]
+- Rehab Budget: $[X]
+- Expected Hold Time: [X] months
+- Financing Rate: [X]%
+
+Run these three scenarios:
+1. Base Case: All estimates hold as planned
+2. Worst Case: ARV drops 10%, hold time extends 6 months, rehab runs 25% over budget, interest rate increases 2%
+3. Best Case: ARV increases 5%, hold time shortens by 1 month, rehab comes in 15% under budget
+
+For each, calculate total costs (acquisition + rehab + carrying + selling costs at 8-10% of sale price) and net profit.
+
+Key question: Does this deal still make at least $15K in the worst case scenario? If not, what would my purchase price need to be?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="prompt-card" data-level="advanced" data-cat="arv">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">06</span><span class="card-title">Price Per Square Foot Neighborhood Map</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Maps $/sqft patterns across a neighborhood to identify pricing ceilings and micro-market trends. Essential before setting your ARV target.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Build me a $/sqft map for this neighborhood:
+
+Subject Property Address: [FULL ADDRESS]
+Search Radius: 0.5 mile (extend to 1 mile if needed)
+Time Period: Last 6 months closed sales
+
+Show me:
+1. Every closed sale with: address, sale price, sqft, $/sqft, date, bed/bath
+2. Sort by $/sqft from highest to lowest
+3. What is the ceiling $/sqft in this neighborhood?
+4. What is the floor $/sqft?
+5. Where does my subject property fit after rehab? (top quartile, middle, bottom)
+6. Is there a clear dividing line (street, highway, railroad) that splits pricing?
+7. Would my rehabbed property be the most expensive home in this area? If yes, my ARV is optimistic.
+
+Give me the data as a table, then your conclusion on realistic $/sqft for my subject after rehab.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me understand the price-per-square-foot landscape in a neighborhood where I'm considering a flip:
+
+Subject Property: [FULL ADDRESS]
+
+Please analyze recent closed sales (last 6 months) within 0.5-1 mile and show me:
+1. A table of all closed sales: address, price, square footage, $/sqft, sale date
+2. The $/sqft range (lowest to highest) in this area
+3. Whether there are natural boundaries (highways, railroads, school districts) that create pricing differences
+4. Where a fully rehabbed version of my property would sit in the pricing hierarchy
+5. Whether my property would be at or near the top of the market after rehab — if yes, flag that as a risk
+
+Summarize with a realistic $/sqft target for my ARV calculation.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="prompt-card" data-level="beginner" data-cat="arv">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">07</span><span class="card-title">ARV Sanity Check — Am I Being Optimistic?</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Challenge your own ARV before you fall in love with a deal. This prompt is designed to poke holes.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Challenge my ARV estimate. I think this property is worth $[YOUR ARV] after rehab.
+
+Property: [ADDRESS]
+Sq Ft: [X] | Bed/Bath: [X/X] | Year Built: [YEAR]
+My planned rehab: [Brief scope]
+My comps used: [List 3-5 addresses and sale prices]
+
+Act as a skeptical hard money lender reviewing my deal package. Tell me:
+1. Is my ARV the highest-priced home in this neighborhood? If yes, it's too high.
+2. Are my comps truly comparable or am I cherry-picking?
+3. What would YOU underwrite this ARV at?
+4. What's the most likely ARV if the market softens 5-10%?
+5. Am I comparing to the right post-rehab condition, or am I overestimating my finish level?
+
+Be direct. I'd rather hear the truth now than lose money later.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I need you to challenge my ARV estimate — play devil's advocate.
+
+I believe this property will be worth $[YOUR ARV] after renovation.
+
+Property: [ADDRESS]
+Size: [SQ FT] sqft | [BED/BATH] | Built [YEAR]
+Planned renovation: [Brief description]
+Comps I'm using: [List addresses and sale prices]
+
+Please critique:
+1. Are my comps truly comparable (size, condition, location, recency)?
+2. Am I using any outliers or cherry-picked high sales?
+3. Would this be the most expensive home on the block after rehab?
+4. What would a conservative appraiser likely value this at?
+5. What happens to my ARV if the market drops 5-10%?
+
+Be brutally honest. I want to find problems now, not after I've invested.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="arv">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">08</span><span class="card-title">Absorption Rate and DOM Analysis</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">How fast are homes selling in your target zip? This determines holding costs and whether you'll get stuck holding a rehabbed property.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze the absorption rate for this zip code:
+
+Zip Code: [XXXXX]
+Property Type: Single Family
+Price Range: $[LOW] to $[HIGH] (my expected ARV range)
+
+Tell me:
+1. How many homes in this price range sold in the last 90 days?
+2. How many are currently active/listed?
+3. Months of inventory (active listings / monthly sales rate)
+4. Average days on market (DOM) for sold properties in this range
+5. Is this a seller's market (<3 months), balanced (3-6), or buyer's market (>6)?
+6. Based on DOM, how many months of carrying costs should I budget?
+7. Are homes in this price range selling at, above, or below list price?
+
+I need this to calculate my carrying cost line item accurately.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me understand how quickly homes are selling in a specific market:
+
+Zip Code: [XXXXX]
+Price Range: $[LOW] — $[HIGH]
+Property Type: Single Family
+
+I need:
+1. Approximate number of homes sold in this range over the last 90 days
+2. Current active inventory in this range
+3. Months of supply (inventory / monthly sales rate)
+4. Average days on market for recent sales
+5. Market classification: seller's, balanced, or buyer's market
+6. What this means for my holding period and carrying costs on a flip
+7. Sale-to-list price ratio (are homes selling at, above, or below asking?)
+
+I'm using this data to plan my hold time and budget carrying costs accurately.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="prompt-card" data-level="advanced" data-cat="arv">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">09</span><span class="card-title">Multifamily ARV (2-20 Units)</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Multifamily (2-20 units) uses both comparable sales AND income approach. This prompt runs both methods and reconciles them.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze this multifamily property using BOTH comp-based and income-based valuation:
+
+Address: [FULL ADDRESS]
+Units: [X] units
+Unit Mix: [e.g., 4x 2bed/1bath]
+Current Rents: $[X] per unit / $[X] total monthly
+Market Rents: $[X] per unit (estimated)
+Asking Price: $[X]
+Condition: [Describe]
+
+Method 1 — Comparable Sales:
+Find similar unit-count properties sold in last 6 months within 2 miles.
+Give me $/unit and $/sqft benchmarks.
+
+Method 2 — Income Approach:
+Calculate NOI using market rents, 8% vacancy, 40% operating expenses.
+Apply cap rates of 6%, 7%, and 8% to show value range.
+
+Reconcile both methods and give me a value range.
+Is this deal viable as a flip, a value-add hold, or both?
+Does it meet a DSCR of 1.2+ if held?
+
+Note: 20 units is the max I analyze using this framework. Anything larger requires different methodology.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I need a dual-method valuation on a small multifamily property:
+
+Property: [ADDRESS]
+Unit Count: [X]
+Unit Mix: [describe — e.g., "4 two-bedroom/one-bath units"]
+Current Rents: $[X]/unit/month | Total: $[X]/month
+Estimated Market Rents: $[X]/unit/month
+Asking Price: $[X]
+Condition: [describe]
+
+Please run two valuation approaches:
+
+1. Comparable Sales Approach: Find similar-sized multifamily properties sold recently in this area. What's the $/unit and $/sqft benchmark?
+
+2. Income Approach: Calculate Net Operating Income (market rents minus 8% vacancy minus ~40% operating expenses). Then apply cap rates of 6%, 7%, and 8% to show a value range.
+
+Then:
+- Reconcile both methods into a final value range
+- Would this work better as a flip or a long-term hold?
+- If held, does it support a DSCR ratio of 1.2 or higher?</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 2: REHAB SCOPE & BUDGET -->
+<!-- ============================================ -->
+<div class="section" id="rehab" data-category="rehab">
+  <div class="section-header">
+    <div class="section-icon">🔨</div>
+    <div class="section-title">Rehab Scope &amp; Budget</div>
+    <div class="section-count">9 prompts</div>
+  </div>
+  <div class="prompt-grid">
+
+    <!-- 10 -->
+    <div class="prompt-card" data-level="beginner" data-cat="rehab">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">10</span><span class="card-title">Full Line-Item Rehab Estimate</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">The foundational rehab prompt. Never use lump sum estimates. Every line item broken out separately.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Generate a full line-item rehab estimate for this property. NO lump sums.
+
+Property: [ADDRESS]
+Sq Ft: [X] | Bed/Bath: [X/X] | Year Built: [YEAR]
+Current Condition: [Describe everything you know — roof, HVAC, plumbing, electrical, foundation, interior, etc.]
+Target Finish Level: [Cosmetic refresh / Light rehab / Medium / Full gut]
+
+Break out every line item with LOW / MEDIUM / HIGH cost scenarios:
+
+1. DEMOLITION (always separate — most commonly missed cost)
+2. Foundation repair
+3. Roof replacement/repair
+4. HVAC system
+5. Electrical (panel upgrade, rewiring)
+6. Plumbing (pipes, fixtures, water heater)
+7. Framing/structural
+8. Insulation
+9. Drywall (hang and finish)
+10. Windows and doors
+11. Flooring (specify material: LVP, tile, carpet)
+12. Kitchen (cabinets, countertops, appliances)
+13. Bathrooms (fixtures, tile, vanities)
+14. Interior paint
+15. Exterior paint / siding / trim
+16. Landscaping / curb appeal
+17. Permits and inspections
+18. GC overhead and profit (separate line)
+19. Contingency (15-25% based on scope)
+
+Show total for LOW / MEDIUM / HIGH scenarios. Use the MEDIUM estimate for offer math. Never the LOW.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Create a detailed line-item rehab budget for a fix-and-flip property. I need individual cost estimates, not a single lump sum number.
+
+Property Details:
+- Address: [ADDRESS]
+- Square Footage: [X] | Bedrooms/Bathrooms: [X/X] | Year Built: [YEAR]
+- Current Condition: [Describe what you know about the property's condition]
+- Intended Rehab Level: [Light cosmetic / Moderate / Heavy / Full gut]
+
+Please itemize the following categories with Low, Medium, and High cost estimates for each:
+- Demolition and debris removal
+- Foundation work
+- Roofing
+- HVAC replacement or repair
+- Electrical system
+- Plumbing system
+- Structural/framing
+- Insulation
+- Drywall
+- Windows and doors
+- Flooring (specify recommended materials)
+- Kitchen renovation
+- Bathroom renovation(s)
+- Interior paint
+- Exterior work (paint, siding, trim)
+- Landscaping
+- Permits and inspections
+- General contractor fee
+- Contingency (15-25%)
+
+Provide totals for all three scenarios. I'll use the Medium estimate for my offer calculations.</div>
+        </div>
+        <div class="prompt-tip">Underbidding the rehab is the most dangerous error in fix-and-flip. You can negotiate a lower acquisition price. You cannot negotiate a lower contractor bill after the walls are open.</div>
+      </div>
+    </div>
+
+    <!-- 11 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="rehab">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">11</span><span class="card-title">Photo-Based Rehab Analysis</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Upload property photos and let AI identify issues you might miss. The student who didn't do this underbid by $87K.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">[UPLOAD YOUR PROPERTY PHOTOS FIRST]
+
+Analyze these property photos for rehab scope. For each photo:
+
+1. What room/area is this?
+2. What issues do you see? (structural, cosmetic, MEP, safety)
+3. What work is required?
+4. Estimated cost range for the work identified
+5. Priority level (must-do / should-do / nice-to-have)
+
+After reviewing all photos, give me:
+- A consolidated line-item estimate based on what you can see
+- Items you CANNOT assess from photos that require in-person inspection (foundation, inside walls, under floors)
+- Red flags that suggest the rehab will be on the HIGH end
+- Recommended additional photos I should take on my next visit
+
+Do NOT estimate for things you can't see. Flag them as "requires in-person inspection."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">[UPLOAD YOUR PROPERTY PHOTOS]
+
+I'm evaluating a potential fix-and-flip. Please analyze these photos and identify:
+
+For each image:
+1. What area/room is shown
+2. Visible issues (water damage, outdated systems, structural concerns, cosmetic issues)
+3. Estimated repair/renovation cost for what you can see
+4. Whether this is a critical repair or optional upgrade
+
+After all photos:
+- Summarize total estimated costs based on visible issues
+- List what you CANNOT determine from photos (hidden mechanical, plumbing behind walls, foundation, roof condition from interior)
+- Flag any red flags that suggest major hidden problems
+- Tell me what additional photos would help (specific angles, areas, close-ups)
+
+Be conservative. If something looks questionable, assume it needs replacement, not repair.</div>
+        </div>
+        <div class="prompt-tip">One student estimated $113K for a rehab that was actually $200K+. Root cause: not using AI image analysis tools. Always upload photos.</div>
+      </div>
+    </div>
+
+    <!-- 12 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="rehab">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">12</span><span class="card-title">MEP Systems Deep Dive</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">MEPs (Mechanical, Electrical, Plumbing) are the most expensive and most commonly underestimated cost category.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Deep dive on MEP costs for this property:
+
+Property: [ADDRESS]
+Year Built: [YEAR]
+Sq Ft: [X]
+What I know about current systems:
+- HVAC: [age, type, working?]
+- Electrical: [panel size, last updated?]
+- Plumbing: [pipe material, any known issues?]
+- Water Heater: [age, type]
+
+Rules:
+- If built before 1980, assume ALL MEPs need work unless proven otherwise
+- Never let the GC lump MEP costs together — I need individual bids for each system
+
+Give me cost estimates for each:
+1. HVAC replacement (full system — specify tonnage based on sqft)
+2. Electrical panel upgrade (100A to 200A if needed)
+3. Full or partial rewiring
+4. Plumbing re-pipe (full or partial based on pipe material)
+5. Water heater replacement
+6. Any code upgrades required for properties of this vintage
+
+Show LOW / MEDIUM / HIGH for each. Flag which items are likely required vs. optional.
+Total MEP budget range.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I need a detailed analysis of the mechanical, electrical, and plumbing (MEP) costs for a property I'm evaluating:
+
+Year Built: [YEAR]
+Square Footage: [X]
+Known System Details:
+- Heating/Cooling: [What you know]
+- Electrical: [Panel size, any updates]
+- Plumbing: [Pipe material if known, any visible issues]
+- Water Heater: [Age and type if known]
+
+Please estimate costs for:
+1. HVAC: repair vs. full replacement — what triggers each?
+2. Electrical: panel upgrade, rewiring — when is each necessary?
+3. Plumbing: re-piping scenarios based on pipe material and age
+4. Water heater replacement
+5. Code compliance upgrades based on the year built
+
+For each system, provide low, medium, and high cost estimates.
+Flag which items are mandatory for habitability/safety vs. optional upgrades.
+What is the total MEP budget range I should plan for?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13 -->
+    <div class="prompt-card" data-level="beginner" data-cat="rehab">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">13</span><span class="card-title">Scope of Work (SOW) Generator</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Creates a contractor-ready SOW document you can hand to your GC for itemized bidding.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Create a Scope of Work document I can give to contractors for itemized bidding.
+
+Property: [ADDRESS]
+Sq Ft: [X] | Bed/Bath: [X/X] | Year Built: [YEAR]
+Target Finish: [Describe — rental grade, mid-range flip, high-end]
+
+Work needed (what I've identified):
+[List everything you know needs work]
+
+Format the SOW as a table with columns:
+| Line # | Category | Description of Work | Quantity/Unit | Contractor Bid $ |
+
+Leave the "Contractor Bid $" column blank for them to fill in.
+
+Include ALL 18 standard line items even if I didn't mention them — some will be "inspect and confirm no work needed."
+
+Demolition MUST be its own line item. Never combine it with another category.
+
+Add a notes section at the bottom:
+- All bids must be itemized per this SOW — no lump sum bids accepted
+- Contractor must walk the property before submitting final numbers
+- Payment structure: draw schedule tied to completion milestones
+- Change orders require written approval before work begins</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me create a Scope of Work document to give to contractors for bidding:
+
+Property: [ADDRESS]
+Size: [SQ FT] | [BED/BATH] | Built [YEAR]
+Target finish level: [describe]
+Known issues: [list everything you've identified]
+
+Create a professional SOW table with these columns:
+| Item # | Category | Description | Quantity/Unit | Bid Amount (blank) |
+
+Cover all major renovation categories:
+Demolition, foundation, roofing, HVAC, electrical, plumbing, framing, insulation, drywall, windows/doors, flooring, kitchen, bathrooms, interior paint, exterior, landscaping, permits
+
+For categories where I haven't identified specific issues, write "inspect and advise."
+
+Include contractor instructions at the bottom:
+- Itemized pricing required (no lump sums)
+- Property walkthrough required before final bid
+- Change order process
+- Milestone-based payment schedule</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14 -->
+    <div class="prompt-card" data-level="advanced" data-cat="rehab">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">14</span><span class="card-title">Contractor Bid Comparison</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Compare multiple contractor bids line by line. Identify where one bid is suspiciously low or high.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Compare these contractor bids against each other AND against market rates:
+
+Property: [ADDRESS] | [SQ FT] sqft | [CITY, STATE]
+
+Contractor A — [Name]:
+[Paste their line items and prices]
+
+Contractor B — [Name]:
+[Paste their line items and prices]
+
+Contractor C — [Name] (if available):
+[Paste their line items and prices]
+
+For each line item:
+1. Show all bids side by side
+2. Flag any bid that is >30% above or below the others (suspiciously high or low)
+3. Compare against standard $/sqft or $/unit rates for this market
+4. Note which contractor included items the others missed
+
+Summary:
+- Which bid is most complete (covers all scope)?
+- Which bid is most aligned with market rates?
+- Where is each contractor potentially cutting corners (suspiciously low)?
+- Where is each contractor potentially overcharging?
+- Which bid would you go with and why?
+
+Red flag: Any contractor who gave a lump sum instead of line items is automatically less trustworthy.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I have multiple contractor bids for a renovation project. Help me compare them:
+
+Property: [ADDRESS] | [SQ FT] sqft
+
+Bid 1: [Contractor name and their line items with prices]
+Bid 2: [Contractor name and their line items with prices]
+Bid 3 (optional): [Contractor name and their line items with prices]
+
+Please create a side-by-side comparison:
+1. Line-by-line price comparison across all bids
+2. Flag items where bids vary by more than 30%
+3. Note line items included by one contractor but missing from others
+4. Compare each line against typical market rates for this area
+5. Identify potential red flags (unrealistically low bids, missing scope)
+
+Recommend which bid appears most reliable and why.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="rehab">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">15</span><span class="card-title">Rehab Level Classifier</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Classify a property into the right rehab tier before estimating costs. Gets your baseline $/sqft right.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Classify this property's rehab level:
+
+Property: [ADDRESS]
+Year Built: [YEAR] | Sq Ft: [X]
+Condition notes: [Describe everything — roof, systems, interior, exterior, foundation]
+
+Classify into ONE of these levels:
+
+COSMETIC ($10-$25/sqft): Paint, flooring, fixtures only. Systems intact.
+LIGHT ($25-$50/sqft): + Kitchen, baths refreshed. No layout changes. Systems functional.
+MEDIUM ($50-$100/sqft): + Layout changes, roof, some systems replaced.
+HEAVY/GUT ($100-$200+/sqft): Full gut, additions, complex mechanical, structural.
+
+Tell me:
+1. Which level and why
+2. $/sqft range for this market
+3. Estimated total rehab range (sqft x $/sqft range)
+4. The ONE item most likely to push this into a higher rehab tier
+5. Recommended contingency percentage (10-15% cosmetic, 20-25% gut, 25-35% historic)
+
+Do not downplay scope. If it's borderline between two levels, classify at the HIGHER level.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Based on the property details below, classify the renovation level and estimate costs:
+
+Year Built: [YEAR] | Square Footage: [X]
+Condition: [describe what you know]
+
+Categories:
+- Cosmetic ($10-$25/sqft): Paint, flooring, fixtures
+- Light ($25-$50/sqft): Plus kitchen/bath refresh, no structural
+- Medium ($50-$100/sqft): Plus layout changes, roof, system replacements
+- Heavy ($100-$200+/sqft): Full gut, structural, complex mechanical
+
+Which level fits this property? Provide:
+1. Classification with rationale
+2. Estimated $/sqft for my market
+3. Total estimated rehab range
+4. Biggest risk item that could escalate costs
+5. Recommended contingency percentage</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 16 -->
+    <div class="prompt-card" data-level="advanced" data-cat="rehab">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">16</span><span class="card-title">Draw Schedule Builder</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Structure your contractor payments tied to milestones. Aligns with how hard money lenders fund draws.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Build a draw schedule for this rehab project:
+
+Total Rehab Budget: $[X]
+Estimated Timeline: [X] weeks/months
+Lender: [Hard money / private / self-funded]
+
+Create a milestone-based payment schedule:
+Draw 1 (10-20%): Deposit / mobilization — what must be completed
+Draw 2 (30-40%): Framing / structural / rough MEP — what must be completed
+Draw 3 (30-40%): Finishes / systems complete — what must be completed
+Draw 4 (10%): Punch list / final inspection — what must be completed
+
+For each draw:
+- Dollar amount
+- % of total budget
+- Specific deliverables that must be verified before payment
+- Estimated timeline to reach this milestone
+- Who inspects (you, lender's inspector, or both)
+
+Rules:
+- Never pay 100% upfront
+- 10% holdback until punch list is complete
+- Change orders require written approval + revised draw schedule
+- Lender draw inspections cost $100-$300 per visit — factor into carrying costs</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me create a milestone-based payment schedule for a renovation project:
+
+Total Budget: $[X]
+Timeline: [X] weeks
+Financing: [hard money / private / cash]
+
+Create 4 payment draws with:
+- Percentage and dollar amount per draw
+- Specific work that must be completed before each payment
+- Verification requirements (inspection, photos)
+- Estimated timeline to each milestone
+
+Include notes on:
+- Holdback amount for punch list completion
+- Change order approval process
+- What triggers draw inspection by the lender</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 17 -->
+    <div class="prompt-card" data-level="beginner" data-cat="rehab">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">17</span><span class="card-title">Rehab ROI Prioritizer</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Not all renovations add equal value. This tells you where your rehab dollars have the highest ROI.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I have a limited rehab budget. Prioritize my spending for maximum ARV impact:
+
+Property: [ADDRESS]
+ARV Target: $[X]
+Total Rehab Budget: $[X]
+Current Condition: [List all items that need work]
+
+Rank every renovation item by ROI:
+1. MUST DO — Required for safety, habitability, or lender approval
+2. HIGH ROI — Buyers notice, appraisers value (kitchens, baths, curb appeal)
+3. MODERATE ROI — Improves livability but doesn't move the ARV needle much
+4. LOW ROI — Nice to have but poor return on investment
+
+For each item, estimate:
+- Cost
+- Value added to ARV
+- ROI ratio (value added / cost)
+
+If my budget is tight, which items do I cut? Which items do I never cut?
+
+Rule: Focus on kitchens, bathrooms, and curb appeal — upgrades that buyers notice and appraisers value.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me prioritize renovation spending for the best return on a flip:
+
+Budget: $[X]
+Needed Work: [list items]
+Target ARV: $[X]
+
+For each renovation item, estimate:
+- Cost to complete
+- Estimated value added
+- ROI ranking (High / Medium / Low)
+- Priority (Must Do / Should Do / Optional)
+
+Which items give me the biggest bang for my buck? Which should I cut if budget is tight?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 18 -->
+    <div class="prompt-card" data-level="advanced" data-cat="rehab">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">18</span><span class="card-title">Market-Adjusted Rehab Costs</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">National averages are dangerous. This adjusts rehab estimates for your specific metro's labor and material costs.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Adjust these rehab cost estimates for my specific market:
+
+My Market: [CITY, STATE]
+Property Sq Ft: [X]
+
+I have a national-average estimate of $[X] total rehab.
+
+Line items at national averages:
+[Paste your line-item breakdown]
+
+Questions:
+1. What is the labor cost multiplier for my market vs. national average?
+2. Which specific line items cost MORE in my market? (e.g., foundation work in Texas clay soil)
+3. Which cost LESS?
+4. What's the adjusted total for my market?
+5. Are there labor shortages in my area that affect timeline and cost?
+6. Any regional code requirements that add cost? (hurricane straps, seismic, energy codes)
+
+Reference: Dallas baseline multiplier = 1.005. Adjust from there.
+Houston = 0.946, Phoenix = 1.041, NYC = 1.252, SF = 1.331.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I have a rehab estimate based on national averages. Adjust it for my local market:
+
+Market: [CITY, STATE]
+National Average Estimate: $[X]
+Line Items: [paste breakdown]
+
+Please:
+1. Apply a local cost adjustment factor
+2. Flag items that cost significantly more or less in my area
+3. Note any regional building code requirements that add cost
+4. Estimate labor availability impact on timeline
+5. Give me an adjusted total range for my market</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 3: OFFER & NEGOTIATION -->
+<!-- ============================================ -->
+<div class="section" id="offer" data-category="offer">
+  <div class="section-header">
+    <div class="section-icon">🤝</div>
+    <div class="section-title">Offer &amp; Negotiation</div>
+    <div class="section-count">8 prompts</div>
+  </div>
+  <div class="prompt-grid">
+
+    <!-- 19 -->
+    <div class="prompt-card" data-level="beginner" data-cat="offer">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">19</span><span class="card-title">MAO Calculator — Maximum Allowable Offer</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">The math behind every offer. Your starting offer and hard ceiling, calculated from real numbers.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Calculate my Maximum Allowable Offer (MAO):
+
+ARV: $[X]
+Rehab (Medium estimate): $[X]
+Hard Money Rate: [X]% | Points: [X]
+Estimated Hold Time: [X] months
+Desired Net Profit: $[X] minimum
+
+Formula: MAO = (ARV × Factor) - Rehab - Carrying Costs - Selling Costs - Profit
+
+Show me:
+1. MAO at 70% factor (conservative)
+2. MAO at 75% factor (moderate)
+3. Carrying costs breakdown (interest, insurance, taxes, utilities for hold period)
+4. Selling costs (agent commission + closing costs at 8-10% of ARV)
+5. My LOWBALL starting offer (aggressive, leaves negotiation room)
+6. My WIN ceiling (maximum I will pay — this is my hard stop)
+
+The spread between lowball and win is my negotiation runway.
+Never exceed the win number without re-running this analysis with updated data.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Calculate the maximum price I should pay for this fix-and-flip:
+
+After Repair Value (ARV): $[X]
+Estimated Rehab Cost: $[X]
+Financing: [X]% interest rate, [X] points
+Expected Hold Time: [X] months
+Minimum Profit Target: $[X]
+
+Please calculate:
+1. Maximum Allowable Offer using the 70% rule (ARV × 0.70 - rehab)
+2. MAO using the 75% rule
+3. Detailed carrying costs (monthly interest, insurance, taxes, utilities × months)
+4. Selling costs (commissions + closing at 8-10% of ARV)
+5. A recommended starting offer (aggressive but reasonable)
+6. The absolute ceiling price I should not exceed
+
+Show all math step by step so I can verify the numbers.</div>
+        </div>
+        <div class="prompt-tip">The AI's "Win" number is your hard ceiling. Start at the lowball. Negotiate up. Never go above the win number without re-running the analysis.</div>
+      </div>
+    </div>
+
+    <!-- 20 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="offer">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">20</span><span class="card-title">Seller Justification Script — "The Fluff"</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">When you need to justify your low offer to a seller. Inflate your costs in conversation, never reveal your true profit target.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me build a seller justification for my offer using "The Fluff" technique:
+
+My Internal Numbers (DO NOT share with seller):
+- Actual rehab estimate: $[X]
+- Actual expected profit: $[X]
+- My MAO / ceiling: $[X]
+- My offer: $[X]
+
+What I need to tell the seller (inflated for negotiation):
+1. Reframe my rehab estimate 50-150% higher than actual ("I'm putting $[INFLATED] into this property")
+2. Express my carrying costs (months × hard money rate)
+3. Express my selling costs (listing agent, closing costs)
+4. Express my profit as modest ("I might make $10-15K on this deal if everything goes right")
+
+Write me a natural-sounding script I can say to the seller:
+"Here's how I got to my number..."
+
+Rules:
+- NEVER reveal your actual profit target
+- NEVER reveal your actual rehab estimate
+- NEVER mention the AI tool or what it told you to offer
+- Express your offer as the result of careful analysis that barely makes the numbers work
+- Be professional and transparent about costs — just not your actual margin</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me create a professional explanation for why my offer is below asking price:
+
+Property Asking Price: $[X]
+My Offer: $[X]
+Renovation Budget: $[X]
+Holding Costs: $[X]/month for [X] months
+Selling Costs: [X]% of sale price
+
+Write a respectful but firm explanation I can give the seller that:
+1. Breaks down my costs clearly
+2. Shows this is a reasonable business decision, not a lowball insult
+3. Positions my offer as fair given the work and risk involved
+4. Acknowledges the property's value while explaining the gap
+5. Leaves room for negotiation without revealing my true ceiling
+
+Keep it conversational, not adversarial. I want the seller to understand my perspective.</div>
+        </div>
+        <div class="prompt-tip">"Never tell them what you're putting in. Always fluff it a little bit." — Toby Potter</div>
+      </div>
+    </div>
+
+    <!-- 21 -->
+    <div class="prompt-card" data-level="advanced" data-cat="offer">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">21</span><span class="card-title">Multi-Offer Option Strategy</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Present 3 offers at once. Shifts the conversation from "yes or no" to "which yes." Advanced negotiation tactic.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Build a 3-option offer strategy for this property:
+
+Property: [ADDRESS]
+Asking: $[X]
+My ARV: $[X]
+My Rehab (Medium): $[X]
+Seller Situation: [What you know — motivation, timeline, financial position]
+
+Create 3 offers that reframe from "yes or no?" to "which yes?":
+
+Option 1 — ALL CASH (lowest price):
+- Fast close (7-10 days)
+- No financing contingency
+- Proof of funds attached
+- Price: [Calculate — most aggressive]
+
+Option 2 — TRADITIONAL FINANCING (higher price):
+- 30-day close
+- Inspection contingency
+- Price: [Calculate — moderate]
+
+Option 3 — SELLER FINANCING (highest price):
+- Highest total purchase price
+- Seller carries the note (monthly income stream)
+- Terms: [Suggest rate, term, balloon]
+- Price: [Calculate — highest but structured as payments]
+
+For each option, show: my total cost, my expected profit, and why the seller might prefer it.
+Present this as: "I have three ways to make this work for both of us."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me create three different offer structures for the same property to give the seller options:
+
+Property: [ADDRESS] | Asking: $[X]
+My ARV: $[X] | Rehab: $[X]
+Seller's situation: [what you know]
+
+Option 1 — Cash (lowest price, fastest close)
+Option 2 — Financed (higher price, 30-day close)
+Option 3 — Seller financing (highest price, monthly payments to seller)
+
+For each option:
+- Calculate my offer price
+- Explain closing timeline
+- Show why the seller might prefer this option
+- Calculate my projected profit
+
+Frame all three as "Here are three ways we can make this work."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 22 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="offer">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">22</span><span class="card-title">Seller Motivation Research</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Understanding WHY a seller is selling changes your entire negotiation strategy. Research before the call.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me research the seller's motivation before I make contact:
+
+Property: [ADDRESS]
+What I know so far: [Any info — listing history, condition, ownership type]
+
+Research these angles:
+1. Listing history — was this property previously listed and pulled? Why?
+2. Ownership — individual, trust, LLC, bank-owned, estate?
+3. Likely motivation category:
+   - Inheritance/Probate (inherited, don't want it)
+   - Retirement/Liquidation (selling off portfolio)
+   - Divorce (need quick resolution)
+   - Job relocation (can't wait)
+   - Financial distress/pre-foreclosure (deadline pressure)
+   - Tired landlord (exhausted from managing tenants)
+   - Estate sale (multiple decision-makers)
+
+4. If this is a portfolio seller (retiree, investor): should I ask for their FULL inventory? (Answer: always yes)
+5. What negotiation approach works best for each motivation type?
+6. What terms matter more than price for this seller type?
+
+Give me a pre-call game plan: what to ask, what to listen for, and how to position my offer based on likely motivation.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me understand the seller's likely motivation so I can tailor my approach:
+
+Property: [ADDRESS]
+Known info: [listing history, ownership type, condition, time on market]
+
+Please analyze:
+1. What's the most likely reason they're selling?
+2. What negotiation leverage does their situation create?
+3. What terms might matter more to them than price? (speed, certainty, flexibility)
+4. What questions should I ask to confirm their motivation?
+5. How should I structure my offer based on each possible motivation?
+
+Give me a conversation framework for my first contact with this seller.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 23 -->
+    <div class="prompt-card" data-level="advanced" data-cat="offer">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">23</span><span class="card-title">Creative Deal Structure Generator</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">When a standard cash offer won't work, explore creative structures. Subject-to, seller financing, novation, lease-option.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">The standard offer won't work on this deal. Explore creative structures:
+
+Property: [ADDRESS]
+ARV: $[X] | Asking: $[X]
+Existing Mortgage: $[X] at [X]% (if known)
+Seller Situation: [Describe — free and clear? Has mortgage? Motivation?]
+Why standard offer fails: [Price gap too large? Can't qualify? etc.]
+
+Analyze these creative structures:
+
+1. SUBJECT-TO + Seller Carry-Back:
+Take over existing mortgage. Seller finances the equity gap.
+Show: monthly payment, total cost, profit projection.
+
+2. SELLER FINANCING (free and clear owners):
+Higher purchase price, seller carries the note.
+Show: suggested rate, term, balloon, monthly payment, seller's total proceeds vs. cash offer.
+
+3. LEASE-OPTION SANDWICH:
+Lease from seller with option. Sub-lease-option to tenant-buyer.
+Show: option fee spread, monthly spread, back-end profit.
+
+4. NOVATION:
+Contract to buy, substitute end-buyer before closing.
+Show: assignment fee potential, MLS retail buyer access.
+
+5. 50/50 PARTNERSHIP:
+Seller retains equity, you manage the project.
+Show: each party's contribution, profit split, exit timeline.
+
+For each: total profit, timeline, risk level (1-5), and which seller type it works best for.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">A standard purchase won't work on this deal due to a price gap. Help me explore creative alternatives:
+
+Property: [ADDRESS]
+ARV: $[X] | Asking: $[X]
+Existing Financing: [If known]
+Seller's Situation: [describe]
+Why the standard approach doesn't work: [explain]
+
+Please analyze these alternative deal structures:
+1. Subject-to existing financing
+2. Seller financing (full or partial)
+3. Lease-option
+4. Novation agreement
+5. Joint venture / partnership
+
+For each, explain: how it works, what terms to propose, projected profit, risk level, and which seller situation it fits best.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 24 -->
+    <div class="prompt-card" data-level="beginner" data-cat="offer">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">24</span><span class="card-title">Offer Email/Letter Generator</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Generate a professional offer letter that positions you as a serious, credible buyer.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Write a professional offer letter/email for this property:
+
+Property: [ADDRESS]
+Offer Price: $[X]
+Closing Timeline: [X] days
+Earnest Money: $[X]
+Financing: [Cash / Hard Money / Conventional]
+Contingencies: [Inspection period / As-is / etc.]
+
+My credentials to include:
+- [Years of experience / deals completed]
+- [Proof of funds available]
+- [Close timeline record]
+
+The letter should:
+1. Be professional and direct — not desperate or overly friendly
+2. State the offer clearly with all key terms
+3. Position me as a reliable, quick-close buyer
+4. Reference my track record or lender relationship for credibility
+5. Include a brief reason for my price (based on condition and needed repairs)
+6. Set an expiration date for the offer (48-72 hours)
+
+Do NOT include: emotional appeals, "we love your home" language, or anything that signals I'll negotiate against myself.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Write a professional offer letter for an investment property purchase:
+
+Property: [ADDRESS]
+Offer: $[X]
+Close Date: [X] days from acceptance
+Earnest Money: $[X]
+Financing Type: [describe]
+Contingencies: [list]
+My Background: [experience level, past deals, lender relationships]
+
+Make it professional, concise, and credible. Include all key terms. Add a 48-72 hour response deadline.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 25 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="offer">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">25</span><span class="card-title">Objection Handler — Seller Says No</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">When the seller rejects your offer, don't walk away. These are responses to the most common objections.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">The seller rejected my offer. Help me respond:
+
+My Offer: $[X]
+Asking Price: $[X]
+Seller's Objection: [Choose or describe]
+- "Your offer is too low"
+- "I have another offer"
+- "My realtor says it's worth more"
+- "I need at least $[X]"
+- "I'm not in a rush to sell"
+- "I want to think about it"
+- Other: [describe]
+
+Give me:
+1. A response script for this specific objection
+2. A question to ask that uncovers their real concern
+3. How to reframe without raising my price
+4. When to walk away vs. when to counter
+5. A follow-up plan if they say no today (the "embarrassing offer" often gets revisited 6-10 months later)
+
+Rules:
+- Never negotiate against myself (don't raise my offer without getting something in return)
+- Listen more than I talk (10% talking, 90% listening)
+- If they mention a realtor's valuation, use the "Realtor Test": ask them to escrow their commission on that number
+- Always leave the door open for future contact</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">A seller rejected my offer. Help me respond effectively:
+
+My Offer: $[X] | Asking: $[X]
+Their Objection: [describe what they said]
+
+Please provide:
+1. A professional response to their specific objection
+2. A follow-up question that gets to their real concern
+3. Ways to add value without raising my price (faster close, fewer contingencies, flexible terms)
+4. When I should counter vs. walk away
+5. A follow-up plan for reaching out in 30, 60, and 90 days if they decline today</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 26 -->
+    <div class="prompt-card" data-level="advanced" data-cat="offer">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">26</span><span class="card-title">Partnership Deal Structure (50/50)</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">When the seller won't come down to your price, a partnership structure can bridge the gap. Seller retains equity, you manage the project.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">The seller won't accept my price. Model a 50/50 partnership instead:
+
+Property: [ADDRESS]
+Seller's asking: $[X] | My MAO: $[X]
+ARV: $[X] | Rehab: $[X]
+The gap: $[X] (difference between asking and my MAO)
+
+Model this as a 50/50 JV:
+- Seller contributes: the property (at their asking price)
+- I contribute: rehab capital + project management + contractor oversight
+- Profit split: 50/50 after all costs
+
+Calculate:
+1. Total project cost (property at asking + rehab + carrying + selling)
+2. Projected profit at ARV
+3. Each partner's share
+4. My ROI on capital invested
+5. Seller's total proceeds vs. just selling to me at my offer price
+
+Does this make the deal viable for both parties?
+What are the risks and how should the partnership agreement be structured?</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Model a joint venture deal where the seller keeps equity instead of accepting my lower offer:
+
+Property Value (seller's price): $[X]
+My Offer (rejected): $[X]
+ARV: $[X] | Rehab: $[X]
+
+Structure a 50/50 partnership:
+- What each party contributes
+- Projected total costs and profit
+- Each party's return
+- Key terms the partnership agreement should include
+- Risks for each party
+
+Compare: seller's outcome from selling at my price vs. partnering at their price.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 4: FUNDING & EXIT -->
+<!-- ============================================ -->
+<div class="section" id="funding" data-category="funding">
+  <div class="section-header">
+    <div class="section-icon">💰</div>
+    <div class="section-title">Funding &amp; Exit Strategy</div>
+    <div class="section-count">8 prompts</div>
+  </div>
+  <div class="prompt-grid">
+
+    <!-- 27 -->
+    <div class="prompt-card" data-level="beginner" data-cat="funding">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">27</span><span class="card-title">Hard Money Loan Calculator</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Calculate exactly what hard money will cost you on a deal. Interest, points, fees, total carrying cost.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Calculate the full cost of hard money financing for this deal:
+
+Purchase Price: $[X]
+Rehab Budget: $[X]
+ARV: $[X]
+Estimated Hold Time: [X] months (rehab + listing + closing)
+
+Hard Money Terms:
+- LTV: [X]% of purchase + [X]% of rehab (typical: 90% purchase, 100% rehab, max 75% ARV)
+- Interest Rate: [X]% (interest-only)
+- Origination Points: [X] points
+- Extension fee: [X] points per extension
+- Other fees: [appraisal, legal, draw inspections]
+
+Calculate:
+1. Loan amount (verify it doesn't exceed 75% ARV cap)
+2. Cash needed at closing (down payment + points + closing costs)
+3. Monthly interest payment
+4. Total interest over hold period
+5. Draw inspection costs ($100-$300 × estimated number of draws)
+6. Total financing cost (all-in: points + interest + fees)
+7. Total cash required from me for this deal
+
+How does the financing cost affect my net profit? Is this deal still viable after financing costs?</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Calculate the total cost of a hard money loan for a fix-and-flip:
+
+Purchase Price: $[X]
+Renovation Budget: $[X]
+ARV: $[X]
+Hold Period: [X] months
+Loan Terms: [X]% rate, [X] points, [X]% LTV
+
+Please calculate:
+1. Total loan amount
+2. Cash I need at closing
+3. Monthly payment
+4. Total interest over the project
+5. All fees (origination, inspection, extension)
+6. Total financing cost
+7. Impact on my net profit</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 28 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="funding">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">28</span><span class="card-title">DSCR Refinance Analysis (Flip to Hold)</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">When the flip math doesn't work but the rental math does. Pivot from flip to BRRRR/hold using a DSCR loan.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">The flip doesn't pencil. Analyze a DSCR refinance to hold as a rental instead:
+
+Property: [ADDRESS]
+Purchase Price: $[X]
+Rehab Cost: $[X]
+Post-Rehab Value (ARV): $[X]
+Total Investment (purchase + rehab): $[X]
+
+Rental Income:
+- Market rent: $[X]/month
+- Estimated vacancy: 8%
+- Estimated operating expenses: 40% of gross rent (taxes, insurance, maintenance, management)
+
+DSCR Loan Terms:
+- Max LTV: 75-80% of appraised value
+- Rate: [X]% (30-year fixed or estimate current market)
+- DSCR floor: 1.0 minimum, target 1.2+
+
+Calculate:
+1. Max loan amount at 75% LTV
+2. Cash-out amount (loan minus payoff of hard money)
+3. Monthly debt service (P&I)
+4. NOI (rental income - vacancy - operating expenses)
+5. DSCR ratio (NOI / annual debt service)
+6. Monthly cash flow after debt service
+7. Cash left in the deal after refinance
+8. Cash-on-cash return on remaining invested capital
+
+Does this property support a DSCR of 1.2+?
+Is the BRRRR strategy viable — can I pull most/all of my capital back out?</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze whether I should hold this property as a rental instead of flipping it:
+
+Purchase + Rehab: $[X]
+After Repair Value: $[X]
+Expected Rent: $[X]/month
+
+Model a DSCR refinance:
+1. Max loan amount at 75% of appraised value
+2. Monthly mortgage payment (30-year, [X]% rate)
+3. Monthly cash flow (rent - vacancy - expenses - mortgage)
+4. DSCR ratio
+5. Cash remaining in the deal after refinance
+6. Cash-on-cash return
+
+Is the rental strategy viable? Does the DSCR meet lender minimums (1.0+, ideally 1.2+)?</div>
+        </div>
+        <div class="prompt-tip">"Top of market" doesn't mean the property is bad. It means flip margin doesn't exist. The DSCR buy-and-hold path is the correct exit. Know which exit before you enter.</div>
+      </div>
+    </div>
+
+    <!-- 29 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="funding">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">29</span><span class="card-title">Exit Strategy Decision Matrix</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Decide between flip, hold, or wholesale based on actual numbers. Every deal should have at least 2 viable exits.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze ALL viable exit strategies for this deal:
+
+Property: [ADDRESS]
+Purchase Price: $[X]
+Rehab (Medium): $[X]
+ARV (flip): $[X]
+Market Rent: $[X]/month
+Current Market DOM: [X] days average
+
+Run 3 exit analyses:
+
+EXIT 1 — FIX AND FLIP:
+- Net profit after all costs
+- ROI
+- Timeline to profit realization
+- Risk level (1-5)
+- Viable? Does it meet $30K+ minimum profit floor?
+
+EXIT 2 — BUY AND HOLD (DSCR):
+- Monthly cash flow
+- Annual cash-on-cash return
+- DSCR ratio
+- Cash left in deal after refi
+- Viable? Does it meet 1.2+ DSCR?
+
+EXIT 3 — WHOLESALE:
+- Estimated assignment fee
+- Timeline to collect
+- Risk level
+- Viable? Is there a buyer pool for this deal?
+
+RECOMMENDATION: Which exit is optimal for THIS specific deal and why?
+BACKUP: If the primary exit fails, which backup exit protects my capital?
+
+Rule: Never enter a deal with only one exit strategy.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Compare three exit strategies for the same property:
+
+Purchase: $[X] | Rehab: $[X] | ARV: $[X] | Rent: $[X]/month
+
+1. Flip: projected profit, timeline, risk
+2. Hold as rental: monthly cash flow, cash-on-cash return, DSCR
+3. Wholesale: likely assignment fee, buyer pool
+
+Which strategy maximizes returns? Which provides the safest fallback?
+Can I identify at least two viable exits before entering this deal?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 30 -->
+    <div class="prompt-card" data-level="advanced" data-cat="funding">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">30</span><span class="card-title">Deal Package for Lender</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Build a fundable deal package that makes a hard money lender say yes. Toby has been on both sides of this table.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Build a deal package I can present to a hard money lender:
+
+Property: [ADDRESS]
+Purchase: $[X] | ARV: $[X] | Rehab: $[X]
+Exit Strategy: [Flip / Hold / Describe]
+My Experience: [# of deals completed, if any]
+Cash Available: $[X]
+
+Create a package with these sections:
+
+1. EXECUTIVE SUMMARY (1 page max)
+- Property overview, purchase price, ARV, rehab budget, projected profit
+- Clear exit strategy with timeline
+
+2. COMPARABLE SALES (support your ARV)
+- 3-5 closed comps with addresses, sale prices, $/sqft
+- Why these comps support your ARV
+
+3. REHAB BUDGET (itemized)
+- Full line-item breakdown
+- Contractor identified (licensed, insured, references)
+
+4. FINANCIAL PROJECTIONS
+- Total project cost
+- Projected profit / ROI
+- Carrying cost calculation
+- Worst-case scenario (still profitable?)
+
+5. BORROWER PROFILE
+- Experience, cash reserves, other assets
+- Track record on previous deals (if any)
+
+What makes a deal fundable to a lender:
+- ARV supported by solid comps (they'll pull their own)
+- Realistic, itemized rehab budget
+- Clear exit strategy
+- Borrower has skin in the game
+- The numbers work even if rehab runs 15% over
+
+What kills a deal:
+- Over-leveraged ARV (above 75% LTV)
+- Lump sum rehab budget
+- No experience + no money down
+- Title issues</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me create a professional deal package to present to a lender:
+
+Property: [ADDRESS]
+Numbers: Purchase $[X], ARV $[X], Rehab $[X]
+My experience: [describe]
+Cash available: $[X]
+
+Create sections for:
+1. Executive summary (1 page)
+2. Comparable sales supporting ARV
+3. Itemized rehab budget
+4. Financial projections with worst-case scenario
+5. Borrower qualifications
+
+Format it professionally. A lender should be able to make a decision from this package alone.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 31 -->
+    <div class="prompt-card" data-level="beginner" data-cat="funding">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">31</span><span class="card-title">Total Project Cost Calculator</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">The complete picture. Every dollar in, every dollar out, projected net profit.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Calculate my TOTAL all-in project cost and net profit:
+
+ACQUISITION:
+- Purchase Price: $[X]
+- Closing Costs (buyer side): $[X] or estimate at 2-3%
+- Earnest Money: $[X]
+
+REHAB:
+- Rehab Budget (Medium): $[X]
+- Contingency ([X]%): calculate
+
+CARRYING COSTS (monthly × [X] months):
+- Hard Money Interest: $[X]/month
+- Property Insurance: $[X]/month
+- Property Taxes: $[X]/month
+- Utilities: $[X]/month
+- HOA (if applicable): $[X]/month
+
+SELLING COSTS:
+- Agent Commission: [X]% of sale price
+- Buyer Closing Cost Assistance: $[X] (if offered)
+- Staging: $[X]
+- Seller Closing Costs: estimate 1-2%
+
+TOTAL ALL-IN COST: [sum everything]
+
+SALE:
+- Expected Sale Price (ARV): $[X]
+- NET PROFIT: Sale price - All-in cost
+- ROI: Net profit / total cash invested
+- Annualized ROI: Adjust for hold period
+
+Does this meet my minimum profit floor?
+| ARV < $300K → minimum $25K profit |
+| ARV $300-600K → minimum $40K profit |
+| ARV > $600K → minimum $60K profit |</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Calculate my total investment and projected profit on this flip:
+
+Purchase: $[X] | Rehab: $[X] | Expected Sale: $[X]
+Hold Time: [X] months | Financing Rate: [X]%
+
+Include ALL costs:
+- Acquisition costs (closing, earnest money)
+- Rehab + contingency
+- Monthly carrying costs (interest, insurance, taxes, utilities)
+- Selling costs (commission, closing, staging)
+
+Show: Total all-in cost, net profit, ROI, and annualized ROI.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 32 -->
+    <div class="prompt-card" data-level="advanced" data-cat="funding">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">32</span><span class="card-title">Private Money Pitch Builder</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Pitch private investors on your deal. "If the deal is good, the money will come."</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Build a private money pitch for this deal:
+
+Deal Summary: [Property address, ARV, purchase, rehab, projected profit]
+Amount Needed: $[X]
+Proposed Terms: [X]% interest, [X] month term, secured by deed of trust
+Investor Type: [Friend/family, HNW individual, self-directed IRA holder]
+
+Create:
+1. 2-minute verbal pitch script (what I say in person or on the phone)
+2. 1-page executive summary (what I hand them or email)
+3. Risk mitigation section (how the investor's capital is protected)
+4. Comparison to alternatives (their money in a savings account vs. this deal)
+
+Include:
+- LTV ratio (their loan vs. property value — they want to see 65-75% max)
+- Exit strategy (how they get paid back)
+- Track record (my experience or mentor's experience)
+- What happens if the deal goes wrong (their security position)
+
+"Money follows confidence. People invest in YOU before they invest in the deal."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me pitch a private investor on funding my deal:
+
+Deal: [summarize — property, numbers, profit projection]
+Amount needed: $[X]
+Proposed terms: [rate, term, security]
+Investor type: [describe]
+
+Create a 2-minute pitch, a 1-page summary, and a risk section explaining how their investment is protected.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 33 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="funding">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">33</span><span class="card-title">Flip vs. Hold Decision Calculator</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Side-by-side comparison: take the flip profit now, or hold for long-term cash flow and appreciation?</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Compare FLIP vs. HOLD for this property over a 5-year horizon:
+
+Property: [ADDRESS]
+All-in Cost: $[X] (purchase + rehab)
+ARV: $[X]
+Market Rent: $[X]/month
+
+FLIP SCENARIO:
+- Net profit from sale (after all costs)
+- Timeline to realize profit
+- Tax impact (short-term capital gains rate)
+- Cash available to reinvest
+
+HOLD SCENARIO (5 years):
+- Monthly cash flow (rent - expenses - mortgage)
+- Cumulative cash flow over 5 years
+- Equity buildup from mortgage paydown
+- Estimated appreciation (3% annually)
+- Total wealth created (cash flow + equity + appreciation)
+- Tax advantages (depreciation, long-term capital gains)
+
+Which creates more total wealth over 5 years?
+Which gives me capital faster for the next deal?
+What's the breakeven point where holding beats flipping?</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Compare selling this property now (flip) vs. holding it as a rental for 5 years:
+
+Total Investment: $[X] | Sale Value: $[X] | Monthly Rent: $[X]
+
+Calculate for each scenario: net profit, ROI, tax implications, and total wealth created. Which strategy is better given my current situation?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 34 -->
+    <div class="prompt-card" data-level="beginner" data-cat="funding">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">34</span><span class="card-title">Cash-to-Close Worksheet</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Know exactly how much cash you need in your account before making an offer. No surprises at closing.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Calculate exactly how much cash I need to close this deal:
+
+Purchase Price: $[X]
+Loan Amount: $[X] (or LTV: [X]% — calculate loan from this)
+Origination Points: [X]
+Closing Costs (estimate 2-3% of purchase): calculate
+Prepaid Items (insurance, taxes, interest): estimate
+First Month's Carrying Costs: calculate
+Earnest Money (already deposited): $[X]
+Appraisal Fee: $[X]
+Inspection Fee: $[X]
+
+Cash needed at closing table: [Total - loan - earnest money credit]
+
+Plus: Emergency reserve I should have beyond closing:
+- First 2 rehab draws (if contractor needs materials deposit)
+- 3 months carrying costs reserve
+- Contingency fund
+
+TOTAL CASH NEEDED BEFORE I MAKE THIS OFFER: $[X]
+
+Do I have this? If not, what are my options? (partner, private money, reduce scope)</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Calculate total cash I need to have available before closing on this flip:
+
+Purchase: $[X] | Loan: $[X] | Points: [X]
+
+Include: down payment, closing costs, prepaid items, inspection/appraisal fees, and reserves I should have on hand for the first month of rehab and carrying costs.
+
+Give me the total number I need in my bank account before I can confidently make this offer.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 5: MARKET ANALYSIS -->
+<!-- ============================================ -->
+<div class="section" id="market" data-category="market">
+  <div class="section-header">
+    <div class="section-icon">🗺️</div>
+    <div class="section-title">Market &amp; Neighborhood Analysis</div>
+    <div class="section-count">7 prompts</div>
+  </div>
+  <div class="prompt-grid">
+
+    <!-- 35-41: Market prompts -->
+    <div class="prompt-card" data-level="beginner" data-cat="market">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">35</span><span class="card-title">Neighborhood Quick Score</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Score a neighborhood before you spend time on individual deals. Is this an area worth investing in?</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Score this neighborhood for fix-and-flip viability:
+
+Location: [ZIP CODE or NEIGHBORHOOD NAME, CITY, STATE]
+
+Rate each factor 1-10:
+1. Population density (more people = faster sales) — "Cattle vs. People" test
+2. Job market strength (employment growth, major employers)
+3. School district quality (affects family buyer demand)
+4. Recent sales volume (how many homes sold in 90 days in this zip)
+5. Average DOM (days on market for similar homes)
+6. Price appreciation trend (up, flat, declining over last 2 years)
+7. Crime statistics relative to surrounding areas
+8. Investor activity level (too many flippers = compressed margins)
+9. Rental demand (backup exit — can I hold if flip doesn't sell?)
+10. Infrastructure/development (new construction, retail, transit coming?)
+
+Overall Score: [sum / 100]
+Verdict: STRONG MARKET / ACCEPTABLE / PROCEED WITH CAUTION / AVOID
+
+Rule: Avoid markets with more trees or cattle than people. Low density = long DOM = hard exits.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Evaluate this neighborhood for real estate investment potential:
+
+Location: [ZIP CODE or AREA]
+
+Assess these factors:
+- Population and job growth
+- School quality
+- Sales volume and average days on market
+- Price trends (appreciation or decline)
+- Crime levels
+- Rental demand
+- New development or infrastructure projects
+- Investor competition level
+
+Give me an overall investment viability score and recommendation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="intermediate" data-cat="market">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">36</span><span class="card-title">Buy Box Definition Builder</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Define your specific buy box criteria so you can filter deals instantly instead of analyzing everything.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me define my buy box for [MARKET/CITY]:
+
+My parameters:
+- Budget range: $[LOW] to $[HIGH] acquisition
+- Target ARV range: $[LOW] to $[HIGH]
+- Property types I'll consider: [SFR, duplex, etc.]
+- Bed/bath minimums: [X/X]
+- Sq ft range: [X] to [X]
+- Year built range: [YEAR] to [YEAR]
+- Max rehab budget: $[X]
+- Maximum drive distance from my base: [X] miles
+- Neighborhoods I'm targeting: [list or "help me identify"]
+
+Based on my parameters, build my buy box as a screening checklist:
+✓ MUST HAVE (deal-breaker if missing)
+✓ PREFER (adds value but not required)
+✗ AVOID (instant disqualify)
+
+Also tell me:
+- How many properties in this zip code fit my buy box in the last 90 days?
+- Am I being too restrictive or too broad?
+- What adjustment would give me the best deal flow volume?
+
+"Dominate your market before you expand. Own every street, every sale, every rehab project in your target area."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me define my investment buy box criteria for [MARKET]:
+
+My constraints: Budget $[X]-$[X], target ARV $[X]-$[X], property types [list], max rehab $[X]
+
+Create a screening checklist with must-haves, preferences, and automatic disqualifiers. Tell me if my criteria are too narrow or too broad for this market.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="intermediate" data-cat="market">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">37</span><span class="card-title">Rental Market Analysis</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Essential for your backup exit strategy. If the flip doesn't sell, can this property cash-flow as a rental?</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze the rental market for this property as a backup exit:
+
+Property: [ADDRESS]
+Bed/Bath: [X/X] | Sq Ft: [X]
+Post-rehab condition: [Describe finish level]
+My all-in cost (purchase + rehab): $[X]
+
+Tell me:
+1. Market rent range for this bed/bath/sqft in this zip ($low - $high)
+2. Vacancy rate for this area
+3. Comparable rental listings currently active
+4. Rental demand indicators (population growth, employment, student housing, military)
+5. Estimated monthly expenses:
+   - Property taxes: $[X]/month
+   - Insurance: $[X]/month
+   - Property management (10% of rent)
+   - Maintenance reserve (5-10% of rent)
+   - Vacancy reserve (8%)
+6. Net Operating Income (monthly and annual)
+7. If financed with DSCR loan at 75% LTV: does it cash-flow?
+8. Cash-on-cash return on remaining equity
+
+"Every underwriting model must assume 10% rent decrease + 10% vacancy increase. Deal must survive a downturn."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze the rental potential for this property:
+
+Property: [ADDRESS] | [BED/BATH] | [SQ FT]
+My total investment: $[X]
+
+What can I rent it for? What are monthly expenses? Does it cash-flow?
+Would it work as a DSCR-financed rental if I can't sell as a flip?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="advanced" data-cat="market">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">38</span><span class="card-title">Market Cycle Position Assessment</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Where is your market in the real estate cycle? This affects your strategy, hold times, and risk tolerance.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Where is [CITY/MARKET] in the real estate cycle right now?
+
+Analyze these indicators:
+1. Price trends (12-month, 24-month, 36-month — accelerating, flat, or declining?)
+2. Inventory levels vs. 12 months ago (rising = cooling, falling = heating)
+3. DOM trends (getting longer or shorter?)
+4. New construction permits (oversupply risk?)
+5. Interest rate environment and its impact on buyer pool
+6. Foreclosure activity (leading indicator of distress)
+7. Population and job migration patterns
+8. Sale-to-list price ratio trend
+
+Classify: EXPANSION / HYPER-SUPPLY / RECESSION / RECOVERY
+
+What does this mean for my flip strategy?
+- Should I tighten my buy box?
+- Should I shorten my target hold time?
+- Should I be more conservative on ARV?
+- Is this a market where I should pivot toward buy-and-hold?
+- What ARV discount factor should I apply? (70% in soft markets, 75% in hot markets)</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Assess where [CITY/MARKET] is in the real estate cycle:
+
+Look at price trends, inventory, days on market, construction activity, foreclosures, and population movement.
+
+Is this market expanding, overheating, cooling, or recovering? How should this affect my investment strategy?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="beginner" data-cat="market">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">39</span><span class="card-title">School District Impact on ARV</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">How does the school district affect ARV for this property?
+
+Property: [ADDRESS]
+School District: [NAME if known]
+
+Tell me:
+1. What school district is this property in?
+2. School ratings (elementary, middle, high)
+3. How do home prices compare ACROSS the district boundary? (same neighborhood, different district)
+4. Is the school district a price premium or discount factor?
+5. Are there any boundary changes planned that could affect value?
+6. For my ARV comps: should I avoid comps from a different school district?
+
+Rule: Never cross school district lines when pulling comps unless verified non-impactful.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze how the school district affects property values at [ADDRESS]:
+
+1. What district is this in and how are the schools rated?
+2. Price premium or discount vs. neighboring districts?
+3. Should I avoid using comps from different school districts?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="advanced" data-cat="market">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">40</span><span class="card-title">Investor Competition Assessment</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Assess investor competition in [ZIP CODE]:
+
+1. How many recently sold homes were purchased by LLCs or investors (non-owner-occupied)?
+2. How many active flips are currently being renovated or listed as "newly remodeled"?
+3. Are margins being compressed by too many flippers?
+4. What's the average flip profit margin in this zip based on recent sales?
+5. Are wholesalers active here? (indicator of investor activity)
+6. Is there institutional investor (iBuyer) activity?
+7. Are new-build developments competing with flip inventory?
+
+High competition doesn't mean avoid — it means:
+- Tighter buy box
+- Better contractor (speed)
+- Better design (differentiation)
+- Or find a sub-market with less competition nearby
+
+What's my competitive advantage in this zip?</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">How competitive is [ZIP CODE] for fix-and-flip investors? Analyze investor activity, flip volume, margin trends, and whether the market is saturated.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="intermediate" data-cat="market">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">41</span><span class="card-title">Hidden Market Lead Source Planner</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Build a Hidden Market lead generation plan for [CITY/MARKET]:
+
+"The Hidden Market" = properties that have NEVER been presented to investors. Not MLS, not wholesaler lists.
+
+1.3 million properties nationally are vacant, distressed, inherited, and off-market right now. Help me access them in my market:
+
+1. DRIVING FOR DOLLARS targets:
+   - What distress signals to look for (vacant, overgrown, boarded, mail piled up)
+   - Best neighborhoods to drive based on my buy box
+
+2. DATA-DRIVEN LISTS to pull:
+   - Probate filings (inherited properties)
+   - Pre-foreclosure notices
+   - Tax delinquent properties
+   - Code violation properties
+   - Absentee owners with high equity
+   - Properties with 3+ years of ownership
+
+3. DIRECT OUTREACH strategy:
+   - Direct mail (what to send, frequency, messaging)
+   - Cold calling scripts for each lead type
+   - Door knocking protocol
+
+4. NETWORK-BASED access:
+   - Probate attorneys
+   - Estate attorneys
+   - Real estate agents who find distressed sellers
+   - Property managers with tired landlord clients
+
+5. TRACKING:
+   - Leads generated per source
+   - Conversion rate per channel
+   - Cost per lead per channel
+   - Which channel to scale first?
+
+"When a wholesaler sends you a deal, that deal has already been shown to 50-100 buyers. That is NOT the hidden market."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me build a direct-to-seller lead generation plan for [MARKET]:
+
+I want to find properties that aren't on the MLS or being marketed by wholesalers. Include: driving for dollars targeting, distressed property data lists to pull, outreach strategies, and professional networking for deal flow. Help me track which channels produce the best leads.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 6: DUE DILIGENCE -->
+<!-- ============================================ -->
+<div class="section" id="diligence" data-category="diligence">
+  <div class="section-header">
+    <div class="section-icon">🔍</div>
+    <div class="section-title">Due Diligence</div>
+    <div class="section-count">7 prompts</div>
+  </div>
+  <div class="prompt-grid">
+
+    <div class="prompt-card" data-level="beginner" data-cat="diligence">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">42</span><span class="card-title">Pre-Offer Due Diligence Checklist</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Generate a pre-offer due diligence checklist for:
+
+Property: [ADDRESS]
+Property Type: [SFR / Duplex / etc.]
+
+Check each item — I need to verify ALL of these before making my offer:
+
+TITLE & OWNERSHIP:
+☐ Current owner name and ownership type (individual, trust, LLC, estate)
+☐ Any liens, judgments, or encumbrances
+☐ Tax status — current or delinquent?
+☐ HOA status and any outstanding dues
+☐ Any pending code violations or citations
+
+PROPERTY CONDITION:
+☐ Property walked in person (non-negotiable — no offers without walking)
+☐ Foundation inspected
+☐ Roof condition assessed
+☐ MEP systems status (age, condition, working?)
+☐ Photos taken of every room and every issue
+
+MARKET & COMPS:
+☐ 3-5 closed comps pulled (90 days, 1 mile, similar spec)
+☐ ARV range established
+☐ Absorption rate checked (DOM in this zip)
+☐ School district verified (no boundary surprises)
+
+FINANCIAL:
+☐ Rehab estimate completed (line-item, not lump sum)
+☐ MAO calculated
+☐ Carrying costs budgeted
+☐ Financing pre-arranged (lender ready)
+☐ Cash-to-close calculated
+
+SPECIAL CHECKS (if applicable):
+☐ Vacant lot → wetland/zoning verified BEFORE analysis
+☐ Property was listed and pulled → researched WHY
+☐ Seller is retiring/portfolio owner → asked for FULL inventory
+☐ Property built pre-1980 → assume MEPs need work</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Create a comprehensive due diligence checklist for [ADDRESS] covering title, ownership, property condition, market analysis, and financial verification. Format as a checkable list I can work through before making my offer.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="intermediate" data-cat="diligence">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">43</span><span class="card-title">Title Issue Red Flag Scanner</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Scan for title red flags on this property:
+
+Address: [ADDRESS]
+What I know about ownership: [Owner name, type, how long owned]
+How I found this deal: [Source]
+
+Check for these title issues that kill deals:
+1. Liens (tax liens, mechanic's liens, judgment liens, IRS liens)
+2. Multiple owners or unclear chain of title
+3. Estate/probate complications (deceased owner, multiple heirs)
+4. Divorce proceedings (both parties must sign)
+5. HOA liens or special assessments
+6. Code enforcement liens
+7. Lis pendens (pending litigation)
+8. Easements that affect usability
+9. Boundary disputes or encroachments
+10. Environmental liens or contamination records
+
+For each potential issue:
+- How to verify (which public records to search)
+- Cost and time to resolve if found
+- Deal-breaker level (YES / MAYBE / NO depending on severity)
+
+What title issues has Toby flagged as deal-killers with lenders?
+"Title issues" is on the list of things that kill deals with hard money lenders.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">What title issues should I check for on [ADDRESS]? List common problems (liens, probate, disputes), how to verify each, and which ones are deal-breakers vs. fixable.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="beginner" data-cat="diligence">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">44</span><span class="card-title">Property Walkthrough Checklist</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Build my property walkthrough checklist. I'm about to visit [ADDRESS].
+
+"We should never put a contract on a deal without walking it."
+
+EXTERIOR (before entering):
+☐ Foundation — visible cracks, settling, water staining
+☐ Roof — sagging, missing shingles, age estimate
+☐ Siding/exterior walls — damage, rot, paint condition
+☐ Windows — condition, style, single vs. double pane
+☐ Grading — does water drain away from foundation?
+☐ Driveway/walkway condition
+☐ Landscaping scope (what needs work for curb appeal?)
+☐ Fence condition
+☐ TAKE PHOTOS: all four sides of exterior, roof close-up, foundation
+
+INTERIOR — ROOM BY ROOM:
+☐ Flooring type and condition each room
+☐ Walls and ceilings — stains (water damage?), cracks, texture
+☐ Windows — open and close, check seals
+☐ Doors — open and close smoothly?
+☐ TAKE PHOTOS: every room, every issue, every angle
+
+SYSTEMS (most expensive — do not skip):
+☐ Electrical panel — size (100A? 200A?), brand, age
+☐ HVAC — type, age, does it run? Filter condition?
+☐ Water heater — type, age, capacity
+☐ Plumbing — turn on every faucet, check water pressure, look under sinks
+☐ Check for visible pipe material (copper, PEX, galvanized, polybutylene)
+☐ TAKE PHOTOS: panel, HVAC unit, water heater, under every sink
+
+KITCHEN:
+☐ Cabinet condition (reface, replace, or paint?)
+☐ Countertop condition and material
+☐ Appliance condition (replace all or keep any?)
+☐ Layout — does it need to change?
+
+BATHROOMS:
+☐ Tile condition (walls and floor)
+☐ Fixtures (faucets, toilet, tub/shower)
+☐ Ventilation (fan working? Window?)
+☐ Signs of water damage around toilet base and tub
+
+RED FLAGS (look specifically for these):
+☐ Water stains on ceiling (roof leak or plumbing above)
+☐ Musty smell (mold behind walls)
+☐ Uneven floors (foundation issues)
+☐ Fresh paint over everything (cover-up attempt)
+☐ DIY electrical work (safety hazard, expensive to fix)
+☐ Additions without permits
+
+Bring your contractor to this walkthrough. If they don't walk it before bidding, their bid is not reliable.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Create a comprehensive property walkthrough checklist I can use during my site visit to [ADDRESS]. Cover exterior, interior room-by-room, all mechanical systems, and red flags to watch for. Include photo reminders for each area.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="intermediate" data-cat="diligence">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">45</span><span class="card-title">Permit and Zoning Verification</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Check permit and zoning status for [ADDRESS]:
+
+1. Current zoning classification — what is permitted?
+2. Any unpermitted additions or structures visible?
+3. Open permits from previous owners (these become YOUR problem)
+4. What permits will MY rehab require?
+5. Estimated permit costs and timeline in this jurisdiction
+6. Any upcoming zoning changes that affect property use/value?
+7. Setback requirements (relevant if I'm adding square footage)
+8. For vacant lots: wetland status, buildable area, utility access
+
+"Never make an offer on a vacant lot without verifying wetland/zoning."
+
+Unpermitted work discovered after purchase can:
+- Kill your appraisal
+- Block your sale
+- Create liability
+- Require expensive remediation</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Research the permit and zoning situation for [ADDRESS]: current zoning, open permits, unpermitted work risks, permits my rehab will need, and estimated costs/timeline.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="advanced" data-cat="diligence">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">46</span><span class="card-title">Vacant Lot Due Diligence</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">This is a VACANT LOT — different analysis than improved property. Do NOT run standard fix-and-flip analysis.
+
+Address: [ADDRESS]
+Asking: $[X]
+Lot Size: [X] acres/sqft
+
+Verify BEFORE any financial analysis:
+1. WETLAND STATUS — is any portion designated wetland? (Can make lot unbuildable)
+2. ZONING — what can be built? Residential? What density?
+3. BUILDABLE AREA — after setbacks, easements, and wetland exclusions, how many sqft are buildable?
+4. UTILITY ACCESS — water, sewer, electric, gas at the lot line?
+5. SOIL/TOPOGRAPHY — any known issues (flood zone, steep grade, fill)?
+6. ENTITLEMENTS — any existing approvals, platting, or subdivision?
+7. ENVIRONMENTAL — any known contamination or environmental restrictions?
+
+If wetlands confirmed on buildable area: WALK AWAY.
+If utilities not at lot line: ADD $15K-$50K+ to your budget.
+If no entitlements: ADD 6-18 months for approvals.
+
+Only if all 7 items check out → estimate buildable value based on comparable new construction sales in the area.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze this vacant lot for development potential:
+
+Address: [ADDRESS] | Lot Size: [X]
+
+Before any financial analysis, verify: wetland status, zoning, buildable area, utility access, soil/topography, and environmental issues. Flag any deal-killers.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="intermediate" data-cat="diligence">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">47</span><span class="card-title">Insurance and Risk Assessment</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Assess insurance and risk factors for [ADDRESS]:
+
+1. Flood zone status (FEMA designation) — flood insurance adds $1K-$5K+/year
+2. Wind/hurricane zone — affects insurance rates and construction requirements
+3. Wildfire risk zone
+4. Crime statistics (affects insurance rates and resale)
+5. Previous claims on property (CLUE report)
+6. Lead paint risk (pre-1978 homes)
+7. Asbestos risk (pre-1980 homes)
+8. Estimated builder's risk insurance during rehab: $[X]
+9. Estimated property insurance after rehab: $[X]/year
+10. Any special assessments or improvement districts
+
+Which of these add cost to my project? Which are deal-killers?
+Factor the insurance costs into my monthly carrying cost calculation.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Assess insurance and environmental risk factors for [ADDRESS]: flood zone, wind zone, fire risk, lead/asbestos concerns, and estimated insurance costs during and after renovation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="beginner" data-cat="diligence">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">48</span><span class="card-title">Listing History Detective</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Research the listing history of [ADDRESS]:
+
+"Research WHY a property was pulled from listing."
+
+1. Has this property been listed before? When? At what price?
+2. How many times has it been listed and delisted?
+3. Any price reductions during previous listings?
+4. Why was it pulled? (price too high? Inspection issues? Financing fell through? Seller changed mind?)
+5. How long has it been off-market since last listing?
+6. Any pending contracts that fell through? Why?
+7. Previous sale history — what did current owner pay? When?
+
+What this tells me:
+- Seller who relisted at lower price = more motivated
+- Multiple failed contracts = possible property issues (inspection findings)
+- Long off-market period = seller may be more flexible now
+- Owner who bought at peak pricing = may owe more than current value (underwater)
+
+This is intelligence my competitors don't have. Use it in my negotiation.</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Research the listing history for [ADDRESS]: previous listings, price changes, failed contracts, and how long it's been on/off market. What does this history tell me about the seller's motivation and negotiation leverage?</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- SECTION 7: DEAL COMPARISON -->
+<!-- ============================================ -->
+<div class="section" id="compare" data-category="compare">
+  <div class="section-header">
+    <div class="section-icon">⚖️</div>
+    <div class="section-title">Deal Comparison</div>
+    <div class="section-count">7 prompts</div>
+  </div>
+  <div class="prompt-grid">
+
+    <div class="prompt-card" data-level="beginner" data-cat="compare">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">49</span><span class="card-title">Side-by-Side Deal Comparison</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Compare these deals side by side. I can only pursue ONE — which is the better investment?
+
+DEAL A:
+Address: [ADDRESS]
+Purchase: $[X] | ARV: $[X] | Rehab: $[X]
+Hold Time: [X] months | Financing: [describe]
+
+DEAL B:
+Address: [ADDRESS]
+Purchase: $[X] | ARV: $[X] | Rehab: $[X]
+Hold Time: [X] months | Financing: [describe]
+
+DEAL C (optional):
+Address: [ADDRESS]
+Purchase: $[X] | ARV: $[X] | Rehab: $[X]
+Hold Time: [X] months | Financing: [describe]
+
+Compare on these metrics:
+| Metric | Deal A | Deal B | Deal C |
+|--------|--------|--------|--------|
+| Net Profit | | | |
+| ROI % | | | |
+| Annualized ROI | | | |
+| Cash Required | | | |
+| Risk Level (1-5) | | | |
+| Rehab Complexity | | | |
+| Market Strength | | | |
+| Backup Exit Viable? | | | |
+| Time to Profit | | | |
+
+WINNER: [Which deal and why]
+If I could only do ONE: [recommendation with reasoning]
+What would make the losing deal(s) competitive? [specific price point or terms]</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Compare these investment deals side by side:
+
+Deal A: [Address, purchase, ARV, rehab, hold time]
+Deal B: [Address, purchase, ARV, rehab, hold time]
+
+Create a comparison table covering: net profit, ROI, cash needed, risk level, rehab complexity, and time to profit. Recommend which deal to pursue and why.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="intermediate" data-cat="compare">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">50</span><span class="card-title">Risk-Adjusted Deal Ranking</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Rank these deals by RISK-ADJUSTED return, not just raw profit:
+
+[List 3-5 deals with: address, purchase, ARV, rehab, hold time, market notes]
+
+Risk factors to score (1-5 each, 5 = highest risk):
+1. ARV confidence (thin comps = high risk)
+2. Rehab complexity (gut rehab = high risk)
+3. Market risk (slow market = high risk)
+4. Financing risk (tight LTV = high risk)
+5. Exit risk (only one viable exit = high risk)
+6. Title/legal risk (estate, liens = high risk)
+7. Timeline risk (long hold = more exposure)
+
+For each deal: Risk Score (sum of factors) / Projected Profit = Risk-Adjusted Score
+
+Rank by risk-adjusted score. The best deal isn't always the highest profit — it's the best return for the risk taken.
+
+"If your numbers can't survive the worst day on the market, you never had a deal — only a gamble."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Rank these deals by risk-adjusted return:
+
+[List deals with key numbers]
+
+Score each on: ARV confidence, rehab complexity, market conditions, financing, exit options, and timeline risk. Then calculate risk-adjusted returns to find the best risk/reward ratio.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="advanced" data-cat="compare">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">51</span><span class="card-title">Portfolio-Level Deal Selection</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I have [X] deals in my pipeline and $[X] total capital available. Which combination maximizes returns?
+
+Available Capital: $[X]
+Maximum simultaneous projects I can manage: [X]
+Contractor availability: [X] crews
+
+Deals in pipeline:
+[List each deal: address, cash required, projected profit, timeline, risk level]
+
+Optimize for:
+1. Maximum total profit within capital constraints
+2. Staggered timelines (don't have all projects finishing at once)
+3. Risk diversification (mix of rehab levels, markets, price points)
+4. Cash flow timing (when does capital get returned from each project?)
+
+Show me:
+- Which deals to take and in what order
+- Capital allocation per deal
+- Monthly cash flow projection (when money goes out and comes back)
+- Total projected profit for the portfolio
+- What to pass on and why
+
+"Crawl, walk, run. Start small, systematize, then scale only what is proven."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">I have multiple deals and limited capital. Help me decide which combination to pursue:
+
+Capital: $[X] | Max projects: [X]
+Deals: [list each with cash needed, profit, timeline]
+
+Optimize for total profit, staggered timelines, and risk diversification. Show the capital allocation plan.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="beginner" data-cat="compare">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">52</span><span class="card-title">Deal Scorecard Template</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Score this deal on a standardized scorecard:
+
+Property: [ADDRESS]
+[Include all numbers: purchase, ARV, rehab, financing, market data]
+
+SCORECARD (rate 1-10 each):
+| Category | Score | Notes |
+|----------|-------|-------|
+| Acquisition price vs. ARV spread | | |
+| ARV confidence (comp quality) | | |
+| Rehab scope clarity | | |
+| Contractor readiness | | |
+| Financing secured | | |
+| Market strength (DOM, absorption) | | |
+| Exit strategy viability | | |
+| Backup exit available | | |
+| Cash requirement manageable | | |
+| Timeline realistic | | |
+
+TOTAL: [X] / 100
+
+Rating:
+- 80-100: Strong deal. Move fast.
+- 60-79: Decent deal. Negotiate harder or reduce risk.
+- 40-59: Marginal. Only pursue if you can improve 2+ scores.
+- Below 40: Pass. Not enough margin for the risk.
+
+What specific changes would move the lowest scores up?</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Score this deal on a 10-point scale across 10 categories: price spread, ARV confidence, rehab clarity, contractor readiness, financing, market strength, exit viability, backup exit, cash requirements, and timeline. Give me a total score out of 100 with a go/no-go recommendation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="intermediate" data-cat="compare">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">53</span><span class="card-title">Post-Mortem: What Went Wrong?</span></div>
+        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Post-mortem analysis on a completed deal:
+
+Property: [ADDRESS]
+Original Projections: Purchase $[X], ARV $[X], Rehab $[X], Profit $[X]
+Actual Results: Purchase $[X], Sale Price $[X], Rehab $[X], Profit $[X]
+
+What happened:
+[Describe — over budget? Under ARV? Took longer? Contractor issues?]
+
+Analyze:
+1. Where was my analysis wrong? (ARV, rehab, timeline, carrying costs?)
+2. Was the original deal good but execution failed, or was it a bad deal from the start?
+3. What would I need to have known at the time to avoid this outcome?
+4. What should I change in my process going forward?
+5. Would the AI analysis have caught this if I'd used it correctly?
+
+Lessons to apply to my next deal:
+- Updated rules or thresholds
+- Process changes
+- New items to add to my due diligence checklist
+
+"The second deal is sold by how you performed on the first."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze what went wrong (or right) on my completed flip:
+
+Projected: [numbers] | Actual: [numbers]
+What happened: [describe]
+
+Where was my analysis off? What should I change for next time?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="advanced" data-cat="compare">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">54</span><span class="card-title">Annual Deal Flow Analysis</span></div>
+        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze my deal flow performance over [TIME PERIOD]:
+
+Deals Analyzed: [X]
+Offers Made: [X]
+Offers Accepted: [X]
+Deals Completed: [X]
+Total Profit: $[X]
+Total Capital Deployed: $[X]
+
+Breakdown by deal:
+[List each: address, purchase, sale, rehab, profit, hold time, lead source]
+
+Calculate:
+1. Conversion rate (analyzed → offered → accepted → completed)
+2. Average profit per deal
+3. Average ROI per deal
+4. Average hold time
+5. Best and worst performing deals (why?)
+6. Best and worst lead sources (ROI by channel)
+7. Total annualized return on capital
+8. Deals per month velocity
+9. Am I meeting the "3 deals per day" analysis standard?
+
+Where should I focus to improve?
+- More deal flow (volume)?
+- Better deal selection (quality)?
+- Faster execution (speed)?
+- Lower costs (contractors, financing)?
+
+"If you're not making at least $1 million a year in real estate investing, you're not doing it right."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Analyze my investing performance:
+
+[List completed deals with numbers]
+
+Calculate conversion rates, average returns, best/worst deals, and where I should focus to improve results.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card" data-level="beginner" data-cat="compare">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">55</span><span class="card-title">Daily Deal Analysis Log</span></div>
+        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
+        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">The "3 deals per day" standard. Use this to log and track your daily analysis habit.</div>
+        <div class="prompt-block">
+          <div class="prompt-block-label toby-label">⚡ Toby Potter AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Daily Deal Analysis Log — [TODAY'S DATE]
+
+"Three deals per day. That's the standard."
+
+DEAL 1:
+Address: [ADDRESS]
+Source: [Where I found it]
+Quick screen result: PURSUE / PASS / NEEDS INFO
+If pursuing: ARV $[X], Rehab $[X], MAO $[X]
+Decision: [Making offer / Passing / Need walkthrough]
+
+DEAL 2:
+Address: [ADDRESS]
+Source: [Where I found it]
+Quick screen result: PURSUE / PASS / NEEDS INFO
+If pursuing: ARV $[X], Rehab $[X], MAO $[X]
+Decision: [Making offer / Passing / Need walkthrough]
+
+DEAL 3:
+Address: [ADDRESS]
+Source: [Where I found it]
+Quick screen result: PURSUE / PASS / NEEDS INFO
+If pursuing: ARV $[X], Rehab $[X], MAO $[X]
+Decision: [Making offer / Passing / Need walkthrough]
+
+Today's Stats:
+- Deals analyzed: [X]
+- Offers made: [X]
+- Leads to follow up: [X]
+- Running weekly total: [X] / 21 (3/day × 7 days)
+
+"You will analyze 50-100 deals before finding one that makes sense at your numbers. This is normal."</div>
+        </div>
+        <div class="prompt-block">
+          <div class="prompt-block-label generic-label">🔄 Generic AI Version</div>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">Help me log my daily deal analysis:
+
+Date: [TODAY]
+Deal 1: [Address, source, quick verdict]
+Deal 2: [Address, source, quick verdict]
+Deal 3: [Address, source, quick verdict]
+
+Track my weekly analysis count and conversion rate. Am I analyzing enough deals?</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>Deal Analysis Prompt Library — The Unshakable Investor — Legacy Elite Member Resource</p>
+  <p style="margin-top:8px;color:var(--text-dim)">Built on Toby Potter's methodology. 55 prompts across 7 categories.</p>
+  <p style="margin-top:8px;color:var(--text-dim)">"Speed of implementation is everything."</p>
+</div>
+
+<script>
+// Toggle cards open/closed
+function toggleCard(header) {
+  const card = header.closest('.prompt-card');
+  card.classList.toggle('open');
+}
+
+// Copy prompt text
+function copyPrompt(btn) {
+  const block = btn.closest('.prompt-block');
+  const text = block.querySelector('.prompt-text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.innerHTML = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// Category navigation
+document.querySelectorAll('.nav-pill').forEach(pill => {
+  pill.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    const cat = pill.dataset.cat;
+    document.querySelectorAll('.section').forEach(s => {
+      if (cat === 'all' || s.dataset.category === cat) {
+        s.style.display = '';
+      } else {
+        s.style.display = 'none';
+      }
+    });
+  });
+});
+
+// Level filters
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const level = btn.dataset.level;
+    document.querySelectorAll('.prompt-card').forEach(card => {
+      if (level === 'all' || card.dataset.level === level) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+    // Update section counts
+    document.querySelectorAll('.section').forEach(section => {
+      const visible = section.querySelectorAll('.prompt-card:not(.hidden)').length;
+      const counter = section.querySelector('.section-count');
+      if (counter) counter.textContent = visible + ' prompt' + (visible !== 1 ? 's' : '');
+    });
+  });
+});
+
+// Search
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.prompt-card').forEach(card => {
+    const title = card.querySelector('.card-title').textContent.toLowerCase();
+    const body = card.querySelector('.card-body') ? card.querySelector('.card-body').textContent.toLowerCase() : '';
+    if (q === '' || title.includes(q) || body.includes(q)) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+});
+</script>
+</body>
+</html>
