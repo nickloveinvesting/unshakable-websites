@@ -80,9 +80,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .filter-btn{font-family:var(--font-accent);font-size:10px;font-weight:600;padding:4px 10px;border-radius:14px;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;transition:all .2s var(--ease-out-expo);background:transparent;text-transform:uppercase;letter-spacing:.05em;user-select:none}
 .filter-btn:hover{border-color:rgba(255,255,255,0.2);color:var(--text-muted)}
 .filter-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,0.06)}
-.filter-btn[data-level="beginner"].active{border-color:var(--green);color:var(--green);background:rgba(34,197,94,0.06)}
-.filter-btn[data-level="intermediate"].active{border-color:var(--blue);color:var(--blue);background:rgba(59,130,246,0.06)}
-.filter-btn[data-level="advanced"].active{border-color:var(--purple);color:var(--purple);background:rgba(168,85,247,0.06)}
 .toolbar-sep{width:1px;height:20px;background:rgba(255,255,255,0.08);flex-shrink:0}
 .situation-btn{font-family:var(--font-accent);font-size:10px;font-weight:600;padding:5px 12px;border-radius:14px;border:1px solid rgba(255,215,0,0.15);color:var(--gold-mid);cursor:pointer;background:rgba(255,165,0,0.05);transition:all .2s var(--ease-out-expo);white-space:nowrap;display:flex;align-items:center;gap:5px}
 .situation-btn:hover{background:rgba(255,165,0,0.1);border-color:rgba(255,215,0,0.3)}
@@ -134,9 +131,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .card-title{font-family:var(--font-accent);font-weight:600;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card-badges{display:flex;gap:5px;flex-shrink:0}
 .badge{font-family:var(--font-accent);font-size:9px;font-weight:600;padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:.04em}
-.badge-beginner{color:var(--green);border:1px solid rgba(34,197,94,0.25);background:rgba(34,197,94,0.05)}
-.badge-intermediate{color:var(--blue);border:1px solid rgba(59,130,246,0.25);background:rgba(59,130,246,0.05)}
-.badge-advanced{color:var(--purple);border:1px solid rgba(168,85,247,0.25);background:rgba(168,85,247,0.05)}
 .expand-icon{color:var(--text-dim);transition:transform .35s var(--ease-spring);flex-shrink:0}
 .prompt-card.open .expand-icon{transform:rotate(180deg)}
 
@@ -159,38 +153,49 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .copy-btn:hover{background:rgba(255,215,0,0.15);border-color:var(--gold);transform:translateY(-1px)}
 .copy-btn.copied{background:rgba(34,197,94,0.12);border-color:var(--green);color:var(--green);transform:scale(1.05)}
 .prompt-tip{font-size:11px;color:var(--text-dim);margin-top:10px;padding:8px 12px;border-left:2px solid rgba(255,215,0,0.2);background:rgba(255,215,0,0.02);border-radius:0 6px 6px 0;line-height:1.5}
+.deal-filled{color:var(--green);font-weight:600;background:rgba(34,197,94,0.08);padding:0 3px;border-radius:3px}
+.prompt-text.has-deal-data{border-left:2px solid rgba(34,197,94,0.3);padding-left:12px}
 
-/* DEAL INPUT PANEL */
-.deal-panel{max-width:1200px;margin:0 auto;padding:0 1.5rem}
-.deal-toggle{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0;cursor:pointer;user-select:none}
-.deal-toggle-text{font-family:var(--font-accent);font-size:12px;font-weight:600;color:var(--gold);letter-spacing:.04em}
-.deal-toggle-icon{width:20px;height:20px;stroke:var(--gold);transition:transform .3s var(--ease-spring)}
-.deal-panel.open .deal-toggle-icon{transform:rotate(180deg)}
-.deal-toggle-badge{font-family:var(--font-mono);font-size:10px;color:var(--bg);background:var(--gold);padding:1px 6px;border-radius:8px;display:none}
-.deal-toggle-badge.visible{display:inline-block}
-.deal-form-wrap{overflow:hidden;max-height:0;transition:max-height .45s var(--ease-out-expo),opacity .3s;opacity:0}
-.deal-panel.open .deal-form-wrap{max-height:500px;opacity:1}
-.deal-form{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:12px}
-.deal-form-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.deal-form-title{font-family:var(--font-display);font-weight:700;font-size:14px;color:var(--text)}
-.deal-clear-btn{font-family:var(--font-accent);font-size:10px;font-weight:600;color:var(--text-dim);background:none;border:1px solid var(--border);padding:4px 10px;border-radius:8px;cursor:pointer;transition:all .2s}
+/* LAYOUT: MAIN + SIDEBAR */
+.page-layout{display:flex;min-height:calc(100vh - 56px)}
+.main-content{flex:1;min-width:0;padding-right:320px}
+
+/* DEAL SIDEBAR */
+.deal-sidebar{position:fixed;top:56px;right:0;width:300px;height:calc(100vh - 56px);background:var(--bg-elevated);border-left:1px solid var(--border);z-index:80;display:flex;flex-direction:column;overflow:hidden}
+.deal-sidebar-header{padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.deal-sidebar-title{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--text);display:flex;align-items:center;gap:8px}
+.deal-sidebar-title svg{width:16px;height:16px;stroke:var(--gold)}
+.deal-sidebar-actions{display:flex;gap:6px}
+.deal-clear-btn{font-family:var(--font-accent);font-size:9px;font-weight:600;color:var(--text-dim);background:none;border:1px solid var(--border);padding:3px 8px;border-radius:6px;cursor:pointer;transition:all .2s}
 .deal-clear-btn:hover{color:var(--red);border-color:var(--red)}
-.deal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.deal-sidebar-body{flex:1;overflow-y:auto;padding:12px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.deal-sidebar-body::-webkit-scrollbar{width:4px}
+.deal-sidebar-body::-webkit-scrollbar-thumb{background:rgba(255,215,0,0.1);border-radius:2px}
 .deal-field{display:flex;flex-direction:column;gap:3px}
-.deal-field label{font-family:var(--font-accent);font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em}
-.deal-field input,.deal-field select{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;transition:border-color .2s,background .2s}
+.deal-field label{font-family:var(--font-accent);font-size:9px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
+.deal-field input,.deal-field select{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:7px;padding:7px 9px;color:var(--text);font-family:var(--font-body);font-size:12px;outline:none;transition:border-color .2s,background .2s;width:100%}
 .deal-field input:focus,.deal-field select:focus{border-color:rgba(255,215,0,0.35);background:rgba(255,215,0,0.04)}
 .deal-field input::placeholder{color:var(--text-dim)}
-.deal-field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
+.deal-field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;cursor:pointer}
 .deal-field select option{background:var(--bg);color:var(--text)}
-.deal-status{font-family:var(--font-accent);font-size:11px;color:var(--text-dim);text-align:center;padding:6px 0;transition:color .2s}
+.deal-field.has-value input,.deal-field.has-value select{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.04)}
+.deal-field.has-value label{color:var(--green)}
+.deal-sidebar-footer{padding:10px 16px 14px;border-top:1px solid rgba(255,255,255,0.06);flex-shrink:0}
+.deal-save-btn{width:100%;padding:9px;border:none;border-radius:8px;font-family:var(--font-accent);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:all .25s var(--ease-out-expo);display:flex;align-items:center;justify-content:center;gap:6px}
+.deal-save-btn.unsaved{background:linear-gradient(135deg,var(--gold),var(--gold-mid));color:var(--bg)}
+.deal-save-btn.unsaved:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,215,0,0.25)}
+.deal-save-btn.saved{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);color:var(--green)}
+.deal-status{font-family:var(--font-accent);font-size:10px;color:var(--text-dim);text-align:center;padding:6px 0 0;line-height:1.4}
 .deal-status.active{color:var(--green)}
 .deal-status strong{color:var(--gold)}
-.populated-indicator{display:none;width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;margin-left:auto}
-.prompt-card.has-deal-data .populated-indicator{display:block}
+
+/* Mobile sidebar toggle */
+.sidebar-toggle{display:none;position:fixed;bottom:24px;right:24px;width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold-mid));color:var(--bg);border:none;z-index:90;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(255,215,0,0.3);font-size:18px}
+.sidebar-toggle .badge-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--green);display:none}
+.sidebar-toggle .badge-dot.visible{display:block}
 
 /* BACK TO TOP */
-.back-to-top{position:fixed;bottom:24px;right:24px;width:40px;height:40px;border-radius:10px;background:rgba(255,215,0,0.1);border:1px solid var(--border);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:translateY(10px);transition:all .3s var(--ease-out-expo);z-index:50;backdrop-filter:blur(8px)}
+.back-to-top{position:fixed;bottom:24px;right:324px;width:40px;height:40px;border-radius:10px;background:rgba(255,215,0,0.1);border:1px solid var(--border);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:translateY(10px);transition:all .3s var(--ease-out-expo);z-index:50;backdrop-filter:blur(8px)}
 .back-to-top.visible{opacity:1;transform:translateY(0)}
 .back-to-top:hover{background:rgba(255,215,0,0.2);border-color:var(--gold);transform:translateY(-2px)}
 
@@ -209,7 +214,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .no-results .reset-link{color:var(--gold);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 
 /* RESPONSIVE */
+@media(max-width:1100px){
+  .main-content{padding-right:280px}
+  .deal-sidebar{width:260px}
+}
 @media(max-width:900px){
+  .main-content{padding-right:0}
+  .deal-sidebar{transform:translateX(100%);transition:transform .35s var(--ease-out-expo);width:300px;box-shadow:-8px 0 30px rgba(0,0,0,0.5)}
+  .deal-sidebar.mobile-open{transform:translateX(0)}
+  .sidebar-toggle{display:flex}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:75}
+  .sidebar-overlay.visible{display:block}
   .topbar-inner{flex-wrap:wrap;height:auto;padding:10px 1rem;gap:8px}
   .nav-pills{order:2;width:100%;gap:3px}
   .search-wrap{order:3;width:100%}
@@ -222,14 +237,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
   .card-title{white-space:normal}
   .prompt-text{padding-right:14px;font-size:11px}
   .copy-btn{position:relative;top:auto;right:auto;margin-top:10px;width:100%;justify-content:center}
-  .deal-grid{grid-template-columns:1fr}
-  .deal-field[style*="span 2"]{grid-column:span 1}
   .situation-grid{grid-template-columns:1fr}
-  .back-to-top{bottom:16px;right:16px;width:36px;height:36px}
+  .back-to-top{bottom:24px;right:80px}
 }
 @media(max-width:480px){
   .hero h1{font-size:1.5rem}
-  .card-badges{display:none}
   .filter-group{flex-wrap:wrap}
 }
 </style>
@@ -271,81 +283,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
   </div>
 </div>
 
-<!-- DEAL INPUT -->
-<div class="deal-panel" id="dealPanel">
-  <div class="deal-toggle" onclick="document.getElementById('dealPanel').classList.toggle('open')">
-    <svg class="deal-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
-    <span class="deal-toggle-text">Enter Your Deal Details</span>
-    <span class="deal-toggle-badge" id="dealBadge">0 fields</span>
-  </div>
-  <div class="deal-form-wrap">
-    <div class="deal-form">
-      <div class="deal-form-header">
-        <div class="deal-form-title">Deal Details</div>
-        <button class="deal-clear-btn" onclick="clearDealForm()">Clear All</button>
-      </div>
-      <div class="deal-grid">
-        <div class="deal-field" style="grid-column:span 2">
-          <label for="dealAddress">Property Address</label>
-          <input type="text" id="dealAddress" placeholder="123 Main St, Dallas, TX 75201" data-deal="address">
-        </div>
-        <div class="deal-field">
-          <label for="dealType">Property Type</label>
-          <select id="dealType" data-deal="type">
-            <option value="">Select...</option>
-            <option value="Single Family">Single Family</option>
-            <option value="Duplex">Duplex</option>
-            <option value="Triplex">Triplex</option>
-            <option value="Fourplex">Fourplex</option>
-            <option value="Multifamily (5+ units)">Multifamily (5+ units)</option>
-            <option value="Townhome">Townhome</option>
-            <option value="Condo">Condo</option>
-          </select>
-        </div>
-        <div class="deal-field">
-          <label for="dealPrice">Asking / Purchase Price</label>
-          <input type="text" id="dealPrice" placeholder="$185,000" data-deal="price">
-        </div>
-        <div class="deal-field">
-          <label for="dealSqft">Square Footage</label>
-          <input type="text" id="dealSqft" placeholder="1,450" data-deal="sqft">
-        </div>
-        <div class="deal-field">
-          <label for="dealBedBath">Bed / Bath</label>
-          <input type="text" id="dealBedBath" placeholder="3/2" data-deal="bedbath">
-        </div>
-        <div class="deal-field">
-          <label for="dealYear">Year Built</label>
-          <input type="text" id="dealYear" placeholder="1978" data-deal="year">
-        </div>
-        <div class="deal-field">
-          <label for="dealArv">Estimated ARV</label>
-          <input type="text" id="dealArv" placeholder="$265,000" data-deal="arv">
-        </div>
-        <div class="deal-field">
-          <label for="dealRehab">Estimated Rehab</label>
-          <input type="text" id="dealRehab" placeholder="$45,000" data-deal="rehab">
-        </div>
-        <div class="deal-field">
-          <label for="dealCondition">Current Condition</label>
-          <input type="text" id="dealCondition" placeholder="Needs full rehab, roof + HVAC" data-deal="condition">
-        </div>
-      </div>
-    </div>
-    <div class="deal-status" id="dealStatus">Fill in any fields above. They will auto-populate into every prompt.</div>
-  </div>
-</div>
+<!-- PAGE LAYOUT -->
+<div class="page-layout">
+<div class="main-content">
 
 <!-- TOOLBAR -->
 <div class="toolbar" id="toolbar">
-  <div class="filter-group">
-    <span class="filter-label">Level:</span>
-    <button class="filter-btn active" data-level="all">All</button>
-    <button class="filter-btn" data-level="beginner">Beginner</button>
-    <button class="filter-btn" data-level="intermediate">Intermediate</button>
-    <button class="filter-btn" data-level="advanced">Advanced</button>
-  </div>
-  <div class="toolbar-sep"></div>
+  
   <button class="situation-btn" id="situationToggle" onclick="toggleSituationPanel()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
     Find by Situation
@@ -426,7 +370,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
     <div class="prompt-card" data-level="beginner" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">01</span><span class="card-title">Quick ARV Estimate from Address</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -478,7 +421,6 @@ Important: Only reference recently CLOSED sales (last 90 days preferred, 6 month
     <div class="prompt-card" data-level="intermediate" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">02</span><span class="card-title">Comp Validation and Adjustment</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -540,7 +482,6 @@ Give me a final adjusted ARV range using only the strong and acceptable comps.</
     <div class="prompt-card" data-level="beginner" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">03</span><span class="card-title">The 30-Second Deal Filter</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -588,7 +529,6 @@ Keep the answer to 3-4 sentences max.</div>
     <div class="prompt-card" data-level="intermediate" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">04</span><span class="card-title">Thin Market / Rural ARV Analysis</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -641,7 +581,6 @@ Give me a conservative ARV range and your confidence level (High / Medium / Low 
     <div class="prompt-card" data-level="advanced" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">05</span><span class="card-title">ARV Stress Test — 3 Scenarios</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -703,7 +642,6 @@ Key question: Does this deal still make at least $15K in the worst case scenario
     <div class="prompt-card" data-level="advanced" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">06</span><span class="card-title">Price Per Square Foot Neighborhood Map</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -751,7 +689,6 @@ Summarize with a realistic $/sqft target for my ARV calculation.</div>
     <div class="prompt-card" data-level="beginner" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">07</span><span class="card-title">ARV Sanity Check — Am I Being Optimistic?</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -803,7 +740,6 @@ Be brutally honest. I want to find problems now, not after I've invested.</div>
     <div class="prompt-card" data-level="intermediate" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">08</span><span class="card-title">Absorption Rate and DOM Analysis</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -855,7 +791,6 @@ I'm using this data to plan my hold time and budget carrying costs accurately.</
     <div class="prompt-card" data-level="advanced" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">09</span><span class="card-title">Multifamily ARV (2-20 Units)</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -932,7 +867,6 @@ Then:
     <div class="prompt-card" data-level="beginner" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">10</span><span class="card-title">Full Line-Item Rehab Estimate</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1013,7 +947,6 @@ Provide totals for all three scenarios. I'll use the Medium estimate for my offe
     <div class="prompt-card" data-level="intermediate" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">11</span><span class="card-title">Photo-Based Rehab Analysis</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1068,7 +1001,6 @@ Be conservative. If something looks questionable, assume it needs replacement, n
     <div class="prompt-card" data-level="intermediate" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">12</span><span class="card-title">MEP Systems Deep Dive</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1133,7 +1065,6 @@ What is the total MEP budget range I should plan for?</div>
     <div class="prompt-card" data-level="beginner" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">13</span><span class="card-title">Scope of Work (SOW) Generator</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1196,7 +1127,6 @@ Include contractor instructions at the bottom:
     <div class="prompt-card" data-level="advanced" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">14</span><span class="card-title">Contractor Bid Comparison</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1259,7 +1189,6 @@ Recommend which bid appears most reliable and why.</div>
     <div class="prompt-card" data-level="intermediate" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">15</span><span class="card-title">Rehab Level Classifier</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1317,7 +1246,6 @@ Which level fits this property? Provide:
     <div class="prompt-card" data-level="advanced" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">16</span><span class="card-title">Draw Schedule Builder</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1377,7 +1305,6 @@ Include notes on:
     <div class="prompt-card" data-level="beginner" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">17</span><span class="card-title">Rehab ROI Prioritizer</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1431,7 +1358,6 @@ Which items give me the biggest bang for my buck? Which should I cut if budget i
     <div class="prompt-card" data-level="advanced" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">18</span><span class="card-title">Market-Adjusted Rehab Costs</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1497,7 +1423,6 @@ Please:
     <div class="prompt-card" data-level="beginner" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">19</span><span class="card-title">MAO Calculator — Maximum Allowable Offer</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1555,7 +1480,6 @@ Show all math step by step so I can verify the numbers.</div>
     <div class="prompt-card" data-level="intermediate" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">20</span><span class="card-title">Seller Justification Script — "The Fluff"</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1615,7 +1539,6 @@ Keep it conversational, not adversarial. I want the seller to understand my pers
     <div class="prompt-card" data-level="advanced" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">21</span><span class="card-title">Multi-Offer Option Strategy</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1681,7 +1604,6 @@ Frame all three as "Here are three ways we can make this work."</div>
     <div class="prompt-card" data-level="intermediate" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">22</span><span class="card-title">Seller Motivation Research</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1736,7 +1658,6 @@ Give me a conversation framework for my first contact with this seller.</div>
     <div class="prompt-card" data-level="advanced" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">23</span><span class="card-title">Creative Deal Structure Generator</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1803,7 +1724,6 @@ For each, explain: how it works, what terms to propose, projected profit, risk l
     <div class="prompt-card" data-level="beginner" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">24</span><span class="card-title">Offer Email/Letter Generator</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1857,7 +1777,6 @@ Make it professional, concise, and credible. Include all key terms. Add a 48-72 
     <div class="prompt-card" data-level="intermediate" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">25</span><span class="card-title">Objection Handler — Seller Says No</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1913,7 +1832,6 @@ Please provide:
     <div class="prompt-card" data-level="advanced" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">26</span><span class="card-title">Partnership Deal Structure (50/50)</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1982,7 +1900,6 @@ Compare: seller's outcome from selling at my price vs. partnering at their price
     <div class="prompt-card" data-level="beginner" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">27</span><span class="card-title">Hard Money Loan Calculator</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2042,7 +1959,6 @@ Please calculate:
     <div class="prompt-card" data-level="intermediate" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">28</span><span class="card-title">DSCR Refinance Analysis (Flip to Hold)</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2108,7 +2024,6 @@ Is the rental strategy viable? Does the DSCR meet lender minimums (1.0+, ideally
     <div class="prompt-card" data-level="intermediate" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">29</span><span class="card-title">Exit Strategy Decision Matrix</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2173,7 +2088,6 @@ Can I identify at least two viable exits before entering this deal?</div>
     <div class="prompt-card" data-level="advanced" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">30</span><span class="card-title">Deal Package for Lender</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2252,7 +2166,6 @@ Format it professionally. A lender should be able to make a decision from this p
     <div class="prompt-card" data-level="beginner" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">31</span><span class="card-title">Total Project Cost Calculator</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2320,7 +2233,6 @@ Show: Total all-in cost, net profit, ROI, and annualized ROI.</div>
     <div class="prompt-card" data-level="advanced" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">32</span><span class="card-title">Private Money Pitch Builder</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2368,7 +2280,6 @@ Create a 2-minute pitch, a 1-page summary, and a risk section explaining how the
     <div class="prompt-card" data-level="intermediate" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">33</span><span class="card-title">Flip vs. Hold Decision Calculator</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2417,7 +2328,6 @@ Calculate for each scenario: net profit, ROI, tax implications, and total wealth
     <div class="prompt-card" data-level="beginner" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">34</span><span class="card-title">Cash-to-Close Worksheet</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2480,7 +2390,6 @@ Give me the total number I need in my bank account before I can confidently make
     <div class="prompt-card" data-level="beginner" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">35</span><span class="card-title">Neighborhood Quick Score</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2534,7 +2443,6 @@ Give me an overall investment viability score and recommendation.</div>
     <div class="prompt-card" data-level="intermediate" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">36</span><span class="card-title">Buy Box Definition Builder</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2582,7 +2490,6 @@ Create a screening checklist with must-haves, preferences, and automatic disqual
     <div class="prompt-card" data-level="intermediate" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">37</span><span class="card-title">Rental Market Analysis</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2631,7 +2538,6 @@ Would it work as a DSCR-financed rental if I can't sell as a flip?</div>
     <div class="prompt-card" data-level="advanced" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">38</span><span class="card-title">Market Cycle Position Assessment</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2675,7 +2581,6 @@ Is this market expanding, overheating, cooling, or recovering? How should this a
     <div class="prompt-card" data-level="beginner" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">39</span><span class="card-title">School District Impact on ARV</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2712,7 +2617,6 @@ Rule: Never cross school district lines when pulling comps unless verified non-i
     <div class="prompt-card" data-level="advanced" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">40</span><span class="card-title">Investor Competition Assessment</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2748,7 +2652,6 @@ What's my competitive advantage in this zip?</div>
     <div class="prompt-card" data-level="intermediate" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">41</span><span class="card-title">Hidden Market Lead Source Planner</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2819,7 +2722,6 @@ I want to find properties that aren't on the MLS or being marketed by wholesaler
     <div class="prompt-card" data-level="beginner" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">42</span><span class="card-title">Pre-Offer Due Diligence Checklist</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2877,7 +2779,6 @@ SPECIAL CHECKS (if applicable):
     <div class="prompt-card" data-level="intermediate" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">43</span><span class="card-title">Title Issue Red Flag Scanner</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2921,7 +2822,6 @@ What title issues has Toby flagged as deal-killers with lenders?
     <div class="prompt-card" data-level="beginner" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">44</span><span class="card-title">Property Walkthrough Checklist</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -2991,7 +2891,6 @@ Bring your contractor to this walkthrough. If they don't walk it before bidding,
     <div class="prompt-card" data-level="intermediate" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">45</span><span class="card-title">Permit and Zoning Verification</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3028,7 +2927,6 @@ Unpermitted work discovered after purchase can:
     <div class="prompt-card" data-level="advanced" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">46</span><span class="card-title">Vacant Lot Due Diligence</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3071,7 +2969,6 @@ Before any financial analysis, verify: wetland status, zoning, buildable area, u
     <div class="prompt-card" data-level="intermediate" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">47</span><span class="card-title">Insurance and Risk Assessment</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3105,7 +3002,6 @@ Factor the insurance costs into my monthly carrying cost calculation.</div>
     <div class="prompt-card" data-level="beginner" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">48</span><span class="card-title">Listing History Detective</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3157,7 +3053,6 @@ This is intelligence my competitors don't have. Use it in my negotiation.</div>
     <div class="prompt-card" data-level="beginner" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">49</span><span class="card-title">Side-by-Side Deal Comparison</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3214,7 +3109,6 @@ Create a comparison table covering: net profit, ROI, cash needed, risk level, re
     <div class="prompt-card" data-level="intermediate" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">50</span><span class="card-title">Risk-Adjusted Deal Ranking</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3255,7 +3149,6 @@ Score each on: ARV confidence, rehab complexity, market conditions, financing, e
     <div class="prompt-card" data-level="advanced" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">51</span><span class="card-title">Portfolio-Level Deal Selection</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3302,7 +3195,6 @@ Optimize for total profit, staggered timelines, and risk diversification. Show t
     <div class="prompt-card" data-level="beginner" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">52</span><span class="card-title">Deal Scorecard Template</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3349,7 +3241,6 @@ What specific changes would move the lowest scores up?</div>
     <div class="prompt-card" data-level="intermediate" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">53</span><span class="card-title">Post-Mortem: What Went Wrong?</span></div>
-        <div class="card-badges"><span class="badge badge-intermediate">Intermediate</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3395,7 +3286,6 @@ Where was my analysis off? What should I change for next time?</div>
     <div class="prompt-card" data-level="advanced" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">54</span><span class="card-title">Annual Deal Flow Analysis</span></div>
-        <div class="card-badges"><span class="badge badge-advanced">Advanced</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3448,7 +3338,6 @@ Calculate conversion rates, average returns, best/worst deals, and where I shoul
     <div class="prompt-card" data-level="beginner" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">55</span><span class="card-title">Daily Deal Analysis Log</span></div>
-        <div class="card-badges"><span class="badge badge-beginner">Beginner</span></div>
         <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -3507,6 +3396,85 @@ Track my weekly analysis count and conversion rate. Am I analyzing enough deals?
   </div>
 </div>
 </div>
+
+</div><!-- /main-content -->
+
+<!-- DEAL SIDEBAR -->
+<aside class="deal-sidebar" id="dealSidebar">
+  <div class="deal-sidebar-header">
+    <div class="deal-sidebar-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Your Deal
+    </div>
+    <div class="deal-sidebar-actions">
+      <button class="deal-clear-btn" onclick="clearDealForm()">Clear</button>
+    </div>
+  </div>
+  <div class="deal-sidebar-body">
+    <div class="deal-field">
+      <label>Property Address</label>
+      <input type="text" id="dealAddress" placeholder="123 Main St, Dallas, TX 75201" data-deal="address">
+    </div>
+    <div class="deal-field">
+      <label>Property Type</label>
+      <select id="dealType" data-deal="type">
+        <option value="">Select type...</option>
+        <option value="Single Family">Single Family</option>
+        <option value="Duplex">Duplex</option>
+        <option value="Triplex">Triplex</option>
+        <option value="Fourplex">Fourplex</option>
+        <option value="Multifamily (5+ units)">Multifamily (5+)</option>
+        <option value="Townhome">Townhome</option>
+        <option value="Condo">Condo</option>
+      </select>
+    </div>
+    <div class="deal-field">
+      <label>Asking / Purchase Price</label>
+      <input type="text" id="dealPrice" placeholder="$185,000" data-deal="price">
+    </div>
+    <div class="deal-field">
+      <label>Square Footage</label>
+      <input type="text" id="dealSqft" placeholder="1,450" data-deal="sqft">
+    </div>
+    <div class="deal-field">
+      <label>Bed / Bath</label>
+      <input type="text" id="dealBedBath" placeholder="3 / 2" data-deal="bedbath">
+    </div>
+    <div class="deal-field">
+      <label>Year Built</label>
+      <input type="text" id="dealYear" placeholder="1978" data-deal="year">
+    </div>
+    <div class="deal-field">
+      <label>Estimated ARV</label>
+      <input type="text" id="dealArv" placeholder="$265,000" data-deal="arv">
+    </div>
+    <div class="deal-field">
+      <label>Estimated Rehab</label>
+      <input type="text" id="dealRehab" placeholder="$45,000" data-deal="rehab">
+    </div>
+    <div class="deal-field">
+      <label>Current Condition</label>
+      <input type="text" id="dealCondition" placeholder="Needs full rehab, roof + HVAC" data-deal="condition">
+    </div>
+  </div>
+  <div class="deal-sidebar-footer">
+    <button class="deal-save-btn unsaved" id="dealSaveBtn" onclick="saveDeal()">
+      Save Deal Details
+    </button>
+    <div class="deal-status" id="dealStatus">Fields auto-fill into prompts when you copy.</div>
+  </div>
+</aside>
+
+</div><!-- /page-layout -->
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
+<!-- MOBILE SIDEBAR TOGGLE -->
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleMobileSidebar()">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  <span class="badge-dot" id="mobileBadgeDot"></span>
+</button>
 
 <!-- FOOTER -->
 <div class="footer">
@@ -3669,25 +3637,136 @@ function applyDealData(text) {
   return r;
 }
 
+let dealSaved = false;
+
 function updateDealStatus() {
   const d = getDealData();
   const status = document.getElementById('dealStatus');
-  const badge = document.getElementById('dealBadge');
+  const saveBtn = document.getElementById('dealSaveBtn');
+  const mobileDot = document.getElementById('mobileBadgeDot');
+
+  // Highlight fields that have values
+  document.querySelectorAll('.deal-field').forEach(f => {
+    const input = f.querySelector('input, select');
+    if (input && input.value.trim()) {
+      f.classList.add('has-value');
+    } else {
+      f.classList.remove('has-value');
+    }
+  });
+
   if (d._filled === 0) {
-    status.textContent = 'Fill in any fields above. They auto-populate into every prompt when you copy.';
+    status.textContent = 'Fields auto-fill into prompts when you copy.';
     status.classList.remove('active');
-    badge.classList.remove('visible');
-  } else {
-    status.innerHTML = '<strong>' + d._filled + ' field' + (d._filled !== 1 ? 's' : '') + '</strong> will auto-fill when you copy any prompt.';
-    status.classList.add('active');
-    badge.textContent = d._filled + ' filled';
-    badge.classList.add('visible');
+    saveBtn.className = 'deal-save-btn unsaved';
+    saveBtn.textContent = 'Save Deal Details';
+    dealSaved = false;
+    if (mobileDot) mobileDot.classList.remove('visible');
+  } else if (!dealSaved) {
+    status.innerHTML = d._filled + ' field' + (d._filled !== 1 ? 's' : '') + ' ready. Hit Save to lock in.';
+    status.classList.remove('active');
+    saveBtn.className = 'deal-save-btn unsaved';
+    saveBtn.textContent = 'Save Deal Details';
+    if (mobileDot) mobileDot.classList.remove('visible');
   }
 }
 
+function applyDealDataWithHighlight(text) {
+  const d = getDealData();
+  if (d._filled === 0) return escapeHtml(text);
+  let r = escapeHtml(text);
+  const hl = (v) => '<span class="deal-filled">' + escapeHtml(v) + '</span>';
+  if (d.address) {
+    r = r.replace(/\[FULL ADDRESS WITH ZIP CODE\]/g, hl(d.address));
+    r = r.replace(/\[FULL ADDRESS\]/g, hl(d.address));
+    r = r.replace(/\[ADDRESS\]/g, hl(d.address));
+    const zip = d.address.match(/\d{5}/);
+    if (zip) r = r.replace(/\[XXXXX\]/g, hl(zip[0]));
+  }
+  if (d.type) {
+    r = r.replace(/Single Family \/ \[ADJUST\]/g, hl(d.type));
+    r = r.replace(/\[Single Family \/ Duplex \/ etc\.\]/g, hl(d.type));
+  }
+  if (d.price) {
+    const pv = d.price.replace(/[^0-9.,]/g, '');
+    const pf = d.price.startsWith('$') ? d.price : '$' + pv;
+    r = r.replace(/\$\[PRICE\]/g, hl(pf));
+    r = r.replace(/\[PRICE\]/g, hl(pf));
+  }
+  if (d.sqft) {
+    const sv = d.sqft.replace(/[^0-9,]/g, '');
+    r = r.replace(/\[SQ FT\]/g, hl(sv));
+    r = r.replace(/\[X\] sqft/g, hl(sv + ' sqft'));
+  }
+  if (d.bedbath) {
+    r = r.replace(/\[BED\/BATH\]/g, hl(d.bedbath));
+    r = r.replace(/\[X\/X\]/g, hl(d.bedbath));
+    const parts = d.bedbath.split(/[\/,]/);
+    if (parts.length >= 2) {
+      r = r.replace(/\[X\] bed \/ \[X\] bath/g, hl(parts[0].trim() + ' bed / ' + parts[1].trim() + ' bath'));
+    }
+  }
+  if (d.year) {
+    r = r.replace(/\[YEAR\]/g, hl(d.year));
+  }
+  if (d.arv) {
+    const af = d.arv.startsWith('$') ? d.arv : '$' + d.arv.replace(/[^0-9.,]/g, '');
+    r = r.replace(/\$\[YOUR ARV\]/g, hl(af));
+    r = r.replace(/\[YOUR ARV\]/g, hl(af));
+  }
+  if (d.condition) {
+    r = r.replace(/\[Brief description[^\]]*\]/g, hl(d.condition));
+    r = r.replace(/\[Describe everything you know[^\]]*\]/g, hl(d.condition));
+    r = r.replace(/\[Describe[^\]]*\]/g, hl(d.condition));
+    r = r.replace(/\[describe[^\]]*\]/g, hl(d.condition));
+  }
+  return r;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function populatePromptsVisually() {
+  document.querySelectorAll('.prompt-text').forEach(el => {
+    if (!el.dataset.originalText) el.dataset.originalText = el.textContent;
+    el.innerHTML = applyDealDataWithHighlight(el.dataset.originalText);
+    el.classList.add('has-deal-data');
+  });
+}
+
+function restorePromptsVisually() {
+  document.querySelectorAll('.prompt-text').forEach(el => {
+    if (el.dataset.originalText) {
+      el.textContent = el.dataset.originalText;
+      el.classList.remove('has-deal-data');
+    }
+  });
+}
+
+function saveDeal() {
+  const d = getDealData();
+  if (d._filled === 0) {
+    showToast('Enter at least one field first');
+    return;
+  }
+  dealSaved = true;
+  const status = document.getElementById('dealStatus');
+  const saveBtn = document.getElementById('dealSaveBtn');
+  const mobileDot = document.getElementById('mobileBadgeDot');
+  status.innerHTML = '<strong>' + d._filled + ' field' + (d._filled !== 1 ? 's' : '') + '</strong> saved and filled into prompts.';
+  status.classList.add('active');
+  saveBtn.className = 'deal-save-btn saved';
+  saveBtn.innerHTML = '\u2713 Deal Saved';
+  if (mobileDot) mobileDot.classList.add('visible');
+  populatePromptsVisually();
+  showToast(d._filled + ' deal field' + (d._filled > 1 ? 's' : '') + ' filled into all prompts.');
+  closeMobileSidebar();
+}
+
 document.querySelectorAll('[data-deal]').forEach(el => {
-  el.addEventListener('input', updateDealStatus);
-  el.addEventListener('change', updateDealStatus);
+  el.addEventListener('input', () => { dealSaved = false; restorePromptsVisually(); updateDealStatus(); });
+  el.addEventListener('change', () => { dealSaved = false; restorePromptsVisually(); updateDealStatus(); });
 });
 
 function clearDealForm() {
@@ -3695,7 +3774,20 @@ function clearDealForm() {
     if (el.tagName === 'SELECT') el.selectedIndex = 0;
     else el.value = '';
   });
+  dealSaved = false;
+  restorePromptsVisually();
   updateDealStatus();
+  showToast('Deal details cleared');
+}
+
+// Mobile sidebar
+function toggleMobileSidebar() {
+  document.getElementById('dealSidebar').classList.toggle('mobile-open');
+  document.getElementById('sidebarOverlay').classList.toggle('visible');
+}
+function closeMobileSidebar() {
+  document.getElementById('dealSidebar').classList.remove('mobile-open');
+  document.getElementById('sidebarOverlay').classList.remove('visible');
 }
 
 // ===== COPY PROMPT (with deal data) =====
@@ -3703,11 +3795,11 @@ function copyPrompt(btn) {
   const block = btn.closest('.prompt-block');
   let text = block.querySelector('.prompt-text').innerText;
   const d = getDealData();
-  text = applyDealData(text);
+  if (dealSaved) text = applyDealData(text);
   navigator.clipboard.writeText(text).then(() => {
     btn.innerHTML = '\u2713 Copied';
     btn.classList.add('copied');
-    showToast(d._filled > 0 ? 'Copied with ' + d._filled + ' deal field' + (d._filled > 1 ? 's' : '') + ' filled in' : 'Prompt copied to clipboard');
+    showToast(dealSaved && d._filled > 0 ? 'Copied with ' + d._filled + ' deal field' + (d._filled > 1 ? 's' : '') + ' filled in' : 'Prompt copied to clipboard');
     setTimeout(() => {
       btn.innerHTML = 'Copy';
       btn.classList.remove('copied');
@@ -3742,23 +3834,7 @@ document.querySelectorAll('.nav-pill').forEach(pill => {
   });
 });
 
-// ===== LEVEL FILTERS =====
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const level = btn.dataset.level;
-    document.querySelectorAll('.prompt-card').forEach(card => {
-      if (level === 'all' || card.dataset.level === level) {
-        card.classList.remove('hidden');
-      } else {
-        card.classList.add('hidden');
-      }
-    });
-    updateSectionCounts();
-    updateResultsCount();
-  });
-});
+
 
 // ===== SEARCH =====
 const searchInput = document.getElementById('searchInput');
