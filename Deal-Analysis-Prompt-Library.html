@@ -47,7 +47,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .topbar.scrolled{box-shadow:0 4px 30px rgba(0,0,0,0.4)}
 .topbar-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;gap:16px;height:56px}
 .logo{font-family:var(--font-display);font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),var(--gold-mid));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap;flex-shrink:0}
-.nav-pills{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;flex:1;padding:4px 0}
+.nav-pills-wrap{position:relative;flex:1;min-width:0}
+.nav-pills-wrap::before,.nav-pills-wrap::after{content:'';position:absolute;top:0;bottom:0;width:32px;z-index:2;pointer-events:none;transition:opacity .2s}
+.nav-pills-wrap::before{left:0;background:linear-gradient(to right,rgba(11,11,15,0.95),transparent)}
+.nav-pills-wrap::after{right:0;background:linear-gradient(to left,rgba(11,11,15,0.95),transparent)}
+.nav-pills-wrap.at-start::before{opacity:0}
+.nav-pills-wrap.at-end::after{opacity:0}
+.nav-scroll-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:24px;height:24px;border-radius:50%;background:rgba(255,215,0,0.12);border:1px solid rgba(255,215,0,0.2);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:12px;line-height:1}
+.nav-scroll-btn:hover{background:rgba(255,215,0,0.25);border-color:var(--gold)}
+.nav-scroll-btn.left{left:2px}
+.nav-scroll-btn.right{right:2px}
+.nav-scroll-btn.hidden{opacity:0;pointer-events:none}
+.nav-pills{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding:4px 28px;scroll-behavior:smooth}
 .nav-pills::-webkit-scrollbar{display:none}
 .nav-pill{font-family:var(--font-accent);font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;border:1px solid transparent;color:var(--text-dim);cursor:pointer;white-space:nowrap;transition:all .25s var(--ease-out-expo);background:transparent;text-decoration:none;user-select:none}
 .nav-pill:hover{color:var(--text-muted);background:rgba(255,255,255,0.04)}
@@ -143,9 +154,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 /* PROMPT BLOCKS */
 .prompt-block{position:relative;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.06);border-radius:0 0 8px 8px;padding:14px 14px 14px}
 .prompt-text{font-family:var(--font-mono);font-size:12px;line-height:1.7;color:var(--text);white-space:pre-wrap;word-break:break-word;padding-right:70px}
-.copy-btn{position:absolute;top:10px;right:10px;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.15);color:var(--gold);font-family:var(--font-accent);font-size:10px;font-weight:600;padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .2s var(--ease-out-expo);display:flex;align-items:center;gap:4px}
+.copy-btn{position:sticky;top:10px;float:right;z-index:5;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.15);color:var(--gold);font-family:var(--font-accent);font-size:10px;font-weight:600;padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .2s var(--ease-out-expo);display:flex;align-items:center;gap:4px;margin-bottom:-24px}
 .copy-btn:hover{background:rgba(255,215,0,0.15);border-color:var(--gold);transform:translateY(-1px)}
 .copy-btn.copied{background:rgba(34,197,94,0.25);border-color:var(--green);color:var(--green);transform:scale(1.08);font-weight:700;letter-spacing:.04em;box-shadow:0 0 12px rgba(34,197,94,0.2)}
+/* Quick copy on card header */
+.quick-copy{background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.12);color:var(--gold);font-family:var(--font-accent);font-size:9px;font-weight:600;padding:3px 8px;border-radius:5px;cursor:pointer;transition:all .2s var(--ease-out-expo);opacity:0;flex-shrink:0;text-transform:uppercase;letter-spacing:.04em}
+.card-header:hover .quick-copy{opacity:1}
+.quick-copy:hover{background:rgba(255,215,0,0.15);border-color:var(--gold)}
+.quick-copy.copied{opacity:1;background:rgba(34,197,94,0.2);border-color:var(--green);color:var(--green)}
 .prompt-tip{font-size:11px;color:var(--text-dim);margin-top:10px;padding:8px 12px;border-left:2px solid rgba(255,215,0,0.2);background:rgba(255,215,0,0.02);border-radius:0 6px 6px 0;line-height:1.5}
 .deal-filled{color:var(--green);font-weight:600;background:rgba(34,197,94,0.08);padding:0 3px;border-radius:3px}
 .prompt-text.has-deal-data{border-left:2px solid rgba(34,197,94,0.3);padding-left:12px}
@@ -169,7 +185,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .deal-field label{font-family:var(--font-accent);font-size:9px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em}
 .deal-field input,.deal-field select{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:7px;padding:7px 9px;color:var(--text);font-family:var(--font-body);font-size:12px;outline:none;transition:border-color .2s,background .2s;width:100%}
 .deal-field input:focus,.deal-field select:focus{border-color:rgba(255,215,0,0.35);background:rgba(255,215,0,0.04)}
-.deal-field input::placeholder{color:var(--text-dim)}
+.deal-field input::placeholder{color:rgba(102,102,102,0.4);font-style:italic}
 .deal-field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;cursor:pointer}
 .deal-field select option{background:var(--bg);color:var(--text)}
 .deal-field.has-value input,.deal-field.has-value select{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.04)}
@@ -246,25 +262,29 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 <div class="topbar" id="topbar">
   <div class="topbar-inner">
     <div class="logo">Unshakable Investor</div>
-    <nav class="nav-pills" id="navPills">
-      <a class="nav-pill active" href="#" data-cat="all">All</a>
-      <a class="nav-pill" href="#arv" data-cat="arv">ARV &amp; Comps</a>
-      <a class="nav-pill" href="#rehab" data-cat="rehab">Rehab</a>
-      <a class="nav-pill" href="#offer" data-cat="offer">Offer</a>
-      <a class="nav-pill" href="#funding" data-cat="funding">Funding</a>
-      <a class="nav-pill" href="#market" data-cat="market">Market</a>
-      <a class="nav-pill" href="#diligence" data-cat="diligence">Diligence</a>
-      <a class="nav-pill" href="#compare" data-cat="compare">Compare</a>
-      <a class="nav-pill" href="#sourcing" data-cat="sourcing">Sourcing</a>
-      <a class="nav-pill" href="#situations" data-cat="situations">Situations</a>
-      <a class="nav-pill" href="#negotiate" data-cat="negotiate">Negotiate</a>
-      <a class="nav-pill" href="#contractor" data-cat="contractor">Contractors</a>
-      <a class="nav-pill" href="#mktintel" data-cat="mktintel">Market Intel</a>
-      <a class="nav-pill" href="#risk" data-cat="risk">Risk</a>
-      <a class="nav-pill" href="#offers" data-cat="offers">Offers</a>
-      <a class="nav-pill" href="#advdili" data-cat="advdili">Adv. Diligence</a>
-      <a class="nav-pill" href="#dispo" data-cat="dispo">Disposition</a>
-    </nav>
+    <div class="nav-pills-wrap at-start" id="navPillsWrap">
+      <button class="nav-scroll-btn left hidden" id="navScrollLeft" onclick="scrollNav(-1)">&#8249;</button>
+      <button class="nav-scroll-btn right" id="navScrollRight" onclick="scrollNav(1)">&#8250;</button>
+      <nav class="nav-pills" id="navPills">
+        <a class="nav-pill active" href="#" data-cat="all">All</a>
+        <a class="nav-pill" href="#arv" data-cat="arv">ARV &amp; Comps</a>
+        <a class="nav-pill" href="#rehab" data-cat="rehab">Rehab</a>
+        <a class="nav-pill" href="#offer" data-cat="offer">Offer</a>
+        <a class="nav-pill" href="#funding" data-cat="funding">Funding</a>
+        <a class="nav-pill" href="#market" data-cat="market">Market</a>
+        <a class="nav-pill" href="#diligence" data-cat="diligence">Diligence</a>
+        <a class="nav-pill" href="#compare" data-cat="compare">Compare</a>
+        <a class="nav-pill" href="#sourcing" data-cat="sourcing">Sourcing</a>
+        <a class="nav-pill" href="#situations" data-cat="situations">Situations</a>
+        <a class="nav-pill" href="#negotiate" data-cat="negotiate">Negotiate</a>
+        <a class="nav-pill" href="#contractor" data-cat="contractor">Contractors</a>
+        <a class="nav-pill" href="#mktintel" data-cat="mktintel">Market Intel</a>
+        <a class="nav-pill" href="#risk" data-cat="risk">Risk</a>
+        <a class="nav-pill" href="#offers" data-cat="offers">Offers</a>
+        <a class="nav-pill" href="#advdili" data-cat="advdili">Adv. Diligence</a>
+        <a class="nav-pill" href="#dispo" data-cat="dispo">Disposition</a>
+      </nav>
+    </div>
     <div class="search-wrap">
       <div class="search-box">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -439,7 +459,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
     <div class="prompt-card" data-level="beginner" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">01</span><span class="card-title">Quick ARV Estimate from Address</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when you have a property address and want a fast ARV range before going deeper. Best for initial screening.</div>
@@ -491,7 +511,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">02</span><span class="card-title">Comp Validation and Adjustment</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use after pulling comps to validate whether they're truly comparable. Catches bad comps before they wreck your ARV.</div>
@@ -547,7 +567,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">03</span><span class="card-title">The 30-Second Deal Filter</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Your first pass on any lead. Quick yes/no/maybe before you spend real time. Run 3+ of these per day.</div>
@@ -596,7 +616,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">04</span><span class="card-title">Thin Market / Rural ARV Analysis</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Rural and small-town markets have fewer comps. This prompt forces conservative ARV assumptions when data is thin.</div>
@@ -648,7 +668,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">05</span><span class="card-title">ARV Stress Test — 3 Scenarios</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Run this after you have a base ARV. Tests whether the deal survives a market downturn. Required before committing capital.</div>
@@ -708,7 +728,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">06</span><span class="card-title">Price Per Square Foot Neighborhood Map</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Maps $/sqft patterns across a neighborhood to identify pricing ceilings and micro-market trends. Essential before setting your ARV target.</div>
@@ -759,7 +779,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">07</span><span class="card-title">ARV Sanity Check — Am I Being Optimistic?</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Challenge your own ARV before you fall in love with a deal. This prompt is designed to poke holes.</div>
@@ -809,7 +829,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">08</span><span class="card-title">Absorption Rate and DOM Analysis</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">How fast are homes selling in your target zip? This determines holding costs and whether you'll get stuck holding a rehabbed property.</div>
@@ -860,7 +880,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">09</span><span class="card-title">Multifamily ARV (2-20 Units)</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Multifamily (2-20 units) uses both comparable sales AND income approach. This prompt runs both methods and reconciles them.</div>
@@ -932,7 +952,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">10</span><span class="card-title">Full Line-Item Rehab Estimate</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">The foundational rehab prompt. Never use lump sum estimates. Every line item broken out separately.</div>
@@ -996,7 +1016,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">11</span><span class="card-title">Photo-Based Rehab Analysis</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Upload property photos and let AI identify issues you might miss. The student who didn't do this underbid by $87K.</div>
@@ -1044,7 +1064,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">12</span><span class="card-title">MEP Systems Deep Dive</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">MEPs (Mechanical, Electrical, Plumbing) are the most expensive and most commonly underestimated cost category.</div>
@@ -1102,7 +1122,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">13</span><span class="card-title">Scope of Work (SOW) Generator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Creates a contractor-ready SOW document you can hand to your GC for itemized bidding.</div>
@@ -1153,7 +1173,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">14</span><span class="card-title">Contractor Bid Comparison</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Compare multiple contractor bids line by line. Identify where one bid is suspiciously low or high.</div>
@@ -1213,7 +1233,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">15</span><span class="card-title">Rehab Level Classifier</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Classify a property into the right rehab tier before estimating costs. Gets your baseline $/sqft right.</div>
@@ -1267,7 +1287,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">16</span><span class="card-title">Draw Schedule Builder</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Structure your contractor payments tied to milestones. Aligns with how hard money lenders fund draws.</div>
@@ -1319,7 +1339,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">17</span><span class="card-title">Rehab ROI Prioritizer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Not all renovations add equal value. This tells you where your rehab dollars have the highest ROI.</div>
@@ -1373,7 +1393,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="rehab">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">18</span><span class="card-title">Market-Adjusted Rehab Costs</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">National averages are dangerous. This adjusts rehab estimates for your specific metro's labor and material costs.</div>
@@ -1440,7 +1460,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">19</span><span class="card-title">MAO Calculator — Maximum Allowable Offer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">The math behind every offer. Your starting offer and hard ceiling, calculated from real numbers.</div>
@@ -1489,7 +1509,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">20</span><span class="card-title">Seller Justification Script — "The Fluff"</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">When you need to justify your low offer to a seller. Inflate your costs in conversation, never reveal your true profit target.</div>
@@ -1541,7 +1561,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">21</span><span class="card-title">Multi-Offer Option Strategy</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Present 3 offers at once. Shifts the conversation from "yes or no" to "which yes." Advanced negotiation tactic.</div>
@@ -1598,7 +1618,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">22</span><span class="card-title">Seller Motivation Research</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Understanding WHY a seller is selling changes your entire negotiation strategy. Research before the call.</div>
@@ -1648,7 +1668,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">23</span><span class="card-title">Creative Deal Structure Generator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">When a standard cash offer won't work, explore creative structures. Subject-to, seller financing, novation, lease-option.</div>
@@ -1707,7 +1727,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">24</span><span class="card-title">Offer Email/Letter Generator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Generate a professional offer letter that positions you as a serious, credible buyer.</div>
@@ -1758,7 +1778,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">25</span><span class="card-title">Objection Handler — Seller Says No</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">When the seller rejects your offer, don't walk away. These are responses to the most common objections.</div>
@@ -1811,7 +1831,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">26</span><span class="card-title">Partnership Deal Structure (50/50)</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">When the seller won't come down to your price, a partnership structure can bridge the gap. Seller retains equity, you manage the project.</div>
@@ -1874,7 +1894,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">27</span><span class="card-title">Hard Money Loan Calculator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Calculate exactly what hard money will cost you on a deal. Interest, points, fees, total carrying cost.</div>
@@ -1933,7 +1953,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">28</span><span class="card-title">DSCR Refinance Analysis (Flip to Hold)</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">When the flip math doesn't work but the rental math does. Pivot from flip to BRRRR/hold using a DSCR loan.</div>
@@ -1999,7 +2019,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">29</span><span class="card-title">Exit Strategy Decision Matrix</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Decide between flip, hold, or wholesale based on actual numbers. Every deal should have at least 2 viable exits.</div>
@@ -2069,7 +2089,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">30</span><span class="card-title">Deal Package for Lender</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Build a fundable deal package that makes a hard money lender say yes. Toby has been on both sides of this table.</div>
@@ -2148,7 +2168,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">31</span><span class="card-title">Total Project Cost Calculator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">The complete picture. Every dollar in, every dollar out, projected net profit.</div>
@@ -2219,7 +2239,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">32</span><span class="card-title">Private Money Pitch Builder</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Pitch private investors on your deal. "If the deal is good, the money will come."</div>
@@ -2274,7 +2294,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">33</span><span class="card-title">Flip vs. Hold Decision Calculator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Side-by-side comparison: take the flip profit now, or hold for long-term cash flow and appreciation?</div>
@@ -2333,7 +2353,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="funding">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">34</span><span class="card-title">Cash-to-Close Worksheet</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Know exactly how much cash you need in your account before making an offer. No surprises at closing.</div>
@@ -2404,7 +2424,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">35</span><span class="card-title">Neighborhood Quick Score</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Score a neighborhood before you spend time on individual deals. Is this an area worth investing in?</div>
@@ -2456,7 +2476,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">36</span><span class="card-title">Buy Box Definition Builder</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Define your specific buy box criteria so you can filter deals instantly instead of analyzing everything.</div>
@@ -2512,7 +2532,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">37</span><span class="card-title">Rental Market Analysis</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Essential for your backup exit strategy. If the flip doesn't sell, can this property cash-flow as a rental?</div>
@@ -2567,7 +2587,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">38</span><span class="card-title">Market Cycle Position Assessment</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Where is your market in the real estate cycle? This affects your strategy, hold times, and risk tolerance.</div>
@@ -2619,7 +2639,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">39</span><span class="card-title">School District Impact on ARV</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -2664,7 +2684,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">40</span><span class="card-title">Investor Competition Assessment</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -2712,7 +2732,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="market">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">41</span><span class="card-title">Hidden Market Lead Source Planner</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -2793,7 +2813,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">42</span><span class="card-title">Pre-Offer Due Diligence Checklist</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -2861,7 +2881,7 @@ End with:
     <div class="prompt-card" data-level="intermediate" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">43</span><span class="card-title">Title Issue Red Flag Scanner</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -2915,7 +2935,7 @@ End with:
     <div class="prompt-card" data-level="beginner" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">44</span><span class="card-title">Property Walkthrough Checklist</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -2986,7 +3006,7 @@ ACCURACY RULES:
     <div class="prompt-card" data-level="intermediate" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">45</span><span class="card-title">Permit and Zoning Verification</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3033,7 +3053,7 @@ End with:
     <div class="prompt-card" data-level="advanced" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">46</span><span class="card-title">Vacant Lot Due Diligence</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3082,7 +3102,7 @@ End with:
     <div class="prompt-card" data-level="intermediate" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">47</span><span class="card-title">Insurance and Risk Assessment</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3126,7 +3146,7 @@ End with:
     <div class="prompt-card" data-level="beginner" data-cat="diligence">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">48</span><span class="card-title">Listing History Detective</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3188,7 +3208,7 @@ End with:
     <div class="prompt-card" data-level="beginner" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">49</span><span class="card-title">Side-by-Side Deal Comparison</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3249,7 +3269,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">50</span><span class="card-title">Risk-Adjusted Deal Ranking</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3295,7 +3315,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">51</span><span class="card-title">Portfolio-Level Deal Selection</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3346,7 +3366,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">52</span><span class="card-title">Deal Scorecard Template</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3402,7 +3422,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">53</span><span class="card-title">Post-Mortem: What Went Wrong?</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3452,7 +3472,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">54</span><span class="card-title">Annual Deal Flow Analysis</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-block">
@@ -3510,7 +3530,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="compare">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">55</span><span class="card-title">Daily Deal Analysis Log</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">The "3 deals per day" standard. Use this to log and track your daily analysis habit.</div>
@@ -3583,7 +3603,7 @@ ACCURACY RULES:
     <div class="prompt-card" data-level="beginner" data-cat="sourcing">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">56</span><span class="card-title">Driving for Dollars Route Planner</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before a DFD session to identify the highest-probability neighborhoods and distress signals to target.</div>
@@ -3631,7 +3651,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="sourcing">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">57</span><span class="card-title">Off-Market Lead Source Optimizer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use quarterly to audit your lead generation channels and reallocate budget to the highest-performing sources.</div>
@@ -3685,7 +3705,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="sourcing">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">58</span><span class="card-title">Wholesaler Relationship Evaluator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to assess whether a wholesaler is sending you real deals or wasting your time with inflated numbers.</div>
@@ -3742,7 +3762,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="sourcing">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">59</span><span class="card-title">Distressed Seller Direct Mail Campaign Builder</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to create targeted direct mail campaigns to distressed property owners — probate, pre-foreclosure, tax delinquent, and absentee owners.</div>
@@ -3797,7 +3817,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="sourcing">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">60</span><span class="card-title">Auction Property Pre-Bid Analysis</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before bidding at foreclosure auctions, tax sales, or online auction platforms to set your maximum bid with discipline.</div>
@@ -3860,7 +3880,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="sourcing">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">61</span><span class="card-title">Agent Relationship Builder and Deal Flow Script</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to create a systematic approach to building agent relationships that generate consistent off-market deal flow.</div>
@@ -3910,7 +3930,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="sourcing">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">100</span><span class="card-title">Private Money Lender Network Builder</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to build a systematic private money pipeline so you never lose a deal because of funding speed. The best deals go to the investor who can close fastest.</div>
@@ -4005,7 +4025,7 @@ End with:
     <div class="prompt-card" data-level="advanced" data-cat="situations">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">62</span><span class="card-title">Foundation Problem Analyzer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when a property shows signs of foundation issues. Determines whether repair costs kill the deal or create opportunity.</div>
@@ -4069,7 +4089,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="situations">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">63</span><span class="card-title">Fire/Flood/Storm Damage Assessment</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use for properties with casualty damage. Separates salvageable deals from money pits by analyzing damage scope and insurance implications.</div>
@@ -4128,7 +4148,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="situations">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">64</span><span class="card-title">Inherited/Probate Property Acquisition Guide</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when pursuing a probate or inherited property. Maps the legal timeline, identifies the decision-maker, and crafts an approach that solves the heir's real problems.</div>
@@ -4185,7 +4205,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="situations">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">65</span><span class="card-title">Subject-To Existing Mortgage Analyzer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to evaluate whether a subject-to deal structure makes sense. Analyzes the existing loan terms, due-on-sale risk, and exit strategy.</div>
@@ -4251,7 +4271,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="situations">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">66</span><span class="card-title">Hoarder / Trash-Out Property Estimator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use for heavily cluttered or hoarder properties where debris removal is a major cost factor before rehab can even begin.</div>
@@ -4310,7 +4330,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="situations">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">67</span><span class="card-title">Seller Financing Deal Structuring Wizard</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when a seller is open to financing. Structures the deal to maximize your returns while giving the seller what they actually want.</div>
@@ -4388,7 +4408,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="negotiate">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">68</span><span class="card-title">Seller Psychology Profiler</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before making contact with a seller. Maps their likely motivations, pain points, and negotiation leverage based on public data.</div>
@@ -4443,7 +4463,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="negotiate">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">69</span><span class="card-title">Counter-Offer Strategy Generator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when a seller counters your offer. Generates a strategic response that moves the deal forward without overpaying.</div>
@@ -4502,7 +4522,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="negotiate">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">70</span><span class="card-title">Agent Negotiation Playbook</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when negotiating through a listing agent. Different dynamics than direct-to-seller — the agent has their own incentives.</div>
@@ -4560,7 +4580,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="negotiate">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">71</span><span class="card-title">Novation Deal Analyzer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when considering a novation strategy — contracting to buy, then substituting an end-buyer to sell at retail price via MLS.</div>
@@ -4617,7 +4637,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="negotiate">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">97</span><span class="card-title">Wholesale Assignment Fee Negotiator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when a wholesaler's deal is close but the assignment fee is eating your margin. Most wholesalers will negotiate — if you know how to frame it.</div>
@@ -4686,7 +4706,7 @@ End with:
     <div class="prompt-card" data-level="advanced" data-cat="negotiate">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">98</span><span class="card-title">Lease-Option Sandwich Deal Structurer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to structure a lease-option sandwich — lease from the seller with an option to buy, then sub-lease-option to a tenant-buyer at a higher price. Profit from the spread without ever owning the property.</div>
@@ -4786,7 +4806,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="contractor">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">72</span><span class="card-title">Contractor Vetting Interview Script</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before hiring any contractor. A structured interview that separates professionals from problems.</div>
@@ -4850,7 +4870,7 @@ ACCURACY RULES:
     <div class="prompt-card" data-level="intermediate" data-cat="contractor">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">73</span><span class="card-title">Contractor Performance Tracker and Draw Inspector</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use during active rehab projects to track contractor performance, validate draw requests, and catch problems before they become expensive.</div>
@@ -4915,7 +4935,7 @@ ACCURACY RULES:
     <div class="prompt-card" data-level="intermediate" data-cat="contractor">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">74</span><span class="card-title">Change Order Evaluator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when a contractor submits a change order. Determines if the cost increase is legitimate or if you are being taken advantage of.</div>
@@ -4976,7 +4996,7 @@ ACCURACY RULES:
     <div class="prompt-card" data-level="intermediate" data-cat="contractor">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">75</span><span class="card-title">Rehab Project Timeline and Gantt Builder</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before a project starts to build a realistic timeline with dependencies. Holds contractors accountable to dates, not just dollars.</div>
@@ -5039,7 +5059,7 @@ ACCURACY RULES:
     <div class="prompt-card" data-level="advanced" data-cat="contractor">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">99</span><span class="card-title">Mechanic's Lien Protection Protocol</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before paying any contractor to protect yourself from mechanic's liens — the silent deal-killer that can freeze your title at closing.</div>
@@ -5133,7 +5153,7 @@ End with:
     <div class="prompt-card" data-level="intermediate" data-cat="mktintel">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">76</span><span class="card-title">Neighborhood Micro-Market Deep Dive</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to analyze a specific neighborhood or zip code beyond surface-level stats. Uncovers the real dynamics driving values.</div>
@@ -5211,7 +5231,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="mktintel">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">77</span><span class="card-title">Market Cycle Timing Indicator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use quarterly to assess where your local market sits in the real estate cycle and adjust your strategy accordingly.</div>
@@ -5282,7 +5302,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="mktintel">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">78</span><span class="card-title">Emerging Neighborhood Identifier</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to find neighborhoods on the verge of appreciation before the market catches up. Early entry = maximum margin.</div>
@@ -5362,7 +5382,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="mktintel">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">79</span><span class="card-title">Comparable Market Analysis (CMA) for Investors</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to create a proper investor-grade CMA that goes deeper than a realtor's opinion of value. Built for underwriting, not listing presentations.</div>
@@ -5443,7 +5463,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="mktintel">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">101</span><span class="card-title">Rental vs. Flip Market Conditions Calculator</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to determine whether your local market currently favors flipping or buying-and-holding based on real data — not gut feeling.</div>
@@ -5552,7 +5572,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="risk">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">80</span><span class="card-title">Deal Stress Test — Worst Case Scenario Modeler</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use on every deal before committing capital. If the deal can't survive these scenarios, walk away.</div>
@@ -5630,7 +5650,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="risk">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">81</span><span class="card-title">Hidden Cost Detector</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before finalizing any deal. Catches the costs that new investors miss and experienced investors sometimes forget.</div>
@@ -5720,7 +5740,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="risk">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">82</span><span class="card-title">Recession Readiness Audit</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to evaluate your entire portfolio and pipeline against a market downturn. Are you positioned to survive — or thrive — in a correction?</div>
@@ -5807,7 +5827,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="risk">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">95</span><span class="card-title">Flip Insurance Coverage Optimizer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before closing on any acquisition to ensure you have the right insurance — not too much, not too little, and the right TYPE for a flip.</div>
@@ -5898,7 +5918,7 @@ End with:
     <div class="prompt-card" data-level="advanced" data-cat="risk">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">96</span><span class="card-title">Flip Tax Impact and Entity Structure Planner</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before your first flip or annually to understand the real tax impact of your flipping business. The IRS treats flippers differently than buy-and-hold investors.</div>
@@ -5999,7 +6019,7 @@ End with:
     <div class="prompt-card" data-level="intermediate" data-cat="offers">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">83</span><span class="card-title">Lowball Offer with Relationship Preservation Script</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when submitting an offer significantly below asking price. The goal is to be aggressive on price while keeping the door open for future acceptance.</div>
@@ -6068,7 +6088,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="offers">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">84</span><span class="card-title">Multi-Exit Offer Structuring Tool</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to create a single offer package that gives you multiple exit strategies built into the contract from day one.</div>
@@ -6139,7 +6159,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="offers">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">85</span><span class="card-title">Proof of Funds and Credibility Package Builder</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to create a professional credibility package that makes sellers and agents trust you to close. The deal often goes to the most credible buyer, not the highest bidder.</div>
@@ -6215,7 +6235,7 @@ ACCURACY RULES:
     <div class="prompt-card" data-level="advanced" data-cat="advdili">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">86</span><span class="card-title">Environmental and Contamination Risk Scanner</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use for older properties, former commercial sites, or any property where environmental contamination could create massive unexpected liability.</div>
@@ -6291,7 +6311,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="advdili">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">87</span><span class="card-title">Lien and Judgment Deep Search Protocol</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before closing to uncover liens, judgments, and encumbrances that a standard title search might miss.</div>
@@ -6372,7 +6392,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="advdili">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">88</span><span class="card-title">Zoning and Highest-Best-Use Analyzer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to determine if a property can be used the way you intend — and whether rezoning or variance could unlock additional value.</div>
@@ -6452,7 +6472,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="advdili">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">89</span><span class="card-title">Pre-Purchase Property Tax Deep Dive</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to analyze property tax implications before buying — reassessment risk, exemption loss, and protest strategy.</div>
@@ -6543,7 +6563,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="dispo">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">90</span><span class="card-title">Flip Listing Strategy and Pricing Optimizer</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when your rehab is 2-3 weeks from completion to build the optimal listing strategy. Pricing wrong costs more than any rehab mistake.</div>
@@ -6624,7 +6644,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="beginner" data-cat="dispo">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">91</span><span class="card-title">Staging ROI Calculator and Strategy</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use to decide what to stage, how much to spend, and whether staging will actually increase your net profit or just your gross price.</div>
@@ -6703,7 +6723,7 @@ End with:
     <div class="prompt-card" data-level="intermediate" data-cat="dispo">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">92</span><span class="card-title">Price Reduction Decision Framework</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when your flip has been on the market and is not moving. Determines whether to reduce price, adjust marketing, or hold firm — and by exactly how much.</div>
@@ -6785,7 +6805,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="intermediate" data-cat="dispo">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">93</span><span class="card-title">Buyer Offer Evaluation and Counter Matrix</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use when you receive an offer on your flip. Evaluates the full package — not just price — and generates optimal counter-offer strategy.</div>
@@ -6872,7 +6892,7 @@ CONFIDENCE ASSESSMENT:
     <div class="prompt-card" data-level="advanced" data-cat="dispo">
       <div class="card-header" onclick="toggleCard(this)">
         <div class="card-title-area"><span class="card-number">94</span><span class="card-title">Appraisal Defense Package Builder</span></div>
-        <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
         <div class="prompt-context">Use before the buyer's appraiser visits your flip. A proactive comp package can mean the difference between a smooth close and a renegotiation nightmare.</div>
@@ -7530,6 +7550,52 @@ document.addEventListener('keydown', (e) => {
 
 // Init counts on load
 document.addEventListener('DOMContentLoaded', () => { updateResultsCount(); updateSectionCounts(); });
+
+// ===== NAV SCROLL ARROWS =====
+function scrollNav(dir) {
+  const nav = document.getElementById('navPills');
+  nav.scrollBy({ left: dir * 200, behavior: 'smooth' });
+}
+(function initNavScroll() {
+  const nav = document.getElementById('navPills');
+  const wrap = document.getElementById('navPillsWrap');
+  const leftBtn = document.getElementById('navScrollLeft');
+  const rightBtn = document.getElementById('navScrollRight');
+  function updateNavArrows() {
+    const atStart = nav.scrollLeft <= 4;
+    const atEnd = nav.scrollLeft + nav.offsetWidth >= nav.scrollWidth - 4;
+    wrap.classList.toggle('at-start', atStart);
+    wrap.classList.toggle('at-end', atEnd);
+    leftBtn.classList.toggle('hidden', atStart);
+    rightBtn.classList.toggle('hidden', atEnd);
+  }
+  nav.addEventListener('scroll', updateNavArrows);
+  window.addEventListener('resize', updateNavArrows);
+  // Also scroll active pill into view when clicked
+  document.querySelectorAll('.nav-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      setTimeout(() => pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }), 50);
+    });
+  });
+  updateNavArrows();
+})();
+
+// ===== QUICK COPY (from card header without expanding) =====
+function quickCopy(btn) {
+  const card = btn.closest('.prompt-card');
+  const promptEl = card.querySelector('.prompt-text');
+  let text = promptEl.dataset.originalText || promptEl.textContent;
+  if (dealSaved) text = applyDealData(text);
+  copyToClipboard(text).then(() => {
+    btn.textContent = '\u2713';
+    btn.classList.add('copied');
+    const d = getDealData();
+    showToast(dealSaved && d._filled > 0 ? 'Copied with ' + d._filled + ' deal fields' : 'Prompt copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500);
+  }).catch(() => {
+    showToast('Copy failed — try expanding the card first');
+  });
+}
 </script>
 </body>
 </html>
