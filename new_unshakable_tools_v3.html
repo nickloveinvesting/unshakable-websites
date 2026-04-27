@@ -75,7 +75,7 @@ input:disabled,button:disabled{background-color:#1A1A1A !important;cursor:not-al
 </script>
 </head>
 <body class="antialiased">
-<div id="root"></div>
+<div id="root"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#050505;gap:24px;"><style>@keyframes spin{to{transform:rotate(360deg)}}@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}</style><div style="width:56px;height:56px;border-radius:50%;border:4px solid #2A2A2A;border-top-color:#FFD700;animation:spin 0.8s linear infinite;"></div><p style="font-family:Montserrat,sans-serif;font-weight:800;font-size:1.25rem;background-image:linear-gradient(to right,#FFD700,#FFA500,#FF4500);-webkit-background-clip:text;background-clip:text;color:transparent;animation:fadeIn 0.6s ease-out;">Loading Deal Analyzer...</p><p style="font-family:Inter,sans-serif;font-size:0.75rem;color:#666;animation:fadeIn 0.8s ease-out;">Preparing 62 rehab items, 9 strategies, 20 scoring metrics</p></div></div>
 <script type="text/babel" data-type="module">
 import React, { useState, useCallback, useMemo, useEffect, useRef, useContext, createContext } from 'react';
 import ReactDOM from 'react-dom/client';
@@ -504,7 +504,8 @@ const computeGanttSchedule = (deal) => {
     const weatherBuf=deal.weatherBuffer;
     const getSeason=(d)=>{const m=d.getMonth();if(m>=11||m<=1)return 'winter';if(m>=2&&m<=4)return 'spring';if(m>=5&&m<=7)return 'summer';return 'fall';};
     const tradeAggs={};
-    expIds.forEach(id=>{const meta=TRADE_METADATA[id];if(!meta)return;const tr=meta.trade;if(!tradeAggs[tr])tradeAggs[tr]={trade:tr,durationDays:0,predecessors:new Set(),items:[],fabLagDays:0,weather:false};tradeAggs[tr].durationDays=Math.max(tradeAggs[tr].durationDays,meta.durationDays);tradeAggs[tr].fabLagDays=Math.max(tradeAggs[tr].fabLagDays,meta.fabLagDays||0);(meta.predecessors||[]).forEach(p=>{const pt=TRADE_METADATA[p]?.trade||p;if(pt!==tr)tradeAggs[tr].predecessors.add(pt);});tradeAggs[tr].items.push(id);if(meta.weather)tradeAggs[tr].weather=true;});
+    const ganttSqft=parseFloat(deal.sqft)||1500;const ganttPcts=deal.selectedPercentages||{};const ganttQtys=deal.selectedQuantities||{};const ganttBaths=Math.max(parseInt(deal.bathsToRemodel)||1,1);
+    expIds.forEach(id=>{const meta=TRADE_METADATA[id];if(!meta)return;const tr=meta.trade;if(!tradeAggs[tr])tradeAggs[tr]={trade:tr,durationDays:0,predecessors:new Set(),items:[],fabLagDays:0,weather:false};let dur=meta.durationDays;const itemDef=rehabItemMap[id];if(itemDef){if(itemDef.areaType==='percentage'){const pct=parseFloat(ganttPcts[id])||100;dur=Math.max(dur,Math.ceil(dur*ganttSqft*pct/100/1500));}else if(itemDef.type==='item'){const qty=parseInt(ganttQtys[id])||1;dur=Math.max(dur,Math.ceil(dur*qty/4));}if(id.startsWith('b_')&&ganttBaths>1)dur=Math.ceil(dur*ganttBaths);}tradeAggs[tr].durationDays+=dur;tradeAggs[tr].fabLagDays=Math.max(tradeAggs[tr].fabLagDays,meta.fabLagDays||0);(meta.predecessors||[]).forEach(p=>{const pt=TRADE_METADATA[p]?.trade||p;if(pt!==tr)tradeAggs[tr].predecessors.add(pt);});tradeAggs[tr].items.push(id);if(meta.weather)tradeAggs[tr].weather=true;});
     const TRADE_SEQUENCE=['foundation','demo','framing','roof','windows','siding','mep_rough','insulation','drywall','exterior_paint','interior_paint','cabinets','countertops','backsplash','tile','flooring','trim','plumbing_fixtures','electrical_fixtures','hvac_final','appliances','landscaping','punch'];
     const PARALLEL_TRADES={'roof':true,'landscaping':true,'exterior_paint':true,'siding':true,'windows':true};
     Object.keys(tradeAggs).forEach(tr=>{
@@ -811,15 +812,7 @@ const DealSnapshotRail = () => {
     return (
         <aside className="bg-[#1A1A1A] rounded-xl border border-[#2A2A2A] p-5 space-y-3 no-print">
             <div className="flex items-center justify-between"><h3 className="text-xs uppercase tracking-wider text-slate-400 headline">Deal Snapshot</h3><Activity className="w-4 h-4 text-amber-400" /></div>
-            <div><p className="text-xs text-slate-500">Address</p><p className="text-sm text-white truncate">{deal.address||'No address yet'}</p></div>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-                <div><p className="text-slate-500">Sqft</p><p className="text-white accent-num">{sqft||'-'}</p></div>
-                <div><p className="text-slate-500">Strategy</p><p className="text-white capitalize">{deal.selectedStrategy||'-'}</p></div>
-                <div><p className="text-slate-500">ARV</p><p className="text-white accent-num">{formatCurrencySimple(arv)}</p></div>
-                <div><p className="text-slate-500">Purchase</p><p className="text-white accent-num">{formatCurrencySimple(purchase)}</p></div>
-                <div><p className="text-slate-500">Rehab</p><p className="text-white accent-num">{formatCurrencySimple(rehab)}</p></div>
-                <div><p className="text-slate-500">Hold</p><p className="text-white accent-num">{m.holdingMonths?m.holdingMonths.toFixed(1):'-'}mo</p></div>
-            </div>
+            <div className="flex items-center justify-between"><div><p className="text-xs text-slate-500">Address</p><p className="text-sm text-white truncate">{deal.address||'No address yet'}</p></div>{deal.selectedStrategy&&<span className="text-xs bg-[#0F0F0F] text-slate-300 px-2 py-0.5 rounded capitalize">{deal.selectedStrategy}</span>}</div>
             {hasInputs?(<div className={`p-3 rounded ${npc}`}>
                 <p className="text-xs text-slate-400 uppercase">Net Profit</p>
                 <p className="text-2xl font-bold accent-num">{formatCurrencySimple(m.netProfit)}</p>
@@ -926,11 +919,11 @@ const HomePage = ({onChangeView}) => {
     );
 };
 
-const RehabEstimator = () => {
+const RehabEstimator = ({onChangeView}) => {
     const {deal,updateDeal}=useDeal();
     const toast=useToast();
     const [zipLoading,setZipLoading]=useState(false);
-    const [expandedCategory,setExpandedCategory]=useState('General Interior');
+    const [expandedCategories,setExpandedCategories]=useState(new Set(['General Interior']));
     const [customDraft,setCustomDraft]=useState({});
     const computed=useMemo(()=>computeRehabCost(deal),[deal]);
     useEffect(()=>{if(computed.totalRehabCost!==deal.totalRehabCost||computed.rehabEstimation!==deal.rehabEstimation||computed.finalEstimation!==deal.finalEstimation){updateDeal({totalRehabCost:computed.totalRehabCost,rehabEstimation:computed.rehabEstimation,finalEstimation:computed.finalEstimation});}},[computed.totalRehabCost,computed.rehabEstimation,computed.finalEstimation]);
@@ -938,7 +931,7 @@ const RehabEstimator = () => {
     const animMetro=useCountUp(computed.rehabEstimation);
     const animFinal=useCountUp(computed.finalEstimation);
     const handleZipBlur=async()=>{if(!/^\d{5}$/.test(deal.zip))return;setZipLoading(true);const r=await lookupMetroByZip(deal.zip);setZipLoading(false);if(r){updateDeal({metroDisplay:r.metro,metroMultiplier:r.multiplier,metroRegion:r.region,stateAbbr:r.state});toast?.show(`Metro: ${r.metro.split(',')[0]}`);}else{toast?.show('ZIP not found');}};
-    const applyPreset=(k)=>{const p=QUICK_SCOPE_PRESETS[k];if(!p)return;const ns={};p.items.forEach(id=>{ns[id]=true;});updateDeal({selectedItems:ns,itemPercentages:p.percentages||{},itemQuantities:p.quantities||{},selectedQualities:p.qualities||{},bathsToRemodel:p.bathsToRemodel||'1'});toast?.show(`Applied: ${p.name}`);};
+    const applyPreset=(k)=>{const p=QUICK_SCOPE_PRESETS[k];if(!p)return;const hasScope=Object.keys(deal.selectedItems||{}).some(id=>deal.selectedItems[id]);if(hasScope&&!window.confirm(`Apply "${p.name}" preset? This will replace your current rehab scope.`))return;const ns={};p.items.forEach(id=>{ns[id]=true;});updateDeal({selectedItems:ns,itemPercentages:p.percentages||{},itemQuantities:p.quantities||{},selectedQualities:p.qualities||{},bathsToRemodel:p.bathsToRemodel||'1'});toast?.show(`Applied: ${p.name}`);};
     const toggleItem=(id)=>updateDeal(p=>({...p,selectedItems:{...p.selectedItems,[id]:!p.selectedItems?.[id]}}));
     const setItemPct=(id,v)=>updateDeal(p=>({...p,itemPercentages:{...p.itemPercentages,[id]:v}}));
     const setItemQty=(id,v)=>updateDeal(p=>({...p,itemQuantities:{...p.itemQuantities,[id]:v}}));
@@ -993,9 +986,9 @@ const RehabEstimator = () => {
                     {categories.map(cat=>{
                         const ic=REHAB_ITEMS.filter(i=>i.category===cat);
                         const gc=Object.keys(itemGroups).filter(g=>{const o=itemGroups[g].options;return o.some(oo=>rehabItemMap[oo]?.category===cat);});
-                        const isO=expandedCategory===cat;
+                        const isO=expandedCategories.has(cat);
                         return (<div key={cat} className="bg-[#1A1A1A] rounded-xl border border-[#2A2A2A] overflow-hidden">
-                            <button onClick={()=>setExpandedCategory(isO?null:cat)} className="w-full flex items-center justify-between p-4 hover:bg-[#0F0F0F]"><h3 className="font-bold text-white headline">{cat}</h3><ChevronDown className={`w-5 h-5 text-amber-400 transition-transform ${isO?'rotate-180':''}`} /></button>
+                            <button onClick={()=>setExpandedCategories(prev=>{const n=new Set(prev);if(n.has(cat))n.delete(cat);else n.add(cat);return n;})} className="w-full flex items-center justify-between p-4 hover:bg-[#0F0F0F]"><h3 className="font-bold text-white headline">{cat}</h3><ChevronDown className={`w-5 h-5 text-amber-400 transition-transform ${isO?'rotate-180':''}`} /></button>
                             {isO&&(<div className="p-3 border-t border-[#2A2A2A] space-y-1">
                                 {cat==='Bathroom Remodel'&&(<div className="bg-[#0F0F0F] rounded p-3 mb-2 flex items-center justify-between"><span className="text-xs uppercase text-slate-400">Bathrooms to remodel</span><input type="number" min="0" max="6" value={deal.bathsToRemodel} onChange={(e)=>updateDeal({bathsToRemodel:e.target.value})} className="w-16 px-2 py-1 rounded text-center" /></div>)}
                                 {gc.map(g=>renderGroup(g))}
@@ -1009,13 +1002,14 @@ const RehabEstimator = () => {
                         </div>);
                     })}
                 </div>
+                <button onClick={()=>onChangeView&&onChangeView(View.StrategyAnalyzer)} className="w-full fire-bg text-black font-extrabold uppercase tracking-wider py-4 rounded-lg headline hover:opacity-90 flex items-center justify-center gap-2 mt-2">Continue to Strategy <ChevronDown className="w-5 h-5 -rotate-90" /></button>
             </div>
             <div className="lg:col-span-1"><div className="lg:sticky lg:top-4"><DealSnapshotRail /></div></div>
         </div>
     );
 };
 
-const StrategyAnalyzer = () => {
+const StrategyAnalyzer = ({onChangeView}) => {
     const {deal,updateDeal}=useDeal();
     const toast=useToast();
     const scenarios=useMemo(()=>computeStrategyScenarios(deal),[deal]);
@@ -1029,7 +1023,7 @@ const StrategyAnalyzer = () => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
-                <div className="bg-[#1A1A1A] p-6 rounded-xl border-2 border-amber-500/40">
+                <div data-section="deal-numbers" className="bg-[#1A1A1A] p-6 rounded-xl border-2 border-amber-500/40">
                     <h2 className="text-xl font-bold headline gradient-text mb-2 flex items-center gap-2"><DollarSign className="w-5 h-5" /> Deal Numbers</h2>
                     <p className="text-xs text-slate-400 mb-4">Enter ARV and purchase price first. These drive every strategy calculation.</p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -1054,7 +1048,7 @@ const StrategyAnalyzer = () => {
                 <div>
                     <h2 className="text-xl font-bold headline gradient-text mb-4">Strategy Scenarios</h2>
                     {(parseFloat(deal.arv)||0)===0||(parseFloat(deal.purchasePrice)||0)===0?(
-                        <div className="bg-[#0F0F0F] border border-dashed border-amber-500/40 rounded-xl p-6 text-center"><AlertTriangle className="w-8 h-8 text-amber-400 mx-auto mb-2" /><p className="text-sm text-amber-200 font-bold">Enter ARV and Purchase Price above</p><p className="text-xs text-slate-400 mt-1">Strategy scenarios calculate from your deal numbers. Add them in the Deal Numbers section above to see all 9 scenarios.</p></div>
+                        <div className="bg-[#0F0F0F] border border-dashed border-amber-500/40 rounded-xl p-6 text-center"><AlertTriangle className="w-8 h-8 text-amber-400 mx-auto mb-2" /><p className="text-sm text-amber-200 font-bold">Enter ARV and Purchase Price above</p><p className="text-xs text-slate-400 mt-1">Strategy scenarios calculate from your deal numbers.</p><button onClick={()=>{const el=document.querySelector('[data-section="deal-numbers"]');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}} className="mt-3 text-xs fire-bg text-black font-bold px-4 py-2 rounded hover:opacity-90">Scroll to Deal Numbers</button></div>
                     ):(
                     <div className="space-y-4">
                         <div>{sectionHeader('Wholesale','wholesale')}<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">{scenarios.wholesale.map(renderCard)}</div></div>
@@ -1063,13 +1057,14 @@ const StrategyAnalyzer = () => {
                     </div>
                     )}
                 </div>
+                <button onClick={()=>onChangeView&&onChangeView(View.RehabGantt)} className="w-full fire-bg text-black font-extrabold uppercase tracking-wider py-4 rounded-lg headline hover:opacity-90 flex items-center justify-center gap-2 mt-2">Continue to Schedule <ChevronDown className="w-5 h-5 -rotate-90" /></button>
             </div>
             <div className="lg:col-span-1"><div className="lg:sticky lg:top-4"><DealSnapshotRail /></div></div>
         </div>
     );
 };
 
-const RehabGantt = () => {
+const RehabGantt = ({onChangeView}) => {
     const {deal,updateDeal}=useDeal();
     const schedule=useMemo(()=>computeGanttSchedule(deal),[deal]);
     useEffect(()=>{let td=schedule.totalDays;if(deal.selectedStrategy==='rental')td+=14;const nm=Math.max(Math.ceil(td/30),1);if(td!==deal.computedDurationDays){updateDeal({computedDurationDays:td,holdingPeriod:String(nm)});}},[schedule.totalDays,deal.selectedStrategy]);
@@ -1085,6 +1080,7 @@ const RehabGantt = () => {
     const startDate=deal.projectStartDate||defaultStart;
     const dayWidth=24;
     const tradeColors={foundation:'#7C3AED',demo:'#DC2626',framing:'#EA580C',roof:'#0EA5E9',windows:'#0891B2',siding:'#059669',mep_rough:'#D97706',insulation:'#CA8A04',drywall:'#A16207',exterior_paint:'#65A30D',interior_paint:'#16A34A',cabinets:'#9333EA',countertops:'#C026D3',backsplash:'#DB2777',tile:'#E11D48',flooring:'#F97316',trim:'#EAB308',plumbing_fixtures:'#0284C7',electrical_fixtures:'#06B6D4',hvac_final:'#FACC15',appliances:'#84CC16',landscaping:'#22C55E',punch:'#A855F7'};
+    const TRADE_LABELS={foundation:'Foundation',demo:'Demo',framing:'Framing',roof:'Roofing',windows:'Windows & Doors',siding:'Siding',mep_rough:'MEP Rough-In',insulation:'Insulation',drywall:'Drywall',exterior_paint:'Exterior Paint',interior_paint:'Interior Paint',cabinets:'Cabinets',countertops:'Countertops',backsplash:'Backsplash',tile:'Tile',flooring:'Flooring',trim:'Trim & Finish',plumbing_fixtures:'Plumbing Fixtures',electrical_fixtures:'Electrical & Lighting',hvac_final:'HVAC Final',appliances:'Appliances',landscaping:'Landscaping',punch:'Punch List'};
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
@@ -1106,18 +1102,19 @@ const RehabGantt = () => {
                     {schedule.tasks.length===0?(<p className="text-sm text-slate-400 text-center py-8">No tasks. Select rehab items in the Rehab Estimator tab.</p>):(
                         <div className="relative"><div className="overflow-x-auto" style={{position:'relative'}}><div style={{minWidth:`${Math.max(schedule.totalDays*dayWidth+200,600)}px`}}>
                             <div className="flex border-b border-[#2A2A2A] pb-1 mb-2"><div style={{width:'180px'}} className="text-xs text-slate-500 uppercase">Trade</div><div style={{width:`${schedule.totalDays*dayWidth}px`}} className="relative text-xs text-slate-500">{[...Array(Math.ceil(schedule.totalDays/7)+1)].map((_,w)=>(<span key={w} style={{position:'absolute',left:`${w*7*dayWidth}px`}}>W{w+1}</span>))}</div></div>
-                            {schedule.tasks.sort((a,b)=>a.startDay-b.startDay).map((task)=>(<div key={task.trade} className="flex items-center py-1.5"><div style={{width:'180px'}} className="text-xs text-white pr-2 truncate">{task.isCritical&&<span className="text-amber-400 mr-1">!</span>}{task.trade.replace(/_/g,' ')}</div><div style={{width:`${schedule.totalDays*dayWidth}px`,height:'24px',position:'relative'}} className="bg-[#0F0F0F] rounded"><div className={`gantt-bar ${task.isCritical?'critical':''}`} style={{left:`${task.startDay*dayWidth}px`,width:`${Math.max((task.endDay-task.startDay)*dayWidth,4)}px`,top:'0px',backgroundImage:task.isCritical?undefined:`linear-gradient(to right, ${tradeColors[task.trade]||'#444'}, ${tradeColors[task.trade]||'#666'})`}}><span className="text-[10px] text-white px-1 leading-[22px] truncate block">{task.adjustedDuration}d</span></div></div></div>))}
+                            {schedule.tasks.sort((a,b)=>a.startDay-b.startDay).map((task)=>(<div key={task.trade} className="flex items-center py-1.5"><div style={{width:'180px'}} className="text-xs text-white pr-2 truncate">{task.isCritical&&<span className="text-amber-400 mr-1">!</span>}{TRADE_LABELS[task.trade]||task.trade.replace(/_/g,' ')}</div><div style={{width:`${schedule.totalDays*dayWidth}px`,height:'24px',position:'relative'}} className="bg-[#0F0F0F] rounded"><div className={`gantt-bar ${task.isCritical?'critical':''}`} style={{left:`${task.startDay*dayWidth}px`,width:`${Math.max((task.endDay-task.startDay)*dayWidth,4)}px`,top:'0px',backgroundImage:task.isCritical?undefined:`linear-gradient(to right, ${tradeColors[task.trade]||'#444'}, ${tradeColors[task.trade]||'#666'})`}}><span className="text-[10px] text-white px-1 leading-[22px] truncate block">{task.adjustedDuration}d</span></div></div></div>))}
                         </div></div>{schedule.totalDays*dayWidth>600&&<div style={{position:'absolute',right:0,top:0,bottom:0,width:'40px',pointerEvents:'none',background:'linear-gradient(to right, transparent, rgba(26,26,26,0.9))'}} className="flex items-center justify-center"><span className="text-xs text-slate-500" style={{writingMode:'vertical-rl'}}>Scroll →</span></div>}</div>
                     )}
                     <div className="flex gap-3 mt-4 text-xs flex-wrap"><div className="flex items-center gap-1"><div className="w-3 h-3 rounded fire-bg"></div><span className="text-slate-400">Critical path</span></div>{schedule.criticalPath.length>0&&<span className="text-slate-400">Critical: {schedule.criticalPath.join(', ')}</span>}</div>
                 </div>
+                <button onClick={()=>onChangeView&&onChangeView(View.FinancingProfit)} className="w-full fire-bg text-black font-extrabold uppercase tracking-wider py-4 rounded-lg headline hover:opacity-90 flex items-center justify-center gap-2 mt-2">Continue to Financing <ChevronDown className="w-5 h-5 -rotate-90" /></button>
             </div>
             <div className="lg:col-span-1"><div className="lg:sticky lg:top-4"><DealSnapshotRail /></div></div>
         </div>
     );
 };
 
-const FinancingProfit = () => {
+const FinancingProfit = ({onChangeView}) => {
     const {deal,updateDeal}=useDeal();
     const toast=useToast();
     const [sortBy,setSortBy]=useState('netProfit');
@@ -1167,6 +1164,7 @@ const FinancingProfit = () => {
                     {arv===0||purchase===0?(<div className="border border-dashed border-amber-500/40 rounded-lg p-4 text-center"><p className="text-xs text-amber-300">Financing scenarios calculate from ARV and Purchase. Enter them above or on the Strategy tab.</p></div>):(<div className="overflow-x-auto"><table className="w-full text-xs"><thead><tr className="text-slate-500 uppercase"><th className="text-left py-2 px-2">Scenario</th><th className="px-2">Cash Req</th><th className="px-2">Loan</th><th className="px-2">Mo Carry</th><th className="px-2">Net Profit</th><th className="px-2">CoC</th><th className="px-2">Ann ROI</th><th className="px-2">TTFD</th><th className="px-2">Risk</th></tr></thead><tbody>{sorted.map(s=>{const sel=deal.selectedFinancingScenario===s.id;const bp=s.netProfit===bestProfit&&s.available;const lc=s.cashRequired===lowestCash&&s.available;const hl=s.loanAmount===highestLev&&s.available;const hr=s.risk===highestRisk&&s.available;return (<tr key={s.id} onClick={()=>selectFin(s.id)} className={`border-t border-[#2A2A2A] cursor-pointer hover:bg-[#0F0F0F] ${sel?'bg-amber-500/10':''} ${!s.available?'opacity-40':''}`}><td className="py-2 px-2 text-white font-semibold">{s.name}{!s.available&&<span className="block text-xs text-slate-500 italic">{s.unavailableReason}</span>}</td><td className={`py-2 px-2 accent-num text-center ${lc?'text-blue-400 font-bold':'text-white'}`}>{s.available?formatCurrencySimple(s.cashRequired):'—'}</td><td className={`py-2 px-2 accent-num text-center ${hl?'text-amber-400 font-bold':'text-white'}`}>{s.available?formatCurrencySimple(s.loanAmount):'—'}</td><td className="py-2 px-2 accent-num text-center text-white">{s.available?formatCurrencySimple(s.monthlyCarry):'—'}</td><td className={`py-2 px-2 accent-num text-center ${bp?'text-emerald-400 font-bold':'text-white'}`}>{s.available?formatCurrencySimple(s.netProfit):'—'}</td><td className="py-2 px-2 accent-num text-center text-white">{s.available?formatPct(s.coc,0):'—'}</td><td className="py-2 px-2 accent-num text-center text-white">{s.available?formatPct(s.annualizedROI,0):'—'}</td><td className="py-2 px-2 accent-num text-center text-white">{s.available?(s.timeToFirstDollar||0).toFixed(1)+'mo':'—'}</td><td className={`py-2 px-2 accent-num text-center ${hr?'text-red-400 font-bold':'text-white'}`}>{s.available?(s.risk||0).toFixed(1)+'/5':'—'}</td></tr>);})}</tbody></table></div>)}
                 </div>
                 {arv>0&&purchase>0&&selFin&&selFin.available&&(<div className="bg-[#1A1A1A] p-6 rounded-xl border-2 border-amber-500/40"><h3 className="font-bold headline gradient-text mb-3">{selFin.name} (Selected)</h3><div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm"><div><p className="text-xs text-slate-500">Acquisition Cost</p><p className="accent-num text-white">{formatCurrencySimple(selFin.acquisitionCost)}</p></div><div><p className="text-xs text-slate-500">Total Project Cost</p><p className="accent-num text-white">{formatCurrencySimple(selFin.totalProjectCost)}</p></div><div><p className="text-xs text-slate-500">Total Financing Cost</p><p className="accent-num text-white">{formatCurrencySimple(selFin.totalFinancingCost)}</p></div><div><p className="text-xs text-slate-500">Time to First Dollar</p><p className="accent-num text-white">{(selFin.timeToFirstDollar||0).toFixed(1)} mo</p></div></div></div>)}
+                <button onClick={()=>onChangeView&&onChangeView(View.DealScore)} className="w-full fire-bg text-black font-extrabold uppercase tracking-wider py-4 rounded-lg headline hover:opacity-90 flex items-center justify-center gap-2 mt-2">Continue to Deal Score <ChevronDown className="w-5 h-5 -rotate-90" /></button>
             </div>
             <div className="lg:col-span-1"><div className="lg:sticky lg:top-4"><DealSnapshotRail /></div></div>
         </div>
@@ -1216,6 +1214,7 @@ const DealScore = () => {
             <div className="lg:col-span-2 space-y-6">
                 <div className="rounded-xl p-8 text-center" style={{backgroundImage:vg}}><VerdictIcon className="w-16 h-16 mx-auto text-black mb-2" /><p className="text-sm uppercase tracking-wider text-black/70 font-bold">Verdict</p><p className="text-7xl font-extrabold text-black headline">{score.verdict}</p><p className="text-2xl font-bold text-black mt-2">Grade {score.grade} / {animScore.toFixed(1)} / 100</p></div>
                 {showGeoWarn&&(<div className="bg-yellow-500/10 border border-yellow-500/40 rounded-xl p-4 flex items-start gap-3"><AlertTriangle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" /><p className="text-sm text-yellow-100">Your projected ROI ({computedROI.toFixed(1)}%) is far from the {deal.metroDisplay.split(',')[0]} median ({metroFlipROI.toFixed(1)}%). Verify assumptions.</p></div>)}
+                {(()=>{const weak=[...score.metrics].sort((a,b)=>(a.score/a.max)-(b.score/b.max)).slice(0,3);return weak.some(w=>w.score<w.max)?(<div className="bg-red-500/5 border border-red-500/30 rounded-xl p-4"><p className="text-xs uppercase tracking-wider text-red-300 font-bold mb-2">Focus Areas — Weakest Metrics</p><div className="space-y-2">{weak.map(w=>(<div key={w.id} className="flex items-center justify-between"><span className="text-sm text-white">{w.name}</span><span className="text-sm accent-num text-red-300 font-bold">{w.score}/{w.max}</span></div>))}</div></div>):null;})()}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">{Object.entries(score.categoryTotals).map(([c,t])=>(<div key={c} className="bg-[#1A1A1A] rounded-xl p-4 border border-[#2A2A2A] text-center"><p className="text-xs uppercase text-slate-400">{c}</p><p className="text-2xl font-bold accent-num gradient-text">{t.toFixed(1)}<span className="text-sm text-slate-500">/{catW[c]}</span></p></div>))}</div>
                 <div><h3 className="text-lg font-bold headline mb-3">20 Metric Breakdown</h3><div className="grid grid-cols-1 sm:grid-cols-2 gap-3">{score.metrics.map(m=>(<button key={m.id} onClick={()=>setExpMetric(expMetric===m.id?null:m.id)} className={`text-left rounded-lg p-4 border border-[#2A2A2A] hover:bg-[#0F0F0F] ${mColor(m)}`}><div className="flex items-center justify-between"><p className="font-bold text-white text-sm">{m.id}. {m.name}</p><p className="accent-num text-amber-400 text-sm font-bold">{m.score} / {m.max}</p></div><p className="text-xs text-slate-300 mt-1 accent-num">{m.value}</p>{expMetric===m.id&&<p className="text-xs text-slate-400 mt-2 italic">{m.why}</p>}</button>))}</div></div>
             </div>
@@ -1224,9 +1223,12 @@ const DealScore = () => {
     );
 };
 
+const useTabCompletion=(deal)=>{const hasScope=Object.keys(deal.selectedItems||{}).some(k=>deal.selectedItems[k]);const hasStrategy=!!deal.selectedStrategy;const hasGantt=(parseFloat(deal.computedDurationDays)||0)>0;const hasFin=!!deal.selectedFinancingScenario;const hasScore=(parseFloat(deal.arv)||0)>0&&(parseFloat(deal.purchasePrice)||0)>0&&hasScope;return {[View.RehabEstimator]:hasScope,[View.StrategyAnalyzer]:hasStrategy,[View.RehabGantt]:hasGantt,[View.FinancingProfit]:hasFin,[View.DealScore]:hasScore};};
+
 const Header = ({currentView,onChangeView,onOpenPipeline}) => {
     const {deal}=useDeal();
     const {deals}=useSavedDealsContext();
+    const completion=useTabCompletion(deal);
     const toast=useToast();
     const tabs=[{id:View.Home,label:'Home',Icon:Home},{id:View.RehabEstimator,label:'Rehab',Icon:Construction},{id:View.StrategyAnalyzer,label:'Strategy',Icon:Compass},{id:View.RehabGantt,label:'Gantt',Icon:Calendar},{id:View.FinancingProfit,label:'Financing',Icon:DollarSign},{id:View.DealScore,label:'Score',Icon:Award}];
     const handleShare=async()=>{const url=`${window.location.origin}${window.location.pathname}?deal=${encodeDealToUrl(deal)}`;try{await navigator.clipboard.writeText(url);toast?.show('Share URL copied');}catch(e){window.prompt('Copy this URL:',url);}};
@@ -1237,7 +1239,7 @@ const Header = ({currentView,onChangeView,onOpenPipeline}) => {
                     <img src="https://storage.googleapis.com/msgsndr/zQh0YM3EIsWgcjMDTSSC/media/68c95d8f7505d3a75a7fabd2.png" alt="Unshakable Investor" className="h-8 w-auto" />
                     <span className="font-extrabold headline text-lg gradient-text hidden md:inline">UNSHAKABLE</span>
                 </button>
-                <div className="hidden lg:flex items-center gap-1">{tabs.map(t=>(<button key={t.id} onClick={()=>onChangeView(t.id)} className={`nav-button flex items-center gap-2 px-3 py-2 rounded text-sm font-semibold ${currentView===t.id?'active':'text-slate-300 hover:bg-[#1A1A1A]'}`}><t.Icon className="w-4 h-4" /> {t.label}</button>))}</div>
+                <div className="hidden lg:flex items-center gap-1">{tabs.map(t=>(<button key={t.id} onClick={()=>onChangeView(t.id)} className={`nav-button flex items-center gap-2 px-3 py-2 rounded text-sm font-semibold relative ${currentView===t.id?'active':'text-slate-300 hover:bg-[#1A1A1A]'}`}><t.Icon className="w-4 h-4" /> {t.label}{completion[t.id]&&currentView!==t.id&&<span className="w-2 h-2 rounded-full bg-emerald-400 absolute -top-0.5 -right-0.5"></span>}</button>))}</div>
                 <div className="flex items-center gap-2">
                     <button onClick={onOpenPipeline} className="icon-btn p-2 rounded hover:bg-[#1A1A1A] relative" aria-label="Pipeline">
                         <Bookmark className="w-5 h-5 text-amber-400" />
@@ -1251,8 +1253,10 @@ const Header = ({currentView,onChangeView,onOpenPipeline}) => {
 };
 
 const MobileBottomTabBar = ({currentView,onChangeView}) => {
-    const tabs=[{id:View.Home,label:'Home',Icon:Home},{id:View.RehabEstimator,label:'Rehab',Icon:Construction},{id:View.StrategyAnalyzer,label:'Strat',Icon:Compass},{id:View.RehabGantt,label:'Gantt',Icon:Calendar},{id:View.FinancingProfit,label:'Fin',Icon:DollarSign},{id:View.DealScore,label:'Score',Icon:Award}];
-    return (<div className="mobile-tab-bar no-print lg:hidden">{tabs.map(t=>(<button key={t.id} onClick={()=>onChangeView(t.id)} className={`flex flex-col items-center justify-center px-1 py-1 rounded text-[10px] ${currentView===t.id?'text-amber-400':'text-slate-400'}`}><t.Icon className="w-5 h-5 mb-0.5" /><span>{t.label}</span></button>))}</div>);
+    const {deal}=useDeal();
+    const completion=useTabCompletion(deal);
+    const tabs=[{id:View.Home,label:'Home',Icon:Home},{id:View.RehabEstimator,label:'Rehab',Icon:Construction},{id:View.StrategyAnalyzer,label:'Strategy',Icon:Compass},{id:View.RehabGantt,label:'Gantt',Icon:Calendar},{id:View.FinancingProfit,label:'Finance',Icon:DollarSign},{id:View.DealScore,label:'Score',Icon:Award}];
+    return (<div className="mobile-tab-bar no-print lg:hidden">{tabs.map(t=>(<button key={t.id} onClick={()=>onChangeView(t.id)} className={`flex flex-col items-center justify-center px-1 py-1 rounded text-[11px] relative ${currentView===t.id?'text-amber-400':'text-slate-400'}`}><t.Icon className="w-5 h-5 mb-0.5" /><span>{t.label}</span>{completion[t.id]&&currentView!==t.id&&<span className="w-1.5 h-1.5 rounded-full bg-emerald-400 absolute top-0 right-0"></span>}</button>))}</div>);
 };
 
 const AppShell = ({currentView,onChangeView}) => {
@@ -1261,10 +1265,10 @@ const AppShell = ({currentView,onChangeView}) => {
         <main className="max-w-7xl mx-auto px-4 py-6 pb-24 lg:pb-6">
             <div className="print-only mb-4 pb-3 border-b-2 border-orange-500"><h1 className="text-2xl font-extrabold text-orange-600">UNSHAKABLE Deal Analyzer</h1><p className="text-sm">Generated {printDate}</p></div>
             <div style={{display:currentView===View.Home?'block':'none'}}><HomePage onChangeView={onChangeView} /></div>
-            <div style={{display:currentView===View.RehabEstimator?'block':'none'}}><RehabEstimator /></div>
-            <div style={{display:currentView===View.StrategyAnalyzer?'block':'none'}}><StrategyAnalyzer /></div>
-            <div style={{display:currentView===View.RehabGantt?'block':'none'}}><RehabGantt /></div>
-            <div style={{display:currentView===View.FinancingProfit?'block':'none'}}><FinancingProfit /></div>
+            <div style={{display:currentView===View.RehabEstimator?'block':'none'}}><RehabEstimator onChangeView={onChangeView} /></div>
+            <div style={{display:currentView===View.StrategyAnalyzer?'block':'none'}}><StrategyAnalyzer onChangeView={onChangeView} /></div>
+            <div style={{display:currentView===View.RehabGantt?'block':'none'}}><RehabGantt onChangeView={onChangeView} /></div>
+            <div style={{display:currentView===View.FinancingProfit?'block':'none'}}><FinancingProfit onChangeView={onChangeView} /></div>
             <div style={{display:currentView===View.DealScore?'block':'none'}}><DealScore /></div>
             <div className="print-only mt-6 pt-3 border-t border-slate-300 text-xs text-center"><p>The Unshakable Investor, Fix and Flip Deal Analyzer v4.1</p></div>
         </main>
