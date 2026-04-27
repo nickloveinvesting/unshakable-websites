@@ -353,21 +353,34 @@ const COACHING_RULES = [
 
 const QUICK_SCOPE_PRESETS = {
 cosmetic:{name:'Cosmetic Refresh',description:'Paint, flooring, fixtures. Typical $15 to $25 per sqft.',items:['int_paint','flooring_lvp','baseboard','deep_clean','light_fixtures','outlets_switches','door_hardware','ext_paint','landscaping','smart_thermostat'],percentages:{int_paint:'100',flooring_lvp:'100',baseboard:'100',ext_paint:'100'},quantities:{light_fixtures:'8'},bathsToRemodel:'0'},
-midGrade:{name:'Mid-Grade Flip',description:'Cosmetic plus kitchen plus 1 bath remodel. Typical $30 to $45 per sqft.',items:['int_paint','flooring_lvp','baseboard','deep_clean','light_fixtures','outlets_switches','door_hardware','ext_paint','landscaping','smart_thermostat','hardwood_refinish','int_door','popcorn_removal','entry_door','hvac','water_heater','k_insulation','k_appliances','k_backsplash','k_sink_faucet','k_mep_updates','b_insulation','b_tub_combo','b_tile','b_vanity','b_toilet','b_fixtures','b_mep_updates','grouped_k_demo','grouped_k_cabinets','grouped_k_countertops','grouped_b_demo'],percentages:{int_paint:'100',flooring_lvp:'100',baseboard:'100',ext_paint:'100',hardwood_refinish:'100',popcorn_removal:'100',k_insulation:'100'},quantities:{light_fixtures:'8',int_door:'6'},qualities:{grouped_k_demo:'k_demo_cosmetic',grouped_k_cabinets:'k_cabinets_mid',grouped_k_countertops:'k_counter_entry',grouped_b_demo:'b_demo_cosmetic'},bathsToRemodel:'1'},
+midGrade:{name:'Mid-Grade Flip',description:'Cosmetic plus kitchen plus 1 bath remodel. Typical $55 to $75 per sqft.',items:['int_paint','flooring_lvp','baseboard','deep_clean','light_fixtures','outlets_switches','door_hardware','ext_paint','landscaping','smart_thermostat','hardwood_refinish','int_door','popcorn_removal','entry_door','hvac','water_heater','k_insulation','k_appliances','k_backsplash','k_sink_faucet','k_mep_updates','b_insulation','b_tub_combo','b_tile','b_vanity','b_toilet','b_fixtures','b_mep_updates','grouped_k_demo','grouped_k_cabinets','grouped_k_countertops','grouped_b_demo'],percentages:{int_paint:'100',flooring_lvp:'100',baseboard:'100',ext_paint:'100',hardwood_refinish:'100',popcorn_removal:'100',k_insulation:'100'},quantities:{light_fixtures:'8',int_door:'6'},qualities:{grouped_k_demo:'k_demo_cosmetic',grouped_k_cabinets:'k_cabinets_mid',grouped_k_countertops:'k_counter_entry',grouped_b_demo:'b_demo_cosmetic'},bathsToRemodel:'1'},
 fullGut:{name:'Full Gut',description:'Complete renovation including major systems. Typical $55 to $80 per sqft.',items:['int_paint','flooring_lvp','baseboard','deep_clean','light_fixtures','outlets_switches','door_hardware','ext_paint','landscaping','smart_thermostat','hardwood_refinish','int_door','popcorn_removal','entry_door','hvac','water_heater','k_framing','k_mep_overhaul','k_insulation','k_appliances','k_backsplash','k_sink_faucet','k_mep_updates','b_framing','b_mep_overhaul','b_insulation','b_tile','b_vanity','b_toilet','b_fixtures','b_mep_updates','window_replace','siding_vinyl','garage_door','roof','elec_panel','foundation_repair','attic_insulation','grouped_k_demo','grouped_k_cabinets','grouped_k_countertops','grouped_b_demo'],percentages:{int_paint:'100',flooring_lvp:'100',baseboard:'100',ext_paint:'100',hardwood_refinish:'100',popcorn_removal:'100',siding_vinyl:'100',k_insulation:'100'},quantities:{light_fixtures:'12',int_door:'8',window_replace:'10'},qualities:{grouped_k_demo:'k_demo_studs',grouped_k_cabinets:'k_cabinets_mid',grouped_k_countertops:'k_counter_mid',grouped_b_demo:'b_demo_studs'},bathsToRemodel:'2'}
+};
+
+// Shared month calculation — single source of truth for hold period across all tabs
+const getProjectMonths = (deal) => {
+    const ganttDays = deal.computedDurationDays || 90;
+    const rehabMonths = Math.max(ganttDays / 30, 1);
+    // Total project = rehab + 2 months closing/listing buffer, floor 4 months
+    const totalProjectMonths = Math.max(rehabMonths + 2, 4);
+    return { rehabMonths, totalProjectMonths, ganttDays };
 };
 
 const formatCurrencySimple = (n)=>{if(isNaN(n)||!isFinite(n))return '$0';return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:0,maximumFractionDigits:0}).format(Math.round(n));};
 const formatCurrency = (v,p=false)=>{if(isNaN(v)||!isFinite(v))return '$0';return v.toLocaleString('en-US',{style:'currency',currency:'USD',minimumFractionDigits:p?2:0,maximumFractionDigits:p?2:0});};
 const formatPct = (v,d=1)=>{if(isNaN(v)||!isFinite(v))return 'N/A';return `${v.toFixed(d)}%`;};
 
-const getDealMetrics = (arv,purchasePrice,rehabCosts,fp,sqft,extraCosts) => {
+const getDealMetrics = (arv,purchasePrice,rehabCosts,fp,sqft,extraCosts,deal) => {
     const {ltv,interestRate,holdingPeriod} = fp;
+    // Use shared month calc when deal context available, else fall back to user holdingPeriod
+    const projectMonths = deal ? getProjectMonths(deal) : null;
+    const months = projectMonths ? projectMonths.totalProjectMonths : holdingPeriod;
     const sellingCosts = arv*0.075;
     const closingCosts = purchasePrice*0.03;
     const totalCostBasis = purchasePrice+rehabCosts;
     const loanAmount = totalCostBasis*(ltv/100);
-    const financingCosts = loanAmount*(interestRate/100/12)*holdingPeriod;
+    const loanPoints = loanAmount*0.02;
+    const financingCosts = loanAmount*(interestRate/100/12)*months+loanPoints;
     const totalExtraCosts = (extraCosts||[]).reduce((a,c)=>a+(parseFloat(c.amount)||0),0);
     const totalHoldingCosts = sellingCosts+financingCosts+closingCosts+totalExtraCosts;
     const totalProjectCost = purchasePrice+rehabCosts+totalHoldingCosts;
@@ -381,7 +394,7 @@ const getDealMetrics = (arv,purchasePrice,rehabCosts,fp,sqft,extraCosts) => {
     const purchasePricePerSqft = sqft>0?purchasePrice/sqft:0;
     const rehabPerSqft = sqft>0?rehabCosts/sqft:0;
     const loanToArv = arv>0?(loanAmount/arv)*100:0;
-    return {arv,purchasePrice,rehabCosts,sellingCosts,closingCosts,loanAmount,financingCosts,totalHoldingCosts,totalProjectCost,netProfit,acquisitionCost,roi,downPayment,totalCostBasis,ltv,costBasisOfArv,profitMargin,arvPerSqft,purchasePricePerSqft,rehabPerSqft,totalExtraCosts,loanToArv,sqft};
+    return {arv,purchasePrice,rehabCosts,sellingCosts,closingCosts,loanAmount,loanPoints,financingCosts,totalHoldingCosts,totalProjectCost,netProfit,acquisitionCost,roi,downPayment,totalCostBasis,ltv,costBasisOfArv,profitMargin,arvPerSqft,purchasePricePerSqft,rehabPerSqft,totalExtraCosts,loanToArv,sqft,holdingMonths:months};
 };
 
 const safeGet = (k,f)=>{try{const r=localStorage.getItem(k);if(!r)return f;return JSON.parse(r);}catch(e){return f;}};
@@ -528,7 +541,7 @@ const computeGanttSchedule = (deal) => {
 const computeStrategyScenarios = (deal) => {
     const arv=parseFloat(deal.arv)||0;
     const purchase=parseFloat(deal.purchasePrice)||0;
-    const rehab=parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation;
+    const rehab=parseFloat(deal.finalEstimation)||parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation;
     const targetAssignmentFee=parseFloat(deal.targetAssignmentFee)||15000;
     const metroBM=METRO_BENCHMARKS[deal.metroDisplay]||NATIONAL_BENCHMARKS;
     const metroDOM=metroBM.medianDOM||55;
@@ -583,8 +596,8 @@ const computeStrategyScenarios = (deal) => {
 const computeFinancingScenarios = (deal,strategy) => {
     const arv=parseFloat(deal.arv)||0;
     const purchase=parseFloat(deal.purchasePrice)||0;
-    const rehab=parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation;
-    const months=Math.max(((deal.computedDurationDays||90)/30)+2,4);
+    const rehab=parseFloat(deal.finalEstimation)||parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation;
+    const months=getProjectMonths(deal).totalProjectMonths;
     const totalCost=purchase+rehab;
     const closingPurchase=purchase*FINANCING_DEFAULTS_2026.closingCosts.purchasePct;
     const closingSale=arv*FINANCING_DEFAULTS_2026.closingCosts.saleAllInPct;
@@ -602,11 +615,11 @@ const computeFinancingScenarios = (deal,strategy) => {
 
     if(strategy==='flip'){
         const sellingCost=closingSale;
-        const allCash=(()=>{const co=totalCost+closingPurchase+totalHoldingCash;const pc=totalCost+closingPurchase+totalHoldingCash+sellingCost;const np=arv-pc;const coc=co>0?(np/co)*100:0;const ar=months>0?coc*(12/months):0;const risk=Math.min(5,((co/pc)*(months/6))*5);return {id:'allCash',name:'All Cash',cashRequired:co,loanAmount:0,monthlyCarry:0,totalFinancingCost:0,acquisitionCost:purchase+closingPurchase,totalProjectCost:pc,netProfit:np,coc,annualizedROI:ar,timeToFirstDollar:months,risk:Math.round(risk*10)/10,available:true};})();
-        const hmStandard=(()=>{const llp=purchase*hmTier.ltvPurchase;const lla=arv*hmTier.arv;const la=Math.min(llp+rehab,lla);const pts=la*hmTier.points;const mi=la*(hmTier.rate/12);const fc=mi*months+pts;const dp=totalCost-la;const co=Math.max(dp,0)+closingPurchase+pts+totalHoldingCash;const pc=totalCost+closingPurchase+totalHoldingCash+sellingCost+fc;const np=arv-pc;const coc=co>0?(np/co)*100:0;const ar=months>0?coc*(12/months):0;const mc=mi+monthlyHolding;const risk=Math.min(5,((co/pc)*(months/6)*(la/Math.max(co,1)))*1.2);return {id:'hardMoneyStandard',name:'Hard Money Standard',cashRequired:co,loanAmount:la,monthlyCarry:mc,totalFinancingCost:fc,acquisitionCost:purchase+closingPurchase,totalProjectCost:pc,netProfit:np,coc,annualizedROI:ar,timeToFirstDollar:months,risk:Math.round(Math.min(risk,5)*10)/10,available:true};})();
-        const hmLayered=(()=>{const lla=arv*hmTier.arv;const hml=Math.min(purchase*hmTier.ltvPurchase+rehab,lla);const gap=Math.max(totalCost-hml,0);const pl=gap;const hp=hml*hmTier.points;const pr=0.08;const mi=hml*(hmTier.rate/12)+pl*(pr/12);const fc=mi*months+hp;const co=closingPurchase+hp+totalHoldingCash;const pc=totalCost+closingPurchase+totalHoldingCash+sellingCost+fc;const np=arv-pc;const coc=co>0?(np/co)*100:0;const ar=months>0?coc*(12/months):0;const td=hml+pl;const risk=Math.min(5,(months/6)*(td/Math.max(co,1))*0.4);return {id:'hardMoneyLayered',name:'HM + Private Money',cashRequired:co,loanAmount:td,monthlyCarry:mi+monthlyHolding,totalFinancingCost:fc,acquisitionCost:purchase+closingPurchase,totalProjectCost:pc,netProfit:np,coc,annualizedROI:ar,timeToFirstDollar:months,risk:Math.round(Math.min(risk,5)*10)/10,available:true,secondaryLoan:pl};})();
+        const allCash=(()=>{const co=totalCost+closingPurchase+totalHoldingCash;const pc=totalCost+closingPurchase+totalHoldingCash+sellingCost;const np=arv-pc;const coc=co>0?(np/co)*100:0;const ar=months>0?coc*(12/months):0;const risk=Math.min(5,1.0+Math.max(0,(months-6)*0.15));return {id:'allCash',name:'All Cash',cashRequired:co,loanAmount:0,monthlyCarry:0,totalFinancingCost:0,acquisitionCost:purchase+closingPurchase,totalProjectCost:pc,netProfit:np,coc,annualizedROI:ar,timeToFirstDollar:months,risk:Math.round(risk*10)/10,available:true};})();
+        const hmStandard=(()=>{const llp=purchase*hmTier.ltvPurchase;const lla=arv*hmTier.arv;const la=Math.min(llp+rehab,lla);const pts=la*hmTier.points;const mi=la*(hmTier.rate/12);const fc=mi*months+pts;const dp=totalCost-la;const co=Math.max(dp,0)+closingPurchase+pts+totalHoldingCash;const pc=totalCost+closingPurchase+totalHoldingCash+sellingCost+fc;const np=arv-pc;const coc=co>0?(np/co)*100:0;const ar=months>0?coc*(12/months):0;const mc=mi+monthlyHolding;const leverageRatio=co>0?la/co:1;const risk=Math.min(5,2.0+leverageRatio*0.8+Math.max(0,(months-6)*0.15));return {id:'hardMoneyStandard',name:'Hard Money Standard',cashRequired:co,loanAmount:la,monthlyCarry:mc,totalFinancingCost:fc,acquisitionCost:purchase+closingPurchase,totalProjectCost:pc,netProfit:np,coc,annualizedROI:ar,timeToFirstDollar:months,risk:Math.round(Math.min(risk,5)*10)/10,available:true};})();
+        const hmLayered=(()=>{const lla=arv*hmTier.arv;const hml=Math.min(purchase*hmTier.ltvPurchase+rehab,lla);const gap=Math.max(totalCost-hml,0);const pl=gap;const hp=hml*hmTier.points;const pr=0.08;const mi=hml*(hmTier.rate/12)+pl*(pr/12);const fc=mi*months+hp;const co=closingPurchase+hp+totalHoldingCash;const pc=totalCost+closingPurchase+totalHoldingCash+sellingCost+fc;const np=arv-pc;const coc=co>0?(np/co)*100:0;const ar=months>0?coc*(12/months):0;const td=hml+pl;const leverageRatio=co>0?td/co:1;const risk=Math.min(5,3.0+leverageRatio*0.5+Math.max(0,(months-6)*0.15));return {id:'hardMoneyLayered',name:'HM + Private Money',cashRequired:co,loanAmount:td,monthlyCarry:mi+monthlyHolding,totalFinancingCost:fc,acquisitionCost:purchase+closingPurchase,totalProjectCost:pc,netProfit:np,coc,annualizedROI:ar,timeToFirstDollar:months,risk:Math.round(Math.min(risk,5)*10)/10,available:true,secondaryLoan:pl};})();
         const dscrPivot={id:'dscrPivot',name:'DSCR Pivot to BRRRR',cashRequired:0,loanAmount:0,monthlyCarry:0,totalFinancingCost:0,acquisitionCost:0,totalProjectCost:0,netProfit:0,coc:0,annualizedROI:0,timeToFirstDollar:0,risk:0,available:false,unavailableReason:'Switch to BRRRR strategy for DSCR math.'};
-        const subjectTo=(()=>{if(!subjectToAvail)return {id:'subjectTo',name:'Subject-To',cashRequired:0,loanAmount:0,monthlyCarry:0,totalFinancingCost:0,acquisitionCost:0,totalProjectCost:0,netProfit:0,coc:0,annualizedROI:0,timeToFirstDollar:0,risk:0,available:false,unavailableReason:'Enter seller mortgage balance and rate.'};const eq=Math.max(purchase-sellerBalance,0);const mi=sellerBalance*(sellerRate/12);const fc=mi*months+FINANCING_DEFAULTS_2026.subjectTo.legalSetupCost;const co=eq+closingPurchase+rehab+totalHoldingCash+FINANCING_DEFAULTS_2026.subjectTo.legalSetupCost;const pc=totalCost+closingPurchase+totalHoldingCash+sellingCost+fc;const np=arv-pc;const coc=co>0?(np/co)*100:0;const ar=months>0?coc*(12/months):0;const risk=Math.min(5,((co/pc)*(months/6))*4);return {id:'subjectTo',name:'Subject-To',cashRequired:co,loanAmount:sellerBalance,monthlyCarry:mi+monthlyHolding,totalFinancingCost:fc,acquisitionCost:eq+closingPurchase,totalProjectCost:pc,netProfit:np,coc,annualizedROI:ar,timeToFirstDollar:months,risk:Math.round(Math.min(risk,5)*10)/10,available:true};})();
+        const subjectTo=(()=>{if(!subjectToAvail)return {id:'subjectTo',name:'Subject-To',cashRequired:0,loanAmount:0,monthlyCarry:0,totalFinancingCost:0,acquisitionCost:0,totalProjectCost:0,netProfit:0,coc:0,annualizedROI:0,timeToFirstDollar:0,risk:0,available:false,unavailableReason:'Enter seller mortgage balance and rate.'};const eq=Math.max(purchase-sellerBalance,0);const mi=sellerBalance*(sellerRate/12);const fc=mi*months+FINANCING_DEFAULTS_2026.subjectTo.legalSetupCost;const co=eq+closingPurchase+rehab+totalHoldingCash+FINANCING_DEFAULTS_2026.subjectTo.legalSetupCost;const pc=totalCost+closingPurchase+totalHoldingCash+sellingCost+fc;const np=arv-pc;const coc=co>0?(np/co)*100:0;const ar=months>0?coc*(12/months):0;const risk=Math.min(5,3.5+Math.max(0,(months-6)*0.2));return {id:'subjectTo',name:'Subject-To',cashRequired:co,loanAmount:sellerBalance,monthlyCarry:mi+monthlyHolding,totalFinancingCost:fc,acquisitionCost:eq+closingPurchase,totalProjectCost:pc,netProfit:np,coc,annualizedROI:ar,timeToFirstDollar:months,risk:Math.round(Math.min(risk,5)*10)/10,available:true};})();
         return [allCash,hmStandard,hmLayered,dscrPivot,subjectTo];
     }
     if(strategy==='rental'){
@@ -641,21 +654,24 @@ const computeDealScore = (deal) => {
     const sqft=parseFloat(deal.sqft)||0;
     const arv=parseFloat(deal.arv)||0;
     const purchase=parseFloat(deal.purchasePrice)||0;
-    const rehab=parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation;
+    const rehab=parseFloat(deal.finalEstimation)||parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation;
     const userCash=parseFloat(deal.userCashAvailable)||0;
-    const months=Math.max((deal.computedDurationDays||90)/30,1);
+    const projectTime=getProjectMonths(deal);
+    const months=projectTime.totalProjectMonths;
     const metroBM=METRO_BENCHMARKS[deal.metroDisplay]||NATIONAL_BENCHMARKS;
     const ltv=parseFloat(deal.ltv)/100||0.75;
     const totalCost=purchase+rehab;
     const loanAmount=totalCost*ltv;
     const equity=Math.max(totalCost-loanAmount,1);
-    const finCosts=loanAmount*(parseFloat(deal.interestRate)/100/12)*months+(loanAmount*0.02);
+    const loanPoints=loanAmount*0.02;
+    const finCosts=loanAmount*(parseFloat(deal.interestRate)/100/12)*months+loanPoints;
     const closingPurch=purchase*0.03;
     const sellingCost=arv*0.075;
     const totalProjectCost=totalCost+closingPurch+sellingCost+finCosts;
     const netProfit=arv-totalProjectCost;
     const cashRequired=equity+closingPurch+finCosts;
-    const grossProfit=Math.max(arv-totalCost,1);
+    const rawGrossProfit=arv-totalCost;
+    const grossProfit=Math.max(rawGrossProfit,1);
     const slide=(v,hi,lo,mx)=>{if(v>=hi)return mx;if(v<=lo)return 0;return Math.round(((v-lo)/(hi-lo))*mx*10)/10;};
     const slideRev=(v,lo,hi,mx)=>{if(v<=lo)return mx;if(v>=hi)return 0;return Math.round(((hi-v)/(hi-lo))*mx*10)/10;};
     const profitMargin=arv>0?(netProfit/arv)*100:0;
@@ -686,7 +702,7 @@ const computeDealScore = (deal) => {
     const structuralCount=structuralItems.filter(id=>(deal.selectedItems||{})[id]).length;
     const m12=structuralCount===0?5:Math.max(0,5-structuralCount*1.7);
     const expectedDays=Math.max(structuralCount*30+45,30);
-    const ganttDays=deal.computedDurationDays||90;
+    const ganttDays=projectTime.ganttDays;
     const timelineDelta=expectedDays>0?Math.abs(ganttDays-expectedDays)/expectedDays*100:0;
     const m13=slideRev(timelineDelta,10,40,5);
     const majorSys=['foundation_repair','roof','k_mep_overhaul','b_mep_overhaul','elec_panel','hvac'];
@@ -698,13 +714,14 @@ const computeDealScore = (deal) => {
     let recStrategy='flip';
     if(cashLow)recStrategy='wholesale';
     else if(cashHigh&&(metroBM.flipROI||25.5)<15)recStrategy='rental';
-    const m15=strategy===recStrategy?5:(strategy?3:1);
+    const profitPositive=netProfit>0;
+    const m15=profitPositive?(strategy===recStrategy?5:(strategy?3:1)):0;
     const fin=deal.selectedFinancingScenario;
     let recFin='hardMoneyStandard';
     if(cashHigh&&strategy==='flip')recFin='allCash';
     if(strategy==='rental')recFin='hmDscr';
     if(strategy==='wholesale')recFin='emdOnly';
-    const m16=fin===recFin?5:(fin?3:1);
+    const m16=profitPositive?(fin===recFin?5:(fin?3:1)):0;
     const tfd=strategy==='wholesale'?1:(strategy==='rental'?months+6:months);
     const m17=slideRev(tfd,6,18,5);
     const stressArv=arv*0.90;
@@ -732,7 +749,7 @@ const computeDealScore = (deal) => {
         {id:8,name:'DOM Realism',score:m8,max:5,value:`${holdDays.toFixed(0)} days`,why:`Holding vs metro DOM ${metroBM.medianDOM} days.`,category:'Market'},
         {id:9,name:'Cash Required vs Available',score:m9,max:5,value:`${cashRatio.toFixed(0)}%`,why:`Need ${formatCurrencySimple(cashRequired)} / have ${formatCurrencySimple(userCash)}.`,category:'Capital'},
         {id:10,name:'Leverage Risk',score:m10,max:5,value:`${leverage.toFixed(1)}:1`,why:`Debt / equity. Under 2:1 is conservative.`,category:'Capital'},
-        {id:11,name:'Financing Cost % of Profit',score:m11,max:5,value:`${finCostPct.toFixed(1)}%`,why:`Financing / gross profit.`,category:'Capital'},
+        {id:11,name:'Financing Cost % of Profit',score:m11,max:5,value:rawGrossProfit>0?`${finCostPct.toFixed(1)}%`:'N/A (no gross profit)',why:`Financing / gross profit.`,category:'Capital'},
         {id:12,name:'Rehab Complexity',score:m12,max:5,value:`${structuralCount} structural`,why:`Each structural item adds 30%+ timeline risk.`,category:'Execution'},
         {id:13,name:'Timeline Realism',score:m13,max:5,value:`${ganttDays} days`,why:`Gantt ${ganttDays} vs expected ${expectedDays}.`,category:'Execution'},
         {id:14,name:'Major Systems Risk',score:m14,max:5,value:`${majorCount} flagged`,why:`${majorCount} of foundation/roof/HVAC/MEP. Get bids.`,category:'Execution'},
@@ -741,7 +758,7 @@ const computeDealScore = (deal) => {
         {id:17,name:'Time to First Dollar',score:m17,max:5,value:`${tfd.toFixed(1)} mo`,why:`Under 6 months is high velocity.`,category:'Strategy'},
         {id:18,name:'Stress Test Survival',score:m18,max:3,value:`${passes}/4 pass`,why:`ARV -10%, rehab +20%, 60-day slip tests.`,category:'Safety'},
         {id:19,name:'Reserve Adequacy',score:m19,max:1,value:`${reserveRatio.toFixed(1)}%`,why:`Contingency / project cost. Target 15%+.`,category:'Safety'},
-        {id:20,name:'Capital Recycle',score:m20,max:1,value:strategy==='rental'?`${(arv*0.75/Math.max(cashRequired,1)*100).toFixed(0)}%`:'N/A',why:strategy==='rental'?`BRRRR refi vs cash in.`:'Non-BRRRR full credit.',category:'Safety'}
+        {id:20,name:'Capital Recycle',score:m20,max:1,value:strategy==='rental'?`${(arv*0.75/Math.max(cashRequired,1)*100).toFixed(0)}%`:'Full exit',why:strategy==='rental'?`BRRRR refi vs cash in.`:'Capital recovered at sale.',category:'Safety'}
     ];
     const total=metrics.reduce((s,m)=>s+m.score,0);
     const verdict=total>=80?'BUY':(total>=60?'WAIT':'KILL');
@@ -780,11 +797,11 @@ const DealSnapshotRail = () => {
     const toast=useToast();
     const arv=parseFloat(deal.arv)||0;
     const purchase=parseFloat(deal.purchasePrice)||0;
-    const rehab=parseFloat(deal.totalRehabCost)||0;
+    const rehab=parseFloat(deal.finalEstimation)||parseFloat(deal.totalRehabCost)||0;
     const target=parseFloat(deal.targetProfit)||0;
     const sqft=parseFloat(deal.sqft)||0;
     const score=useMemo(()=>computeDealScore(deal),[deal]);
-    const m=useMemo(()=>getDealMetrics(arv,purchase,rehab,{ltv:parseFloat(deal.ltv)||0,interestRate:parseFloat(deal.interestRate)||0,holdingPeriod:parseFloat(deal.holdingPeriod)||0},sqft,deal.extraCosts||[]),[arv,purchase,rehab,deal.ltv,deal.interestRate,deal.holdingPeriod,sqft,deal.extraCosts]);
+    const m=useMemo(()=>getDealMetrics(arv,purchase,rehab,{ltv:parseFloat(deal.ltv)||0,interestRate:parseFloat(deal.interestRate)||0,holdingPeriod:parseFloat(deal.holdingPeriod)||0},sqft,deal.extraCosts||[],deal),[arv,purchase,rehab,deal.ltv,deal.interestRate,deal.holdingPeriod,sqft,deal.extraCosts,deal.computedDurationDays]);
     const hasInputs=arv>0&&purchase>0;
     let npc='kpi-bad';
     if(target>0){if(m.netProfit>=target)npc='kpi-good';else if(m.netProfit>=target*0.9)npc='kpi-warn';}else if(m.netProfit>0)npc='kpi-good';
@@ -801,14 +818,14 @@ const DealSnapshotRail = () => {
                 <div><p className="text-slate-500">ARV</p><p className="text-white accent-num">{formatCurrencySimple(arv)}</p></div>
                 <div><p className="text-slate-500">Purchase</p><p className="text-white accent-num">{formatCurrencySimple(purchase)}</p></div>
                 <div><p className="text-slate-500">Rehab</p><p className="text-white accent-num">{formatCurrencySimple(rehab)}</p></div>
-                <div><p className="text-slate-500">Hold</p><p className="text-white accent-num">{deal.holdingPeriod||'-'}mo</p></div>
+                <div><p className="text-slate-500">Hold</p><p className="text-white accent-num">{m.holdingMonths?m.holdingMonths.toFixed(1):'-'}mo</p></div>
             </div>
             {hasInputs?(<div className={`p-3 rounded ${npc}`}>
                 <p className="text-xs text-slate-400 uppercase">Net Profit</p>
                 <p className="text-2xl font-bold accent-num">{formatCurrencySimple(m.netProfit)}</p>
                 <div className="grid grid-cols-2 gap-2 text-xs mt-1"><div><p className="text-slate-500">ROI</p><p className="text-white accent-num">{formatPct(m.roi)}</p></div><div><p className="text-slate-500">Margin</p><p className="text-white accent-num">{formatPct(m.profitMargin)}</p></div></div>
             </div>):(<div className="p-3 rounded border border-dashed border-[#333] text-center"><p className="text-xs text-slate-500">Enter ARV and Purchase on Strategy tab to calculate profit</p></div>)}
-            {hasInputs?(<div className="bg-[#0F0F0F] rounded p-3 text-center"><p className="text-xs text-slate-500 uppercase">Deal Score</p><p className="text-3xl font-bold gradient-text accent-num">{score.total.toFixed(0)}<span className="text-sm text-slate-500">/100</span></p><p className="text-xs text-slate-400">{score.verdict} ({score.grade})</p></div>):(<div className="bg-[#0F0F0F] rounded p-3 text-center border border-dashed border-[#333]"><p className="text-xs text-slate-500">Score available after deal numbers entered</p></div>)}
+            {hasInputs?(<div className="bg-[#0F0F0F] rounded p-3 text-center"><p className="text-xs text-slate-500 uppercase">Deal Score</p><p className="text-3xl font-bold gradient-text accent-num">{score.total.toFixed(1)}<span className="text-sm text-slate-500">/100</span></p><p className="text-xs text-slate-400">{score.verdict} ({score.grade})</p></div>):(<div className="bg-[#0F0F0F] rounded p-3 text-center border border-dashed border-[#333]"><p className="text-xs text-slate-500">Score available after deal numbers entered</p></div>)}
             <div className="grid grid-cols-3 gap-1 pt-2"><button onClick={handleSave} className="text-xs bg-[#0F0F0F] hover:bg-[#222] text-white px-2 py-1.5 rounded flex items-center justify-center gap-1"><Save className="w-3 h-3" /> Save</button><button onClick={handlePrint} className="text-xs bg-[#0F0F0F] hover:bg-[#222] text-white px-2 py-1.5 rounded flex items-center justify-center gap-1"><Printer className="w-3 h-3" /> PDF</button><button onClick={handleShare} className="text-xs bg-[#0F0F0F] hover:bg-[#222] text-white px-2 py-1.5 rounded flex items-center justify-center gap-1"><Share2 className="w-3 h-3" /> Share</button></div>
         </aside>
     );
@@ -933,8 +950,10 @@ const RehabEstimator = () => {
     const rehabPerSqft=sqft>0?computed.finalEstimation/sqft:0;
     const profitMargin=arv>0?((arv-parseFloat(deal.purchasePrice||0)-computed.finalEstimation)/arv)*100:0;
     const costBasisOfArv=arv>0?((parseFloat(deal.purchasePrice||0)+computed.finalEstimation)/arv)*100:0;
-    const netProfit=arv-parseFloat(deal.purchasePrice||0)-computed.finalEstimation-(arv*0.075);
-    const cm=COACHING_RULES.find(r=>r.test({sqft,rehabPerSqft,profitMargin,costBasisOfArv,netProfit}));
+    const purchaseVal=parseFloat(deal.purchasePrice||0);
+    const netProfit=arv-purchaseVal-computed.finalEstimation-(arv*0.075);
+    const hasInputs=arv>0&&purchaseVal>0;
+    const cm=hasInputs?COACHING_RULES.find(r=>r.test({sqft,rehabPerSqft,profitMargin,costBasisOfArv,netProfit})):null;
     const coachingMessage=cm?cm.message({sqft,rehabPerSqft,profitMargin,costBasisOfArv,netProfit}):null;
     const noScope=Object.keys(deal.selectedItems||{}).filter(k=>deal.selectedItems[k]).length===0;
     const categories=['General Interior','General Exterior','Major Systems & Utilities','Kitchen Remodel','Bathroom Remodel'];
@@ -1005,8 +1024,8 @@ const StrategyAnalyzer = () => {
     const isRestricted=restrictedStates.includes(stateAbbr);
     const recommendation=useMemo(()=>{const c=parseFloat(deal.userCashAvailable)||0;const t=deal.creditTier||'1-3deals';const r=deal.riskTolerance||'balanced';let s='flip';let sb='market';if(c>0&&c<50000){s='wholesale';sb=r==='aggressive'?'aggressive':'market';}else if(c>=200000&&(METRO_BENCHMARKS[deal.metroDisplay]?.flipROI||25.5)<15){s='rental';sb='market';}else if(t==='firstTimer'){s='flip';sb='conservative';}else{s='flip';sb=r==='aggressive'?'aggressive':(r==='conservative'?'conservative':'market');}return {strategy:s,sub:sb};},[deal.userCashAvailable,deal.creditTier,deal.riskTolerance,deal.metroDisplay]);
     const selectScenario=(s,sb)=>{updateDeal({selectedStrategy:s,selectedSubScenario:sb});toast?.show(`Strategy: ${s} (${sb})`);};
-    const renderCard=(s)=>{const sel=deal.selectedStrategy===s.strategy&&deal.selectedSubScenario===s.subScenario;const best=recommendation.strategy===s.strategy&&recommendation.sub===s.subScenario;const showR=s.strategy==='wholesale'&&isRestricted;return (<button key={`${s.strategy}-${s.subScenario}`} onClick={()=>selectScenario(s.strategy,s.subScenario)} className={`text-left bg-[#1A1A1A] hover:bg-[#222] rounded-xl p-4 border-2 transition relative ${sel?'border-amber-500':'border-[#2A2A2A]'} ${best?'ring-best':''}`}>{sel&&<Check className="absolute top-2 left-2 w-5 h-5 text-amber-400" />}{best&&<span className="absolute -top-2 -right-2 bg-amber-500 text-black text-xs font-bold px-2 py-0.5 rounded">BEST FIT</span>}<div className="flex items-center justify-between mb-2 mt-1"><p className="text-xs uppercase text-slate-400 capitalize">{s.strategy}</p><p className="text-xs font-bold text-amber-300">{s.label}</p></div>{showR&&(<div className="bg-yellow-500/10 border border-yellow-500/40 rounded p-2 mb-2"><p className="text-xs text-yellow-200 flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> Wholesaling regulated in {stateAbbr}, consult attorney.</p></div>)}{s.strategy==='wholesale'&&(<><p className="text-2xl font-bold accent-num gradient-text">{formatCurrencySimple(s.assignmentFee)}</p><p className="text-xs text-slate-400">Assignment fee</p><div className="mt-2 grid grid-cols-3 gap-1 text-xs"><div><p className="text-slate-500">Cash</p><p className="text-white accent-num">{formatCurrencySimple(s.cashRequired)}</p></div><div><p className="text-slate-500">Days</p><p className="text-white accent-num">{s.timeToClose}</p></div><div><p className="text-slate-500">Risk</p><p className="text-white accent-num">{s.risk}/5</p></div></div></>)}{s.strategy==='rental'&&(<><p className="text-2xl font-bold accent-num gradient-text">{formatCurrencySimple(s.cashFlow)}</p><p className="text-xs text-slate-400">Annual cash flow</p><div className="mt-2 grid grid-cols-3 gap-1 text-xs"><div><p className="text-slate-500">Cap</p><p className="text-white accent-num">{formatPct(s.capRate,1)}</p></div><div><p className="text-slate-500">CoC</p><p className="text-white accent-num">{formatPct(s.coc,1)}</p></div><div><p className="text-slate-500">DSCR</p><p className="text-white accent-num">{(s.dscr||0).toFixed(2)}</p></div></div></>)}{s.strategy==='flip'&&(<><p className="text-2xl font-bold accent-num gradient-text">{formatCurrencySimple(s.netProfit)}</p><p className="text-xs text-slate-400">Net profit</p><div className="mt-2 grid grid-cols-3 gap-1 text-xs"><div><p className="text-slate-500">ROI</p><p className="text-white accent-num">{formatPct(s.roi,0)}</p></div><div><p className="text-slate-500">Ann ROI</p><p className="text-white accent-num">{formatPct(s.annualizedRoi,0)}</p></div><div><p className="text-slate-500">Months</p><p className="text-white accent-num">{s.months.toFixed(1)}</p></div></div></>)}<p className="text-xs text-slate-500 mt-2 italic">{s.assumptions}</p></button>);};
-    const sectionHeader=(label,strategyKey)=>(<div className="flex items-center gap-2 mb-2"><p className="text-sm uppercase tracking-wider text-slate-300 font-bold headline">{label}</p>{recommendation.strategy===strategyKey&&<span className="text-xs bg-amber-500 text-black px-2 py-0.5 rounded font-bold">RECOMMENDED FOR YOU</span>}</div>);
+    const renderCard=(s)=>{const sel=deal.selectedStrategy===s.strategy&&deal.selectedSubScenario===s.subScenario;const scenarioProfit=s.strategy==='flip'?s.netProfit:(s.strategy==='rental'?s.cashFlow:(s.assignmentFee||0));const isProfitable=scenarioProfit>0;const best=recommendation.strategy===s.strategy&&recommendation.sub===s.subScenario&&isProfitable;const showR=s.strategy==='wholesale'&&isRestricted;return (<button key={`${s.strategy}-${s.subScenario}`} onClick={()=>selectScenario(s.strategy,s.subScenario)} className={`text-left bg-[#1A1A1A] hover:bg-[#222] rounded-xl p-4 border-2 transition relative ${sel?'border-amber-500':'border-[#2A2A2A]'} ${best?'ring-best':''}`}>{sel&&<Check className="absolute top-2 left-2 w-5 h-5 text-amber-400" />}{best&&<span className="absolute -top-2 -right-2 bg-amber-500 text-black text-xs font-bold px-2 py-0.5 rounded">BEST FIT</span>}{!isProfitable&&s.strategy==='flip'&&parseFloat(deal.arv)>0&&parseFloat(deal.purchasePrice)>0&&<div className="bg-red-500/10 border border-red-500/40 rounded p-2 mb-2"><p className="text-xs text-red-300 flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> Negative profit. Renegotiate purchase or cut scope.</p></div>}<div className="flex items-center justify-between mb-2 mt-1"><p className="text-xs uppercase text-slate-400 capitalize">{s.strategy}</p><p className="text-xs font-bold text-amber-300">{s.label}</p></div>{showR&&(<div className="bg-yellow-500/10 border border-yellow-500/40 rounded p-2 mb-2"><p className="text-xs text-yellow-200 flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> Wholesaling regulated in {stateAbbr}, consult attorney.</p></div>)}{s.strategy==='wholesale'&&(<><p className="text-2xl font-bold accent-num gradient-text">{formatCurrencySimple(s.assignmentFee)}</p><p className="text-xs text-slate-400">Assignment fee</p><div className="mt-2 grid grid-cols-3 gap-1 text-xs"><div><p className="text-slate-500">Cash</p><p className="text-white accent-num">{formatCurrencySimple(s.cashRequired)}</p></div><div><p className="text-slate-500">Days</p><p className="text-white accent-num">{s.timeToClose}</p></div><div><p className="text-slate-500">Risk</p><p className="text-white accent-num">{s.risk}/5</p></div></div></>)}{s.strategy==='rental'&&(<><p className="text-2xl font-bold accent-num gradient-text">{formatCurrencySimple(s.cashFlow)}</p><p className="text-xs text-slate-400">Annual cash flow</p><div className="mt-2 grid grid-cols-3 gap-1 text-xs"><div><p className="text-slate-500">Cap</p><p className="text-white accent-num">{formatPct(s.capRate,1)}</p></div><div><p className="text-slate-500">CoC</p><p className="text-white accent-num">{formatPct(s.coc,1)}</p></div><div><p className="text-slate-500">DSCR</p><p className="text-white accent-num">{(s.dscr||0).toFixed(2)}</p></div></div></>)}{s.strategy==='flip'&&(<><p className="text-2xl font-bold accent-num gradient-text">{formatCurrencySimple(s.netProfit)}</p><p className="text-xs text-slate-400">Net profit</p><div className="mt-2 grid grid-cols-3 gap-1 text-xs"><div><p className="text-slate-500">ROI</p><p className="text-white accent-num">{formatPct(s.roi,0)}</p></div><div><p className="text-slate-500">Ann ROI</p><p className="text-white accent-num">{formatPct(s.annualizedRoi,0)}</p></div><div><p className="text-slate-500">Months</p><p className="text-white accent-num">{s.months.toFixed(1)}</p></div></div></>)}<p className="text-xs text-slate-500 mt-2 italic">{s.assumptions}</p></button>);};
+    const sectionHeader=(label,strategyKey)=>{const stratScenarios=(scenarios[strategyKey]||[]);const bestScenario=stratScenarios.find(s=>s.strategy===recommendation.strategy&&s.subScenario===recommendation.sub);const recProfit=bestScenario?(bestScenario.strategy==='flip'?bestScenario.netProfit:(bestScenario.strategy==='rental'?bestScenario.cashFlow:(bestScenario.assignmentFee||0))):0;const showRec=recommendation.strategy===strategyKey&&recProfit>0;return (<div className="flex items-center gap-2 mb-2"><p className="text-sm uppercase tracking-wider text-slate-300 font-bold headline">{label}</p>{showRec&&<span className="text-xs bg-amber-500 text-black px-2 py-0.5 rounded font-bold">RECOMMENDED FOR YOU</span>}{recommendation.strategy===strategyKey&&recProfit<=0&&parseFloat(deal.arv)>0&&parseFloat(deal.purchasePrice)>0&&<span className="text-xs bg-red-500/80 text-white px-2 py-0.5 rounded font-bold">UNPROFITABLE — RENEGOTIATE</span>}</div>);};
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
@@ -1016,7 +1035,7 @@ const StrategyAnalyzer = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div><label className="text-xs uppercase text-slate-400 font-bold">After-Repair Value (ARV)</label><input type="number" value={deal.arv} onChange={(e)=>updateDeal({arv:e.target.value})} placeholder="e.g. 350000" className="w-full px-3 py-2 rounded mt-1 text-lg accent-num" />{deal.sqft&&parseFloat(deal.arv)>0&&<p className="text-xs text-amber-400 mt-1">${(parseFloat(deal.arv)/parseFloat(deal.sqft)).toFixed(0)}/sqft</p>}</div>
                         <div><label className="text-xs uppercase text-slate-400 font-bold">Purchase Price</label><input type="number" value={deal.purchasePrice} onChange={(e)=>updateDeal({purchasePrice:e.target.value})} placeholder="e.g. 220000" className="w-full px-3 py-2 rounded mt-1 text-lg accent-num" />{deal.sqft&&parseFloat(deal.purchasePrice)>0&&<p className="text-xs text-amber-400 mt-1">${(parseFloat(deal.purchasePrice)/parseFloat(deal.sqft)).toFixed(0)}/sqft</p>}</div>
-                        <div><label className="text-xs uppercase text-slate-400 font-bold">Rehab (auto)</label><div className="w-full px-3 py-2 rounded mt-1 text-lg accent-num bg-[#0F0F0F] text-slate-400">{formatCurrencySimple(parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation)}</div><p className="text-xs text-slate-500 mt-1">From Rehab tab</p></div>
+                        <div><label className="text-xs uppercase text-slate-400 font-bold">Rehab (auto)</label><div className="w-full px-3 py-2 rounded mt-1 text-lg accent-num bg-[#0F0F0F] text-slate-400">{formatCurrencySimple(parseFloat(deal.finalEstimation)||parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation)}</div><p className="text-xs text-slate-500 mt-1">From Rehab tab (incl. 10% contingency)</p></div>
                     </div>
                 </div>
                 <div className="bg-[#1A1A1A] p-6 rounded-xl border border-[#2A2A2A]">
@@ -1085,10 +1104,10 @@ const RehabGantt = () => {
                 <div className="bg-[#1A1A1A] p-6 rounded-xl border border-[#2A2A2A]">
                     <h3 className="font-bold headline mb-4">Gantt Chart</h3>
                     {schedule.tasks.length===0?(<p className="text-sm text-slate-400 text-center py-8">No tasks. Select rehab items in the Rehab Estimator tab.</p>):(
-                        <div className="overflow-x-auto"><div style={{minWidth:`${Math.max(schedule.totalDays*dayWidth+200,600)}px`}}>
+                        <div className="relative"><div className="overflow-x-auto" style={{position:'relative'}}><div style={{minWidth:`${Math.max(schedule.totalDays*dayWidth+200,600)}px`}}>
                             <div className="flex border-b border-[#2A2A2A] pb-1 mb-2"><div style={{width:'180px'}} className="text-xs text-slate-500 uppercase">Trade</div><div style={{width:`${schedule.totalDays*dayWidth}px`}} className="relative text-xs text-slate-500">{[...Array(Math.ceil(schedule.totalDays/7)+1)].map((_,w)=>(<span key={w} style={{position:'absolute',left:`${w*7*dayWidth}px`}}>W{w+1}</span>))}</div></div>
                             {schedule.tasks.sort((a,b)=>a.startDay-b.startDay).map((task)=>(<div key={task.trade} className="flex items-center py-1.5"><div style={{width:'180px'}} className="text-xs text-white pr-2 truncate">{task.isCritical&&<span className="text-amber-400 mr-1">!</span>}{task.trade.replace(/_/g,' ')}</div><div style={{width:`${schedule.totalDays*dayWidth}px`,height:'24px',position:'relative'}} className="bg-[#0F0F0F] rounded"><div className={`gantt-bar ${task.isCritical?'critical':''}`} style={{left:`${task.startDay*dayWidth}px`,width:`${Math.max((task.endDay-task.startDay)*dayWidth,4)}px`,top:'0px',backgroundImage:task.isCritical?undefined:`linear-gradient(to right, ${tradeColors[task.trade]||'#444'}, ${tradeColors[task.trade]||'#666'})`}}><span className="text-[10px] text-white px-1 leading-[22px] truncate block">{task.adjustedDuration}d</span></div></div></div>))}
-                        </div></div>
+                        </div></div>{schedule.totalDays*dayWidth>600&&<div style={{position:'absolute',right:0,top:0,bottom:0,width:'40px',pointerEvents:'none',background:'linear-gradient(to right, transparent, rgba(26,26,26,0.9))'}} className="flex items-center justify-center"><span className="text-xs text-slate-500" style={{writingMode:'vertical-rl'}}>Scroll →</span></div>}</div>
                     )}
                     <div className="flex gap-3 mt-4 text-xs flex-wrap"><div className="flex items-center gap-1"><div className="w-3 h-3 rounded fire-bg"></div><span className="text-slate-400">Critical path</span></div>{schedule.criticalPath.length>0&&<span className="text-slate-400">Critical: {schedule.criticalPath.join(', ')}</span>}</div>
                 </div>
@@ -1105,9 +1124,9 @@ const FinancingProfit = () => {
     const sqft=parseFloat(deal.sqft)||0;
     const arv=parseFloat(deal.arv)||0;
     const purchase=parseFloat(deal.purchasePrice)||0;
-    const rehab=parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation;
+    const rehab=parseFloat(deal.finalEstimation)||parseFloat(deal.totalRehabCost)||computeRehabCost(deal).finalEstimation;
     const targetProfit=parseFloat(deal.targetProfit)||0;
-    const metrics=useMemo(()=>getDealMetrics(arv,purchase,rehab,{ltv:parseFloat(deal.ltv)||0,interestRate:parseFloat(deal.interestRate)||0,holdingPeriod:parseFloat(deal.holdingPeriod)||0},sqft,deal.extraCosts||[]),[arv,purchase,rehab,deal.ltv,deal.interestRate,deal.holdingPeriod,sqft,deal.extraCosts]);
+    const metrics=useMemo(()=>getDealMetrics(arv,purchase,rehab,{ltv:parseFloat(deal.ltv)||0,interestRate:parseFloat(deal.interestRate)||0,holdingPeriod:parseFloat(deal.holdingPeriod)||0},sqft,deal.extraCosts||[],deal),[arv,purchase,rehab,deal.ltv,deal.interestRate,deal.holdingPeriod,sqft,deal.extraCosts,deal.computedDurationDays]);
     const strategy=deal.selectedStrategy||'flip';
     const fs=useMemo(()=>computeFinancingScenarios(deal,strategy),[deal,strategy]);
     const sorted=useMemo(()=>{const a=[...fs];const dir=(sortBy==='cashRequired'||sortBy==='risk'||sortBy==='timeToFirstDollar')?1:-1;return a.sort((x,y)=>{if(!x.available&&y.available)return 1;if(x.available&&!y.available)return -1;return dir*((y[sortBy]||0)-(x[sortBy]||0));});},[fs,sortBy]);
@@ -1134,7 +1153,7 @@ const FinancingProfit = () => {
                         <div><label className="text-xs uppercase text-slate-400">Target Profit</label><input type="number" value={deal.targetProfit} onChange={(e)=>updateDeal({targetProfit:e.target.value})} className="w-full px-3 py-2 rounded mt-1" /></div>
                         <div><label className="text-xs uppercase text-slate-400">LTV %</label><input type="number" value={deal.ltv} onChange={(e)=>updateDeal({ltv:e.target.value})} className="w-full px-3 py-2 rounded mt-1" /></div>
                         <div><label className="text-xs uppercase text-slate-400">Interest Rate %</label><input type="number" step="0.1" value={deal.interestRate} onChange={(e)=>updateDeal({interestRate:e.target.value})} className="w-full px-3 py-2 rounded mt-1" /></div>
-                        <div><label className="text-xs uppercase text-slate-400">Holding Period (months)</label><input type="number" value={deal.holdingPeriod} onChange={(e)=>updateDeal({holdingPeriod:e.target.value})} className="w-full px-3 py-2 rounded mt-1" /><p className="text-xs text-slate-500 mt-1">Auto from Gantt: {Math.ceil((deal.computedDurationDays||0)/30)||'n/a'} mo</p></div>
+                        <div><label className="text-xs uppercase text-slate-400">Total Hold Period</label><div className="w-full px-3 py-2 rounded mt-1 bg-[#0F0F0F] border border-[#333] text-amber-400 font-bold accent-num">{metrics.holdingMonths?metrics.holdingMonths.toFixed(1):'-'} months</div><p className="text-xs text-slate-500 mt-1">Rehab {getProjectMonths(deal).rehabMonths.toFixed(1)}mo + 2mo closing/sale buffer (min 4mo)</p></div>
                     </div>
                     <div className="mt-4"><p className="text-xs uppercase text-slate-400 mb-2">Extra Costs</p>{(deal.extraCosts||[]).map(c=>(<div key={c.id} className="flex gap-2 mb-2"><input type="text" placeholder="Name" value={c.name} onChange={(e)=>updExtra(c.id,'name',e.target.value)} className="flex-1 px-2 py-1 rounded text-sm" /><input type="number" placeholder="$" value={c.amount} onChange={(e)=>updExtra(c.id,'amount',e.target.value)} className="w-32 px-2 py-1 rounded text-sm" /><button onClick={()=>rmExtra(c.id)} className="px-2 text-red-400"><X className="w-4 h-4" /></button></div>))}<button onClick={addExtra} className="text-xs px-3 py-1 bg-[#0F0F0F] hover:bg-[#222] rounded">+ Add Extra Cost</button></div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
@@ -1145,7 +1164,7 @@ const FinancingProfit = () => {
                 </div>
                 <div className="bg-[#1A1A1A] p-6 rounded-xl border border-[#2A2A2A]">
                     <div className="flex items-center justify-between mb-4 flex-wrap gap-2"><h2 className="text-xl font-bold headline gradient-text flex items-center gap-2"><Layers className="w-5 h-5" /> Financing Scenarios <span className="text-sm text-slate-400 capitalize font-normal">({strategy})</span></h2><select value={sortBy} onChange={(e)=>setSortBy(e.target.value)} className="text-xs px-2 py-1 rounded"><option value="netProfit">Best Profit</option><option value="cashRequired">Lowest Cash</option><option value="risk">Lowest Risk</option><option value="annualizedROI">Best Annualized ROI</option><option value="timeToFirstDollar">Fastest Cash Back</option></select></div>
-                    {arv===0||purchase===0?(<div className="border border-dashed border-amber-500/40 rounded-lg p-4 text-center"><p className="text-xs text-amber-300">Financing scenarios calculate from ARV and Purchase. Enter them above or on the Strategy tab.</p></div>):(<div className="overflow-x-auto"><table className="w-full text-xs"><thead><tr className="text-slate-500 uppercase"><th className="text-left py-2 px-2">Scenario</th><th className="px-2">Cash Req</th><th className="px-2">Loan</th><th className="px-2">Mo Carry</th><th className="px-2">Net Profit</th><th className="px-2">CoC</th><th className="px-2">Ann ROI</th><th className="px-2">TTFD</th><th className="px-2">Risk</th></tr></thead><tbody>{sorted.map(s=>{const sel=deal.selectedFinancingScenario===s.id;const bp=s.netProfit===bestProfit&&s.available;const lc=s.cashRequired===lowestCash&&s.available;const hl=s.loanAmount===highestLev&&s.available;const hr=s.risk===highestRisk&&s.available;return (<tr key={s.id} onClick={()=>selectFin(s.id)} className={`border-t border-[#2A2A2A] cursor-pointer hover:bg-[#0F0F0F] ${sel?'bg-amber-500/10':''} ${!s.available?'opacity-40':''}`}><td className="py-2 px-2 text-white font-semibold">{s.name}{!s.available&&<span className="block text-xs text-slate-500 italic">{s.unavailableReason}</span>}</td><td className={`py-2 px-2 accent-num text-center ${lc?'text-blue-400 font-bold':'text-white'}`}>{formatCurrencySimple(s.cashRequired)}</td><td className={`py-2 px-2 accent-num text-center ${hl?'text-amber-400 font-bold':'text-white'}`}>{formatCurrencySimple(s.loanAmount)}</td><td className="py-2 px-2 accent-num text-center text-white">{formatCurrencySimple(s.monthlyCarry)}</td><td className={`py-2 px-2 accent-num text-center ${bp?'text-emerald-400 font-bold':'text-white'}`}>{formatCurrencySimple(s.netProfit)}</td><td className="py-2 px-2 accent-num text-center text-white">{formatPct(s.coc,0)}</td><td className="py-2 px-2 accent-num text-center text-white">{formatPct(s.annualizedROI,0)}</td><td className="py-2 px-2 accent-num text-center text-white">{(s.timeToFirstDollar||0).toFixed(1)}mo</td><td className={`py-2 px-2 accent-num text-center ${hr?'text-red-400 font-bold':'text-white'}`}>{(s.risk||0).toFixed(1)}/5</td></tr>);})}</tbody></table></div>)}
+                    {arv===0||purchase===0?(<div className="border border-dashed border-amber-500/40 rounded-lg p-4 text-center"><p className="text-xs text-amber-300">Financing scenarios calculate from ARV and Purchase. Enter them above or on the Strategy tab.</p></div>):(<div className="overflow-x-auto"><table className="w-full text-xs"><thead><tr className="text-slate-500 uppercase"><th className="text-left py-2 px-2">Scenario</th><th className="px-2">Cash Req</th><th className="px-2">Loan</th><th className="px-2">Mo Carry</th><th className="px-2">Net Profit</th><th className="px-2">CoC</th><th className="px-2">Ann ROI</th><th className="px-2">TTFD</th><th className="px-2">Risk</th></tr></thead><tbody>{sorted.map(s=>{const sel=deal.selectedFinancingScenario===s.id;const bp=s.netProfit===bestProfit&&s.available;const lc=s.cashRequired===lowestCash&&s.available;const hl=s.loanAmount===highestLev&&s.available;const hr=s.risk===highestRisk&&s.available;return (<tr key={s.id} onClick={()=>selectFin(s.id)} className={`border-t border-[#2A2A2A] cursor-pointer hover:bg-[#0F0F0F] ${sel?'bg-amber-500/10':''} ${!s.available?'opacity-40':''}`}><td className="py-2 px-2 text-white font-semibold">{s.name}{!s.available&&<span className="block text-xs text-slate-500 italic">{s.unavailableReason}</span>}</td><td className={`py-2 px-2 accent-num text-center ${lc?'text-blue-400 font-bold':'text-white'}`}>{s.available?formatCurrencySimple(s.cashRequired):'—'}</td><td className={`py-2 px-2 accent-num text-center ${hl?'text-amber-400 font-bold':'text-white'}`}>{s.available?formatCurrencySimple(s.loanAmount):'—'}</td><td className="py-2 px-2 accent-num text-center text-white">{s.available?formatCurrencySimple(s.monthlyCarry):'—'}</td><td className={`py-2 px-2 accent-num text-center ${bp?'text-emerald-400 font-bold':'text-white'}`}>{s.available?formatCurrencySimple(s.netProfit):'—'}</td><td className="py-2 px-2 accent-num text-center text-white">{s.available?formatPct(s.coc,0):'—'}</td><td className="py-2 px-2 accent-num text-center text-white">{s.available?formatPct(s.annualizedROI,0):'—'}</td><td className="py-2 px-2 accent-num text-center text-white">{s.available?(s.timeToFirstDollar||0).toFixed(1)+'mo':'—'}</td><td className={`py-2 px-2 accent-num text-center ${hr?'text-red-400 font-bold':'text-white'}`}>{s.available?(s.risk||0).toFixed(1)+'/5':'—'}</td></tr>);})}</tbody></table></div>)}
                 </div>
                 {arv>0&&purchase>0&&selFin&&selFin.available&&(<div className="bg-[#1A1A1A] p-6 rounded-xl border-2 border-amber-500/40"><h3 className="font-bold headline gradient-text mb-3">{selFin.name} (Selected)</h3><div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm"><div><p className="text-xs text-slate-500">Acquisition Cost</p><p className="accent-num text-white">{formatCurrencySimple(selFin.acquisitionCost)}</p></div><div><p className="text-xs text-slate-500">Total Project Cost</p><p className="accent-num text-white">{formatCurrencySimple(selFin.totalProjectCost)}</p></div><div><p className="text-xs text-slate-500">Total Financing Cost</p><p className="accent-num text-white">{formatCurrencySimple(selFin.totalFinancingCost)}</p></div><div><p className="text-xs text-slate-500">Time to First Dollar</p><p className="accent-num text-white">{(selFin.timeToFirstDollar||0).toFixed(1)} mo</p></div></div></div>)}
             </div>
@@ -1161,7 +1180,7 @@ const DealScore = () => {
     const [expMetric,setExpMetric]=useState(null);
     const arv=parseFloat(deal.arv)||0;
     const purchase=parseFloat(deal.purchasePrice)||0;
-    const rehab=parseFloat(deal.totalRehabCost)||0;
+    const rehab=parseFloat(deal.finalEstimation)||parseFloat(deal.totalRehabCost)||0;
     const ready=arv>0&&purchase>0&&rehab>0;
     const VerdictIcon=score.verdict==='BUY'?Trophy:(score.verdict==='WAIT'?Clock:X);
     const vg=score.verdict==='BUY'?'linear-gradient(to right, #FFD700, #FFA500, #FF4500)':score.verdict==='WAIT'?'linear-gradient(to right, #FFD700, #FFA500)':'linear-gradient(to right, #DC2626, #991B1B)';
