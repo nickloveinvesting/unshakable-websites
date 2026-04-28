@@ -7314,34 +7314,68 @@ function closeMobileSidebar() {
   document.getElementById('sidebarOverlay').classList.remove('visible');
 }
 
-// ===== COPY TO CLIPBOARD (with file:// fallback) =====
-function copyToClipboard(text) {
-  // Try modern clipboard API first
+// ===== COPY TO CLIPBOARD (iframe-safe with 3 fallback tiers) =====
+function copyToClipboard(text, promptEl) {
+  // Tier 1: Modern Clipboard API (works on direct page, fails in cross-origin iframe without allow="clipboard-write")
   if (navigator.clipboard && window.isSecureContext) {
-    return navigator.clipboard.writeText(text);
+    return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text, promptEl));
   }
-  // Try clipboard API without secure context check (works in some browsers on file://)
   if (navigator.clipboard) {
-    return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+    return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text, promptEl));
   }
-  return fallbackCopy(text);
+  return fallbackCopy(text, promptEl);
 }
-function fallbackCopy(text) {
+function fallbackCopy(text, promptEl) {
   return new Promise((resolve, reject) => {
+    // Tier 2: execCommand('copy') via hidden textarea
     const ta = document.createElement('textarea');
     ta.value = text;
     ta.setAttribute('readonly', '');
     ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0';
     document.body.appendChild(ta);
-    const selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
+    const saved = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
     ta.select();
     ta.setSelectionRange(0, text.length);
     let ok = false;
     try { ok = document.execCommand('copy'); } catch(e) { ok = false; }
     ta.remove();
-    if (selected) { document.getSelection().removeAllRanges(); document.getSelection().addRange(selected); }
-    ok ? resolve() : reject(new Error('execCommand failed'));
+    if (saved) { document.getSelection().removeAllRanges(); document.getSelection().addRange(saved); }
+    if (ok) { resolve(); return; }
+    // Tier 3: Select text visually so user can Ctrl+C / Cmd+C
+    selectTextFallback(text, promptEl);
+    reject(new Error('execCommand failed — text selected for manual copy'));
   });
+}
+function selectTextFallback(text, promptEl) {
+  // If we have the prompt element, select its text directly
+  if (promptEl) {
+    const range = document.createRange();
+    range.selectNodeContents(promptEl);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    promptEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  // Otherwise create a visible textarea with the text pre-selected
+  let overlay = document.getElementById('copyFallbackOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'copyFallbackOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;padding:24px';
+    overlay.innerHTML = '<div style="width:90%;max-width:700px;max-height:80vh;display:flex;flex-direction:column;gap:12px">'
+      + '<div style="color:#FFD700;font-family:Montserrat,sans-serif;font-weight:700;font-size:16px;text-align:center">Press Ctrl+C (or Cmd+C on Mac) to copy</div>'
+      + '<textarea id="copyFallbackTA" readonly style="flex:1;min-height:300px;background:#111;color:#e0e0e0;border:2px solid #FFD700;border-radius:8px;padding:16px;font-family:JetBrains Mono,monospace;font-size:13px;line-height:1.6;resize:none"></textarea>'
+      + '<button onclick="document.getElementById(\'copyFallbackOverlay\').style.display=\'none\'" style="align-self:center;background:rgba(255,215,0,0.15);border:1px solid #FFD700;color:#FFD700;padding:8px 24px;border-radius:6px;cursor:pointer;font-family:Montserrat,sans-serif;font-weight:600">Close</button>'
+      + '</div>';
+    document.body.appendChild(overlay);
+  }
+  overlay.style.display = 'flex';
+  const ta = document.getElementById('copyFallbackTA');
+  ta.value = text;
+  ta.focus();
+  ta.select();
+  ta.setSelectionRange(0, text.length);
 }
 
 // ===== COPY PROMPT (with deal data) =====
@@ -7352,7 +7386,7 @@ function copyPrompt(btn) {
   let text = promptEl.dataset.originalText || promptEl.innerText;
   const d = getDealData();
   if (dealSaved) text = applyDealData(text);
-  copyToClipboard(text).then(() => {
+  copyToClipboard(text, promptEl).then(() => {
     btn.innerHTML = '\u2713 COPIED';
     btn.classList.add('copied');
     showToast(dealSaved && d._filled > 0 ? 'Copied with ' + d._filled + ' deal field' + (d._filled > 1 ? 's' : '') + ' filled in' : 'Prompt copied to clipboard');
@@ -7361,7 +7395,8 @@ function copyPrompt(btn) {
       btn.classList.remove('copied');
     }, 3000);
   }).catch(() => {
-    showToast('Copy failed. Try selecting the text manually.');
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    showToast('Text selected \u2014 press ' + (isMac ? '\u2318+C' : 'Ctrl+C') + ' to copy');
   });
 }
 
@@ -7586,14 +7621,15 @@ function quickCopy(btn) {
   const promptEl = card.querySelector('.prompt-text');
   let text = promptEl.dataset.originalText || promptEl.textContent;
   if (dealSaved) text = applyDealData(text);
-  copyToClipboard(text).then(() => {
+  copyToClipboard(text, promptEl).then(() => {
     btn.textContent = '\u2713';
     btn.classList.add('copied');
     const d = getDealData();
     showToast(dealSaved && d._filled > 0 ? 'Copied with ' + d._filled + ' deal fields' : 'Prompt copied');
     setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2500);
   }).catch(() => {
-    showToast('Copy failed — try expanding the card first');
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    showToast('Text selected \u2014 press ' + (isMac ? '\u2318+C' : 'Ctrl+C') + ' to copy');
   });
 }
 </script>
