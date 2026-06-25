@@ -254,6 +254,63 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
   .hero h1{font-size:1.5rem}
   .filter-group{flex-wrap:wrap}
 }
+
+/* injected */
+/* ===== UNSHAKABLE ENHANCEMENTS (navigate / use / organize) ===== */
+.pill-count{display:inline-block;margin-left:5px;font-size:9px;font-weight:700;color:var(--text-dim);background:rgba(255,255,255,0.07);border-radius:8px;padding:1px 5px;font-family:var(--font-accent);vertical-align:middle}
+.nav-pill.active .pill-count{color:var(--gold);background:rgba(255,215,0,0.12)}
+.nav-pill.nav-current:not(.active){color:var(--gold)}
+
+/* view + track chip bar */
+.view-bar{max-width:1200px;margin:0 auto;padding:10px 1.5rem 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.view-bar .vb-label{font-family:var(--font-accent);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-right:2px}
+.uiv-chip{font-family:var(--font-accent);font-size:11px;font-weight:600;padding:5px 12px;border-radius:14px;border:1px solid var(--border);color:var(--text-muted);background:transparent;cursor:pointer;transition:border-color .2s,color .2s,background .2s;display:inline-flex;align-items:center;gap:5px;user-select:none}
+.uiv-chip:hover{border-color:rgba(255,255,255,0.22);color:var(--text)}
+.uiv-chip.active{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,0.07)}
+.uiv-chip .c{font-size:9px;font-weight:700;opacity:.8}
+.uiv-divider{width:1px;height:18px;background:var(--border);margin:0 2px}
+
+/* favorite star */
+.fav-star{background:none;border:none;cursor:pointer;color:var(--text-dim);font-size:17px;line-height:1;padding:2px 6px;margin-right:2px;border-radius:6px;transition:color .2s var(--ease-out-expo),transform .15s var(--ease-out-expo)}
+.fav-star:hover{color:var(--gold);transform:scale(1.18)}
+.fav-star.on{color:var(--gold)}
+.fav-star:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* keyboard focus visibility */
+.card-header:focus-visible{outline:2px solid var(--gold);outline-offset:-2px;border-radius:8px}
+
+/* browse-by-strategy overlay */
+.uiv-browse-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:64px 20px;overflow-y:auto}
+.uiv-browse-overlay.open{display:flex}
+.uiv-browse{max-width:980px;width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:22px 22px 26px;box-shadow:0 20px 70px rgba(0,0,0,0.55)}
+.uiv-browse h3{font-family:var(--font-display);font-size:18px;font-weight:800;margin:0 0 2px;color:var(--text)}
+.uiv-browse .sub{font-size:12px;color:var(--text-dim);margin:0 0 16px}
+.uiv-browse-close{position:absolute;top:64px;right:20px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-muted);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:18px;line-height:1}
+.uiv-track-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.uiv-track{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:14px}
+.uiv-track-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.uiv-track-name{font-family:var(--font-accent);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold)}
+.uiv-track-all{font-size:10px;color:var(--text-dim);background:none;border:1px solid var(--border);border-radius:10px;padding:2px 8px;cursor:pointer;font-family:var(--font-accent)}
+.uiv-track-all:hover{border-color:var(--gold);color:var(--gold)}
+.uiv-cat{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;border-radius:8px;cursor:pointer;transition:background .15s}
+.uiv-cat:hover{background:rgba(255,215,0,0.06)}
+.uiv-cat-name{font-size:13px;color:var(--text-muted)}
+.uiv-cat:hover .uiv-cat-name{color:var(--text)}
+.uiv-cat-count{font-size:10px;font-weight:700;color:var(--text-dim);font-family:var(--font-accent)}
+
+/* sidebar strategy grouping */
+.deal-group-label{font-family:var(--font-accent);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin:14px 0 6px;padding-top:10px;border-top:1px solid var(--border)}
+
+@media (max-width:680px){
+  .uiv-browse-close{right:14px}
+  .view-bar{padding:8px 1rem 0}
+}
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+
 </style>
 </head>
 <body>
@@ -283,6 +340,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
         <a class="nav-pill" href="#offers" data-cat="offers">Offers</a>
         <a class="nav-pill" href="#advdili" data-cat="advdili">Adv. Diligence</a>
         <a class="nav-pill" href="#dispo" data-cat="dispo">Disposition</a>
+        <a class="nav-pill" href="#wholesale" data-cat="wholesale">Wholesale</a>
+        <a class="nav-pill" href="#rental" data-cat="rental">Rentals</a>
       </nav>
     </div>
     <div class="search-wrap">
@@ -298,10 +357,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 <!-- HERO -->
 <div class="hero">
   <h1>Deal Analysis Prompt Library</h1>
-  <p>101 AI prompts for analyzing fix-and-flip deals. Built on Toby Potter's methodology. Copy, paste, close.</p>
+  <p>120 AI prompts for analyzing fix-and-flip deals, plus wholesale and rental expansion packs. Built on Toby Potter's methodology. Copy, paste, close.</p>
   <div class="stat-row">
-    <div class="stat"><div class="stat-num">101</div><div class="stat-label">Prompts</div></div>
-    <div class="stat"><div class="stat-num">16</div>
+    <div class="stat"><div class="stat-num">120</div><div class="stat-label">Prompts</div></div>
+    <div class="stat"><div class="stat-num">18</div>
       <div class="stat-label">Categories</div></div>
     
   </div>
@@ -428,12 +487,22 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
       <div class="situation-desc">Build a private lender network for fast flexible capital</div>
       <div class="situation-prompts">Prompt #100</div>
     </div>
+    <div class="situation-card" onclick="filterBySituation(['102','103','104','105','106','107','108','109','110','111'])" data-prompts="102,103,104,105,106,107,108,109,110,111">
+      <div class="situation-title">&#x1F91D; Wholesaling a deal</div>
+      <div class="situation-desc">Screen, price the MAO and fee, assign vs double close, find and vet buyers, dispo, stay compliant</div>
+      <div class="situation-prompts">Prompts #102-#111</div>
+    </div>
+    <div class="situation-card" onclick="filterBySituation(['112','113','114','115','116','117','118','119','120'])" data-prompts="112,113,114,115,116,117,118,119,120">
+      <div class="situation-title">&#x1F3E0; Holding as a rental</div>
+      <div class="situation-desc">Underwrite cash flow, BRRRR, nine-gate screen, rent comps, property class, refi, IRR, taxes</div>
+      <div class="situation-prompts">Prompts #112-#120</div>
+    </div>
   </div>
 </div>
 
 <!-- RESULTS BAR -->
 <div class="results-bar" id="resultsBar">
-  <div class="results-count" id="resultsCount">Showing <strong>101</strong> of 101 prompts</div>
+  <div class="results-count" id="resultsCount">Showing <strong>120</strong> of 120 prompts</div>
   <button class="expand-all-btn" id="expandAllBtn" onclick="toggleExpandAll()">Expand All</button>
 </div>
 
@@ -6970,6 +7039,1058 @@ CONFIDENCE ASSESSMENT:
   </div>
 </div>
 
+
+<div class="section" id="wholesale" data-category="wholesale">
+  <div class="section-header">
+    <div class="section-icon">🤝</div>
+    <div class="section-title">Wholesaling and Assignments</div>
+    <div class="section-count">10 prompts</div>
+  </div>
+  <div class="prompt-grid">
+
+    <!-- 102 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">102</span><span class="card-title">Wholesale Deal Quick Screen</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Run this the moment a lead comes in, before you spend a minute on it. Two numbers decide go or no-go.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently SOLD properties near the subject on Redfin, Zillow, Realtor.com, or county records, including investor and as-is sales, not just renovated retail sales
+- Search for current local market conditions, days on market, and cash-buyer activity
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+I have a new wholesale lead and need a fast go / no-go before I invest time in it.
+
+Property:
+- Address with ZIP: [ADDRESS]
+- Beds/Baths/SqFt: [X/X/X], Year built: [X]
+- Condition tier: [light / medium / heavy / teardown]
+- Seller's asking price or motivation, if known: [X]
+- Market type: [hot / balanced / slow-rural]
+
+Do this:
+1. Estimate ARV as a RANGE from renovated retail comps sold in the last 90 to 180 days, within 0.5 mile, within 10% of square footage, same bed/bath, not crossing major boundaries. Show the comps and the average price per square foot you used.
+2. Estimate a quick rehab number from the condition tier and add a 15% contingency.
+3. Apply a screening multiple to ARV: 65% in a balanced market, 60% in a slow or rural market, up to 70% only in a hot market with deep cash-buyer demand. Then compute a quick maximum allowable offer: (ARV times screen percent) minus rehab minus a target assignment fee of [TARGET FEE, default 10,000].
+4. Compare the seller's likely number to that maximum.
+
+Output a clear GO / MAYBE / NO-GO verdict, the spread in dollars and as a percent of ARV, the single biggest unknown to verify next, and one sentence on why.
+
+Guardrails: do not apply a flat 70% in every market. Do not use active or pending listings or automated estimates as ARV comps. Do not skip the rehab contingency. Treat ARV as a range, never a single guaranteed number.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: Screen tighter than you think. In a slow market a 60% multiple keeps you from chasing deals that look fine on paper but die at disposition.</div>
+      </div>
+    </div>
+
+    <!-- 103 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">103</span><span class="card-title">Wholesale MAO and Assignment Fee Calculator</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Back into the exact price you can offer the seller while still leaving your cash buyer their margin and yourself a fee.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently SOLD properties near the subject on Redfin, Zillow, Realtor.com, or county records, including investor and as-is sales, not just renovated retail sales
+- Search for current local market conditions, days on market, and cash-buyer activity
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Calculate my maximum allowable offer for a wholesale assignment so the end buyer keeps their full margin and my fee comes out of my own room, not theirs.
+
+Inputs:
+- ARV, or give me comps to derive it: [X]
+- Estimated rehab: [X]
+- Buyer multiple to use: [default 70%; 75 to 80% only in hot markets, 65% or lower in slow/rural]
+- Target assignment fee: [ASSIGNMENT FEE]
+- Market type: [hot / balanced / slow]
+- Known buyer fee cap, if any (some institutional buyers cap fees near 10% of price): [X]
+
+Compute and show the math:
+1. Buyer's maximum allowable offer = ARV times buyer multiple minus rehab. This already includes the flipper's holding, closing, selling costs and profit. Do not subtract those again.
+2. My maximum offer to the seller = buyer's MAO minus my assignment fee.
+3. My fee in dollars and as a percent of the seller offer. Flag it if it exceeds 10% of price, since that can block an assignment with a financed buyer and may push you toward a double close.
+4. A sensitivity table showing the seller offer at 65%, 70%, and 75% buyer multiples.
+5. A recommended opening offer below my maximum to leave negotiating room.
+
+Guardrails: never subtract the fee from the buyer's side AND use their full multiple, that quietly eats their margin and kills repeat buyers. Size the fee to the spread, not to habit.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: Your fee lives in the gap between the seller's price and the buyer's MAO. Protect the buyer's number first; repeat buyers are worth more than any single fee.</div>
+      </div>
+    </div>
+
+    <!-- 104 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">104</span><span class="card-title">As-Is Value Comping for Cash Buyers</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">ARV is what it sells for renovated. This finds the as-is number a cash buyer will actually pay today.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently SOLD properties near the subject on Redfin, Zillow, Realtor.com, or county records, including investor and as-is sales, not just renovated retail sales
+- Search for current local market conditions, days on market, and cash-buyer activity
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Estimate the AS-IS value a cash buyer or flipper would actually pay for this property today, not its renovated retail value.
+
+Property:
+- Address with ZIP: [ADDRESS]
+- Beds/Baths/SqFt/Year: [X]
+- Condition and rehab scope: [DESCRIBE]
+- ARV, or comps to derive it: [X]
+- Estimated rehab: [X]
+- Buyer type: [cash / hard money]
+
+Use two methods and reconcile them:
+Method 1, investor comps: pull SOLD comps that were themselves sold as-is to investors (estate sales, REO, cash-only listings, investor specials, properties bought then flipped), last 90 to 180 days, within 0.5 mile, within 10% of square footage, same bed/bath. Adjust each to the subject and average. Show the comps and adjustments.
+Method 2, discount from ARV: as-is is roughly ARV minus rehab minus the buyer's required margin, which is close to the flipper's MAO (ARV times 70% minus rehab).
+Reconcile the two numbers, explain any gap, and state which to trust and why. A cash buyer may pay slightly more than a hard-money buyer because they avoid today's borrowing costs.
+
+Output: an as-is value range from each method, a reconciled number, the implied cash-buyer offer ceiling, and a confidence rating tied to how many recent comps you found.
+
+Guardrails: never use renovated or retail comps to set as-is value, that inflates it and kills the deal for the buyer. Use at least 3 comps. Do not treat an automated value estimate as as-is value; those assume average condition, not distress.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: If your two methods disagree by a lot, your ARV or rehab number is wrong. Fix those before you call the seller.</div>
+      </div>
+    </div>
+
+    <!-- 105 -->
+    <div class="prompt-card" data-level="advanced" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">105</span><span class="card-title">Assignment vs. Double Close Decision</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Pick the right exit before you sign. Spread size, fee visibility, and state law decide it.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently SOLD properties near the subject on Redfin, Zillow, Realtor.com, or county records, including investor and as-is sales, not just renovated retail sales
+- Search for current local market conditions, days on market, and cash-buyer activity
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Tell me whether to use a straight assignment or a double close on this wholesale deal, and why.
+
+Inputs:
+- Assignment fee or spread: [X dollars and as a percent of price]
+- Is the contract assignable? Any source restriction (MLS, bank-owned/REO, HUD/FHA)?: [X]
+- End buyer's financing: [cash / hard money / FHA owner-occupant]
+- Property state: [STATE]
+- How sensitive are you to the seller or buyer seeing your fee?: [X]
+- Will your title company handle double closes?: [X]
+
+Analyze:
+1. Assignment is the default: lower cost, fee shows on the settlement statement, you never take title. Use it when the fee is reasonable relative to price and the contract is assignable.
+2. Double close (transactional funding) hides the A-to-B price and is used when the spread is large, the contract is non-assignable, the buyer's lender will not fund an assigned contract, or state law favors two separate transactions. Cost: transactional funding points of roughly 1 to 2.5% of the amount plus a processing fee of about 400 to 900 dollars per transaction, plus two sets of closing costs.
+3. Give a net-to-me comparison: fee minus near-zero assignment cost versus fee minus double-close costs. State the breakeven spread where the double close is worth it.
+4. Flag the property state's disclosure, licensing, and seasoning rules and whether they push toward one structure. Note the FHA 90-day seasoning rule if the end buyer is an FHA owner-occupant.
+
+Output a clear recommendation, the deciding factor named, the net-dollar comparison, and a title and funding checklist if double closing.
+
+Guardrails: do not double close every deal, the extra cost erodes small spreads. Never assign a contract that bans assignment (REO/HUD). This is not legal advice; confirm structure with your title company and a local attorney.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: A fee that looks reasonable on a settlement statement keeps assignments clean. When the fee gets large relative to price, the double close protects the deal.</div>
+      </div>
+    </div>
+
+    <!-- 106 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">106</span><span class="card-title">Cash Buyer List Builder and Buyer-Deal Matching</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">2026 reality: matching a deal to the right 5 to 10 buyers beats blasting a list of 5,000.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently SOLD properties near the subject on Redfin, Zillow, Realtor.com, or county records, including investor and as-is sales, not just renovated retail sales
+- Search for current local market conditions, days on market, and cash-buyer activity
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Help me match this specific deal to the right cash buyers, and if I have no list yet, give me the playbook to build one.
+
+Deal:
+- Address / ZIP / submarket: [X]
+- Type, beds/baths/sqft: [X]
+- ARV, repair cost and scope: [X]
+- Contract or assignment price and target fee: [X]
+- Estimated rent and rough cap rate: [X]
+My buyer data: [paste your cash-buyer list with their buy boxes, OR write "none, give me the pull playbook"]
+
+Do this:
+1. Profile the deal: is it flip-grade (cosmetic rehab, strong ARV spread), rental-grade (cash flows, 7% or higher cap), or both? Show the math that decides it.
+2. Define the ideal buyer buy box for THIS deal: price band, ZIP/submarket, property type, beds/baths, rehab tolerance, ARV ceiling, hold strategy.
+3. If I gave a list, segment it and return a ranked shortlist of 3 to 10 buyers whose box this deal fits, each with a one-line reason and a match score, ranked by recent verified purchases and proximity. If I gave no list, give the exact pull playbook: county deed and tax records for recent all-cash sales with no mortgage recorded, MLS sold-and-flipped comps, PropStream cash-buyer filters, then skip trace.
+4. For each buyer segment, give the dispo angle: flippers want ARV and spread, landlords want rent and cap rate.
+
+Guardrails: do not invent buyer names or phone numbers; if I gave no list, return the playbook, not fabricated contacts. Match on ZIP and neighborhood, not citywide. Treat only buyers with a verified purchase in the last 90 days to 6 months as active. Do not state any legal filing requirement; tell me to confirm closing paperwork with my title company.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: A short, perfectly matched buyer list closes faster than a giant cold one. Spend your time on the buyers who already buy this exact box in this exact ZIP.</div>
+      </div>
+    </div>
+
+    <!-- 107 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">107</span><span class="card-title">Buyer Qualification and Proof-of-Funds Vetting</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Verify the buyer is real before you stop marketing. AI-faked proof of funds is now common.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently SOLD properties near the subject on Redfin, Zillow, Realtor.com, or county records, including investor and as-is sales, not just renovated retail sales
+- Search for current local market conditions, days on market, and cash-buyer activity
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Help me vet this cash buyer before I take the deal off the market.
+
+Buyer:
+- Name and closing entity: [X]
+- Proof of funds type, date, amount, issuing institution: [X]
+- Earnest money offered, and whether it goes to my title company and is non-refundable: [X]
+- Claimed recent closings, with county and state: [X]
+- Last title company or attorney they closed with: [X]
+- Are they the end buyer, or assigning to someone else?: [X]
+- Their stated buy box: [X]
+
+Do this:
+1. Assess the proof of funds: is it fresh (within 30 days for a fast offer, 60 outer limit) and from a real institution? Tell me the exact verification step: confirm with the issuing bank using a number I look up myself, or have the title company verify. Never accept a screenshot as final proof.
+2. Give me an ordered vetting question script.
+3. State the earnest money requirement clearly: non-refundable, 2,500 to 5,000 dollars, wired to my title company, with the rationale. This is the single best tire-kicker filter.
+4. Give a county-records check: the grantee index showing recent deeds in their name or LLC with no mortgage lien equals an active cash buyer.
+5. Score red flags, give a go / no-go, and provide a reference-call template for their last title company.
+
+Guardrails: generative AI now produces proof-of-funds letters that pass visual review, so verification must happen at the issuing institution, not by looking at the document. Do not call the number printed on the proof of funds. Always ask "are you the end buyer?" to screen daisy-chains. A clean proof of funds without a track record still needs the earnest money and county check.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: Non-refundable earnest money to your title company filters out most tire-kickers in one step. Real buyers do not flinch at it.</div>
+      </div>
+    </div>
+
+    <!-- 108 -->
+    <div class="prompt-card" data-level="advanced" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">108</span><span class="card-title">Wholesale Contract and Assignment-Clause Review</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Self-check your purchase and assignment paperwork for the clauses that protect your exit and your fee. Not legal advice.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for the CURRENT statute and state real estate commission guidance that applies. Specifically:
+- Search for the named state's wholesaling, assignment, and disclosure laws and their effective dates
+- Confirm whether any 2025 or 2026 law has changed since your training data
+- Use only verifiable, current sources. Do not rely on training data for legal rules.
+
+Review my wholesale paperwork and flag what is missing or weak. This is a self-review to prepare for my attorney, not legal advice.
+
+Inputs:
+- State and county: [X]
+- Document type and full text: [paste the purchase agreement and/or assignment agreement]
+- Parties, whose names must match across both documents: [X]
+- Property address and unit count: [X]
+- Exit strategy: [assign / double close]
+- Purchase price and assignment fee: [X]
+- Earnest money amount, escrow holder, refundable?: [X]
+- End-buyer deposit and refundable?: [X]
+- Inspection or due-diligence period in days: [X]
+- Seller type: [private / bank / REO / HUD / short sale]
+- End-buyer financing: [cash / FHA / VA]
+
+Check and report:
+1. Assignability: is the contract assignable? Confirm and-or-assigns language AND that no anti-assignment box is checked. Note that and-or-assigns does NOT override a checked no-assignment clause. REO, HUD, and short-sale contracts usually bar assignment and force a double close.
+2. Clause checklist as a table marking Present / Missing / Weak: and-or-assigns, inspection contingency with day count, equitable-interest and marketing rights, earnest money terms, fee terms, non-refundable buyer deposit, non-circumvention, default and remedies, closing-date alignment, access clause.
+3. 2026 state disclosure compliance: many states now require written equitable-interest disclosure. Examples to verify against current statute: Ohio SB 155 (effective March 2 2026, standalone bold disclosure, buyer cancellation and 30-day deposit return), Pennsylvania Act 52 (30-day cancellation), Oklahoma SB 1075 (2-business-day cancellation), Maryland, Connecticut HB 7287 registration (effective July 1 2026), Texas equitable-interest disclosure. Confirm what this state currently requires.
+4. Exit protection: refundable earnest money plus a live contingency.
+5. Flag whether FHA or VA seasoning could block the exit.
+
+Output: a top banner stating this is a self-review and not legal advice and that a licensed attorney in this state must review it and verify current law; the assignability verdict citing the exact clause; the clause table; the state-disclosure check; and a prioritized fix list with questions for the attorney.
+
+Guardrails: do not give a legal opinion or claim a contract is enforceable. Always recommend attorney review and verification of current state statute. Market the equitable interest, never the property itself.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: The inspection contingency is your exit and your marketing window in one clause. If it is missing or too short, that is the first thing to fix.</div>
+      </div>
+    </div>
+
+    <!-- 109 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">109</span><span class="card-title">Disposition: Match Deal to Buyer List and Pitch</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Deal under contract? Build the targeted disposition message and pick the buyer segments who actually want it.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently SOLD properties near the subject on Redfin, Zillow, Realtor.com, or county records, including investor and as-is sales, not just renovated retail sales
+- Search for current local market conditions, days on market, and cash-buyer activity
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+I have a deal under contract. Build my disposition: pick the buyer segments to send it to and write the pitch.
+
+Deal:
+- Address, beds/baths/sqft, type, year, occupancy: [X]
+- ARV, repair estimate and scope, asking or assignment price, projected spread: [X]
+- Estimated rent and cap rate, for landlord buyers: [X]
+- 3 to 5 comps, sold within 6 months, within 0.5 mile, matched: [X]
+- Photos available and a gallery link, including the worst room: [X]
+- Access or showing instructions and offer deadline: [X]
+- My buyer segments and counts, and the channel for each: [X]
+
+Do this:
+1. Recommend the 1 to 3 buyer segments to send this to first, ranked, with a rough send count. Targeted beats mass: a tight matched list outperforms a full-list blast.
+2. Write the pitch tailored per segment: flippers lead with spread and ARV, landlords lead with rent and cap rate. Use a scannable subject line, a bolded numbers block in the first 3 lines (asking, ARV, repairs, spread), short bullets, a photo callout, a comps summary, and a clear access and deadline call to action with your phone number.
+3. Give channel variants: an SMS under 300 characters with an opt-out, an email with the gallery link, and a platform post.
+4. Add a compliant urgency line (highest and best by a real date) and a 5-day follow-up cadence.
+
+Guardrails: do not blast the entire list, it hurts deliverability and creates TCPA and CAN-SPAM risk. Only text buyers who consented, include an opt-out, and never segment on protected classes, only on investment criteria like ARV, cap rate, and ZIP. Do not hide the price or the worst room. Do not promise an unrealistic instant close.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: Put the numbers in the first three lines and show the worst room up front. Serious buyers want the spread and the truth, not hype.</div>
+      </div>
+    </div>
+
+    <!-- 110 -->
+    <div class="prompt-card" data-level="advanced" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">110</span><span class="card-title">Repeatable Wholesale Pipeline and KPI Builder</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Diagnose why your wholesale pipeline is stuck and reverse-engineer the activity to hit a deal goal.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently SOLD properties near the subject on Redfin, Zillow, Realtor.com, or county records, including investor and as-is sales, not just renovated retail sales
+- Search for current local market conditions, days on market, and cash-buyer activity
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Analyze my wholesale pipeline, find the bottleneck, and reverse-engineer what I need to hit my goal.
+
+Inputs:
+- Goal: [deals per month OR net profit per month]
+- Average realized assignment fee, last 3 to 6 months: [X]
+- Channels and monthly spend per channel: [X]
+- Funnel counts, last 30 or 90 days: marketing touches, contacts or conversations, leads, appointments or offers, contracts, closings: [X]
+- Cost per lead by channel: [X]
+- Average days lead-to-contract and contract-to-assignment: [X]
+- Follow-up touches per lead and speed to first response: [X]
+- Buyer list size, active buyers, and average days on market to assign: [X]
+
+Do this:
+1. Build a funnel table: count per stage, conversion percent between adjacent stages, my number versus benchmark, and a RED/YELLOW/GREEN flag per stage. Use my own ratios where I gave them; fall back to benchmarks only where I did not.
+2. Reverse-engineer the target funnel from my goal using my own conversion rates.
+3. Diagnose the single first stage that falls below benchmark and classify it as top-of-funnel, conversion, or disposition. Disposition is the most common 2026 bottleneck.
+4. Unit economics: cost per lead, cost per acquisition by channel, return as fee divided by cost per acquisition, blended cost per deal, and break-even leads per month.
+5. Give 3 to 5 prioritized fixes tied to the bottleneck and a recommended channel reallocation.
+
+Benchmarks to use as a fallback only: lead-to-deal roughly 1 to 5%, top performers near 15%; most deals need 5 or more follow-ups; speed to lead matters. Treat fee as revenue, not profit.
+
+Guardrails: prefer my own ratios over generic benchmarks. Do not celebrate top-of-funnel vanity volume if conversion or disposition is the real problem. Weight leads by quality, not raw count.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: When deals dry up, the problem is usually one specific stage, not the whole funnel. Find the first red gate from the top and fix only that.</div>
+      </div>
+    </div>
+
+    <!-- 111 -->
+    <div class="prompt-card" data-level="advanced" data-cat="wholesale">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">111</span><span class="card-title">State Wholesaling Compliance Check</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Wholesaling rules changed hard in 2025 and 2026 and vary by state. Check yours before you market a single deal.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced real estate wholesaler and acquisitions analyst who has closed hundreds of assignment deals. Your analysis is always conservative — protecting your spread and your cash-buyer relationships matters more than forcing a marginal deal.
+
+RESEARCH FIRST: Before responding, search the internet for the CURRENT statute and state real estate commission guidance that applies. Specifically:
+- Search for the named state's wholesaling, assignment, and disclosure laws and their effective dates
+- Confirm whether any 2025 or 2026 law has changed since your training data
+- Use only verifiable, current sources. Do not rely on training data for legal rules.
+
+Tell me how to wholesale legally in my state as of right now, then tell me to verify it.
+
+Inputs:
+- Property state, required: [STATE]
+- County or city: [X]
+- Intended exit: [assignment / double close / undecided]
+- Wholesale deals I have closed in this state in the trailing 12 months: [X]
+- Do I hold an active real estate license there?: [yes/no]
+- How am I sourcing buyers, a private pre-screened list or public advertising?: [X]
+- Will I market the property, or only my contract (equitable interest)?: [X]
+- Does my contract include the required disclosures and cancellation windows?: [X]
+
+Do this:
+1. Search for the CURRENT statute and state real estate commission guidance for this state and summarize: is wholesaling legal, legal with conditions, high-risk, or effectively restricted?
+2. Give a rules table: required disclosure form, timing, and format; any license-after-N-deals threshold and whether the count is rolling or calendar; any registration requirement and its deadline; and marketing restrictions.
+3. Note the known strict and changing states to check against: Illinois (one unlicensed deal per 12 months), Oklahoma (public marketing treated as brokerage, mandatory pre-contract disclosure with a 2-business-day cancellation), South Carolina (marketing a property you do not own is brokerage), Connecticut (DCP registration effective July 1 2026, seller 3-day cancellation, 90-day closing cap), Ohio (standalone disclosure effective March 2 2026), Texas, Maryland.
+4. Recommend the legal path for this state and the contract and disclosure checklist to operate cleanly.
+
+Output a clear verdict, the rules table, the recommended path, and the specific statute or bill cited.
+
+Guardrails: market your CONTRACT, not the property, this is the number one trigger for unlicensed-brokerage reclassification. Deal-count thresholds are often rolling, not calendar. Close with this exact warning: statutes change frequently, several 2025 and 2026 laws are newly in force, so verify against the current state statute and your state real estate commission and confirm with a licensed real estate attorney in that state before acting. This is not legal advice.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: The fastest way to get reclassified as an unlicensed broker is advertising the house. Market your contract and your equitable interest, never the property.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section" id="rental" data-category="rental">
+  <div class="section-header">
+    <div class="section-icon">🏠</div>
+    <div class="section-title">Rental and Buy-and-Hold Analysis</div>
+    <div class="section-count">9 prompts</div>
+  </div>
+  <div class="prompt-grid">
+
+    <!-- 112 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="rental">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">112</span><span class="card-title">Full Buy-and-Hold Underwriting</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Complete rental underwriting with mandatory reserves and a downturn stress test. Every survivor of the quick screen runs through this.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced buy-and-hold rental underwriter and licensed appraiser. Your analysis is always conservative — protecting the investor from negative cash flow and thin reserves matters more than finding opportunity.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently sold and currently leased comparable properties on Redfin, Zillow, Realtor.com, Rentometer, or county records
+- Search for current DSCR and investment mortgage rates, local property tax rates, and insurance costs for this market
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Underwrite this property as a long-term rental with conservative, fully-reserved numbers.
+
+Inputs:
+- Purchase price, down payment percent, closing costs, rehab or make-ready: [X]
+- Loan type, rate, term: [X]
+- Monthly market rent and any other income (laundry, parking, pet): [MONTHLY RENT]
+- Property taxes, modeled on the POST-PURCHASE reassessed value, not the seller's current bill: [X]
+- Insurance, HOA: [X]
+- Vacancy percent, management percent, maintenance percent, capex percent: [X]
+
+Compute and show every step:
+1. Gross scheduled rent, then effective gross income after vacancy.
+2. Operating expenses: taxes, insurance, management, maintenance, capex reserve, owner-paid utilities, HOA. Exclude mortgage and depreciation.
+3. NOI, then cap rate (NOI divided by price).
+4. Annual debt service using PITIA, then annual and monthly cash flow.
+5. Cash-on-cash return (annual cash flow divided by total cash invested) and DSCR.
+6. Operating expense ratio and gross rent multiplier.
+7. Downturn stress test: rent down 10% and vacancy raised to 10 to 15%. Show stressed NOI, cash flow, cash-on-cash, DSCR, and break-even occupancy.
+
+Benchmarks: cap rate 6 to 10% is solid, cash-on-cash 8% or higher, DSCR at or above 1.25 to qualify and never below 1.0. Report both cap rate and cash-on-cash since one is unlevered and one is levered.
+
+Guardrails: never zero out or skip vacancy, maintenance, capex, or management reserves, even if self-managing; that is the number one way pro formas lie. Use reassessed property taxes, since a sale often reassesses to a far higher value. Do not assume aggressive rent growth.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: If a deal only works when you delete the capex and vacancy reserves, it does not work. Reserve first, then judge the number.</div>
+      </div>
+    </div>
+
+    <!-- 113 -->
+    <div class="prompt-card" data-level="advanced" data-cat="rental">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">113</span><span class="card-title">BRRRR Deal Analyzer</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Buy, rehab, rent, refinance, repeat. Find how much capital you recover and whether it is a true infinite return.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced buy-and-hold rental underwriter and licensed appraiser. Your analysis is always conservative — protecting the investor from negative cash flow and thin reserves matters more than finding opportunity.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently sold and currently leased comparable properties on Redfin, Zillow, Realtor.com, Rentometer, or county records
+- Search for current DSCR and investment mortgage rates, local property tax rates, and insurance costs for this market
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Analyze this BRRRR deal and tell me how much of my capital I get back.
+
+Inputs:
+- Purchase price, rehab budget, holding costs, buying closing costs: [X]
+- ARV with the comp basis: [X]
+- Refinance LTV (default 75%), refi rate, term, refi closing percent (2 to 5%): [X]
+- Market rent and operating expense assumptions (taxes on reassessed value, insurance, management, maintenance, capex, vacancy): [X]
+
+Compute and show the math:
+1. All-in cost: purchase plus rehab plus holding plus closing.
+2. Refinance loan amount: ARV times refi LTV.
+3. Cash pulled out: refi loan minus refi closing costs.
+4. Capital left in the deal: total cash in minus cash pulled out.
+5. Post-refi monthly and annual cash flow on the new loan.
+6. Cash-on-cash on the capital left in. If capital left is zero or less, label it INFINITE RETURN, but only if post-refi cash flow is still positive.
+7. Equity captured (ARV minus refi loan) and pass or fail on the 75% rule (all-in under 75% of ARV).
+8. Sensitivity: rerun if the ARV appraises 5 to 10% low.
+
+2026 notes to apply: DSCR refinance is the common BRRRR exit, usually about 6 months seasoning versus 12 for conventional, and no portfolio cap versus the conventional 6 to 10 financed-property limit. DSCR refi rates ran roughly 6.1 to 7.5% in mid-2026; pull live quotes.
+
+Guardrails: the appraisal gap is the number one BRRRR killer, so stress the ARV down. Do not forget refi closing costs reduce the cash pulled out. Zero capital left does not mean zero risk; cash flow must stay positive after the refinance.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: Underwrite the refinance appraisal 5 to 10% below your ARV. If the deal still recycles most of your cash at the lower number, it is a real BRRRR.</div>
+      </div>
+    </div>
+
+    <!-- 114 -->
+    <div class="prompt-card" data-level="beginner" data-cat="rental">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">114</span><span class="card-title">Quick Rental Screen (Nine-Gate Scorecard)</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">A 2 to 3 minute green/yellow/red screen across nine gates. Kills losers fast before you build a full model.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced buy-and-hold rental underwriter and licensed appraiser. Your analysis is always conservative — protecting the investor from negative cash flow and thin reserves matters more than finding opportunity.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently sold and currently leased comparable properties on Redfin, Zillow, Realtor.com, Rentometer, or county records
+- Search for current DSCR and investment mortgage rates, local property tax rates, and insurance costs for this market
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Run a fast nine-gate screen on this rental and tell me whether it earns a full underwrite.
+
+Inputs:
+- Price, monthly rent, estimated taxes (reassessed), all-in operating expense percent, down payment percent, rate, HOA, property age, market liquidity note: [X]
+
+Score each of these nine gates GREEN, YELLOW, or RED and show the quick number behind each:
+1. Rent-to-price ratio: green at or above 0.8 to 1.0%, yellow 0.5 to 0.8%, red under 0.5%.
+2. Cap rate: green 6 to 10%, yellow under 6%, red under 4% or implausibly high.
+3. Monthly cash flow per unit: green above 200 dollars, yellow 100 to 200, red under 100.
+4. Cash-on-cash: green at or above 8%, yellow 6 to 8%, red under 6%.
+5. Five-year IRR: green at or above 12%, yellow 8 to 12%, red under 8%.
+6. Day-one equity or ROI: green strong, yellow modest, red negative.
+7. Property-tax drag, the reassessment risk on a high-premium purchase: green low, yellow moderate, red high.
+8. HOA and property health (age, deferred maintenance, looming capex): green low, yellow moderate, red high.
+9. Exit flexibility (buyer pool, owner-occupant appeal, liquidity): green high, yellow moderate, red thin.
+
+Output a nine-row table, an overall verdict, a 2 to 3 sentence rationale, and a clear proceed-to-full-underwriting yes or no. Any red gate should reject or strongly flag the deal.
+
+Guardrails: at current rates roughly 0.8% rent-to-price, not the old 1% rule, is the functional cash-flow threshold. Do not let a green rent-to-price hide a red tax-drag or capex gate. This screen only rejects losers fast; every survivor still needs the full underwriting prompt. Use reassessed taxes even here.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: This screen is for saying no in two minutes. A green board does not mean buy, it means do the real underwriting.</div>
+      </div>
+    </div>
+
+    <!-- 115 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="rental">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">115</span><span class="card-title">Operating Expense Benchmarking and Reserve Sizing</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Pressure-test a pro forma's expenses against real benchmarks and size reserves honestly.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced buy-and-hold rental underwriter and licensed appraiser. Your analysis is always conservative — protecting the investor from negative cash flow and thin reserves matters more than finding opportunity.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently sold and currently leased comparable properties on Redfin, Zillow, Realtor.com, Rentometer, or county records
+- Search for current DSCR and investment mortgage rates, local property tax rates, and insurance costs for this market
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Benchmark this rental's operating expenses against realistic ranges and size the reserves properly.
+
+Inputs:
+- Gross monthly rent and property value: [X]
+- Property age and class: [X]
+- Market type and whether self-managed or third-party managed: [X]
+- The current pro forma expense lines to check: [X]
+
+Do this:
+1. Compare each submitted expense line to benchmark ranges and flag any that sits below the realistic floor:
+- Operating expense ratio: 30 to 50% of gross rent, 35 to 45% typical, older stock higher, excluding mortgage and depreciation.
+- Management: 8 to 12% of gross rent plus a leasing fee around 50 to 100% of one month's rent on turnover. Charge it even if self-managing.
+- Maintenance reserve: about 2 to 5% of gross rent, or 1 to 2% of property value per year, older equals higher.
+- Capex reserve: 5 to 15% of gross rent, commonly 5 to 10%, older buildings higher.
+- Vacancy: 5 to 8% strong, 10 to 15% average, higher in weak markets; 5% is the floor.
+2. Recommend reserve amounts in both dollars per year and percent.
+3. Build a stressed pro forma: vacancy to 10%, rent down 10%, taxes reassessed, maintenance and capex to the high end. Show the resulting change in NOI, cap rate, and cash-on-cash.
+4. List every optimism flag where the original pro forma is below benchmark.
+
+Guardrails: pro formas most often lie by under-reserving capex, vacancy, and management. Use reassessed taxes, not the seller's trailing bill. Self-management is not free; your time has value and a future hire is likely. Do not accept aggressive rent growth on a 2% market.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: Charge management even when you self-manage. The day you scale or hire, that expense is real, and a deal that only works as your unpaid job is not a deal.</div>
+      </div>
+    </div>
+
+    <!-- 116 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="rental">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">116</span><span class="card-title">Rent Estimate and Rent Comp Validation</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Build market rent from leased comps, not asking prices, and adjust for the differences that move rent.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced buy-and-hold rental underwriter and licensed appraiser. Your analysis is always conservative — protecting the investor from negative cash flow and thin reserves matters more than finding opportunity.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently sold and currently leased comparable properties on Redfin, Zillow, Realtor.com, Rentometer, or county records
+- Search for current DSCR and investment mortgage rates, local property tax rates, and insurance costs for this market
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Estimate market rent for this property from comparable leases and validate the comps.
+
+Inputs:
+- Address / ZIP: [X]
+- Beds, baths, sqft, year or condition, type: [X]
+- Parking, key amenities, included utilities: [X]
+- Target lease term and current or asking rent: [MONTHLY RENT]
+- 3 to 5 leased comps if I have them (address, beds/baths, sqft, rent, lease date, concessions): [X]
+- Season of analysis: [X]
+
+Do this:
+1. Pull comparable LEASED units, prioritizing: same ZIP or submarket, same bed/bath, within about 20% square footage, same type, leased in the last 60 to 90 days, same school zone and side of major roads.
+2. Adjust each comp to the subject for beds, baths, size, condition, amenities, and parking. Normalize size with rent per square foot only within a tight size band, never across very different sizes. Show each raw rent and adjusted rent.
+3. Weight leased comps as ground truth; use active listings only to gauge direction and days on market. A unit sitting active 30 or more days signals the ask is above market.
+4. Convert any concessions to net-effective rent (for example one month free on a 12-month lease is about an 8.3% haircut) and compare net-effective to net-effective.
+5. Seasonally adjust: rents peak in late spring and summer and trough in winter.
+
+Output: a point rent estimate plus a low/expected/high range, the per-comp adjustment table, blended rent per square foot, net-effective versus face rent, a seasonality note, and a days-to-lease expectation. If you also use an automated rent tool, treat it as one comp source to triangulate, never the single answer.
+
+Guardrails: do not anchor on asking rents; leased comps are the truth. Do not stretch rent per square foot across mismatched sizes. Do not ignore concessions or mix in different property classes or school zones. Flag comps older than 90 days.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: Asking rent is a wish; leased rent is a fact. Build your number from what tenants actually signed, then sanity-check the ask.</div>
+      </div>
+    </div>
+
+    <!-- 117 -->
+    <div class="prompt-card" data-level="intermediate" data-cat="rental">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">117</span><span class="card-title">Property Class and Tenant-Quality Assessment (A/B/C/D)</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Grade the neighborhood and the building, then change your underwriting assumptions to match the class.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced buy-and-hold rental underwriter and licensed appraiser. Your analysis is always conservative — protecting the investor from negative cash flow and thin reserves matters more than finding opportunity.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently sold and currently leased comparable properties on Redfin, Zillow, Realtor.com, Rentometer, or county records
+- Search for current DSCR and investment mortgage rates, local property tax rates, and insurance costs for this market
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Classify this property and neighborhood A through D and tell me how that should change my underwriting.
+
+Inputs:
+- Address / ZIP, year built: [X]
+- Median area income, crime index, school rating: [X]
+- Nearby employers or job base, owner-occupancy percent: [X]
+- Rent level versus the metro, current condition and deferred maintenance: [X]
+- Current tenant payment history, if known: [X]
+
+Do this:
+1. Assign a neighborhood class and a building class separately, since they can differ (for example a B building in an A area), with the rationale per factor: age, income, crime, schools, owner-occupancy, tenant profile.
+2. Give the recommended underwriting assumptions for this class as a table:
+- Vacancy: roughly A 3 to 5%, B 5 to 8%, C 8 to 12%, D 15% or more and lumpier.
+- Bad debt or delinquency: near zero for A rising to material for D; underwrite collected rent, not gross.
+- Maintenance, capex, and turnover: rising sharply from A to D.
+- Management: self-manage feasible in A and B; C and D need hands-on professional management at a higher fee.
+- Exit cap and liquidity: A is liquid and stable; C and D have thin buyer pools and harder financing, so stress the exit cap upward.
+3. State whether this is a cash-flow play or an appreciation play, and note the trajectory (gentrifying C-to-B versus declining B-to-C).
+
+Guardrails: do not confuse building class with neighborhood class. Never trust a Class D pro forma's paper cash flow; underwrite C and D on realized numbers after vacancy, delinquency, and turnover. Class is relative to the metro, so calibrate locally.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: On paper, Class D always cash flows. In reality, vacancy, turnover, and non-payment eat it. Underwrite the rent you will actually collect, not the rent on the lease.</div>
+      </div>
+    </div>
+
+    <!-- 118 -->
+    <div class="prompt-card" data-level="advanced" data-cat="rental">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">118</span><span class="card-title">Cash-Out Refinance and Equity-Recapture Analysis</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Model a cash-out refi on a rental: how much tax-free cash you pull, and whether DSCR still qualifies.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced buy-and-hold rental underwriter and licensed appraiser. Your analysis is always conservative — protecting the investor from negative cash flow and thin reserves matters more than finding opportunity.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently sold and currently leased comparable properties on Redfin, Zillow, Realtor.com, Rentometer, or county records
+- Search for current DSCR and investment mortgage rates, local property tax rates, and insurance costs for this market
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Analyze a cash-out refinance on this rental and tell me how much I can pull and whether it still qualifies.
+
+Inputs:
+- Current appraised value and current loan balance: [X]
+- Target LTV (investment cash-out typically caps at 70 to 75%): [X]
+- New rate, term, closing costs or points: [X]
+- Gross monthly rent and PITIA components: [X]
+- Current cash flow, FICO, months owned for seasoning: [X]
+- Planned use of proceeds and expected return on the redeployed cash: [X]
+
+Compute and show the math:
+1. Maximum new loan: appraised value times target LTV.
+2. Gross and net cash pulled: new loan minus old payoff minus closing costs. Flag that loan proceeds are NOT taxable income but they reduce equity and do not raise basis.
+3. New PITIA on the new balance.
+4. New DSCR: gross monthly rent divided by PITIA. Pass or fail against the common 1.20 to 1.25 lender floor. Pulling cash raises the payment and lowers DSCR; if it drops below 1.0 the property is negative cash flow and may not qualify.
+5. Before-and-after monthly and annual cash flow.
+6. Incremental annual interest cost of the pulled capital versus the expected return on redeploying it.
+7. Seasoning eligibility: DSCR or non-QM often allows cash-out after about 6 months; conventional is typically 12 months. Confirm by program.
+
+2026 notes: DSCR fixed rates ran roughly 6.1 to 7.5% in mid-2026 and cash-out usually prices about 0.2 to 0.5% above purchase; pull live quotes.
+
+Guardrails: do not assume 80% LTV, that is for primary homes, not investment. Check DSCR and seasoning eligibility before modeling the rate. Do not pull so much that DSCR falls below 1.0. Proceeds are not income and do not raise basis.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: A cash-out refi trades monthly cash flow for a tax-free lump sum. Only pull it if the redeployed cash earns more than the interest it now costs you, and DSCR still clears the lender floor.</div>
+      </div>
+    </div>
+
+    <!-- 119 -->
+    <div class="prompt-card" data-level="advanced" data-cat="rental">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">119</span><span class="card-title">Hold-Period Return Model (IRR / Appreciation / Exit Timing)</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Model a multi-year hold: cash flow, appreciation, paydown, and exit, then decide sell vs refi vs 1031.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced buy-and-hold rental underwriter and licensed appraiser. Your analysis is always conservative — protecting the investor from negative cash flow and thin reserves matters more than finding opportunity.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently sold and currently leased comparable properties on Redfin, Zillow, Realtor.com, Rentometer, or county records
+- Search for current DSCR and investment mortgage rates, local property tax rates, and insurance costs for this market
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Build a multi-year hold model for this rental and tell me when to sell, refinance, or 1031.
+
+Inputs:
+- Purchase price, down payment, closing and initial capex: [X]
+- Loan rate, amortization, term: [X]
+- Year-1 rent and operating expenses, vacancy and bad-debt percent: [X]
+- Rent growth percent, appreciation percent, expense growth percent: [X]
+- Hold period in years and selling cost percent: [X]
+- Terminal cap rate if you want to value the exit that way: [X]
+
+Compute and show:
+1. Year 0 outflow: down payment plus closing plus initial capex.
+2. Years 1 to N annual cash flow with rent grown each year, after vacancy and bad debt.
+3. Exit: net sale proceeds equal sale price minus selling costs (about 6 to 8%) minus remaining loan balance. Value the sale by compounded appreciation or terminal cap rate.
+4. IRR, equity multiple, total return, and cash-on-cash by year. Always report the equity multiple alongside IRR, since the multiple ignores timing.
+5. A base, conservative, and downside case. Use conservative assumptions: appreciation and rent growth around 2 to 3% per year.
+
+Then give a sell / refinance / 1031 recommendation:
+- Refinance when equity has built, you want tax-free access to capital, and DSCR still supports the new payment (keeps the asset and depreciation, no recapture).
+- 1031 when you want to sell and trade up without triggering capital gains or depreciation recapture, within the 45-day identification and 180-day closing windows.
+- Sell when IRR has plateaued (marginal future return falls below your reinvestment hurdle) or at a market peak.
+
+Guardrails: do not let optimistic appreciation or rent growth carry the IRR. Always subtract selling costs and the remaining loan balance from exit proceeds. Report IRR with the equity multiple, never alone. Factor recapture and capital gains in any sell scenario.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: A high equity multiple over a long hold can still be a mediocre IRR. When the annual return drops below what your next deal would earn, that is the signal to sell, refi, or exchange.</div>
+      </div>
+    </div>
+
+    <!-- 120 -->
+    <div class="prompt-card" data-level="advanced" data-cat="rental">
+      <div class="card-header" onclick="toggleCard(this)">
+        <div class="card-title-area"><span class="card-number">120</span><span class="card-title">Rental Tax and Depreciation Impact</span></div>
+        <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="card-body">
+        <div class="prompt-context">Estimate depreciation, the 2026 bonus-depreciation upside, and recapture at sale. Not tax advice; confirm with a CPA.</div>
+        <div class="prompt-block">
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+          <div class="prompt-text">You are an experienced buy-and-hold rental underwriter and licensed appraiser. Your analysis is always conservative — protecting the investor from negative cash flow and thin reserves matters more than finding opportunity.
+
+RESEARCH FIRST: Before responding, search the internet for current, real data relevant to this analysis. Specifically:
+- Search for recently sold and currently leased comparable properties on Redfin, Zillow, Realtor.com, Rentometer, or county records
+- Search for current DSCR and investment mortgage rates, local property tax rates, and insurance costs for this market
+- Use only verifiable, current data. Do not rely on training data for prices, rates, or market conditions.
+
+Estimate the tax and depreciation impact of this rental. This is not tax advice; I will confirm every figure with a CPA.
+
+Inputs:
+- Purchase price and land or building allocation (often the assessor ratio, commonly around 80% building and 20% land, but verify): [X]
+- Placed-in-service date and acquisition or contract date: [X]
+- Property type (residential vs commercial): [X]
+- My marginal tax bracket: [X]
+- Real-estate-professional or active-participation status?: [X]
+- Planned hold and whether I am considering a cost-segregation study: [X]
+- Prior depreciation taken, if any: [X]
+
+Do this:
+1. Carve out land, since land is not depreciable, and compute annual straight-line depreciation: residential is 27.5 years, so building basis divided by 27.5, about 3.636% per year. Show the number.
+2. Estimate the income sheltered, and note passive-loss limits may suspend losses unless I qualify as a real estate professional or meet the active-participation allowance.
+3. Cost-segregation and bonus upside: research and apply CURRENT 2026 rules. As of 2026, the One Big Beautiful Bill Act restored permanent 100% first-year bonus depreciation for qualifying property acquired and placed in service after January 19 2025 (confirm against current IRS guidance). A cost-seg study reclassifies components into 5, 7, and 15-year lives that qualify for bonus; the building shell and land do not. Show an illustrative first-year deduction if roughly 20 to 30% of basis is reclassified, and the tax saved at my bracket.
+4. Recapture at sale: depreciation taken is unrecaptured section 1250 gain taxed up to 25%. Estimate it.
+5. 1031 basics: defers both capital gains and recapture within the 45-day identification and 180-day closing windows.
+
+Output the depreciation figures, the cost-seg scenario, the recapture estimate, the 1031 summary, and a prominent CPA-confirmation disclaimer.
+
+Guardrails: never depreciate land. Bonus applies only to the carved-out short-life components, not the whole building. Remember recapture comes due at sale even though depreciation felt free. Verify the post-January-19-2025 acquired-and-placed-in-service test and all current rules with a licensed CPA; tax law is fact-specific and changes.
+
+ACCURACY RULES:
+- Do NOT fabricate addresses, sale prices, rents, comparable sales, interest rates, or contacts. If you cannot find real data, say "I could not verify this — here is how to find it yourself" and name the specific source (county appraiser site, MLS, lender rate sheet, state statute, etc.)
+- Label every data point: [VERIFIED] if from a real source you searched, or [ESTIMATE] if calculated or assumed
+- If your confidence in any number is below 70%, flag it with [LOW CONFIDENCE] and explain why
+- Show your math for every calculation. Do not present conclusions without the steps that produced them.
+
+End your analysis with:
+CONFIDENCE ASSESSMENT:
+- Data quality: [HIGH / MEDIUM / LOW] — what percentage of this analysis is based on verified vs. estimated data?
+- Biggest risk: What is the single factor most likely to make this analysis wrong?
+- Verify before acting: List 2-3 specific things you should independently confirm before making a decision based on this analysis.</div>
+        </div>
+        <div class="prompt-tip">Pro tip: Depreciation is not free money, it is a tax deferral you repay at sale through recapture, unless you roll into a 1031. Plan the exit when you plan the purchase.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 </div><!-- /main-content -->
 
 <!-- DEAL SIDEBAR -->
@@ -7632,6 +8753,343 @@ function quickCopy(btn) {
     showToast('Text selected \u2014 press ' + (isMac ? '\u2318+C' : 'Ctrl+C') + ' to copy');
   });
 }
+</script>
+<script>
+/* ===== UNSHAKABLE ENHANCEMENTS: navigate / use / organize ===== */
+(function(){
+  "use strict";
+  function ready(fn){ if(document.readyState!=='loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
+
+  var TRACKS = [
+    { key:'analyze',  label:'Analyze',      cats:['arv','market','diligence','compare','sourcing','mktintel','risk','advdili'] },
+    { key:'flip',     label:'Fix & Flip',   cats:['rehab','offer','funding','negotiate','contractor','offers','situations','dispo'] },
+    { key:'wholesale',label:'Wholesale',    cats:['wholesale'] },
+    { key:'rental',   label:'Rental & Hold',cats:['rental'] }
+  ];
+  var CAT_LABEL = {};
+
+  var LS_FAV='uiv_favs', LS_RECENT='uiv_recent';
+  function load(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
+  function save(key,arr){ try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(e){} }
+  function getFavs(){ return new Set(load(LS_FAV)); }
+  function cardNum(card){ var n=card.querySelector('.card-number'); return n?n.textContent.trim():''; }
+
+  var viewMode='all'; // all | favorites | recent | track
+
+  ready(function(){
+    buildCatLabels();
+    addPillCounts();
+    buildViewBar();
+    buildBrowseOverlay();
+    addFavStars();
+    hookRecent();
+    enhanceCards();        // keyboard a11y + aria
+    addAriaLabels();
+    extendDealSidebar();
+    wireScrollSpy();
+    wireSlashShortcut();
+    resetViewChipsOnNav();
+  });
+
+  function buildCatLabels(){
+    document.querySelectorAll('.nav-pill').forEach(function(p){
+      var c=p.dataset.cat; if(c && c!=='all'){ CAT_LABEL[c]=p.textContent.trim(); }
+    });
+  }
+
+  function catCount(cat){ return document.querySelectorAll('.prompt-card[data-cat="'+cat+'"]').length; }
+
+  /* ---- Tier 1: per-pill counts ---- */
+  function addPillCounts(){
+    document.querySelectorAll('.nav-pill').forEach(function(p){
+      var c=p.dataset.cat; if(!c||c==='all') return;
+      var n=catCount(c); if(!n) return;
+      var span=document.createElement('span'); span.className='pill-count'; span.textContent=n;
+      p.appendChild(span);
+    });
+  }
+
+  /* ---- helpers driving the existing .hidden + count pipeline ---- */
+  function resetBase(){
+    var si=document.getElementById('searchInput'); if(si) si.value='';
+    var sc=document.getElementById('searchClear'); if(sc) sc.classList.remove('visible');
+    document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.remove('hidden','highlighted'); });
+    document.querySelectorAll('.nav-pill').forEach(function(p){ p.classList.remove('active','nav-current'); });
+    var all=document.querySelector('.nav-pill[data-cat="all"]'); if(all) all.classList.add('active');
+    document.querySelectorAll('.section').forEach(function(s){ s.style.display=''; });
+    if(typeof window.clearSituationFilter==='function'){ try{ window.clearSituationFilter(); }catch(e){} }
+    var lvlAll=document.querySelector('.filter-btn[data-level="all"]');
+    if(lvlAll){ document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); }); lvlAll.classList.add('active'); }
+  }
+  function refresh(){ if(typeof window.updateSectionCounts==='function') window.updateSectionCounts(); if(typeof window.updateResultsCount==='function') window.updateResultsCount(); }
+
+  function showAll(){ viewMode='all'; resetBase(); refresh(); setChip('all'); window.scrollTo({top:0,behavior:'smooth'}); }
+  function showFavorites(){
+    viewMode='favorites'; resetBase();
+    var favs=getFavs();
+    document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.toggle('hidden', !favs.has(cardNum(c))); });
+    refresh(); setChip('favorites');
+  }
+  function showRecent(){
+    viewMode='recent'; resetBase();
+    var rec=new Set(load(LS_RECENT));
+    document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.toggle('hidden', !rec.has(cardNum(c))); });
+    refresh(); setChip('recent');
+  }
+  function showTrack(track){
+    viewMode='track'; resetBase();
+    var allow=new Set(track.cats);
+    document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.toggle('hidden', !allow.has(c.dataset.cat)); });
+    refresh(); setChip('track:'+track.key);
+    var first=document.getElementById(track.cats[0]);
+    if(first) setTimeout(function(){ first.scrollIntoView({behavior:'smooth',block:'start'}); }, 60);
+  }
+  function jumpToCat(cat){
+    showAll();
+    var pill=document.querySelector('.nav-pill[data-cat="'+cat+'"]');
+    if(pill){ pill.click(); }
+  }
+
+  /* ---- Tier 3: view chip bar (All / Favorites / Recent / tracks / Browse) ---- */
+  function buildViewBar(){
+    var rb=document.getElementById('resultsBar'); if(!rb||!rb.parentNode) return;
+    var bar=document.createElement('div'); bar.className='view-bar'; bar.id='uivViewBar';
+
+    var lbl=document.createElement('span'); lbl.className='vb-label'; lbl.textContent='View'; bar.appendChild(lbl);
+
+    bar.appendChild(makeChip('all','All', null, function(){ showAll(); }));
+    var favChip=makeChip('favorites','★ Favorites', countFavs(), function(){ showFavorites(); }); bar.appendChild(favChip);
+    var recChip=makeChip('recent','↻ Recent', load(LS_RECENT).length||null, function(){ showRecent(); }); bar.appendChild(recChip);
+
+    var div=document.createElement('span'); div.className='uiv-divider'; bar.appendChild(div);
+    var tl=document.createElement('span'); tl.className='vb-label'; tl.textContent='Strategy'; bar.appendChild(tl);
+    TRACKS.forEach(function(t){
+      var n=t.cats.reduce(function(a,c){ return a+catCount(c); },0);
+      bar.appendChild(makeChip('track:'+t.key, t.label, n, function(){ showTrack(t); }));
+    });
+
+    var div2=document.createElement('span'); div2.className='uiv-divider'; bar.appendChild(div2);
+    var browse=makeChip('browse','≡ Browse', null, function(){ openBrowse(); }); browse.classList.remove('active'); bar.appendChild(browse);
+
+    rb.parentNode.insertBefore(bar, rb);
+    setChip('all');
+  }
+  function makeChip(id,label,count,onClick){
+    var b=document.createElement('button'); b.type='button'; b.className='uiv-chip'; b.dataset.chip=id;
+    b.innerHTML = label + (count!=null ? ' <span class="c">'+count+'</span>' : '');
+    b.addEventListener('click', onClick);
+    return b;
+  }
+  function setChip(id){
+    document.querySelectorAll('#uivViewBar .uiv-chip').forEach(function(c){ c.classList.toggle('active', c.dataset.chip===id); });
+  }
+  function countFavs(){ var n=getFavs().size; return n||null; }
+  function refreshChipCounts(){
+    var fav=document.querySelector('#uivViewBar .uiv-chip[data-chip="favorites"]');
+    if(fav){ var n=getFavs().size; fav.innerHTML='★ Favorites'+(n?' <span class="c">'+n+'</span>':''); fav.classList.toggle('active', viewMode==='favorites'); }
+    var rec=document.querySelector('#uivViewBar .uiv-chip[data-chip="recent"]');
+    if(rec){ var r=load(LS_RECENT).length; rec.innerHTML='↻ Recent'+(r?' <span class="c">'+r+'</span>':''); }
+  }
+
+  /* ---- Tier 2: browse-by-strategy overlay ---- */
+  function buildBrowseOverlay(){
+    var ov=document.createElement('div'); ov.className='uiv-browse-overlay'; ov.id='uivBrowse';
+    var panel=document.createElement('div'); panel.className='uiv-browse';
+    var close=document.createElement('button'); close.className='uiv-browse-close'; close.setAttribute('aria-label','Close browse panel'); close.innerHTML='&times;';
+    close.addEventListener('click', closeBrowse);
+    var h=document.createElement('h3'); h.textContent='Browse by strategy';
+    var sub=document.createElement('p'); sub.className='sub'; sub.textContent='Jump straight to a category, or open a full strategy track.';
+    var grid=document.createElement('div'); grid.className='uiv-track-grid';
+    TRACKS.forEach(function(t){
+      var col=document.createElement('div'); col.className='uiv-track';
+      var head=document.createElement('div'); head.className='uiv-track-head';
+      var name=document.createElement('span'); name.className='uiv-track-name'; name.textContent=t.label;
+      var allBtn=document.createElement('button'); allBtn.className='uiv-track-all'; allBtn.textContent='Show all';
+      allBtn.addEventListener('click', function(){ closeBrowse(); showTrack(t); });
+      head.appendChild(name); head.appendChild(allBtn); col.appendChild(head);
+      t.cats.forEach(function(c){
+        var row=document.createElement('div'); row.className='uiv-cat';
+        var nm=document.createElement('span'); nm.className='uiv-cat-name'; nm.textContent=CAT_LABEL[c]||c;
+        var ct=document.createElement('span'); ct.className='uiv-cat-count'; ct.textContent=catCount(c);
+        row.appendChild(nm); row.appendChild(ct);
+        row.addEventListener('click', function(){ closeBrowse(); jumpToCat(c); });
+        col.appendChild(row);
+      });
+      grid.appendChild(col);
+    });
+    panel.appendChild(h); panel.appendChild(sub); panel.appendChild(grid);
+    ov.appendChild(close); ov.appendChild(panel);
+    ov.addEventListener('click', function(e){ if(e.target===ov) closeBrowse(); });
+    document.body.appendChild(ov);
+  }
+  function openBrowse(){ var ov=document.getElementById('uivBrowse'); if(ov) ov.classList.add('open'); }
+  function closeBrowse(){ var ov=document.getElementById('uivBrowse'); if(ov) ov.classList.remove('open'); }
+
+  /* ---- Tier 3: favorites stars ---- */
+  function addFavStars(){
+    var favs=getFavs();
+    document.querySelectorAll('.prompt-card').forEach(function(card){
+      var header=card.querySelector('.card-header'); if(!header) return;
+      var num=cardNum(card);
+      var star=document.createElement('button');
+      star.type='button'; star.className='fav-star'+(favs.has(num)?' on':'');
+      star.setAttribute('aria-label', (favs.has(num)?'Remove from':'Add to')+' favorites');
+      star.setAttribute('aria-pressed', favs.has(num)?'true':'false');
+      star.textContent = favs.has(num)?'★':'☆';
+      star.addEventListener('click', function(e){
+        e.stopPropagation();
+        var set=getFavs();
+        if(set.has(num)){ set.delete(num); star.classList.remove('on'); star.textContent='☆'; star.setAttribute('aria-pressed','false'); star.setAttribute('aria-label','Add to favorites'); }
+        else { set.add(num); star.classList.add('on'); star.textContent='★'; star.setAttribute('aria-pressed','true'); star.setAttribute('aria-label','Remove from favorites'); }
+        save(LS_FAV, Array.from(set));
+        refreshChipCounts();
+        if(viewMode==='favorites') showFavorites();
+      });
+      // insert before the quick-copy button if present, else at end
+      var qc=header.querySelector('.quick-copy');
+      if(qc){ header.insertBefore(star, qc); } else { header.appendChild(star); }
+    });
+  }
+
+  /* ---- Tier 3: recently used (hook copy actions) ---- */
+  function recordRecent(num){
+    if(!num) return;
+    var arr=load(LS_RECENT).filter(function(x){ return x!==num; });
+    arr.unshift(num);
+    if(arr.length>8) arr=arr.slice(0,8);
+    save(LS_RECENT, arr);
+    refreshChipCounts();
+  }
+  function hookRecent(){
+    document.addEventListener('click', function(e){
+      var btn=e.target.closest ? e.target.closest('.copy-btn, .quick-copy') : null;
+      if(!btn) return;
+      var card=btn.closest('.prompt-card'); if(card) recordRecent(cardNum(card));
+    }, true);
+  }
+
+  /* ---- Tier 1: keyboard a11y for cards ---- */
+  function enhanceCards(){
+    // wrap toggleCard so aria-expanded stays in sync regardless of trigger
+    if(typeof window.toggleCard==='function' && !window.toggleCard._uiv){
+      var orig=window.toggleCard;
+      window.toggleCard=function(h){ orig(h); try{ var c=h.closest('.prompt-card'); h.setAttribute('aria-expanded', c.classList.contains('open')?'true':'false'); }catch(e){} };
+      window.toggleCard._uiv=true;
+    }
+    document.querySelectorAll('.card-header').forEach(function(h){
+      h.setAttribute('role','button');
+      h.setAttribute('tabindex','0');
+      var c=h.closest('.prompt-card');
+      h.setAttribute('aria-expanded', c && c.classList.contains('open')?'true':'false');
+      var titleEl=h.querySelector('.card-title');
+      if(titleEl) h.setAttribute('aria-label', 'Toggle prompt: '+titleEl.textContent.trim());
+      h.addEventListener('keydown', function(e){
+        if(e.key==='Enter' || e.key===' ' || e.key==='Spacebar'){
+          e.preventDefault();
+          if(typeof window.toggleCard==='function') window.toggleCard(h);
+        }
+      });
+    });
+  }
+
+  /* ---- Tier 1: aria-labels on icon-only controls ---- */
+  function addAriaLabels(){
+    var map=[['backToTop','Back to top'],['sidebarToggle','Open deal details'],
+             ['navScrollLeft','Scroll categories left'],['navScrollRight','Scroll categories right'],
+             ['searchClear','Clear search']];
+    map.forEach(function(p){ var el=document.getElementById(p[0]); if(el && !el.getAttribute('aria-label')) el.setAttribute('aria-label', p[1]); });
+    var si=document.getElementById('searchInput'); if(si && !si.getAttribute('aria-label')) si.setAttribute('aria-label','Search prompts');
+  }
+
+  /* ---- Tier 3: strategy-aware deal sidebar fields ---- */
+  function extendDealSidebar(){
+    var anchorField=document.querySelector('[data-deal="condition"]');
+    var container = anchorField ? anchorField.closest('.deal-field').parentNode : null;
+    if(!container) return;
+    var lbl=document.createElement('div'); lbl.className='deal-group-label'; lbl.textContent='Wholesale & Rental';
+    container.appendChild(lbl);
+    container.appendChild(makeDealField('Assignment Fee','assignfee','$10,000'));
+    container.appendChild(makeDealField('Monthly Rent','rent','$1,650'));
+
+    // bind status updates for new inputs
+    container.querySelectorAll('[data-deal="assignfee"],[data-deal="rent"]').forEach(function(el){
+      el.addEventListener('input', function(){ if(typeof window.updateDealStatus==='function') window.updateDealStatus(); });
+    });
+
+    // extend applyDealData to fill the new tokens (runs on top of original)
+    if(typeof window.applyDealData==='function' && !window.applyDealData._uiv){
+      var orig=window.applyDealData;
+      var wrapped=function(text){
+        var r=orig(text);
+        try{
+          var data={};
+          document.querySelectorAll('[data-deal]').forEach(function(el){ data[el.dataset.deal]=el.value.trim(); });
+          if(data.assignfee){
+            var fee=data.assignfee.charAt(0)==='$'?data.assignfee:'$'+data.assignfee.replace(/[^0-9.,]/g,'');
+            r=r.replace(/\[ASSIGNMENT FEE\]/g, fee).replace(/\[TARGET FEE[^\]]*\]/g, fee);
+          }
+          if(data.rent){
+            var rent=data.rent.charAt(0)==='$'?data.rent:'$'+data.rent.replace(/[^0-9.,]/g,'');
+            r=r.replace(/\[MONTHLY RENT\]/g, rent);
+          }
+        }catch(e){}
+        return r;
+      };
+      wrapped._uiv=true;
+      window.applyDealData=wrapped;
+    }
+  }
+  function makeDealField(label,key,placeholder){
+    var f=document.createElement('div'); f.className='deal-field';
+    var l=document.createElement('label'); l.textContent=label;
+    var i=document.createElement('input'); i.type='text'; i.setAttribute('data-deal',key); i.placeholder=placeholder;
+    f.appendChild(l); f.appendChild(i); return f;
+  }
+
+  /* ---- Tier 1/2: scrollspy (only in All view) ---- */
+  function wireScrollSpy(){
+    var ticking=false;
+    window.addEventListener('scroll', function(){
+      if(ticking) return; ticking=true;
+      requestAnimationFrame(function(){
+        ticking=false;
+        if(viewMode!=='all') return;
+        var active=document.querySelector('.nav-pill.active');
+        if(!active || active.dataset.cat!=='all') return; // a single category is filtered; leave it
+        var current='';
+        document.querySelectorAll('.section').forEach(function(s){
+          if(s.style.display!=='none' && s.getBoundingClientRect().top<160) current=s.dataset.category;
+        });
+        document.querySelectorAll('.nav-pill').forEach(function(p){
+          p.classList.toggle('nav-current', !!current && p.dataset.cat===current);
+        });
+      });
+    }, {passive:true});
+  }
+
+  /* ---- Tier 1: '/' focuses search ---- */
+  function wireSlashShortcut(){
+    document.addEventListener('keydown', function(e){
+      if(e.key==='/' && !e.metaKey && !e.ctrlKey && !e.altKey){
+        var t=e.target, tag=t&&t.tagName?t.tagName.toLowerCase():'';
+        if(tag==='input'||tag==='textarea'||tag==='select'||(t&&t.isContentEditable)) return;
+        var si=document.getElementById('searchInput'); if(si){ e.preventDefault(); si.focus(); }
+      }
+      if(e.key==='Escape'){ closeBrowse(); }
+    });
+  }
+
+  /* ---- keep view chips in sync when user uses native nav / situations ---- */
+  function resetViewChipsOnNav(){
+    document.querySelectorAll('.nav-pill').forEach(function(p){
+      p.addEventListener('click', function(){ viewMode='all'; setChip(p.dataset.cat==='all'?'all':null); });
+    });
+    document.querySelectorAll('.situation-card').forEach(function(c){
+      c.addEventListener('click', function(){ viewMode='all'; setChip(null); });
+    });
+  }
+})();
+
 </script>
 </body>
 </html>
