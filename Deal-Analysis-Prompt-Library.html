@@ -255,17 +255,39 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
   .filter-group{flex-wrap:wrap}
 }
 
-/* injected */
-/* ===== UNSHAKABLE ENHANCEMENTS (navigate / use / organize) ===== */
-.pill-count{display:inline-block;margin-left:5px;font-size:9px;font-weight:700;color:var(--text-dim);background:rgba(255,255,255,0.07);border-radius:8px;padding:1px 5px;font-family:var(--font-accent);vertical-align:middle}
-.nav-pill.active .pill-count{color:var(--gold);background:rgba(255,215,0,0.12)}
-.nav-pill.nav-current:not(.active){color:var(--gold)}
 
-/* view + track chip bar */
-.view-bar{max-width:1200px;margin:0 auto;padding:10px 1.5rem 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+/* injected v2 */
+/* ===== UNSHAKABLE ENHANCEMENTS v2 (2-tier nav, a11y, clarity) ===== */
+
+/* a11y: lift the failing dim text to WCAG AA (#666 -> ~5.3:1 on #0B0B0F) */
+:root{ --text-dim:#8f8a82; }
+
+/* primary nav = strategy tracks. hide the 18 category pills in the topbar */
+.nav-pills .nav-pill:not([data-cat="all"]):not(.track-pill){ display:none !important; }
+.nav-pill.track-pill{ font-weight:700; }
+.nav-pill .pill-count{display:inline-block;margin-left:6px;font-size:9px;font-weight:700;color:var(--text-dim);background:rgba(255,255,255,0.07);border-radius:8px;padding:1px 5px;font-family:var(--font-accent);vertical-align:middle}
+.nav-pill.active .pill-count{color:var(--gold);background:rgba(255,215,0,0.14)}
+
+/* secondary, scoped category sub-nav (appears only inside a track) */
+.subnav{position:sticky;z-index:88;background:rgba(11,11,15,0.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:none}
+.subnav.show{display:block}
+.subnav-inner{max-width:1200px;margin:0 auto;padding:8px 1.5rem;display:flex;gap:7px;align-items:center;overflow-x:auto;scrollbar-width:none}
+.subnav-inner::-webkit-scrollbar{display:none}
+.subnav-label{font-family:var(--font-accent);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);white-space:nowrap;margin-right:2px}
+.subpill{font-family:var(--font-accent);font-size:11px;font-weight:600;white-space:nowrap;padding:4px 11px;border-radius:13px;border:1px solid var(--border);color:var(--text-muted);background:transparent;cursor:pointer;transition:border-color .2s,color .2s,background .2s}
+.subpill:hover{border-color:var(--border-hover);color:var(--text)}
+.subpill.cur{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,0.07)}
+.subpill .c{font-size:9px;font-weight:700;opacity:.75;margin-left:4px}
+
+/* section icon: drop the emoji, use a clean gold accent bar (no cross-platform emoji tell) */
+.section-icon{font-size:0 !important;width:auto !important;height:auto !important;display:inline-flex;align-items:center;margin-right:2px}
+.section-icon::before{content:"";display:block;width:4px;height:24px;border-radius:2px;background:linear-gradient(180deg,var(--gold),var(--gold-mid))}
+
+/* utility row (favorites / recent / browse / situations) */
+.view-bar{max-width:1200px;margin:0 auto;padding:12px 1.5rem 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .view-bar .vb-label{font-family:var(--font-accent);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin-right:2px}
 .uiv-chip{font-family:var(--font-accent);font-size:11px;font-weight:600;padding:5px 12px;border-radius:14px;border:1px solid var(--border);color:var(--text-muted);background:transparent;cursor:pointer;transition:border-color .2s,color .2s,background .2s;display:inline-flex;align-items:center;gap:5px;user-select:none}
-.uiv-chip:hover{border-color:rgba(255,255,255,0.22);color:var(--text)}
+.uiv-chip:hover{border-color:var(--border-hover);color:var(--text)}
 .uiv-chip.active{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,0.07)}
 .uiv-chip .c{font-size:9px;font-weight:700;opacity:.8}
 .uiv-divider{width:1px;height:18px;background:var(--border);margin:0 2px}
@@ -275,17 +297,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 .fav-star:hover{color:var(--gold);transform:scale(1.18)}
 .fav-star.on{color:var(--gold)}
 .fav-star:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-
-/* keyboard focus visibility */
 .card-header:focus-visible{outline:2px solid var(--gold);outline-offset:-2px;border-radius:8px}
 
 /* browse-by-strategy overlay */
 .uiv-browse-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding:64px 20px;overflow-y:auto}
 .uiv-browse-overlay.open{display:flex}
-.uiv-browse{max-width:980px;width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:22px 22px 26px;box-shadow:0 20px 70px rgba(0,0,0,0.55)}
+.uiv-browse{position:relative;max-width:980px;width:100%;background:var(--bg-elevated);border:1px solid var(--border);border-radius:16px;padding:22px 22px 26px;box-shadow:0 20px 70px rgba(0,0,0,0.55)}
 .uiv-browse h3{font-family:var(--font-display);font-size:18px;font-weight:800;margin:0 0 2px;color:var(--text)}
 .uiv-browse .sub{font-size:12px;color:var(--text-dim);margin:0 0 16px}
-.uiv-browse-close{position:absolute;top:64px;right:20px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-muted);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:18px;line-height:1}
+.uiv-browse-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-muted);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:18px;line-height:1}
 .uiv-track-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
 .uiv-track{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:14px}
 .uiv-track-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -301,12 +321,18 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 /* sidebar strategy grouping */
 .deal-group-label{font-family:var(--font-accent);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);margin:14px 0 6px;padding-top:10px;border-top:1px solid var(--border)}
 
+/* hide the orphaned original "Find by Situation" button (folded into the utility row) */
+#situationToggle{display:none !important}
+
+/* anchored scroll clears the sticky bars */
+.section{scroll-margin-top:104px}
+
 @media (max-width:680px){
-  .uiv-browse-close{right:14px}
-  .view-bar{padding:8px 1rem 0}
+  .uiv-browse-close{right:12px;top:12px}
+  .view-bar{padding:10px 1rem 0}
+  .subnav-inner{padding:8px 1rem}
 }
 
-/* respect reduced motion */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
@@ -736,7 +762,7 @@ CONFIDENCE ASSESSMENT:
     <!-- 5 -->
     <div class="prompt-card" data-level="advanced" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
-        <div class="card-title-area"><span class="card-number">05</span><span class="card-title">ARV Stress Test — 3 Scenarios</span></div>
+        <div class="card-title-area"><span class="card-number">05</span><span class="card-title">ARV Stress Test - 3 Scenarios</span></div>
         <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -847,7 +873,7 @@ CONFIDENCE ASSESSMENT:
     <!-- 7 -->
     <div class="prompt-card" data-level="beginner" data-cat="arv">
       <div class="card-header" onclick="toggleCard(this)">
-        <div class="card-title-area"><span class="card-number">07</span><span class="card-title">ARV Sanity Check — Am I Being Optimistic?</span></div>
+        <div class="card-title-area"><span class="card-number">07</span><span class="card-title">ARV Sanity Check - Am I Being Optimistic?</span></div>
         <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1528,7 +1554,7 @@ CONFIDENCE ASSESSMENT:
     <!-- 19 -->
     <div class="prompt-card" data-level="beginner" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
-        <div class="card-title-area"><span class="card-number">19</span><span class="card-title">MAO Calculator — Maximum Allowable Offer</span></div>
+        <div class="card-title-area"><span class="card-number">19</span><span class="card-title">MAO Calculator - Maximum Allowable Offer</span></div>
         <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1577,7 +1603,7 @@ CONFIDENCE ASSESSMENT:
     <!-- 20 -->
     <div class="prompt-card" data-level="intermediate" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
-        <div class="card-title-area"><span class="card-number">20</span><span class="card-title">Seller Justification Script — "The Fluff"</span></div>
+        <div class="card-title-area"><span class="card-number">20</span><span class="card-title">Seller Justification Script - "The Fluff"</span></div>
         <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -1846,7 +1872,7 @@ CONFIDENCE ASSESSMENT:
     <!-- 25 -->
     <div class="prompt-card" data-level="intermediate" data-cat="offer">
       <div class="card-header" onclick="toggleCard(this)">
-        <div class="card-title-area"><span class="card-number">25</span><span class="card-title">Objection Handler — Seller Says No</span></div>
+        <div class="card-title-area"><span class="card-number">25</span><span class="card-title">Objection Handler - Seller Says No</span></div>
         <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -5640,7 +5666,7 @@ CONFIDENCE ASSESSMENT:
     <!-- 80 -->
     <div class="prompt-card" data-level="intermediate" data-cat="risk">
       <div class="card-header" onclick="toggleCard(this)">
-        <div class="card-title-area"><span class="card-number">80</span><span class="card-title">Deal Stress Test — Worst Case Scenario Modeler</span></div>
+        <div class="card-title-area"><span class="card-number">80</span><span class="card-title">Deal Stress Test - Worst Case Scenario Modeler</span></div>
         <button class="quick-copy" onclick="event.stopPropagation();quickCopy(this)">Copy</button><svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
       </div>
       <div class="card-body">
@@ -8755,7 +8781,7 @@ function quickCopy(btn) {
 }
 </script>
 <script>
-/* ===== UNSHAKABLE ENHANCEMENTS: navigate / use / organize ===== */
+/* ===== UNSHAKABLE ENHANCEMENTS v2: two-tier navigation + clarity ===== */
 (function(){
   "use strict";
   function ready(fn){ if(document.readyState!=='loading'){ fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
@@ -8767,55 +8793,94 @@ function quickCopy(btn) {
     { key:'rental',   label:'Rental & Hold',cats:['rental'] }
   ];
   var CAT_LABEL = {};
+  var TRACK_OF = {};
+  TRACKS.forEach(function(t){ t.cats.forEach(function(c){ TRACK_OF[c]=t.key; }); });
 
   var LS_FAV='uiv_favs', LS_RECENT='uiv_recent';
-  function load(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
-  function save(key,arr){ try{ localStorage.setItem(key, JSON.stringify(arr)); }catch(e){} }
+  function load(k){ try{ return JSON.parse(localStorage.getItem(k)||'[]'); }catch(e){ return []; } }
+  function save(k,a){ try{ localStorage.setItem(k, JSON.stringify(a)); }catch(e){} }
   function getFavs(){ return new Set(load(LS_FAV)); }
   function cardNum(card){ var n=card.querySelector('.card-number'); return n?n.textContent.trim():''; }
+  function catCount(cat){ return document.querySelectorAll('.prompt-card[data-cat="'+cat+'"]').length; }
 
-  var viewMode='all'; // all | favorites | recent | track
+  var viewMode='all';     // all | track | favorites | recent
+  var activeTrack=null;
 
   ready(function(){
     buildCatLabels();
-    addPillCounts();
+    buildPrimaryTrackNav();
+    buildSubNav();
     buildViewBar();
     buildBrowseOverlay();
     addFavStars();
     hookRecent();
-    enhanceCards();        // keyboard a11y + aria
+    enhanceCards();
     addAriaLabels();
     extendDealSidebar();
     wireScrollSpy();
     wireSlashShortcut();
-    resetViewChipsOnNav();
+    decorateSectionIcons();
+    showAll();
   });
 
   function buildCatLabels(){
     document.querySelectorAll('.nav-pill').forEach(function(p){
-      var c=p.dataset.cat; if(c && c!=='all'){ CAT_LABEL[c]=p.textContent.trim(); }
+      var c=p.dataset.cat; if(c && c!=='all'){ CAT_LABEL[c]=p.textContent.replace(/\s*\d+\s*$/,'').trim(); }
     });
   }
 
-  function catCount(cat){ return document.querySelectorAll('.prompt-card[data-cat="'+cat+'"]').length; }
-
-  /* ---- Tier 1: per-pill counts ---- */
-  function addPillCounts(){
-    document.querySelectorAll('.nav-pill').forEach(function(p){
-      var c=p.dataset.cat; if(!c||c==='all') return;
-      var n=catCount(c); if(!n) return;
-      var span=document.createElement('span'); span.className='pill-count'; span.textContent=n;
-      p.appendChild(span);
+  /* ---- primary nav: strategy tracks (category pills hidden via CSS) ---- */
+  function buildPrimaryTrackNav(){
+    var nav=document.getElementById('navPills'); if(!nav) return;
+    var all=nav.querySelector('.nav-pill[data-cat="all"]');
+    var anchor=all?all.nextSibling:nav.firstChild;
+    TRACKS.forEach(function(t){
+      var n=t.cats.reduce(function(a,c){ return a+catCount(c); },0);
+      var a=document.createElement('a');
+      a.className='nav-pill track-pill'; a.href='#'; a.dataset.track=t.key;
+      a.innerHTML=t.label+' <span class="pill-count">'+n+'</span>';
+      a.addEventListener('click', function(e){ e.preventDefault(); showTrack(t); });
+      nav.insertBefore(a, anchor);
     });
+    if(all){ all.addEventListener('click', function(e){ e.preventDefault(); showAll(); }); }
   }
 
-  /* ---- helpers driving the existing .hidden + count pipeline ---- */
+  /* ---- secondary nav: scoped category sub-bar ---- */
+  function buildSubNav(){
+    var topbar=document.getElementById('topbar');
+    var bar=document.createElement('div'); bar.className='subnav'; bar.id='uivSubnav';
+    bar.innerHTML='<div class="subnav-inner" id="uivSubnavInner"></div>';
+    if(topbar && topbar.parentNode){ topbar.parentNode.insertBefore(bar, topbar.nextSibling); }
+    else { document.body.insertBefore(bar, document.body.firstChild); }
+    positionSubnav();
+    window.addEventListener('resize', positionSubnav);
+  }
+  function positionSubnav(){
+    var topbar=document.getElementById('topbar'); var bar=document.getElementById('uivSubnav');
+    if(topbar && bar){ bar.style.top=(topbar.offsetHeight||56)+'px'; }
+  }
+  function fillSubNav(track){
+    var inner=document.getElementById('uivSubnavInner'); if(!inner) return;
+    inner.innerHTML='';
+    var lbl=document.createElement('span'); lbl.className='subnav-label'; lbl.textContent=track.label; inner.appendChild(lbl);
+    track.cats.forEach(function(c){
+      var b=document.createElement('button'); b.type='button'; b.className='subpill'; b.dataset.cat=c;
+      b.innerHTML=(CAT_LABEL[c]||c)+' <span class="c">'+catCount(c)+'</span>';
+      b.addEventListener('click', function(){
+        var sec=document.getElementById(c);
+        if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      inner.appendChild(b);
+    });
+  }
+  function showSubNav(on){ var b=document.getElementById('uivSubnav'); if(b) b.classList.toggle('show', !!on); }
+
+  /* ---- view pipeline (drives the existing .hidden + count machinery) ---- */
   function resetBase(){
     var si=document.getElementById('searchInput'); if(si) si.value='';
     var sc=document.getElementById('searchClear'); if(sc) sc.classList.remove('visible');
     document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.remove('hidden','highlighted'); });
-    document.querySelectorAll('.nav-pill').forEach(function(p){ p.classList.remove('active','nav-current'); });
-    var all=document.querySelector('.nav-pill[data-cat="all"]'); if(all) all.classList.add('active');
+    document.querySelectorAll('.nav-pill').forEach(function(p){ p.classList.remove('active'); });
     document.querySelectorAll('.section').forEach(function(s){ s.style.display=''; });
     if(typeof window.clearSituationFilter==='function'){ try{ window.clearSituationFilter(); }catch(e){} }
     var lvlAll=document.querySelector('.filter-btn[data-level="all"]');
@@ -8823,88 +8888,84 @@ function quickCopy(btn) {
   }
   function refresh(){ if(typeof window.updateSectionCounts==='function') window.updateSectionCounts(); if(typeof window.updateResultsCount==='function') window.updateResultsCount(); }
 
-  function showAll(){ viewMode='all'; resetBase(); refresh(); setChip('all'); window.scrollTo({top:0,behavior:'smooth'}); }
-  function showFavorites(){
-    viewMode='favorites'; resetBase();
-    var favs=getFavs();
-    document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.toggle('hidden', !favs.has(cardNum(c))); });
-    refresh(); setChip('favorites');
-  }
-  function showRecent(){
-    viewMode='recent'; resetBase();
-    var rec=new Set(load(LS_RECENT));
-    document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.toggle('hidden', !rec.has(cardNum(c))); });
-    refresh(); setChip('recent');
+  function showAll(){
+    viewMode='all'; activeTrack=null; resetBase(); refresh();
+    var all=document.querySelector('.nav-pill[data-cat="all"]'); if(all) all.classList.add('active');
+    showSubNav(false); setViewChip('all');
+    window.scrollTo({top:0,behavior:'smooth'});
   }
   function showTrack(track){
-    viewMode='track'; resetBase();
+    viewMode='track'; activeTrack=track.key; resetBase();
     var allow=new Set(track.cats);
     document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.toggle('hidden', !allow.has(c.dataset.cat)); });
-    refresh(); setChip('track:'+track.key);
+    refresh();
+    var pill=document.querySelector('.nav-pill.track-pill[data-track="'+track.key+'"]'); if(pill) pill.classList.add('active');
+    fillSubNav(track); showSubNav(true); setViewChip(null);
     var first=document.getElementById(track.cats[0]);
     if(first) setTimeout(function(){ first.scrollIntoView({behavior:'smooth',block:'start'}); }, 60);
   }
+  function showFavorites(){
+    viewMode='favorites'; activeTrack=null; resetBase();
+    var favs=getFavs();
+    document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.toggle('hidden', !favs.has(cardNum(c))); });
+    refresh(); showSubNav(false); setViewChip('favorites');
+  }
+  function showRecent(){
+    viewMode='recent'; activeTrack=null; resetBase();
+    var rec=new Set(load(LS_RECENT));
+    document.querySelectorAll('.prompt-card').forEach(function(c){ c.classList.toggle('hidden', !rec.has(cardNum(c))); });
+    refresh(); showSubNav(false); setViewChip('recent');
+  }
   function jumpToCat(cat){
-    showAll();
-    var pill=document.querySelector('.nav-pill[data-cat="'+cat+'"]');
-    if(pill){ pill.click(); }
+    var t=TRACKS.filter(function(x){ return x.key===TRACK_OF[cat]; })[0];
+    if(t){ showTrack(t); setTimeout(function(){ var s=document.getElementById(cat); if(s) s.scrollIntoView({behavior:'smooth',block:'start'}); }, 120); }
   }
 
-  /* ---- Tier 3: view chip bar (All / Favorites / Recent / tracks / Browse) ---- */
+  /* ---- utility row ---- */
   function buildViewBar(){
     var rb=document.getElementById('resultsBar'); if(!rb||!rb.parentNode) return;
     var bar=document.createElement('div'); bar.className='view-bar'; bar.id='uivViewBar';
-
-    var lbl=document.createElement('span'); lbl.className='vb-label'; lbl.textContent='View'; bar.appendChild(lbl);
-
-    bar.appendChild(makeChip('all','All', null, function(){ showAll(); }));
-    var favChip=makeChip('favorites','★ Favorites', countFavs(), function(){ showFavorites(); }); bar.appendChild(favChip);
-    var recChip=makeChip('recent','↻ Recent', load(LS_RECENT).length||null, function(){ showRecent(); }); bar.appendChild(recChip);
-
-    var div=document.createElement('span'); div.className='uiv-divider'; bar.appendChild(div);
-    var tl=document.createElement('span'); tl.className='vb-label'; tl.textContent='Strategy'; bar.appendChild(tl);
-    TRACKS.forEach(function(t){
-      var n=t.cats.reduce(function(a,c){ return a+catCount(c); },0);
-      bar.appendChild(makeChip('track:'+t.key, t.label, n, function(){ showTrack(t); }));
-    });
-
-    var div2=document.createElement('span'); div2.className='uiv-divider'; bar.appendChild(div2);
-    var browse=makeChip('browse','≡ Browse', null, function(){ openBrowse(); }); browse.classList.remove('active'); bar.appendChild(browse);
-
+    var lbl=document.createElement('span'); lbl.className='vb-label'; lbl.textContent='Jump to'; bar.appendChild(lbl);
+    bar.appendChild(makeChip('situations','◎ By situation', null, function(){ if(typeof window.toggleSituationPanel==='function') window.toggleSituationPanel(); }));
+    bar.appendChild(makeChip('browse','≡ Browse all', null, function(){ openBrowse(); }));
+    var d=document.createElement('span'); d.className='uiv-divider'; bar.appendChild(d);
+    var lbl2=document.createElement('span'); lbl2.className='vb-label'; lbl2.textContent='Saved'; bar.appendChild(lbl2);
+    bar.appendChild(makeChip('favorites','★ Favorites', countFavs(), function(){ showFavorites(); }));
+    bar.appendChild(makeChip('recent','↻ Recent', load(LS_RECENT).length||null, function(){ showRecent(); }));
     rb.parentNode.insertBefore(bar, rb);
-    setChip('all');
   }
   function makeChip(id,label,count,onClick){
     var b=document.createElement('button'); b.type='button'; b.className='uiv-chip'; b.dataset.chip=id;
-    b.innerHTML = label + (count!=null ? ' <span class="c">'+count+'</span>' : '');
-    b.addEventListener('click', onClick);
-    return b;
+    b.innerHTML=label+(count!=null?' <span class="c">'+count+'</span>':'');
+    b.addEventListener('click', onClick); return b;
   }
-  function setChip(id){
-    document.querySelectorAll('#uivViewBar .uiv-chip').forEach(function(c){ c.classList.toggle('active', c.dataset.chip===id); });
+  function setViewChip(id){
+    document.querySelectorAll('#uivViewBar .uiv-chip').forEach(function(c){
+      if(c.dataset.chip==='favorites'||c.dataset.chip==='recent') c.classList.toggle('active', c.dataset.chip===id);
+    });
   }
   function countFavs(){ var n=getFavs().size; return n||null; }
   function refreshChipCounts(){
-    var fav=document.querySelector('#uivViewBar .uiv-chip[data-chip="favorites"]');
-    if(fav){ var n=getFavs().size; fav.innerHTML='★ Favorites'+(n?' <span class="c">'+n+'</span>':''); fav.classList.toggle('active', viewMode==='favorites'); }
-    var rec=document.querySelector('#uivViewBar .uiv-chip[data-chip="recent"]');
-    if(rec){ var r=load(LS_RECENT).length; rec.innerHTML='↻ Recent'+(r?' <span class="c">'+r+'</span>':''); }
+    var f=document.querySelector('#uivViewBar .uiv-chip[data-chip="favorites"]');
+    if(f){ var n=getFavs().size; f.innerHTML='★ Favorites'+(n?' <span class="c">'+n+'</span>':''); f.classList.toggle('active', viewMode==='favorites'); }
+    var r=document.querySelector('#uivViewBar .uiv-chip[data-chip="recent"]');
+    if(r){ var k=load(LS_RECENT).length; r.innerHTML='↻ Recent'+(k?' <span class="c">'+k+'</span>':''); }
   }
 
-  /* ---- Tier 2: browse-by-strategy overlay ---- */
+  /* ---- browse overlay ---- */
   function buildBrowseOverlay(){
     var ov=document.createElement('div'); ov.className='uiv-browse-overlay'; ov.id='uivBrowse';
     var panel=document.createElement('div'); panel.className='uiv-browse';
     var close=document.createElement('button'); close.className='uiv-browse-close'; close.setAttribute('aria-label','Close browse panel'); close.innerHTML='&times;';
     close.addEventListener('click', closeBrowse);
     var h=document.createElement('h3'); h.textContent='Browse by strategy';
-    var sub=document.createElement('p'); sub.className='sub'; sub.textContent='Jump straight to a category, or open a full strategy track.';
+    var sub=document.createElement('p'); sub.className='sub'; sub.textContent='Open a full strategy, or jump straight to a category.';
     var grid=document.createElement('div'); grid.className='uiv-track-grid';
     TRACKS.forEach(function(t){
       var col=document.createElement('div'); col.className='uiv-track';
       var head=document.createElement('div'); head.className='uiv-track-head';
       var name=document.createElement('span'); name.className='uiv-track-name'; name.textContent=t.label;
-      var allBtn=document.createElement('button'); allBtn.className='uiv-track-all'; allBtn.textContent='Show all';
+      var allBtn=document.createElement('button'); allBtn.className='uiv-track-all'; allBtn.textContent='Open';
       allBtn.addEventListener('click', function(){ closeBrowse(); showTrack(t); });
       head.appendChild(name); head.appendChild(allBtn); col.appendChild(head);
       t.cats.forEach(function(c){
@@ -8918,14 +8979,15 @@ function quickCopy(btn) {
       grid.appendChild(col);
     });
     panel.appendChild(h); panel.appendChild(sub); panel.appendChild(grid);
-    ov.appendChild(close); ov.appendChild(panel);
+    ov.appendChild(panel);
+    panel.insertBefore(close, panel.firstChild);
     ov.addEventListener('click', function(e){ if(e.target===ov) closeBrowse(); });
     document.body.appendChild(ov);
   }
-  function openBrowse(){ var ov=document.getElementById('uivBrowse'); if(ov) ov.classList.add('open'); }
-  function closeBrowse(){ var ov=document.getElementById('uivBrowse'); if(ov) ov.classList.remove('open'); }
+  function openBrowse(){ var o=document.getElementById('uivBrowse'); if(o) o.classList.add('open'); }
+  function closeBrowse(){ var o=document.getElementById('uivBrowse'); if(o) o.classList.remove('open'); }
 
-  /* ---- Tier 3: favorites stars ---- */
+  /* ---- favorites ---- */
   function addFavStars(){
     var favs=getFavs();
     document.querySelectorAll('.prompt-card').forEach(function(card){
@@ -8933,141 +8995,114 @@ function quickCopy(btn) {
       var num=cardNum(card);
       var star=document.createElement('button');
       star.type='button'; star.className='fav-star'+(favs.has(num)?' on':'');
-      star.setAttribute('aria-label', (favs.has(num)?'Remove from':'Add to')+' favorites');
-      star.setAttribute('aria-pressed', favs.has(num)?'true':'false');
-      star.textContent = favs.has(num)?'★':'☆';
+      star.setAttribute('aria-label',(favs.has(num)?'Remove from':'Add to')+' favorites');
+      star.setAttribute('aria-pressed',favs.has(num)?'true':'false');
+      star.textContent=favs.has(num)?'★':'☆';
       star.addEventListener('click', function(e){
         e.stopPropagation();
         var set=getFavs();
         if(set.has(num)){ set.delete(num); star.classList.remove('on'); star.textContent='☆'; star.setAttribute('aria-pressed','false'); star.setAttribute('aria-label','Add to favorites'); }
         else { set.add(num); star.classList.add('on'); star.textContent='★'; star.setAttribute('aria-pressed','true'); star.setAttribute('aria-label','Remove from favorites'); }
-        save(LS_FAV, Array.from(set));
-        refreshChipCounts();
+        save(LS_FAV, Array.from(set)); refreshChipCounts();
         if(viewMode==='favorites') showFavorites();
       });
-      // insert before the quick-copy button if present, else at end
       var qc=header.querySelector('.quick-copy');
       if(qc){ header.insertBefore(star, qc); } else { header.appendChild(star); }
     });
   }
 
-  /* ---- Tier 3: recently used (hook copy actions) ---- */
+  /* ---- recents ---- */
   function recordRecent(num){
     if(!num) return;
     var arr=load(LS_RECENT).filter(function(x){ return x!==num; });
-    arr.unshift(num);
-    if(arr.length>8) arr=arr.slice(0,8);
-    save(LS_RECENT, arr);
-    refreshChipCounts();
+    arr.unshift(num); if(arr.length>8) arr=arr.slice(0,8);
+    save(LS_RECENT, arr); refreshChipCounts();
   }
   function hookRecent(){
     document.addEventListener('click', function(e){
-      var btn=e.target.closest ? e.target.closest('.copy-btn, .quick-copy') : null;
+      var btn=e.target.closest?e.target.closest('.copy-btn, .quick-copy'):null;
       if(!btn) return;
       var card=btn.closest('.prompt-card'); if(card) recordRecent(cardNum(card));
     }, true);
   }
 
-  /* ---- Tier 1: keyboard a11y for cards ---- */
+  /* ---- keyboard a11y for cards ---- */
   function enhanceCards(){
-    // wrap toggleCard so aria-expanded stays in sync regardless of trigger
     if(typeof window.toggleCard==='function' && !window.toggleCard._uiv){
       var orig=window.toggleCard;
       window.toggleCard=function(h){ orig(h); try{ var c=h.closest('.prompt-card'); h.setAttribute('aria-expanded', c.classList.contains('open')?'true':'false'); }catch(e){} };
       window.toggleCard._uiv=true;
     }
     document.querySelectorAll('.card-header').forEach(function(h){
-      h.setAttribute('role','button');
-      h.setAttribute('tabindex','0');
+      h.setAttribute('role','button'); h.setAttribute('tabindex','0');
       var c=h.closest('.prompt-card');
       h.setAttribute('aria-expanded', c && c.classList.contains('open')?'true':'false');
-      var titleEl=h.querySelector('.card-title');
-      if(titleEl) h.setAttribute('aria-label', 'Toggle prompt: '+titleEl.textContent.trim());
+      var t=h.querySelector('.card-title'); if(t) h.setAttribute('aria-label','Toggle prompt: '+t.textContent.trim());
       h.addEventListener('keydown', function(e){
-        if(e.key==='Enter' || e.key===' ' || e.key==='Spacebar'){
-          e.preventDefault();
-          if(typeof window.toggleCard==='function') window.toggleCard(h);
-        }
+        if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){ e.preventDefault(); if(typeof window.toggleCard==='function') window.toggleCard(h); }
       });
     });
   }
-
-  /* ---- Tier 1: aria-labels on icon-only controls ---- */
   function addAriaLabels(){
-    var map=[['backToTop','Back to top'],['sidebarToggle','Open deal details'],
-             ['navScrollLeft','Scroll categories left'],['navScrollRight','Scroll categories right'],
-             ['searchClear','Clear search']];
-    map.forEach(function(p){ var el=document.getElementById(p[0]); if(el && !el.getAttribute('aria-label')) el.setAttribute('aria-label', p[1]); });
+    [['backToTop','Back to top'],['sidebarToggle','Open deal details'],['navScrollLeft','Scroll left'],['navScrollRight','Scroll right'],['searchClear','Clear search']].forEach(function(p){
+      var el=document.getElementById(p[0]); if(el && !el.getAttribute('aria-label')) el.setAttribute('aria-label',p[1]);
+    });
     var si=document.getElementById('searchInput'); if(si && !si.getAttribute('aria-label')) si.setAttribute('aria-label','Search prompts');
+    document.querySelectorAll('.section-icon').forEach(function(i){ i.setAttribute('aria-hidden','true'); });
   }
 
-  /* ---- Tier 3: strategy-aware deal sidebar fields ---- */
+  /* ---- strategy-aware sidebar ---- */
   function extendDealSidebar(){
-    var anchorField=document.querySelector('[data-deal="condition"]');
-    var container = anchorField ? anchorField.closest('.deal-field').parentNode : null;
+    var anchor=document.querySelector('[data-deal="condition"]');
+    var container=anchor?anchor.closest('.deal-field').parentNode:null;
     if(!container) return;
+    if(container.querySelector('[data-deal="assignfee"]')) return;
     var lbl=document.createElement('div'); lbl.className='deal-group-label'; lbl.textContent='Wholesale & Rental';
     container.appendChild(lbl);
     container.appendChild(makeDealField('Assignment Fee','assignfee','$10,000'));
     container.appendChild(makeDealField('Monthly Rent','rent','$1,650'));
-
-    // bind status updates for new inputs
     container.querySelectorAll('[data-deal="assignfee"],[data-deal="rent"]').forEach(function(el){
       el.addEventListener('input', function(){ if(typeof window.updateDealStatus==='function') window.updateDealStatus(); });
     });
-
-    // extend applyDealData to fill the new tokens (runs on top of original)
     if(typeof window.applyDealData==='function' && !window.applyDealData._uiv){
       var orig=window.applyDealData;
       var wrapped=function(text){
         var r=orig(text);
         try{
-          var data={};
-          document.querySelectorAll('[data-deal]').forEach(function(el){ data[el.dataset.deal]=el.value.trim(); });
-          if(data.assignfee){
-            var fee=data.assignfee.charAt(0)==='$'?data.assignfee:'$'+data.assignfee.replace(/[^0-9.,]/g,'');
-            r=r.replace(/\[ASSIGNMENT FEE\]/g, fee).replace(/\[TARGET FEE[^\]]*\]/g, fee);
-          }
-          if(data.rent){
-            var rent=data.rent.charAt(0)==='$'?data.rent:'$'+data.rent.replace(/[^0-9.,]/g,'');
-            r=r.replace(/\[MONTHLY RENT\]/g, rent);
-          }
+          var d={}; document.querySelectorAll('[data-deal]').forEach(function(el){ d[el.dataset.deal]=el.value.trim(); });
+          if(d.assignfee){ var fee=d.assignfee.charAt(0)==='$'?d.assignfee:'$'+d.assignfee.replace(/[^0-9.,]/g,''); r=r.replace(/\[ASSIGNMENT FEE\]/g,fee).replace(/\[TARGET FEE[^\]]*\]/g,fee); }
+          if(d.rent){ var rent=d.rent.charAt(0)==='$'?d.rent:'$'+d.rent.replace(/[^0-9.,]/g,''); r=r.replace(/\[MONTHLY RENT\]/g,rent); }
         }catch(e){}
         return r;
       };
-      wrapped._uiv=true;
-      window.applyDealData=wrapped;
+      wrapped._uiv=true; window.applyDealData=wrapped;
     }
   }
-  function makeDealField(label,key,placeholder){
+  function makeDealField(label,key,ph){
     var f=document.createElement('div'); f.className='deal-field';
     var l=document.createElement('label'); l.textContent=label;
-    var i=document.createElement('input'); i.type='text'; i.setAttribute('data-deal',key); i.placeholder=placeholder;
+    var i=document.createElement('input'); i.type='text'; i.setAttribute('data-deal',key); i.placeholder=ph;
     f.appendChild(l); f.appendChild(i); return f;
   }
 
-  /* ---- Tier 1/2: scrollspy (only in All view) ---- */
+  /* ---- scrollspy: highlight current category in sub-nav ---- */
   function wireScrollSpy(){
     var ticking=false;
     window.addEventListener('scroll', function(){
       if(ticking) return; ticking=true;
       requestAnimationFrame(function(){
         ticking=false;
-        if(viewMode!=='all') return;
-        var active=document.querySelector('.nav-pill.active');
-        if(!active || active.dataset.cat!=='all') return; // a single category is filtered; leave it
-        var current='';
+        if(viewMode!=='track') return;
+        var cur='';
         document.querySelectorAll('.section').forEach(function(s){
-          if(s.style.display!=='none' && s.getBoundingClientRect().top<160) current=s.dataset.category;
+          if(s.style.display!=='none' && s.getBoundingClientRect().top<170) cur=s.dataset.category;
         });
-        document.querySelectorAll('.nav-pill').forEach(function(p){
-          p.classList.toggle('nav-current', !!current && p.dataset.cat===current);
-        });
+        document.querySelectorAll('#uivSubnavInner .subpill').forEach(function(p){ p.classList.toggle('cur', p.dataset.cat===cur); });
       });
     }, {passive:true});
   }
 
-  /* ---- Tier 1: '/' focuses search ---- */
+  /* ---- '/' focuses search ---- */
   function wireSlashShortcut(){
     document.addEventListener('keydown', function(e){
       if(e.key==='/' && !e.metaKey && !e.ctrlKey && !e.altKey){
@@ -9079,15 +9114,7 @@ function quickCopy(btn) {
     });
   }
 
-  /* ---- keep view chips in sync when user uses native nav / situations ---- */
-  function resetViewChipsOnNav(){
-    document.querySelectorAll('.nav-pill').forEach(function(p){
-      p.addEventListener('click', function(){ viewMode='all'; setChip(p.dataset.cat==='all'?'all':null); });
-    });
-    document.querySelectorAll('.situation-card').forEach(function(c){
-      c.addEventListener('click', function(){ viewMode='all'; setChip(null); });
-    });
-  }
+  function decorateSectionIcons(){ /* handled by CSS; placeholder for future icon set */ }
 })();
 
 </script>
